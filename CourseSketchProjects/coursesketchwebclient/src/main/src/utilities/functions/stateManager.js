@@ -1,29 +1,48 @@
 /**
- * @class Redirector
  * Handles the window state.
  *
  * Right now this is missing a couple of items but ill describe them here.
- * <ol>
- * <li>A way to add and pop off states (you can not undo redo though so dont
- * worry about that).</li>
- * <li>when moving through peer states the most previous state should be
- * replaced</li>
- * <li>each state should probably have a url or template/document id that
- * points to the html code to be displayed</li>
- * <li>when a state is popped off forcibly delete as much as possible to make
- * it easier to reclaim memory</li>
- * <li> States are described through the url. There are a couple ways to do this
- * though.
- * <ul>
- * <li>One is to have a mechanism that unviersally knows how to handle all
- * possible states</li>
- * <li>Another is to have a state map file in json that describes how to handle
- * each state</li>
- * <li>The final way I thought of is to have each level know how to handle the
- * state and then pass the state down to the level below it</li>
- * </ul>
- * </li>
- * </ol>
+ * <pre>
+ *  <ol>
+ *      <li>
+ *          A way to add and pop off states (you can not undo redo though so dont
+ *          worry about that).
+ *      </li>
+ *      <li>
+ *          when moving through peer states the most previous state should be
+ *          replaced
+ *      </li>
+ *      <li>
+ *          each state should probably have a url or template/document id that
+ *          points to the html code to be displayed
+ *      </li>
+ *      <li>
+ *          when a state is popped off forcibly delete as much as possible to make
+ *          it easier to reclaim memory
+ *      </li>
+ *      <li>
+ *          States are described through the url. There are a couple ways to do this
+ *          though.
+ *          <ul>
+ *              <li>
+ *                  One is to have a mechanism that unviersally knows how to handle all
+ *                  possible states
+ *              </li>
+ *              <li>
+ *                  Another is to have a state map file in json that describes how to handle
+ *                  each state
+ *              </li>
+ *              <li>
+ *                  The final way I thought of is to have each level know how to handle the
+ *                  state and then pass the state down to the level below it
+ *              </li>
+ *          </ul>
+ *      </li>
+ *  </ol>
+ * </pre>
+ * @constructor Redirector
+ * @param {Document} scope - The current scope to get the url.
+ * @param {Window} affectedWindow - The window that is being affected.
  */
 function Redirector(scope, affectedWindow) {
     var activeState = false;

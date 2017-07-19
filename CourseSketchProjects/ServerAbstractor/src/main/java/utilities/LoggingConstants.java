@@ -3,7 +3,7 @@ package utilities;
 import com.cedarsoftware.util.io.JsonWriter;
 
 /**
- * Created by Raunak on 2/26/15.
+ * Holds constants used for logging.
  */
 public final class LoggingConstants {
 

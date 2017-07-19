@@ -89,6 +89,22 @@
         "beforeColon": false,
         "afterColon": true
       }
-    ]
+    ],
+    "require-jsdoc": [2, {
+      "require": {
+        "FunctionDeclaration": true,
+        "MethodDefinition": true,
+        "ClassDeclaration": true,
+        "ArrowFunctionExpression": false
+      }
+    }],
+    "valid-jsdoc": [2, {
+      "prefer": { "arg": "param", "argument": "param", "class": "constructor", "return": "returns", "virtual": "abstract" },
+      "preferType": { "Boolean": "Boolean", "Number": "Number", "object": "Object", "String": "String" },
+      "requireReturn": false,
+      "requireReturnType": true,
+      "requireParamDescription": true,
+      "requireReturnDescription": true
+    }]
   }
 }

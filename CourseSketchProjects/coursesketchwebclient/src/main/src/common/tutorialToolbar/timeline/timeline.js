@@ -1,4 +1,4 @@
-//jscs:disable
+/* eslint-disable */
 /* jshint ignore:start */
 function Timeline() {
     /**

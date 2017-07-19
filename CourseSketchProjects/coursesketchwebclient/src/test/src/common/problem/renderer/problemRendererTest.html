@@ -1,0 +1,627 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Problem Renderer Test</title>
+    <!-- test Library -->
+    <link rel="import" href="/test/testUtilities/testUtilities.html">
+    <link rel="import"
+          href="/test/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
+    <script src="/test/testUtilities/databaseHelper.js"></script>
+
+    <!-- multi-choice -->
+    <link rel="import" href="/src/utilities/templates/multiChoice/multiChoiceInclude.html"/>
+    <!-- embedded HTML -->
+    <link rel="import" href="/src/utilities/templates/embeddedHtml/embeddedHtmlInclude.html"/>
+    <!-- sketching -->
+    <link rel="import" href="/src/sketching/sketchInclude.html"/>
+    <!-- question -->
+    <link rel="import" href="/src/utilities/templates/question/questionInclude.html"/>
+
+    <!-- file being tested. -->
+    <script src="/src/common/problem/renderer/problemRenderer.js" data-cover></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div id="htmlCode"></div>
+<div id="testBed"></div>
+
+<script>
+    QUnit.module("waiting", {
+        beforeEach: function() {
+            this.fakeElement = document.createElement('div');
+            document.getElementById('testBed').appendChild(this.fakeElement);
+        },
+        afterEach: function() {
+            document.getElementById('testBed').innerHTML = '';
+        }
+    });
+
+    test("testing default waiting functions", function(assert) {
+        expect(3);
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        renderer.setFinishWaitingFunction(function() {
+            assert.ok(true);
+        });
+        renderer.setStartWaitingFunction(function() {
+            assert.ok(true);
+        });
+        renderer.renderBankProblem(undefined, function() {
+            assert.ok(true);
+        })
+    });
+
+    test("testing default waiting functions doesnt exist after reset", function(assert) {
+        expect(1);
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        renderer.setFinishWaitingFunction(function() {
+            assert.ok(false);
+        });
+        renderer.setStartWaitingFunction(function() {
+            assert.ok(false);
+        });
+        renderer.reset();
+        renderer.renderBankProblem(undefined, function() {
+            assert.ok(true);
+        })
+    });
+
+    test("testing renderer when it is already waiting.", function(assert) {
+        expect(2);
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        renderer.setFinishWaitingFunction(function() {
+            assert.ok(false);
+        });
+        renderer.setStartWaitingFunction(function() {
+            assert.ok(true);
+        });
+        renderer.startWaiting();
+        renderer.renderBankProblem(undefined, function() {
+            assert.ok(true);
+        })
+    });
+
+    test("testing renderer when it is already waiting force stop waiting.", function(assert) {
+        expect(3);
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        renderer.setFinishWaitingFunction(function() {
+            assert.ok(true);
+        });
+        renderer.setStartWaitingFunction(function() {
+            assert.ok(true);
+        });
+        renderer.startWaiting();
+        renderer.renderBankProblem(undefined, function() {
+            assert.ok(true);
+        }, true);
+    });
+
+    test("testing renderer when it is already waiting prevent stop waiting.", function(assert) {
+        expect(2);
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        renderer.setFinishWaitingFunction(function() {
+            assert.ok(false);
+        });
+        renderer.setStartWaitingFunction(function() {
+            assert.ok(true);
+        });
+        renderer.renderBankProblem(undefined, function() {
+            assert.ok(true);
+        }, false);
+    });
+
+    QUnit.module("rendering bank problem", {
+        beforeEach: function() {
+            this.fakeElement = document.createElement('div');
+            document.getElementById('testBed').appendChild(this.fakeElement);
+        },
+        afterEach: function() {
+            document.getElementById('testBed').innerHTML = '';
+        }
+    });
+
+    test("testing empty special data", function(assert) {
+        expect(2);
+        var fakeElement = this.fakeElement;
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.fakeBankProblems[0];
+        renderer.renderBankProblem(bankProblem, function() {
+            assert.equal(fakeElement.childNodes.length, 0);
+            done();
+        });
+    });
+
+    test("testing free response bank problem.", function(assert) {
+        expect(3);
+        var fakeElement = this.fakeElement;
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.fakeBankProblems[1];
+        renderer.renderBankProblem(bankProblem, function() {
+            var element = fakeElement.querySelector('TextArea');
+            assert.notEqual(element, null);
+            assert.equal(element.value, bankProblem.specialQuestionData.freeResponse.startingText);
+            done();
+        });
+    });
+
+    test("testing empty free response bank problem.", function(assert) {
+        expect(3);
+        var fakeElement = this.fakeElement;
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
+        bankProblem.questionType = CourseSketch.prutil.QuestionType.FREE_RESP;
+        bankProblem.specialQuestionData = CourseSketch.prutil.QuestionData();
+        renderer.renderBankProblem(bankProblem, function() {
+            var element = fakeElement.querySelector('TextArea');
+            assert.notEqual(element, null);
+            assert.equal(element.value, '');
+            done();
+        });
+    });
+
+    test("testing multi choice bank problem.", function(assert) {
+        expect(3);
+        var fakeElement = this.fakeElement;
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.fakeBankProblems[2];
+        renderer.renderBankProblem(bankProblem, function() {
+            var element = fakeElement.querySelector('multi-choice');
+            assert.notEqual(element, null);
+            element.setFinishedListener(function(ignore, ignore, ignore, multiChoice) {
+                assert.protoEqual(multiChoice, bankProblem.specialQuestionData.multipleChoice,
+                    CourseSketch.prutil.getMultipleChoiceClass(), 'Multi choice should be the same');
+                done();
+            });
+            element.saveData();
+        });
+    });
+
+    test("testing multi choice empty bank problem.", function(assert) {
+        expect(3);
+        var fakeElement = this.fakeElement;
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
+        bankProblem.questionType = CourseSketch.prutil.QuestionType.MULT_CHOICE;
+        bankProblem.specialQuestionData = CourseSketch.prutil.QuestionData();
+        renderer.renderBankProblem(bankProblem, function() {
+            var element = fakeElement.querySelector('multi-choice');
+            assert.notEqual(element, null);
+            element.setFinishedListener(function(ignore, ignore, ignore, multiChoice) {
+                assert.protoEqual(multiChoice, CourseSketch.prutil.MultipleChoice(),
+                    CourseSketch.prutil.getMultipleChoiceClass(), 'Multi choice should be the same');
+                done();
+            });
+            element.saveData();
+        });
+    });
+
+    test("testing sketch surface bank problem.", function(assert) {
+        expect(3);
+        var fakeElement = this.fakeElement;
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.fakeBankProblems[4];
+        renderer.renderBankProblem(bankProblem, function() {
+            var element = fakeElement.querySelector('sketch-surface');
+            assert.notEqual(element, null);
+            var updateList = element.getUpdateList();
+            assert.gt(updateList.length, 50);
+            done();
+        });
+    });
+
+    test("testing sketch empty bank problem.", function(assert) {
+        expect(2);
+        var fakeElement = this.fakeElement;
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
+        bankProblem.questionType = CourseSketch.prutil.QuestionType.SKETCH;
+        bankProblem.specialQuestionData = CourseSketch.prutil.QuestionData();
+        renderer.renderBankProblem(bankProblem, function() {
+            var element = fakeElement.querySelector('sketch-surface');
+            assert.notEqual(element, null);
+            done();
+        });
+    });
+
+
+    QUnit.module("rendering submission", {
+        beforeEach: function() {
+            this.fakeElement = document.createElement('div');
+            document.getElementById('testBed').appendChild(this.fakeElement);
+        },
+        afterEach: function() {
+            document.getElementById('testBed').innerHTML = '';
+        }
+    });
+
+    test("testing undefined submission renders bank problem instead", function(assert) {
+        expect(5);
+        var fakeElement = this.fakeElement;
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.fakeBankProblems[1];
+        renderer.setErrorListener(function(error) {
+           assert.ok(error instanceof ProblemRenderException, 'error should be a render exception');
+           assert.equal(error.specificMessage, 'Can not render and undefined submission');
+        });
+        renderer.renderSubmission(bankProblem, undefined, function() {
+            var element = fakeElement.querySelector('TextArea');
+            assert.notEqual(element, null);
+            assert.equal(element.value, bankProblem.specialQuestionData.freeResponse.startingText);
+            done();
+        });
+    });
+
+    test("testing empty submission renders bank problem instead", function(assert) {
+        expect(3);
+        var fakeElement = this.fakeElement;
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.fakeBankProblems[1];
+        var submission = CourseSketch.prutil.SrlSubmission();
+        renderer.renderSubmission(bankProblem, submission, function() {
+            var element = fakeElement.querySelector('TextArea');
+            assert.notEqual(element, null);
+            assert.equal(element.value, bankProblem.specialQuestionData.freeResponse.startingText);
+            done();
+        });
+    });
+
+    test("testing empty special data", function(assert) {
+        expect(2);
+        var fakeElement = this.fakeElement;
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.fakeBankProblems[0];
+        var submission = CourseSketch.prutil.SrlSubmission();
+        renderer.renderSubmission(bankProblem, submission, function() {
+            assert.equal(fakeElement.childNodes.length, 0);
+            done();
+        });
+    });
+
+    test("testing free response submission.", function(assert) {
+        expect(3);
+        var fakeElement = this.fakeElement;
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
+        var submission = CourseSketch.prutil.SrlSubmission();
+        submission.submissionData = CourseSketch.fakeBankProblems[1].specialQuestionData;
+        bankProblem.questionType = CourseSketch.fakeBankProblems[1].questionType;
+        renderer.setIsStudentProblem(true);
+        renderer.renderSubmission(bankProblem, submission, function() {
+            var element = fakeElement.querySelector('TextArea');
+            assert.notEqual(element, null);
+            assert.equal(element.value, submission.submissionData.freeResponse.startingText);
+            done();
+        });
+    });
+
+    test("testing empty free response bank problem with full submission.", function(assert) {
+        expect(3);
+        var fakeElement = this.fakeElement;
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
+        var submission = CourseSketch.prutil.SrlSubmission();
+        bankProblem.questionType = CourseSketch.prutil.QuestionType.FREE_RESP;
+        bankProblem.specialQuestionData = CourseSketch.prutil.QuestionData();
+        submission.submissionData = CourseSketch.fakeBankProblems[1].specialQuestionData;
+        renderer.setIsStudentProblem(true);
+        renderer.renderSubmission(bankProblem, submission, function() {
+            var element = fakeElement.querySelector('TextArea');
+            assert.notEqual(element, null);
+            assert.equal(element.value, submission.submissionData.freeResponse.startingText);
+            done();
+        });
+    });
+
+    test("testing multi choice submission.", function(assert) {
+        expect(3);
+        var fakeElement = this.fakeElement;
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
+        var submission = CourseSketch.prutil.SrlSubmission();
+        submission.submissionData = CourseSketch.fakeBankProblems[2].specialQuestionData;
+        bankProblem.questionType = CourseSketch.fakeBankProblems[2].questionType;
+        renderer.setIsStudentProblem(true);
+        renderer.renderSubmission(bankProblem, submission, function() {
+            var element = fakeElement.querySelector('multi-choice');
+            assert.notEqual(element, null);
+            element.setFinishedListener(function(ignore, ignore, ignore, multiChoice) {
+                assert.protoEqual(multiChoice, submission.submissionData.multipleChoice,
+                    CourseSketch.prutil.getMultipleChoiceClass(), 'Multi choice should be the same');
+                done();
+            });
+            element.saveData();
+        });
+    });
+
+    test("testing multi choice empty bank problem.", function(assert) {
+        expect(3);
+        var fakeElement = this.fakeElement;
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
+        bankProblem.questionType = CourseSketch.prutil.QuestionType.MULT_CHOICE;
+        bankProblem.specialQuestionData = CourseSketch.prutil.QuestionData();
+        var submission = CourseSketch.prutil.SrlSubmission();
+        submission.submissionData = CourseSketch.prutil.QuestionData();
+        renderer.setIsStudentProblem(true);
+        renderer.renderSubmission(bankProblem, submission, function() {
+            var element = fakeElement.querySelector('multi-choice');
+            assert.notEqual(element, null);
+            element.setFinishedListener(function(ignore, ignore, ignore, multiChoice) {
+                assert.protoEqual(multiChoice, CourseSketch.prutil.MultipleChoice(),
+                    CourseSketch.prutil.getMultipleChoiceClass(), 'Multi choice should be the same');
+                done();
+            });
+            element.saveData();
+        });
+    });
+
+    test("testing sketch surface bank problem.", function(assert) {
+        expect(3);
+        var fakeElement = this.fakeElement;
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
+        var submission = CourseSketch.prutil.SrlSubmission();
+        submission.submissionData = CourseSketch.fakeBankProblems[4].specialQuestionData;
+        bankProblem.questionType = CourseSketch.fakeBankProblems[4].questionType;
+        renderer.setIsStudentProblem(true);
+        renderer.renderSubmission(bankProblem, submission, function() {
+            var element = fakeElement.querySelector('sketch-surface');
+            assert.notEqual(element, null);
+            var updateList = element.getUpdateList();
+            assert.gt(updateList.length, 50);
+            done();
+        });
+    });
+
+    test("testing sketch empty bank problem.", function(assert) {
+        expect(2);
+        var fakeElement = this.fakeElement;
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
+        bankProblem.questionType = CourseSketch.prutil.QuestionType.SKETCH;
+        bankProblem.specialQuestionData = CourseSketch.prutil.QuestionData();
+        var submission = CourseSketch.prutil.SrlSubmission();
+        submission.submissionData = CourseSketch.prutil.QuestionData();
+        renderer.setIsStudentProblem(true);
+        renderer.renderSubmission(bankProblem, submission, function() {
+            var element = fakeElement.querySelector('sketch-surface');
+            assert.notEqual(element, null);
+            done();
+        });
+    });
+
+
+    QUnit.module("saving bank problem", {
+        beforeEach: function() {
+            this.fakeElement = document.createElement('div');
+            document.getElementById('testBed').appendChild(this.fakeElement);
+        },
+        afterEach: function() {
+            document.getElementById('testBed').innerHTML = '';
+        }
+    });
+
+    test("testing saving free response.", function(assert) {
+        expect(2);
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.fakeBankProblems[1];
+        renderer.renderBankProblem(bankProblem, function() {
+            var newBankProblem = CourseSketch.prutil.SrlBankProblem();
+            renderer.saveData(newBankProblem, function() {
+                assert.protoEqual(newBankProblem.specialQuestionData, bankProblem.specialQuestionData,
+                    CourseSketch.prutil.getQuestionDataClass());
+                done();
+            });
+        });
+    });
+
+    test("testing saving multi choice", function(assert) {
+        expect(2);
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.fakeBankProblems[2];
+        renderer.renderBankProblem(bankProblem, function() {
+            var newBankProblem = CourseSketch.prutil.SrlBankProblem();
+            renderer.saveData(newBankProblem, function() {
+                assert.protoEqual(newBankProblem.specialQuestionData, bankProblem.specialQuestionData,
+                    CourseSketch.prutil.getQuestionDataClass());
+                done();
+            });
+        });
+    });
+
+    test("testing saving sketch surface", function(assert) {
+        expect(2);
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true);
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.fakeBankProblems[4];
+        renderer.renderBankProblem(bankProblem, function() {
+            var newBankProblem = CourseSketch.prutil.SrlBankProblem();
+            renderer.saveData(newBankProblem, function() {
+                var updateList = newBankProblem.specialQuestionData.sketchArea.recordedSketch;
+                assert.gt(updateList.list.length, 50);
+                done();
+            });
+        });
+    });
+
+
+    QUnit.module("advanced rendering", {
+        beforeEach: function() {
+            this.fakeElement = document.createElement('div');
+            document.getElementById('testBed').appendChild(this.fakeElement);
+        },
+        afterEach: function() {
+            document.getElementById('testBed').innerHTML = '';
+        }
+    });
+
+    test("testing rendering then another render change clears everything", function(assert) {
+        expect(6);
+        var fakeElement = this.fakeElement;
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true, 'emptying panel');
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.fakeBankProblems[2];
+        renderer.renderBankProblem(bankProblem, function() {
+            var element = fakeElement.querySelector('multi-choice');
+            assert.notEqual(element, null);
+            element.setFinishedListener(function(ignore, ignore, ignore, multiChoice) {
+                assert.protoEqual(multiChoice, bankProblem.specialQuestionData.multipleChoice,
+                    CourseSketch.prutil.getMultipleChoiceClass(), 'Multi choice should be the same');
+                var bankProblem2 = CourseSketch.prutil.SrlBankProblem();
+                bankProblem2.questionType = CourseSketch.prutil.QuestionType.FREE_RESP;
+                bankProblem2.specialQuestionData = CourseSketch.prutil.QuestionData();
+                renderer.renderBankProblem(bankProblem2, function() {
+                    var element = fakeElement.querySelector('TextArea');
+                    assert.notEqual(element, null);
+                    assert.equal(element.value, '');
+                    done();
+                });
+            });
+            element.saveData();
+        });
+    });
+
+    test("testing rendering then another render change saves state", function(assert) {
+        expect(10);
+        var fakeElement = this.fakeElement;
+        var done = assert.async();
+        this.fakeElement.emptyPanel = function() {
+            assert.ok(true, 'emptying panel');
+        };
+        var renderer = new CourseSketch.ProblemRenderer(this.fakeElement);
+        // Free response with starting text
+        var bankProblem = CourseSketch.fakeBankProblems[2];
+        renderer.renderBankProblem(bankProblem, function() {
+            var element = fakeElement.querySelector('multi-choice');
+            assert.notEqual(element, null);
+            element.setFinishedListener(function(ignore, ignore, ignore, multiChoice) {
+                assert.protoEqual(multiChoice, bankProblem.specialQuestionData.multipleChoice,
+                    CourseSketch.prutil.getMultipleChoiceClass(), 'Multi choice should be the same');
+                var bankProblem2 = CourseSketch.prutil.SrlBankProblem();
+                bankProblem2.questionType = CourseSketch.prutil.QuestionType.FREE_RESP;
+                bankProblem2.specialQuestionData = CourseSketch.prutil.QuestionData();
+                renderer.renderBankProblem(bankProblem2, function() {
+                    var element = fakeElement.querySelector('TextArea');
+                    assert.notEqual(element, null);
+                    assert.equal(element.value, '');
+                    var newBankProblem = CourseSketch.prutil.SrlBankProblem();
+                    newBankProblem.questionType = CourseSketch.prutil.QuestionType.MULT_CHOICE;
+                    renderer.renderBankProblem(newBankProblem, function() {
+                        var element = fakeElement.querySelector('multi-choice');
+                        assert.notEqual(element, null);
+                        element.setFinishedListener(function(ignore, ignore, ignore, multiChoice) {
+                            assert.protoEqual(multiChoice, bankProblem.specialQuestionData.multipleChoice,
+                                CourseSketch.prutil.getMultipleChoiceClass(), 'Multi choice should be the same');
+                            renderer.saveData(newBankProblem, function() {
+                                assert.protoEqual(newBankProblem.specialQuestionData, bankProblem.specialQuestionData,
+                                    CourseSketch.prutil.getQuestionDataClass());
+                                done();
+                            });
+                        });
+                        element.saveData();
+                    });
+                });
+            });
+            element.saveData();
+        });
+    });
+</script>
+</body>

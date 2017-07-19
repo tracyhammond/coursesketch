@@ -41,7 +41,7 @@ function HighlightText() {
 
     /**
      * @param {Array} children - represents the childNodes in the selected text.
-     * @return {Boolean} false if children contains nodes that are something other than #text or SPAN. True otherwise
+     * @returns {Boolean} false if children contains nodes that are something other than #text or SPAN. True otherwise
      * If false then the text selected will not be highlighted
      * It will not be highlighted because it contains node types such as H2 and adding span tags will ruin the formatting of the text
      */
@@ -89,7 +89,7 @@ function HighlightText() {
     /**
      * @param {Node} node - is the node whose path we are getting
      * @param {String} currentPath - is used within the function to append the previous sibling to the path
-     * @return {String} currentPath is the XML Path of the input node
+     * @returns {String} currentPath is the XML Path of the input node
      */
     function getXPath(node, currentPath) {
         currentPath = currentPath || '';

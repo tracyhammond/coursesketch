@@ -89,14 +89,14 @@
         <dependency>
             <groupId>CourseSketch</groupId>
             <artifactId>ProtoFiles</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>${protoFileVersion}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>com.github.dtracers</groupId>
             <artifactId>SketchRecognitionFramework</artifactId>
-            <version>4.0.0</version>
+            <version>${recognitionFrameworkVersion}</version>
         </dependency>
 
         <dependency>

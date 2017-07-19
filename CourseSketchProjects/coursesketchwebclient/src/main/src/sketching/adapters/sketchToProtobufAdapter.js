@@ -1,4 +1,5 @@
 /* jshint camelcase: false */
+/* eslint-disable valid-jsdoc */
 
 (function(scriptScope) {
     /**
@@ -196,7 +197,7 @@
      * Used locally to encode an SRL_Object into its protobuf type.
      *
      * @param {SRL_Object} object - the object that is being turned into its proto type.
-     * @return {ProtoSrlObject} The protobuf form of an SRL_Object.
+     * @returns {ProtoSrlObject} The protobuf form of an SRL_Object.
      */
     function encodeSrlObject(object) {
         var proto = CourseSketch.prutil.ProtoSrlObject();

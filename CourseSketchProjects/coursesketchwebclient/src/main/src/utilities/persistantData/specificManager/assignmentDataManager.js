@@ -1,15 +1,13 @@
 /**
  * A manager for assignments that talks with the remote server.
  *
- * @param {CourseSketchDatabase} parent - The database that will hold the methods of this instance.
+ * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
  * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
- * @param {IndexedDB} parentDatabase - The local database
- * @param {SrlRequest} Request - A shortcut to a request
+ * @param {ProtoDatabase} parentDatabase - The local database
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
-function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Request, ByteBuffer) {
-    var dataListener = advanceDataListener;
+function AssignmentDataManager(parent, advanceDataListener, parentDatabase, ByteBuffer) {
     var database = parentDatabase;
     var parentScope = parent;
 
@@ -18,7 +16,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
      * not exist.
      *
      * @param {SrlAssignment} assignment - Assignment to modify state of.
-     * @param {Function} assignmentCallback - Function to be called after the state is modified.
+     * @param {Function} [assignmentCallback] - Function to be called after the state is modified.
      */
     function stateCallback(assignment, assignmentCallback) {
         /*jshint maxcomplexity:13 */
@@ -70,7 +68,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
      * Calls that stateCallback with all of the assignments in the list
      * modifying their states appropriately.
      *
-     * @param {List<SrlAssignment>} assignmentList - The list of assignments to modify the state of.
+     * @param {SrlAssignment[]} assignmentList - The list of assignments to modify the state of.
      * @param {Function} assignmentCallback - Function to be called after the state is modified.
      */
     function stateCallbackList(assignmentList, assignmentCallback) {
@@ -101,7 +99,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
      * Deletes a assignment from local database.
      * This does not delete the id pointing to this item in the respective course.
      *
-     * @param {String} assignmentId - ID of the assignment to delete
+     * @param {UUID} assignmentId - ID of the assignment to delete
      * @param {Function} assignmentCallback - Function to be called after the deletion is done.
      */
     function deleteAssignment(assignmentId, assignmentCallback) {
@@ -123,12 +121,15 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
         advanceDataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer(), function(evt, item) {
             if (isException(item)) {
                 assignmentCallback(new DatabaseException('exception thrown while waiting for response from sever',
-                    'Getting the list of asignments: ' + asignmentIdList,  item));
+                    'Inserting assignment into server: ' + assignment.name,  item));
                 return;
             }
             var resultArray = item.getReturnText().split(':');
             var oldId = resultArray[1].trim();
             var newId = resultArray[0].trim();
+           // if (oldId === newId) {
+           //     assignmentCallback(assignment);
+           // }
             // we want to get the current course in the local database in case
             // it has changed while the server was processing.
             getAssignmentLocal(oldId, function(assignment2) {
@@ -153,7 +154,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
      * Adds a new assignment to both local and server databases. Also updates the
      * corresponding course given by the assignment's courseId.
      *
-     * @param {String} assignment
+     * @param {SrlAssignment} assignment
      *                assignment object to insert
      * @param {Function} localCallback
      *                function to be called after local insert is done
@@ -170,6 +171,14 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
                 localCallback(assignment);
             }
             insertAssignmentServer(assignment, function(assignmentUpdated) {
+                if (assignmentUpdated instanceof DatabaseException) {
+                    if (!isUndefined(serverCallback)) {
+                        serverCallback(assignmentUpdated);
+                    } else {
+                        console.log(assignmentUpdated);
+                    }
+                    return;
+                }
                 parent.getCourse(assignment.courseId, function(course) {
                     var assignmentList = course.assignmentList;
 
@@ -209,8 +218,13 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
             }
             advanceDataListener.sendDataUpdate(CourseSketch.prutil.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer(), function(evt, item) {
                 if (isException(item)) {
-                    serverCallback(new DatabaseException('exception thrown while waiting for response from sever',
-                        'Getting the list of asignments: ' + asignmentIdList,  item));
+                    var databaseException = new DatabaseException('exception thrown while waiting for response from sever',
+                        'Updating assignment: ' + assignment,  item);
+                    if (!isUndefined(serverCallback)) {
+                        serverCallback(databaseException);
+                    } else {
+                        console.log(databaseException, assignment);
+                    }
                     return;
                 }
                 // we do not need to make server changes we just need to make sure it was successful.
@@ -225,7 +239,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
     /**
      * Gets an Assignment from the local database.
      *
-     * @param {String} assignmentId - ID of the assignment to get
+     * @param {UUID} assignmentId - ID of the assignment to get
      * @param {Function} assignmentCallback - function to be called after getting is complete, parameter
      *                is the assignment object, can be called with {@link DatabaseException} if an exception occurred getting the data.
      */
@@ -256,7 +270,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
      *
      * This does attempt to pull assignments from the server!
      *
-     * @param {List<String>} assignmentIdList - list of IDs of the assignments to get
+     * @param {UUID[]} assignmentIdList - list of IDs of the assignments to get
      * @param {Function} assignmentCallbackPartial - called when assignments are grabbed from the local
      *            database only. This list may not be complete. This may also
      *            not get called if there are no local assignments.
@@ -343,7 +357,10 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
                             });
                             // end server listener
                         } else {
+                            stateCallbackList(assignmentList, assignmentCallbackPartial);
+
                             stateCallbackList(assignmentList, assignmentCallbackComplete);
+                            return;
                         }
 
                         // this calls actually before the response from the
@@ -362,7 +379,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
      * Returns a assignment with the given assignmentId will ask the server if it
      * does not exist locally.
      *
-     * @param {String} assignmentId - The id of the assignment we want to find.
+     * @param {UUID} assignmentId - The id of the assignment we want to find.
      * @param {Function} assignmentCallback - The method to call when the assignment has been found. (this is asynchronous)
      */
     function getAssignment(assignmentId, assignmentCallback) {
@@ -374,11 +391,16 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
         /**
          * Ensures that the callback is only called once.
          *
-         * @param {List<Assignments>} assignmentList - The assignments that were loaded.
+         * @param {List<SrlAssignment> | BaseException} assignmentList - The assignments that were loaded.
          */
         function callOnce(assignmentList) {
             if (!called) {
                 called = true;
+                if (
+                    (assignmentList instanceof CourseSketch.DatabaseException || isUndefined(assignmentList[0]))) {
+                    assignmentCallback(new DatabaseException('Error with grabbing local assignment', assignmentList));
+                    return;
+                }
                 assignmentCallback(assignmentList[0]);
             }
         }

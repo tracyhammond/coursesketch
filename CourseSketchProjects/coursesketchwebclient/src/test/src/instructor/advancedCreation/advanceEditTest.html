@@ -1,0 +1,467 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Advance Edit test</title>
+    <link id="advanceEditImport" rel="import" href="/src/instructor/advancedCreation/advanceEdit.html">
+    <!-- test Library -->
+    <link rel="import" href="/test/testUtilities/testUtilities.html">
+
+    <!-- files needed for testing -->
+    <link rel="import" href="/src/utilities/connection/protobufInclude.html">
+    <script>
+        SchoolItem = undefined;
+    </script>
+
+    <!-- file being tested. -->
+    <script src="/src/instructor/advancedCreation/advanceEdit.js"
+            data-cover></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div id="testLocation"></div>
+
+<script>
+    $(document).ready(function () {
+        var advanceNode = safeImport(document, document, 'advanceEditImport', 'advanceEditTemplate');
+
+        /**
+         * returns a clone of the node that can be used for creating an advance edit panel.
+         */
+        function getAdvanceEditPanel() {
+            return advanceNode.cloneNode(true);
+        }
+
+        function createSchoolElement() {
+            var fakeSchoolItem = document.createElement('div');
+            fakeSchoolItem.getAdvanceEditPanel = getAdvanceEditPanel;
+            fakeSchoolItem.schoolItemData = undefined;
+            return fakeSchoolItem;
+        }
+
+        function createList(editPanel, schoolItemElement, type) {
+            var parentNode = document.querySelectorAll("#testLocation")[0];
+            schoolItemElement.setAttribute('data-type', type);
+            return editPanel.createAdvanceEditPanelElements(schoolItemElement, parentNode)[0];
+        }
+
+        QUnit.module("testConstruction", {
+            beforeEach: function () {
+                CourseSketch.AdvanceEditPanel.prototype.getAdvanceEditPanel = getAdvanceEditPanel;
+                this.advanceEdit = new CourseSketch.AdvanceEditPanel();
+                this.fakeSchoolItem = createSchoolElement();
+
+            },
+            afterEach: function () {
+                document.getElementById("testLocation").innerHTML = "";
+            }
+        });
+
+        test('advanced edit creates no list if given no type', function (assert) {
+            var parentNode = document.querySelectorAll("#testLocation")[0];
+            var host = this.advanceEdit.createAdvanceEditPanelElements(this.fakeSchoolItem, parentNode)[0];
+            assert.equal(host.shadowRoot.querySelectorAll('ul.collapsible li').length, 0);
+        });
+
+        test('advanced edit creates list correctly if given a type', function (assert) {
+            var host = createList(this.advanceEdit, this.fakeSchoolItem, 'Course');
+            assert.notEqual(host.shadowRoot.querySelectorAll('ul.collapsible li').length, 0);
+        });
+
+        test('advanced edit creates no list if given a wrong type', function (assert) {
+            var host = createList(this.advanceEdit, this.fakeSchoolItem, 'INVALID_TYPE');
+            assert.equal(host.shadowRoot.querySelectorAll('ul.collapsible li').length, 0);
+        });
+
+        QUnit.module("simple Data Checks", {
+            beforeEach: function () {
+                CourseSketch.AdvanceEditPanel.prototype.getAdvanceEditPanel = getAdvanceEditPanel;
+                this.advanceEdit = new CourseSketch.AdvanceEditPanel();
+                this.fakeSchoolItem = createSchoolElement();
+                this.host = createList(this.advanceEdit, this.fakeSchoolItem, 'Assignment');
+            },
+            afterEach: function () {
+                this.host = undefined;
+                document.getElementById("testLocation").innerHTML = "";
+            }
+        });
+
+        test('advanced edit inserts spans correctly', function (assert) {
+            var data = 'fakeId';
+            var parentDiv = this.host.shadowRoot.querySelectorAll('[data-prop="id"]')[0];
+            var dataElement = parentDiv.querySelectorAll('.data')[0];
+            assert.notEqual(dataElement.textContent, data);
+
+            this.advanceEdit.loadDataIntoElement(dataElement, data, 'id');
+            assert.equal(dataElement.textContent, data);
+        });
+
+        test('advanced edit inserts date correctly', function (assert) {
+            var date = '1996-04-02';
+            var time = '11:06:07';
+            var compareValue = new Date(date + ' ' + time).getTime();
+            var data = CourseSketch.prutil.DateTime();
+            data.setMillisecond('' + compareValue);
+
+            var parentDiv = this.host.shadowRoot.querySelectorAll('[data-prop="accessDate"]')[0];
+            var dataElement = parentDiv.querySelectorAll('.data')[0];
+
+            var dateElement = dataElement.querySelectorAll('.date')[0];
+            var timeElement = dataElement.querySelectorAll('.time')[0];
+
+            this.advanceEdit.loadDataIntoElement(dataElement, data, 'accessDate');
+            assert.equal(dateElement.value, date);
+            assert.equal(timeElement.value, time);
+        });
+
+        test('advanced edit inserts text correctly', function (assert) {
+            var data = 'fakeName';
+            var parentDiv = this.host.shadowRoot.querySelectorAll('[data-prop="name"]')[0];
+            var dataElement = parentDiv.querySelectorAll('.data')[0];
+            assert.notEqual(dataElement.value, data);
+
+            this.advanceEdit.loadDataIntoElement(dataElement, data, 'name');
+            assert.equal(dataElement.value, data);
+        });
+
+        test('advanced edit inserts checkbox correctly', function (assert) {
+            var data = true;
+            var parentDiv = this.host.shadowRoot.querySelectorAll('[data-prop="applyOnlyToLateProblems"]')[0];
+            var dataElement = parentDiv.querySelectorAll('.data')[1];
+            assert.notEqual(dataElement.checked, data);
+
+            this.advanceEdit.loadDataIntoElement(dataElement, data, 'applyOnlyToLateProblems');
+            assert.equal(dataElement.checked, data);
+        });
+
+        test('advanced edit inserts select correctly', function (assert) {
+            var data = 2;
+            var parentDiv = this.host.shadowRoot.querySelectorAll('[data-prop="access"]')[0];
+            var dataElement = parentDiv.querySelectorAll('.data')[0];
+            assert.notEqual(dataElement.value, data);
+
+            this.advanceEdit.loadDataIntoElement(dataElement, data, 'access');
+            assert.equal(dataElement.value, data);
+        });
+
+        test('advanced edit gets spans correctly (returns value passed in)', function (assert) {
+            var data = 'fakeId';
+            var parentDiv = this.host.shadowRoot.querySelectorAll('[data-prop="id"]')[0];
+            var dataElement = parentDiv.querySelectorAll('.data')[0];
+            assert.notEqual(dataElement.textContent, data);
+
+            this.advanceEdit.loadDataIntoElement(dataElement, data, 'id');
+
+            var ignoredData = 'not fake id';
+            var value = this.advanceEdit.getDataFromElement(dataElement, ignoredData, 'id');
+            assert.equal(value, ignoredData);
+        });
+
+        test('advanced edit gets date correctly', function (assert) {
+            var date = '1996-04-02';
+            var time = '11:06:07';
+            var compareValue = new Date(date + ' ' + time).getTime();
+            var data = CourseSketch.prutil.DateTime();
+            data.setMillisecond('' + compareValue);
+
+            var parentDiv = this.host.shadowRoot.querySelectorAll('[data-prop="accessDate"]')[0];
+            var dataElement = parentDiv.querySelectorAll('.data')[0];
+
+            this.advanceEdit.loadDataIntoElement(dataElement, data, 'accessDate');
+
+            // data loaded correctly
+            var value = this.advanceEdit.getDataFromElement(dataElement, data, 'accessDate');
+            assert.protoEqual(value, data, CourseSketch.prutil.getDateTimeClass());
+
+        });
+
+        test('advanced edit gets text correctly', function (assert) {
+            var data = 'fakeName';
+            var parentDiv = this.host.shadowRoot.querySelectorAll('[data-prop="name"]')[0];
+            var dataElement = parentDiv.querySelectorAll('.data')[0];
+            assert.notEqual(dataElement.value, data);
+
+            this.advanceEdit.loadDataIntoElement(dataElement, data, 'name');
+            // data loaded correctly
+            var value = this.advanceEdit.getDataFromElement(dataElement, data, 'name');
+            assert.equal(value, data);
+        });
+
+        test('advanced edit gets checkbox correctly', function (assert) {
+            var data = true;
+            var parentDiv = this.host.shadowRoot.querySelectorAll('[data-prop="applyOnlyToLateProblems"]')[0];
+            var dataElement = parentDiv.querySelectorAll('.data')[0];
+            assert.notEqual(dataElement.checked, data);
+
+            this.advanceEdit.loadDataIntoElement(dataElement, data, 'applyOnlyToLateProblems');
+            // data loaded correctly
+            var value = this.advanceEdit.getDataFromElement(dataElement, data, 'applyOnlyToLateProblems');
+            assert.equal(value, data);
+        });
+
+        test('advanced edit gets select correctly', function (assert) {
+            var data = 2;
+            var parentDiv = this.host.shadowRoot.querySelectorAll('[data-prop="access"]')[0];
+            var dataElement = parentDiv.querySelectorAll('.data')[0];
+            assert.notEqual(dataElement.value, data);
+
+            this.advanceEdit.loadDataIntoElement(dataElement, data, 'access');
+            // data loaded correctly
+            var value = this.advanceEdit.getDataFromElement(dataElement, data, 'access');
+            assert.equal(value, data);
+        });
+
+        QUnit.module("simple Assignment", {
+            beforeEach: function () {
+                CourseSketch.AdvanceEditPanel.prototype.getAdvanceEditPanel = getAdvanceEditPanel;
+                this.schoolItemProto = CourseSketch.prutil.SrlAssignment();
+
+                // Date
+                var date = '1996-04-02';
+                var time = '11:06:07';
+                var compareValue = new Date(date + ' ' + time).getTime();
+                var data = CourseSketch.prutil.DateTime();
+                data.setMillisecond('' + compareValue);
+                this.schoolItemProto.accessDate = data;
+
+                // Id
+                this.schoolItemProto.id = "fakeId";
+
+                // Name
+                this.schoolItemProto.name = "fakeName";
+
+                // Type
+                this.schoolItemProto.assignmentType = 2;
+                this.advanceEdit = new CourseSketch.AdvanceEditPanel();
+                this.fakeSchoolItem = createSchoolElement();
+                this.fakeSchoolItem.schoolItemData = this.schoolItemProto;
+                this.host = createList(this.advanceEdit, this.fakeSchoolItem, 'Assignment');
+            },
+            afterEach: function () {
+                this.host = undefined;
+                document.getElementById("testLocation").innerHTML = "";
+            }
+        });
+
+        test('advanced edit loads assignment correctly', function (assert) {
+            var fakeId = 'fakeId';
+            var idDiv = this.host.shadowRoot.querySelectorAll('[data-prop="id"]')[0];
+            var idData = idDiv.querySelectorAll('.data')[0];
+
+            var fakeName = 'fakeName';
+            var nameDiv = this.host.shadowRoot.querySelectorAll('[data-prop="name"]')[0];
+            var nameElement = nameDiv.querySelectorAll('.data')[0];
+            assert.notEqual(nameElement.value, fakeName);
+
+            var date = '1996-04-02';
+            var time = '11:06:07';
+            var compareValue = new Date(date + ' ' + time).getTime();
+            var dateProto = CourseSketch.prutil.DateTime();
+            dateProto.setMillisecond('' + compareValue);
+            var defaultDate = CourseSketch.prutil.DateTime();
+            defaultDate.setMillisecond('' + 0);
+
+            var latePolicyMap = new Map();
+            latePolicyMap.set('functionType', 0);
+            latePolicyMap.set('timeFrameType', 3);
+            latePolicyMap.set('rate', null);
+            latePolicyMap.set('subtractionType', 0);
+            latePolicyMap.set('applyOnlyToLateProblems', false);
+
+            // loads data
+            var orignalData = this.advanceEdit.loadData(this.schoolItemProto, this.host.shadowRoot);
+            assert.equal(orignalData.get('name'), fakeName);
+            assert.equal(orignalData.get('id'), fakeId);
+            assert.protoEqual(orignalData.get('accessDate'), dateProto, CourseSketch.prutil.getDateTimeClass());
+            assert.protoEqual(orignalData.get('closeDate'), defaultDate, CourseSketch.prutil.getDateTimeClass());
+            assert.deepEqual(orignalData.get('latePolicy'), latePolicyMap);
+
+            var nameValue = this.advanceEdit.getDataFromElement(nameElement, fakeName, 'name');
+            assert.equal(nameValue, fakeName);
+            assert.equal(idData.textContent, fakeId);
+
+            var dateDiv = this.host.shadowRoot.querySelectorAll('[data-prop="accessDate"]')[0];
+            var dateElement = dateDiv.querySelectorAll('.data')[0];
+
+            // data loaded correctly
+            var dateValue = this.advanceEdit.getDataFromElement(dateElement, undefined, 'accessDate');
+            assert.protoEqual(dateValue, dateProto, CourseSketch.prutil.getDateTimeClass());
+        });
+
+        test('advanced edit saves simple assignment correctly no changes', function (assert) {
+            // loads data
+            var originalData = this.advanceEdit.loadData(this.schoolItemProto, this.host.shadowRoot);
+
+            var newProto = CourseSketch.prutil.cleanProtobuf(this.schoolItemProto, CourseSketch.prutil.getSrlAssignmentClass());
+            assert.protoEqual(newProto, this.schoolItemProto, CourseSketch.prutil.getSrlAssignmentClass(),
+                'Protobuf objects should be equal with no changes');
+
+            var newData = this.advanceEdit.getInput(newProto, this.host.shadowRoot, originalData);
+            assert.deepEqual(originalData, newData);
+            assert.equal(this.advanceEdit.compareMaps(originalData, newData), true);
+            assert.protoEqual(newProto, this.schoolItemProto, CourseSketch.prutil.getSrlAssignmentClass(),
+                'Protobuf objects should still be equal after loading same data');
+
+        });
+
+        test('advanced edit saves simple assignment correctly changes', function (assert) {
+
+            // loads data
+            var originalData = this.advanceEdit.loadData(this.schoolItemProto, this.host.shadowRoot);
+
+            // simulate person editing data
+
+            var fakeId = 'fakeId2';
+            var idDiv = this.host.shadowRoot.querySelectorAll('[data-prop="id"]')[0];
+            var idData = idDiv.querySelectorAll('.data')[0];
+            // should not change answer
+            idData.textContent = fakeId;
+
+            var fakeName = 'fakeName2';
+            var nameDiv = this.host.shadowRoot.querySelectorAll('[data-prop="name"]')[0];
+            var nameElement = nameDiv.querySelectorAll('.data')[0];
+            nameElement.value = fakeName;
+
+            var date = '1996-04-01';
+            var time = '11:06:08';
+            var compareValue = new Date(date + ' ' + time).getTime();
+            var dateProto = CourseSketch.prutil.DateTime();
+            dateProto.setMillisecond('' + compareValue);
+
+            var dateDiv = this.host.shadowRoot.querySelectorAll('[data-prop="accessDate"]')[0];
+            var dateData = dateDiv.querySelectorAll('.data')[0];
+
+            var dateElement = dateData.querySelectorAll('.date')[0];
+            var timeElement = dateData.querySelectorAll('.time')[0];
+
+            dateElement.value = date;
+            timeElement.value = time;
+
+            var newProto = CourseSketch.prutil.cleanProtobuf(this.schoolItemProto, CourseSketch.prutil.getSrlAssignmentClass());
+            var compareProto = CourseSketch.prutil.cleanProtobuf(this.schoolItemProto, CourseSketch.prutil.getSrlAssignmentClass());
+            compareProto.name = fakeName;
+            compareProto.accessDate = dateProto;
+            assert.protoEqual(newProto, this.schoolItemProto, CourseSketch.prutil.getSrlAssignmentClass(),
+                'Protobuf objects should be equal with no changes');
+
+            var newData = this.advanceEdit.getInput(newProto, this.host.shadowRoot, originalData);
+            // These fields are different and should be different
+            assert.notDeepEqual(originalData, newData);
+            assert.equal(this.advanceEdit.compareMaps(originalData, newData), false);
+            assert.protoEqual(newProto, compareProto, CourseSketch.prutil.getSrlAssignmentClass(),
+                'These should have the same changes in them');
+
+        });
+
+        QUnit.module("complex Assignment", {
+            beforeEach: function () {
+                CourseSketch.AdvanceEditPanel.prototype.getAdvanceEditPanel = getAdvanceEditPanel;
+                this.schoolItemProto = CourseSketch.prutil.SrlAssignment();
+
+                this.schoolItemProto.latePolicy = CourseSketch.prutil.LatePolicy();
+                this.schoolItemProto.latePolicy.rate = 20.1;
+
+                // Date
+                var date = '1996-04-02';
+                var time = '11:06:07';
+                var compareValue = new Date(date + ' ' + time).getTime();
+                var data = CourseSketch.prutil.DateTime();
+                data.setMillisecond('' + compareValue);
+                this.schoolItemProto.accessDate = data;
+
+                // Id
+                this.schoolItemProto.id = "fakeId";
+
+                // Name
+                this.schoolItemProto.name = "fakeName";
+
+                // Type
+                this.schoolItemProto.assignmentType = 2;
+                this.advanceEdit = new CourseSketch.AdvanceEditPanel();
+                this.fakeSchoolItem = createSchoolElement();
+                this.fakeSchoolItem.schoolItemData = this.schoolItemProto;
+                this.host = createList(this.advanceEdit, this.fakeSchoolItem, 'Assignment');
+            },
+            afterEach: function () {
+                this.host = undefined;
+                document.getElementById("testLocation").innerHTML = "";
+            }
+        });
+
+        test('advanced edit saves complex assignment correctly no changes', function (assert) {
+            var rateDiv = this.host.shadowRoot.querySelectorAll('[data-prop="rate"]')[0];
+            var rateData = rateDiv.querySelectorAll('.data')[0];
+
+            // loads data
+            var originalData = this.advanceEdit.loadData(this.schoolItemProto, this.host.shadowRoot);
+
+            assert.equal(rateDiv.style.display, 'inherit');
+
+            var newProto = CourseSketch.prutil.cleanProtobuf(this.schoolItemProto, CourseSketch.prutil.getSrlAssignmentClass());
+            assert.protoEqual(newProto, this.schoolItemProto, CourseSketch.prutil.getSrlAssignmentClass(),
+                'Protobuf objects should be equal with no changes');
+
+            var newData = this.advanceEdit.getInput(newProto, this.host.shadowRoot, originalData);
+            assert.equal(rateData.value, '20.1');
+            assert.equal(this.advanceEdit.compareMaps(originalData, newData), true);
+            assert.protoEqual(newProto, this.schoolItemProto, CourseSketch.prutil.getSrlAssignmentClass(),
+                'Protobuf objects should still be equal after loading same data');
+
+        });
+
+        test('advanced edit saves complex assignment correctly changes', function (assert) {
+            // loads data
+            var originalData = this.advanceEdit.loadData(this.schoolItemProto, this.host.shadowRoot);
+
+            var rateDiv = this.host.shadowRoot.querySelectorAll('[data-prop="rate"]')[0];
+            var rateData = rateDiv.querySelectorAll('.data')[0];
+            var newRate = 21.2;
+            rateData.value = 21.2;
+
+            // simulate person editing data
+
+            var fakeId = 'fakeId2';
+            var idDiv = this.host.shadowRoot.querySelectorAll('[data-prop="id"]')[0];
+            var idData = idDiv.querySelectorAll('.data')[0];
+            // should not change answer
+            idData.textContent = fakeId;
+
+            var fakeName = 'fakeName2';
+            var nameDiv = this.host.shadowRoot.querySelectorAll('[data-prop="name"]')[0];
+            var nameElement = nameDiv.querySelectorAll('.data')[0];
+            nameElement.value = fakeName;
+
+            var date = '1996-04-01';
+            var time = '11:06:08';
+            var compareValue = new Date(date + ' ' + time).getTime();
+            var dateProto = CourseSketch.prutil.DateTime();
+            dateProto.setMillisecond('' + compareValue);
+
+            var dateDiv = this.host.shadowRoot.querySelectorAll('[data-prop="accessDate"]')[0];
+            var dateData = dateDiv.querySelectorAll('.data')[0];
+
+            var dateElement = dateData.querySelectorAll('.date')[0];
+            var timeElement = dateData.querySelectorAll('.time')[0];
+
+            dateElement.value = date;
+            timeElement.value = time;
+
+            var newProto = CourseSketch.prutil.cleanProtobuf(this.schoolItemProto, CourseSketch.prutil.getSrlAssignmentClass());
+            var compareProto = CourseSketch.prutil.cleanProtobuf(this.schoolItemProto, CourseSketch.prutil.getSrlAssignmentClass());
+            compareProto.name = fakeName;
+            compareProto.accessDate = dateProto;
+            compareProto.latePolicy.rate = newRate;
+            assert.protoEqual(newProto, this.schoolItemProto, CourseSketch.prutil.getSrlAssignmentClass(),
+                'Protobuf objects should be equal with no changes');
+
+            var newData = this.advanceEdit.getInput(newProto, this.host.shadowRoot, originalData);
+            // These fields are different and should be different
+            assert.notDeepEqual(originalData, newData);
+            assert.equal(this.advanceEdit.compareMaps(originalData, newData), false);
+            assert.protoEqual(newProto, compareProto, CourseSketch.prutil.getSrlAssignmentClass(),
+                'These should have the same changes in them');
+
+        });
+    });
+</script>
+</body>

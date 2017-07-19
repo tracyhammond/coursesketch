@@ -1,4 +1,4 @@
-//jscs:disable jsDoc
+/* eslint-disable valid-jsdoc, require-jsdoc */
 /**
  * Creates the text box dialog
  * The dialog is moveable and allows the creator to enter text to be displayed
@@ -19,9 +19,12 @@ function TextBox() {
      * It also ignores click and drag from textareas and buttons within the dialog
      * The dragging is restricted to the area of the parentNode the dialog is created in
      * NOTE: This code comes from the interact library examples page
+     *
+     * @param {Element} localElement - The host element.
      */
     function enableDragging(localElement) {
-        interact(localElement.shadowRoot.querySelector('.draggable'))
+        var element = localElement.shadowRoot.querySelectorAll('.draggable');
+        interact(element)
             .ignoreFrom('textarea, button')
             .draggable({
                 onmove: function(event) {
@@ -30,8 +33,8 @@ function TextBox() {
                     var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
                     target.style.webkitTransform =
-                    target.style.transform =
-                        'translate(' + x + 'px, ' + y + 'px)';
+                        target.style.transform =
+                            'translate(' + x + 'px, ' + y + 'px)';
 
                     target.setAttribute('data-x', x);
                     target.setAttribute('data-y', y);
@@ -42,7 +45,7 @@ function TextBox() {
             .restrict({
                 drag: localElement.parentNode,
                 endOnly: false,
-                elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+                elementRect: {top: 0, left: 0, bottom: 1, right: 1}
             });
     }
 
@@ -196,7 +199,7 @@ function TextBox() {
         $(dialog).width(textBoxProto.getWidth()); // Sets dialog width
         $(node).width(textBoxProto.getWidth()); // Sets node width
         $(node).height(textBoxProto.getHeight() - 16); // Sets node height minus 16px to account for default padding
-        $(dialog).css({ top: textBoxProto.getY(), left: textBoxProto.getX() }); // Sets dialog x and y positions
+        $(dialog).css({top: textBoxProto.getY(), left: textBoxProto.getX()}); // Sets dialog x and y positions
         node.textContent = textBoxProto.getText(); // Sets selected node (creatorText or viewTexet) text value
 
         // If the dialog is hidden, then the TTS display is the element. This speaks the text then removes the hidden element from the DOM.
@@ -210,7 +213,7 @@ function TextBox() {
     };
 
     /**
-     * @return {Function} finishedCallback is the callback set at implementation.
+     * @returns {Function} finishedCallback is the callback set at implementation.
      * The callback can be called immediately using .getFinishedCallback()(argument) with argument being optional
      */
     this.getFinishedCallback = function() {

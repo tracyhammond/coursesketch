@@ -123,7 +123,7 @@ validateFirstRun(document.currentScript);
     CourseSketch.classSearch.registerClass = function(id) {
         CourseSketch.dataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.REGISTER, courseProtoMap[id].toArrayBuffer(), function(evt, item) {
             if (isException(item)) {
-                var exception = new DatabaseException('registration failed for course parent.getCurrentId()', '', item);
+                var exception = new CourseSketch.DatabaseException('registration failed for course parent.getCurrentId()', '', item);
                 CourseSketch.clientException(exception);
             } else {
                 alert('Registration successful');

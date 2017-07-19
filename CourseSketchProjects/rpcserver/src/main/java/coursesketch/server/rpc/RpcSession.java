@@ -38,7 +38,7 @@ public final class RpcSession implements SocketSession {
      * Creates a wrapper around the {@link ClientRpcController}.
      * @param controller The context of the session (the socket itself).
      */
-    public RpcSession(final ClientRpcController controller) {
+    RpcSession(final ClientRpcController controller) {
         this.controller = controller;
         // This is null because it is required to be set to a value.
         session = null;
@@ -50,6 +50,13 @@ public final class RpcSession implements SocketSession {
      */
     public RpcSession(final RpcClientChannel rpcClientChannel) {
         this.session = rpcClientChannel;
+    }
+
+    /**
+     * @return {@link RpcClientChannel} The local session data.
+     */
+    private RpcClientChannel getSession() {
+        return session;
     }
 
     /**
@@ -71,7 +78,7 @@ public final class RpcSession implements SocketSession {
      */
     @Override
     public void close() {
-        session.close();
+        getSession().close();
     }
 
     /**
@@ -81,8 +88,8 @@ public final class RpcSession implements SocketSession {
      */
     @Override
     public Future<Void> send(final Message.Request req) {
-        session.callMethod(Message.RequestService.getDescriptor().findMethodByName("sendMessage"),
-                session.newRpcController(), req, req, null);
+        getSession().callMethod(Message.RequestService.getDescriptor().findMethodByName("sendMessage"),
+                getSession().newRpcController(), req, req, null);
         return null;
     }
 
@@ -122,18 +129,15 @@ public final class RpcSession implements SocketSession {
     }
 
     /**
-     * Checks if two {@RpcSessions} are equal.
+     * Checks if two {@link RpcSession} are equal.
      *
      * @param other
      *         A different RpcSession.
-     * @return True if the {@link org.eclipse.jetty.websocket.api.Session} are equal.
+     * @return True if the {@link PeerInfo} are equal.
      */
     @Override
     public boolean equals(final Object other) {
-        if (other instanceof RpcSession) {
-            return getPeerInfo().equals(((RpcSession) other).getPeerInfo());
-        }
-        return false;
+        return other instanceof RpcSession && getPeerInfo().equals(((RpcSession) other).getPeerInfo());
     }
 
     /**
@@ -150,7 +154,7 @@ public final class RpcSession implements SocketSession {
     }
 
     /**
-     * @return The hash code of the {@link org.eclipse.jetty.websocket.api.Session}.
+     * @return The hash code of the {@link PeerInfo}.
      */
     @Override
     public int hashCode() {

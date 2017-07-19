@@ -9,6 +9,7 @@
     var courseBarrier = barrier.getCallback();
     var assignmentBarrier = barrier.getCallback();
     var problemBarrier = barrier.getCallback();
+    var bankProblemBarrier = barrier.getCallback();
 
     // barriers have been tested and work as expected with these function.
     var loadLectures = function() {
@@ -57,6 +58,46 @@
         }
     };
 
+    var loadBankProblems = function() {
+        var localBarrier = new CallbackBarrier();
+        var loadedCallback = localBarrier.getCallbackAmount(CourseSketch.fakeBankProblems.length);
+        localBarrier.finalize(bankProblemBarrier);
+        for (var i = 0; i < CourseSketch.fakeBankProblems.length; ++i) {
+            CourseSketch.dataManager.setBankProblem(CourseSketch.fakeBankProblems[i], loadedCallback);
+        }
+        CourseSketch.dataManager.getAllBankProblems = function (courseId, assignmentId, page, callback) {
+            callback(CourseSketch.fakeBankProblems.slice(page * 10), (page + 1) * 10);
+        }
+    };
+
+    /**
+     *
+     */
+    function setDataListenerFunctions() {
+        CourseSketch.dataListener.sendDataInsert = function (queryType, data, callback, requestId, times) {
+            var oldId;
+            if (queryType === CourseSketch.prutil.ItemQuery.ASSIGNMENT) {
+                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlAssignmentClass()).id;
+            }
+            if (queryType === CourseSketch.prutil.ItemQuery.COURSE) {
+                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlCourseClass()).id;
+            }
+            if (queryType === CourseSketch.prutil.ItemQuery.COURSE_PROBLEM) {
+                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlProblemClass()).id;
+            }
+            if (queryType === CourseSketch.prutil.ItemQuery.BANK_PROBLEM) {
+                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlBankProblemClass()).id;
+            }
+            var result = {
+                getReturnText: function() { return oldId + ':' + oldId; }
+            };
+            callback(undefined, result);
+        };
+        CourseSketch.dataListener.sendDataUpdate = function (queryType, data, callback, requestId, times) {
+            callback();
+        }
+    }
+
     /**
      * Called when we can load our fake data into the database.
      */
@@ -97,8 +138,10 @@
         loadCourses();
         loadSlides();
         loadProblems();
+        loadBankProblems();
         loadAssignments();
         loadLectures();
+        setDataListenerFunctions();
     }
 
     // waits till the database is ready to set up our loading process

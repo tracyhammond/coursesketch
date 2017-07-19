@@ -1,7 +1,7 @@
 /**
  * Handles the opening and closing of menu bar and changing the title.
  *
- * @class HeaderHandler
+ * @constructor HeaderHandler
  */
 function HeaderHandler() {
     var open;
@@ -20,14 +20,12 @@ function HeaderHandler() {
             }, 300, function() {
                 open = false;
             });
-            return false;
         } else { // Open header
             header.animate({
                 top: '0px'
             }, 300, function() {
                 open = true;
             });
-            return false;
         }
     };
 

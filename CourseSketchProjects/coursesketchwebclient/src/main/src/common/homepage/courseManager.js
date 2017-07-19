@@ -22,6 +22,10 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     var assignmentSelectionManager = new ClickSelectionManager();
     var problemSelectionManager = new ClickSelectionManager();
 
+    CourseSketch.courseManagement.courseSelectionManager = courseSelectionManager;
+    CourseSketch.courseManagement.assignmentSelectionManager = assignmentSelectionManager;
+    CourseSketch.courseManagement.problemSelectionManager = problemSelectionManager;
+
     var waitingIcon = CourseSketch.courseManagement.waitingIcon;
     var courseManagement = CourseSketch.courseManagement;
 
@@ -31,12 +35,12 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      * This will wait till the database is ready before it polls for updates and
      * shows the courses.
      *
-     * @name initializeCourseManagment
+     * @name initializeCourseManagement
      * @memberof courseManagement
      */
-    CourseSketch.courseManagement.initializeCourseManagment = function() {
+    CourseSketch.courseManagement.initializeCourseManagement = function() {
         if (!document.querySelector('#class_list_column')) {
-            return false;
+            return;
         }
         document.querySelector('#class_list_column').appendChild(waitingIcon);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
@@ -116,9 +120,10 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         setNotSelectedMessage(2);
 
         // note that query selector does not work on ids that start with a number.
-        changeSelection(classColumn.querySelector(cssEscapeId(course.id)), courseSelectionManager);
-        assignmentSelectionManager.clearAllSelectedItems();
         problemSelectionManager.clearAllSelectedItems();
+        assignmentSelectionManager.clearAllSelectedItems();
+        changeSelection(classColumn.querySelector(cssEscapeId(course.id)), courseSelectionManager);
+
 
         // waiting icon
         document.querySelector('#assignment_list_column').appendChild(waitingIcon);
@@ -179,8 +184,8 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      */
     courseManagement.assignmentClicked = function(assignment) {
         var assignmentColumn = document.querySelector('#assignment_list_column');
-        changeSelection(assignmentColumn.querySelector(cssEscapeId(assignment.id)), assignmentSelectionManager);
         problemSelectionManager.clearAllSelectedItems();
+        changeSelection(assignmentColumn.querySelector(cssEscapeId(assignment.id)), assignmentSelectionManager);
 
         // waiting icon
         document.getElementById('problem_list_column').appendChild(waitingIcon);

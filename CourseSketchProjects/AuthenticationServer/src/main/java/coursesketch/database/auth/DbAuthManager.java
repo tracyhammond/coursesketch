@@ -50,7 +50,7 @@ public final class DbAuthManager {
      *
      * @param authId The AuthId of the user that is inserting the new item.
      * @param itemId The id of the item being inserted.
-     * @param itemType The type of item that is being inserted. EX: {@link protobuf.srl.school.Util.ItemType#COURSE}
+     * @param itemType The type of item that is being inserted. EX: {@link Util.ItemType#COURSE}
      * @param parentId The id of the parent object. EX: parent points to the course if item is an Assignment.
      *                 If the {@code itemType} is a bank problem, then this value can be a course that automatically gets permission to view the bank
      *                 problem.
@@ -231,8 +231,8 @@ public final class DbAuthManager {
      * The student must have a valid registration key, an instructor does not require a valid registration key in some instances.
      * @param authId The authentication Id of the user that is being added.
      * @param itemId The Id of the course or bank problem the user is being added to.
-     * @param itemType The type of item the user is registering for (Only {@link protobuf.srl.school.Util.ItemType#COURSE}
-     *                 and (Only {@link protobuf.srl.school.Util.ItemType#BANK_PROBLEM} are valid types.
+     * @param itemType The type of item the user is registering for (Only {@link Util.ItemType#COURSE}
+     *                 and (Only {@link Util.ItemType#BANK_PROBLEM} are valid types.
      * @param registrationKey The key that is used to register for the course.
      * @param authChecker Used to check permissions in the database.
      * @throws AuthenticationException If the user does not have access or an invalid {@code registrationKey}.

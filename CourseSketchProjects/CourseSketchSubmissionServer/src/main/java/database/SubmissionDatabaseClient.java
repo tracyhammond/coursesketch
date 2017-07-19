@@ -18,6 +18,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.commands.Commands.SrlUpdateList;
+import protobuf.srl.question.QuestionDataOuterClass;
+import protobuf.srl.question.QuestionDataOuterClass.FreeResponse;
+import protobuf.srl.question.QuestionDataOuterClass.MultipleChoice;
+import protobuf.srl.question.QuestionDataOuterClass.QuestionData;
+import protobuf.srl.question.QuestionDataOuterClass.SketchArea;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 import protobuf.srl.submission.Submission.SrlSubmission;
@@ -38,6 +43,7 @@ import static database.DatabaseStringConstants.IS_PRACTICE_PROBLEM;
 import static database.DatabaseStringConstants.ITEM_ID;
 import static database.DatabaseStringConstants.PROBLEM_BANK_ID;
 import static database.DatabaseStringConstants.SELF_ID;
+import static database.DatabaseStringConstants.SLIDE_BLOB_TYPE;
 import static database.DatabaseStringConstants.SOLUTION_COLLECTION;
 import static database.DatabaseStringConstants.SUBMISSION_TIME;
 import static database.DatabaseStringConstants.TEXT_ANSWER;
@@ -116,14 +122,17 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         if (multipleObjectCursor.hasNext()) {
             resultCursor = multipleObjectCursor.next();
             multipleObjectCursor.close();
-            final Document updateObj = new Document(UPDATELIST, new Binary(solution.getSubmission().getUpdateList().toByteArray()));
+            final Document updateObj =
+                    new Document(UPDATELIST, new Binary(solution.getSubmission()
+                            .getSubmissionData().getSketchArea().getRecordedSketch().toByteArray()));
             solutions.updateOne(resultCursor, new Document("$set", updateObj));
         } else {
             LOG.info("No existing submissions found");
 
             final Document query = new Document(ALLOWED_IN_PROBLEMBANK, solution.getAllowedInProblemBank())
                     .append(IS_PRACTICE_PROBLEM, solution.getIsPracticeProblem())
-                    .append(UPDATELIST, new Binary(solution.getSubmission().getUpdateList().toByteArray()))
+                    .append(UPDATELIST, new Binary(solution.getSubmission()
+                            .getSubmissionData().getSketchArea().getRecordedSketch().toByteArray()))
                     .append(PROBLEM_BANK_ID, solution.getProblemBankId());
 
             solutions.insertOne(query);
@@ -311,39 +320,40 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
             subBuilder.setId(submissionId);
         }
 
-        final SrlSubmission.SubmissionTypeCase submissionType = getExpectedType(submissionObject);
+        final QuestionData.ElementTypeCase submissionType = getExpectedType(submissionObject);
 
+        final QuestionData.Builder questionData = QuestionData.newBuilder();
         switch (submissionType) {
-            case UPDATELIST:
+            case SKETCHAREA:
                 final Object binary = submissionObject.get(UPDATELIST);
                 if (binary == null) {
                     throw new SubmissionException("UpdateList did not contain any data", null);
                 }
                 try {
-                    subBuilder.setUpdateList(SrlUpdateList.parseFrom(ByteString.copyFrom(((Binary) binary).getData())));
-                    return subBuilder.build();
+                    final SrlUpdateList updateList = SrlUpdateList.parseFrom(ByteString.copyFrom(((Binary) binary).getData()));
+                    questionData.setSketchArea(QuestionDataOuterClass.SketchArea.newBuilder().setRecordedSketch(updateList));
                 } catch (InvalidProtocolBufferException e) {
                     throw new SubmissionException("Error decoding update list", e);
                 }
-            case TEXTANSWER:
+                break;
+            case FREERESPONSE:
                 final Object text = submissionObject.get(TEXT_ANSWER);
                 if (text == null) {
                     throw new SubmissionException("Text answer did not contain any data", null);
                 }
-                subBuilder.setTextAnswer(text.toString());
-                return subBuilder.build();
-            case ANSWERCHOICE:
+                questionData.setFreeResponse(QuestionDataOuterClass.FreeResponse.newBuilder().setStartingText(text.toString()));
+                break;
+            case MULTIPLECHOICE:
                 final Object answerChoice = submissionObject.get(ANSWER_CHOICE);
                 if (answerChoice == null) {
                     throw new SubmissionException("Text answer did not contain any data", null);
                 }
-                // prevents a possible class cast exception.
-                subBuilder.setAnswerChoice(Integer.parseInt(answerChoice.toString()));
-                return subBuilder.build();
+                questionData.setMultipleChoice(MultipleChoice.newBuilder().setCorrectId(answerChoice.toString()));
+                break;
             default:
                 throw new SubmissionException("Submission data is not supported type or does not exist", null);
-
         }
+        return subBuilder.setSubmissionData(questionData).build();
     }
 
     /**
@@ -363,15 +373,26 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      */
     private static Document createSubmission(final SrlSubmission submission, final Document cursor,
             final boolean isMod, final long submissionTime) throws SubmissionException {
-        if (submission.hasUpdateList()) {
-            return createUpdateList(submission, cursor, isMod, submissionTime);
-        } else if (submission.hasTextAnswer()) {
-            return createTextSubmission(submission, cursor);
-        } else if (submission.hasAnswerChoice()) {
-            return createMultipleChoiceSolution(submission, cursor);
-        } else {
+        if (!submission.hasSubmissionData()) {
             throw new SubmissionException("Tried to save as an invalid submission", null);
         }
+        Document document = null;
+        final QuestionData submissionData = submission.getSubmissionData();
+        switch (submissionData.getElementTypeCase()) {
+            case SKETCHAREA:
+                document = createUpdateList(submissionData.getSketchArea(), cursor, isMod, submissionTime);
+                break;
+            case FREERESPONSE:
+                document = createTextSubmission(submissionData.getFreeResponse(), cursor);
+                break;
+            case MULTIPLECHOICE:
+                document = createMultipleChoiceSolution(submissionData.getMultipleChoice(), cursor);
+                break;
+            default:
+                throw new SubmissionException("Tried to save as an invalid submission", null);
+        }
+        document.append(SLIDE_BLOB_TYPE, submissionData.getElementTypeCase().getNumber());
+        return document;
     }
 
     /**
@@ -385,12 +406,12 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * @throws SubmissionException
      *         thrown if there is a problem creating the database object.
      */
-    private static Document createTextSubmission(final SrlSubmission submission, final Document cursor) throws SubmissionException {
-        if (cursor != null && getExpectedType(cursor) != SrlSubmission.SubmissionTypeCase.TEXTANSWER) {
+    private static Document createTextSubmission(final FreeResponse submission, final Document cursor) throws SubmissionException {
+        if (cursor != null && getExpectedType(cursor) != QuestionData.ElementTypeCase.FREERESPONSE) {
             throw new SubmissionException("Can not switch to a text submission from a different type", null);
         }
         // don't store it as changes for right now.
-        return new Document(TEXT_ANSWER, submission.getTextAnswer());
+        return new Document(TEXT_ANSWER, submission.getStartingText());
     }
 
     /**
@@ -404,20 +425,20 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * @throws SubmissionException
      *         thrown if there is a problem creating the database object.
      */
-    private static Document createMultipleChoiceSolution(final SrlSubmission submission, final Document cursor) throws SubmissionException {
-        if (cursor != null && getExpectedType(cursor) != SrlSubmission.SubmissionTypeCase.ANSWERCHOICE) {
+    private static Document createMultipleChoiceSolution(final MultipleChoice submission, final Document cursor) throws SubmissionException {
+        if (cursor != null && getExpectedType(cursor) != QuestionData.ElementTypeCase.MULTIPLECHOICE) {
             throw new SubmissionException("Can not switch to a multiple choice submission from a different type", null);
         }
         // don't store it as changes for right now.
-        return new Document(ANSWER_CHOICE, submission.getAnswerChoice());
+        return new Document(ANSWER_CHOICE, submission.getCorrectId());
     }
 
     /**
-    * Gets the time for the first stroke in a submission.
-    * @param updateList The updateList in a submission.
-    * @return the time for the first stroke recorded.
-    *
-    */
+     * Gets the time for the first stroke in a submission.
+     * @param updateList The updateList in a submission.
+     * @return the time for the first stroke recorded.
+     *
+     */
     private static long getFirstStrokeTime(final SrlUpdateList updateList) {
         for (int i = 0; i < updateList.getListList().size(); i++) {
             final Commands.SrlUpdate tmpUpdate = updateList.getListList().get(i);
@@ -432,11 +453,11 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     }
 
     /**
-    *
-    *  Gets the time for the last stroke in a submission.
-    * @param updateList The updateList in a submission.
-    * @return the time for the last stroke recorded.
-    */
+     *
+     *  Gets the time for the last stroke in a submission.
+     * @param updateList The updateList in a submission.
+     * @return the time for the last stroke recorded.
+     */
     static long getFirstSubmissionTime(final SrlUpdateList updateList) {
         try {
             for (int i = 0; i < updateList.getListList().size(); i++) {
@@ -457,6 +478,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         }
         return -1;
     }
+
     /**
      * Creates a database object for the update list, merges the list if there is already a list in the database.
      *
@@ -472,27 +494,27 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * @throws SubmissionException
      *         thrown if there is a problem creating the database object.
      */
-    static Document createUpdateList(final SrlSubmission submission, final Document cursor,
+    static Document createUpdateList(final SketchArea submission, final Document cursor,
             final boolean isMod, final long submissionTime)
             throws SubmissionException {
         if (cursor != null) {
             SrlUpdateList result = null;
             try {
                 final Object binary = cursor.get(UPDATELIST);
-                if (getExpectedType(cursor) != SrlSubmission.SubmissionTypeCase.UPDATELIST) {
+                if (getExpectedType(cursor) != QuestionData.ElementTypeCase.SKETCHAREA) {
                     throw new SubmissionException("Can not switch type of submission.", null);
                 }
                 if (binary == null) {
-                    result = submission.getUpdateList();
+                    result = submission.getRecordedSketch();
                 } else {
                     result = SrlUpdateList.parseFrom(ByteString.copyFrom(((Binary) binary).getData()));
                 }
             } catch (InvalidProtocolBufferException e) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                result = submission.getUpdateList();
+                result = submission.getRecordedSketch();
             }
             try {
-                result = new SubmissionMerger(result, submission.getUpdateList()).setIsModerator(isMod).merge();
+                result = new SubmissionMerger(result, submission.getRecordedSketch()).setIsModerator(isMod).merge();
             } catch (MergeException e) {
                 throw new SubmissionException("exception while merging the two lists.  Update rejected", e);
             }
@@ -502,9 +524,9 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
             return new Document(UPDATELIST, new Binary(result.toByteArray())).append(FIRST_STROKE_TIME, firstStrokeTime)
                     .append(FIRST_SUBMISSION_TIME, lastStrokeTime);
         } else {
-            final long firstStrokeTime = getFirstStrokeTime(submission.getUpdateList());
-            final long lastStrokeTime = getFirstSubmissionTime(submission.getUpdateList());
-            return new Document(UPDATELIST, new Binary(setTime(submission.getUpdateList(), submissionTime).toByteArray()))
+            final long firstStrokeTime = getFirstStrokeTime(submission.getRecordedSketch());
+            final long lastStrokeTime = getFirstSubmissionTime(submission.getRecordedSketch());
+            return new Document(UPDATELIST, new Binary(setTime(submission.getRecordedSketch(), submissionTime).toByteArray()))
                     .append(FIRST_STROKE_TIME, firstStrokeTime).append(FIRST_SUBMISSION_TIME, lastStrokeTime);
         }
     }
@@ -569,28 +591,12 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * @throws SubmissionException
      *         Thrown if there is no type found or if there are multiple types found.
      */
-    private static SrlSubmission.SubmissionTypeCase getExpectedType(final Document cursor) throws SubmissionException {
-        SrlSubmission.SubmissionTypeCase currentCase = null;
-        if (cursor.containsKey(UPDATELIST)) {
-            currentCase = SrlSubmission.SubmissionTypeCase.UPDATELIST;
+    private static QuestionData.ElementTypeCase getExpectedType(final Document cursor) throws SubmissionException {
+        final int type = (int) cursor.get(SLIDE_BLOB_TYPE);
+        if (type == -1) {
+            return QuestionData.ElementTypeCase.ELEMENTTYPE_NOT_SET;
         }
-        if (cursor.containsKey(TEXT_ANSWER)) {
-            if (currentCase != null) {
-                throw new SubmissionException("Submission can not be multiple types at the same time.", null);
-            }
-            currentCase = SrlSubmission.SubmissionTypeCase.TEXTANSWER;
-        }
-        if (cursor.containsKey(ANSWER_CHOICE)) {
-            if (currentCase != null) {
-                throw new SubmissionException("Submission can not be multiple types at the same time.", null);
-            }
-            currentCase = SrlSubmission.SubmissionTypeCase.ANSWERCHOICE;
-        }
-        if (currentCase == null) {
-            throw new SubmissionException("Submission has no type specified", null);
-        } else {
-            return currentCase;
-        }
+        return QuestionData.ElementTypeCase.valueOf(type);
     }
 
     /**
@@ -612,7 +618,8 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      *
      * This method should be synchronous.
      */
-    @Override protected void onStartDatabase() {
+    @Override
+    protected void onStartDatabase() {
         final MongoClient mongoClient = new MongoClient(super.getServerInfo().getDatabaseUrl());
         database = mongoClient.getDatabase(super.getServerInfo().getDatabaseName());
         super.setDatabaseStarted();

@@ -59,7 +59,9 @@ function VoiceRecording() {
         }.bind(this);
 
         /**
-         * Create the recorder
+         * Create the recorder.
+         *
+         * @param {*} stream Idk
          */
         this.startUserMedia = function(stream) {
             this.recorder = new Recorder(stream);
@@ -85,6 +87,8 @@ function VoiceRecording() {
                 navigator.webkitGetUserMedia ||
                 navigator.mozgetUserMedia ||
                 navigator.msGetUserMedia);
+                console.log('Audio context set up');
+                console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not available'));
                 window.URL = window.URL || window.webkitURL;
             } catch (e) {
                 alert('Web audio is not supported in this browser.');

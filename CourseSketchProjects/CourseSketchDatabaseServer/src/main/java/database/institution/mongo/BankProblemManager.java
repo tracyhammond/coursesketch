@@ -1,5 +1,6 @@
 package database.institution.mongo;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
@@ -9,8 +10,10 @@ import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
 import org.bson.Document;
+import org.bson.types.Binary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.question.QuestionDataOuterClass;
 import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
@@ -27,6 +30,8 @@ import static database.DatabaseStringConstants.REGISTRATION_KEY;
 import static database.DatabaseStringConstants.SCRIPT;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
+import static database.DatabaseStringConstants.SLIDE_BLOB;
+import static database.DatabaseStringConstants.SLIDE_BLOB_TYPE;
 import static database.DatabaseStringConstants.SOLUTION_ID;
 import static database.DatabaseStringConstants.SOURCE;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
@@ -82,11 +87,45 @@ public final class BankProblemManager {
 
         if (problem.hasSpecialQuestionData()) {
             insertObject.append(DatabaseStringConstants.SPECIAL_QUESTION_DATA,
-                    SlideManager.createQueryFromElement(problem.getSpecialQuestionData()));
+                    createQueryFromElement(problem.getSpecialQuestionData()));
         }
 
         problemBankCollection.insertOne(insertObject);
         return insertObject.get(SELF_ID).toString();
+    }
+
+    /**
+     * NOTE: This function is only used internally and should not be made public.
+     *
+     * @param specialQuestionData an element that belongs on a problem
+     * @return a Document of the element
+     */
+    private static Document createQueryFromElement(final QuestionDataOuterClass.QuestionData specialQuestionData) {
+        final Document query = new Document();
+        int type = specialQuestionData.getElementTypeCase().getNumber();
+        switch (specialQuestionData.getElementTypeCase()) {
+            case MULTIPLECHOICE:
+                query.append(SLIDE_BLOB, specialQuestionData.getMultipleChoice().toByteArray());
+                break;
+            case CHECKBOX:
+                query.append(SLIDE_BLOB, specialQuestionData.getCheckBox().toByteArray());
+                break;
+            case FREERESPONSE:
+                query.append(SLIDE_BLOB, specialQuestionData.getFreeResponse());
+                break;
+            case SKETCHAREA:
+                query.append(SLIDE_BLOB, specialQuestionData.getSketchArea().toByteArray());
+                break;
+            case EMBEDDEDHTML:
+                query.append(SLIDE_BLOB, specialQuestionData.getEmbeddedHtml().toByteArray());
+                break;
+            case ELEMENTTYPE_NOT_SET:
+            default:
+                type = -1;
+                break;
+        }
+        query.append(SLIDE_BLOB_TYPE, type);
+        return query;
     }
 
     /**
@@ -149,7 +188,7 @@ public final class BankProblemManager {
         try {
             if (mongoBankProblem.containsKey(DatabaseStringConstants.SPECIAL_QUESTION_DATA)) {
                 exactProblem.setSpecialQuestionData(
-                        SlideManager.createElementFromQuery((Document) mongoBankProblem.get(DatabaseStringConstants.SPECIAL_QUESTION_DATA)));
+                        createElementFromQuery((Document) mongoBankProblem.get(DatabaseStringConstants.SPECIAL_QUESTION_DATA)));
             }
         } catch (DatabaseAccessException e) {
             LOG.error("Error parsing lecture element", e);
@@ -159,6 +198,49 @@ public final class BankProblemManager {
             exactProblem.setScript((String) mongoBankProblem.get(SCRIPT));
         }
         return exactProblem.build();
+    }
+
+
+    /**
+     * NOTE: This function is only used internally and should not be made public.
+     *
+     * @param query a Document from the mongo database that is a slide
+     * @return a Problem.ProblemElement of the Document that was passed in
+     * @throws database.DatabaseAccessException a DatabaseAccessException if something goes wrong parsing a blob of a LectureElement
+     */
+    static QuestionDataOuterClass.QuestionData createElementFromQuery(final Document query) throws DatabaseAccessException {
+        final QuestionDataOuterClass.QuestionData.Builder element = QuestionDataOuterClass.QuestionData.newBuilder();
+        final int type = (int) query.get(SLIDE_BLOB_TYPE);
+        if (type == -1) {
+            return element.build();
+        }
+        final QuestionDataOuterClass.QuestionData.ElementTypeCase blobType =
+                QuestionDataOuterClass.QuestionData.ElementTypeCase.valueOf(type);
+        final byte[] blob = ((Binary) query.get(SLIDE_BLOB)).getData();
+        try {
+            switch (blobType) {
+                case MULTIPLECHOICE:
+                    element.setMultipleChoice(QuestionDataOuterClass.MultipleChoice.parseFrom(blob));
+                    break;
+                case CHECKBOX:
+                    element.setCheckBox(QuestionDataOuterClass.CheckBox.parseFrom(blob));
+                    break;
+                case FREERESPONSE:
+                    element.setFreeResponse(QuestionDataOuterClass.FreeResponse.parseFrom(blob));
+                    break;
+                case SKETCHAREA:
+                    element.setSketchArea(QuestionDataOuterClass.SketchArea.parseFrom(blob));
+                    break;
+                case EMBEDDEDHTML:
+                    element.setEmbeddedHtml(QuestionDataOuterClass.EmbeddedHtml.parseFrom(blob));
+                    break;
+                default:
+                    break;
+            }
+        } catch (InvalidProtocolBufferException e) {
+            throw new DatabaseAccessException("Error while parsing the blob of a LectureElement", e);
+        }
+        return element.build();
     }
 
     /**
@@ -228,7 +310,7 @@ public final class BankProblemManager {
             update = true;
         }
         if (problem.hasSpecialQuestionData()) {
-            updateObj.append(DatabaseStringConstants.SPECIAL_QUESTION_DATA, SlideManager.createQueryFromElement(problem.getSpecialQuestionData()));
+            updateObj.append(DatabaseStringConstants.SPECIAL_QUESTION_DATA, createQueryFromElement(problem.getSpecialQuestionData()));
             update = true;
         }
         if (problem.getOtherKeywordsCount() > 0) {

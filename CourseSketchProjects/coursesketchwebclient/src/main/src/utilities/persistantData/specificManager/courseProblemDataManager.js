@@ -1,14 +1,13 @@
 /**
  * A manager for assignments that talks with the remote server.
  *
- * @param {CourseSketchDatabase} parent - The database that will hold the methods of this instance.
+ * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
  * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
- * @param {IndexedDB} parentDatabase -  The local database
- * @param {SrlRequest} Request - A shortcut to a request
+ * @param {ProtoDatabase} parentDatabase -  The local database
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
-function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, Request, ByteBuffer) {
+function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, ByteBuffer) {
 
     /**
      * Sets a courseProblem in local database.
@@ -23,6 +22,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
             }
         });
     }
+
     parent.setCourseProblem = setCourseProblem;
 
     /**
@@ -41,6 +41,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
             }
         });
     }
+
     parent.deleteCourseProblem = deleteCourseProblem;
 
     /**
@@ -64,6 +65,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
             }
         });
     }
+
     parent.getCourseProblemLocal = getCourseProblemLocal;
 
     /**
@@ -78,7 +80,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
         advanceDataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.COURSE_PROBLEM, courseProblem.toArrayBuffer(), function(event, item) {
             if (isException(item)) {
                 courseProblemCallback(new DatabaseException('exception thrown while waiting for response from sever',
-                    'Inserting course problem ' + courseProblem,  item));
+                    'Inserting course problem ' + courseProblem, item));
                 return;
             }
             var resultArray = item.getReturnText().split(':');
@@ -109,8 +111,8 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
      * exist.
      *
      * @param {SrlCourseProblem} courseProblem - CourseProblem object to set
-     * @param {Function} localCallback - Function to be called after local courseProblem setting is done
-     * @param {Function} serverCallback - Function to be called after server courseProblem setting is done
+     * @param {Function} [localCallback] - Function to be called after local courseProblem setting is done
+     * @param {Function} [serverCallback] - Function to be called after server courseProblem setting is done
      */
     function updateCourseProblem(courseProblem, localCallback, serverCallback) {
         setCourseProblem(courseProblem, function() {
@@ -120,7 +122,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
             advanceDataListener.sendDataUpdate(CourseSketch.prutil.ItemQuery.COURSE_PROBLEM, courseProblem.toArrayBuffer(), function(evt, item) {
                 if (isException(item)) {
                     serverCallback(new DatabaseException('exception thrown while waiting for response from sever',
-                        'updating course problem ' + courseProblem,  item));
+                        'updating course problem ' + courseProblem, item));
                     return;
                 }
                 // We do not need to make server changes we just need to make sure it was successful.
@@ -130,60 +132,8 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
             });
         });
     }
+
     parent.updateCourseProblem = updateCourseProblem;
-
-    /**
-     * Updates a bankProblem in both local and server databases.
-     * Updates an existing bankProblem into the database. This bankProblem must already
-     * exist.
-     *
-     * @param {SrlBankProblem} bankProblem - BankProblem object to set
-     * @param {Function} localCallback - Function to be called after local bankProblem setting is done
-     * @param {Function} serverCallback - Function to be called after server bankProblem setting is done
-     */
-    function updateBankProblem(bankProblem, localCallback, serverCallback) {
-        if (!isUndefined(localCallback)) {
-            localCallback(bankProblem);
-        }
-        advanceDataListener.sendDataUpdate(CourseSketch.prutil.ItemQuery.BANK_PROBLEM, bankProblem.toArrayBuffer(), function(evt, item) {
-            if (isException(item)) {
-                serverCallback(new DatabaseException('exception thrown while waiting for response from sever',
-                    'updating bank problem ' + bankProblem,  item));
-                return;
-            }
-            // we do not need to make server changes we just need to make sure it was successful.
-            if (!isUndefined(serverCallback)) {
-                serverCallback(item);
-            }
-        });
-    }
-    parent.updateBankProblem = updateBankProblem;
-
-    /**
-     * Adds a new bankProblem to the server databases.
-     *
-     * @param {SrlBankProblem} bankProblem
-     *                bankProblem object to insert.
-     * @param {Function} serverCallback
-     *                function to be called after server insert is done.  Called with the new updateId of the bank problem.
-     */
-    function insertBankProblemServer(bankProblem, serverCallback) {
-        if (isUndefined(bankProblem.id) || bankProblem.id === null) {
-            bankProblem.id = generateUUID();
-        }
-        advanceDataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.BANK_PROBLEM, bankProblem.toArrayBuffer(), function(evt, item) {
-            if (isException(item)) {
-                serverCallback(new DatabaseException('exception thrown while waiting for response from sever',
-                    'inesrting bank problem ' + bankProblem,  item));
-                return;
-            }
-            var resultArray = item.getReturnText().split(':');
-            // We do not need the old id as it is never stored in a way that we need to delete.
-            var newId = resultArray[0].trim();
-            // we return the new id knowing it was inserted in the database correctly.
-            serverCallback(newId);
-        });
-    }
 
     /**
      * Adds a new courseProblem to both local and server databases. Also updates the
@@ -194,9 +144,9 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
      *
      * @param {SrlCourseProblem} courseProblem
      *                courseProblem object to insert
-     * @param {Function} localCallback
+     * @param {Function} [localCallback]
      *                function to be called after local insert is done
-     * @param {Function} serverCallback
+     * @param {Function} [serverCallback]
      *                function to be called after server insert is done
      */
     function insertCourseProblem(courseProblem, localCallback, serverCallback) {
@@ -235,20 +185,11 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
                 // Finished with setting courseProblem
             });
         } // insertingCourseProblem
-
-        // Inserts the bank problem first!
-        if ((isUndefined(courseProblem.problemBankId) || courseProblem.problemBankId === null) &&
-                (!isUndefined(courseProblem.problemInfo) && courseProblem.problemInfo !== null)) {
-            insertBankProblemServer(courseProblem.problemInfo, function(updateId) {
-                courseProblem.problemBankId = updateId;
-                insertingCourseProblem();
-            });
-        } else {
-            insertingCourseProblem();
-        }
+        insertingCourseProblem();
 
         // Finished with local courseProblem
     }
+
     parent.insertCourseProblem = insertCourseProblem;
 
     /**
@@ -301,6 +242,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
         // create local courseProblem list so everything appears really fast!
         for (var i = 0; i < courseProblemIdList.length; i++) {
             var courseProblemIdLoop = courseProblemIdList[i];
+
             /**
              * The purpose of this function is purely to scope the courseProblemId so that it changes.
              *
@@ -321,12 +263,12 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
                             advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
                                 if (isException(item)) {
                                     courseProblemCallbackComplete(new DatabaseException('exception thrown while waiting for response from sever',
-                                        'getting course problem ' + leftOverId,  item));
+                                        'getting course problem ' + leftOverId, item));
                                     return;
                                 }
                                 if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
                                     courseProblemCallbackComplete(new DatabaseException('The data sent back from the server does not exist: ' +
-                                            leftOverId));
+                                        leftOverId));
                                     return;
                                 }
 
@@ -337,6 +279,10 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
                                 }
                                 courseProblemCallbackComplete(courseProblemList);
                             });
+                        } else {
+                            courseProblemCallbackPartial(courseProblemList);
+                            courseProblemCallbackComplete(courseProblemList);
+                            return;
                         }
 
                         // this calls actually before the response from the server is received!
@@ -352,6 +298,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
             loopContainer(courseProblemIdLoop);
         } // end of loop
     }
+
     parent.getCourseProblems = getCourseProblems;
 
     /**
@@ -367,7 +314,8 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
      */
     function getCourseProblem(courseProblemId, courseProblemLocalCallback, courseProblemServerCallback) {
         getCourseProblems([ courseProblemId ], function(courseProblemList) {
-            if (!isUndefined(courseProblemLocalCallback) && courseProblemList instanceof CourseSketch.DatabaseException) {
+            if (!isUndefined(courseProblemLocalCallback) &&
+                (courseProblemList instanceof CourseSketch.DatabaseException || isUndefined(courseProblemList[0]))) {
                 courseProblemLocalCallback(new DatabaseException('Error with grabbing local course problem', courseProblemList));
                 return;
             }
@@ -375,7 +323,8 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
                 courseProblemLocalCallback(courseProblemList[0]);
             }
         }, function(courseProblemList) {
-            if (!isUndefined(courseProblemServerCallback) && courseProblemList instanceof CourseSketch.DatabaseException) {
+            if (!isUndefined(courseProblemServerCallback) &&
+                (courseProblemList instanceof CourseSketch.DatabaseException || isUndefined(courseProblemList[0]))) {
                 courseProblemServerCallback(new DatabaseException('Error with grabbing remote course problem', courseProblemList));
                 return;
             }
@@ -384,5 +333,6 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
             }
         });
     }
+
     parent.getCourseProblem = getCourseProblem;
 }

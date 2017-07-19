@@ -42,6 +42,7 @@ import static database.DatabaseStringConstants.PROBLEM_LIST;
 import static database.DatabaseStringConstants.REVIEW_OPEN_DATE;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
+import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 import static database.DbSchoolUtility.getCollectionFromType;
 import static database.utilities.MongoUtilities.convertStringToObjectId;
@@ -138,7 +139,8 @@ public final class AssignmentManager {
 
         final Document query = new Document(COURSE_ID, assignment.getCourseId())
                 .append(NAME, assignment.getName())
-                .append(DESCRIPTION, assignment.getDescription());
+                .append(DESCRIPTION, assignment.getDescription())
+                .append(STATE_PUBLISHED, false);
 
         setAssignmentTypeInformation(assignment, query, true);
 
@@ -503,6 +505,12 @@ public final class AssignmentManager {
                 update = true;
             }
 
+            if (assignment.hasState() && assignment.getState().hasPublished() && assignment.getState().getPublished() && isPublishable(assignment)) {
+                // Can not be set to false.
+                updateQuery.append(STATE_PUBLISHED, true);
+                update = true;
+            }
+
             update |= setAssignmentTypeInformation(assignment, updateQuery, false);
             update |= setDateInformation(assignment, updateQuery, false);
             update |= setGradeInformation(assignment, updateQuery, false);
@@ -511,6 +519,17 @@ public final class AssignmentManager {
             assignmentCollection.updateOne(cursor, new Document(SET_COMMAND, updateQuery));
             UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
         }
+        return true;
+    }
+
+    /**
+     * Checks for various values to see if the assignment is publishable.
+     *
+     * @param assignment The assignment we are checking to see if it is publishable.
+     * @return True if it is publishable.
+     */
+    private static boolean isPublishable(final SrlAssignment assignment) {
+        LOG.debug("{}", assignment);
         return true;
     }
 

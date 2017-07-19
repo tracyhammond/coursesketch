@@ -25,7 +25,7 @@ function ImageBox() {
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
      *
      * @param {Event} event - event that triggered this function
-     * @return {ImageProto} the created protobuf object
+     * @returns {ImageProto} the created protobuf object
      */
     this.saveData = function(event) {
         var imageProto = CourseSketch.prutil.Image();
@@ -60,7 +60,7 @@ function ImageBox() {
     };
 
     /**
-     * @return {Function} finishedCallback is the callback set at implementation.
+     * @returns {Function} finishedCallback is the callback set at implementation.
      * The callback can be called immediately using .getFinishedCallback()(argument) with argument being optional
      */
     this.getFinishedCallback = function() {

@@ -87,6 +87,7 @@ validateFirstRun(document.currentScript);
 
     for (var i = 0; i < CourseSketch.fakeSlides.length; i++) {
         CourseSketch.fakeSlides[i].elements = [];
-        CourseSketch.fakeSlides[i].elements.push(CourseSketch.fakeElements[i]);
+        var fakeElement  = CourseSketch.fakeElements[i];
+        CourseSketch.fakeSlides[i].elements.push(fakeElement);
     }
 })();

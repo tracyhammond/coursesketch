@@ -31,7 +31,7 @@
     background: #D4D4D4;
 }
 
-:host(.selectedBox) {
+:host(.card.selectedBox) {
     background: #C4C4C4;
 }
 

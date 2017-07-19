@@ -1,4 +1,4 @@
-// jscs:disable jsDoc
+/* eslint-disable require-jsdoc, valid-jsdoc */
 /**
  * A class that allows callbacks to be a barrier.
  */

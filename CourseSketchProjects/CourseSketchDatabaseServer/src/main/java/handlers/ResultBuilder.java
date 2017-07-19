@@ -1,6 +1,10 @@
 package handlers;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.protobuf.GeneratedMessage;
+import coursesketch.database.auth.AuthenticationException;
+import database.DatabaseAccessException;
 import protobuf.srl.query.Data;
 import protobuf.srl.request.Message;
 import utilities.ProtobufUtilities;
@@ -8,19 +12,20 @@ import utilities.ProtobufUtilities;
 import java.util.List;
 
 /**
- * Created by gigemjt on 1/2/15.
+ * A helper class that builds results.
  */
 public final class ResultBuilder {
 
     /**
      * The string used to separate ids when returning a result.
      */
-    public static final String ID_SEPARATOR = " : ";
+    static final String ID_SEPARATOR = " : ";
 
     /**
      * Utility class.
      */
-    private ResultBuilder() { }
+    private ResultBuilder() {
+    }
 
     /**
      * Builds a complete result from the query.
@@ -37,18 +42,8 @@ public final class ResultBuilder {
      *         The data from the result.
      * @return A fully built item result.
      */
-    public static Data.ItemResult buildResult(final String text, final Data.ItemQuery type, final GeneratedMessage... data) {
-        final Data.ItemResult.Builder result = Data.ItemResult.newBuilder();
-        if (data != null) {
-            for (GeneratedMessage message : data) {
-                result.addData(message.toByteString());
-            }
-        }
-        result.setQuery(type);
-        if (text != null) {
-            result.setReturnText(text);
-        }
-        return result.build();
+    static Data.ItemResult buildResult(final String text, final Data.ItemQuery type, final GeneratedMessage... data) {
+        return buildResult(text, type, Lists.newArrayList(data));
     }
 
     /**
@@ -66,7 +61,7 @@ public final class ResultBuilder {
      *         The data from the result.
      * @return A fully built item result.
      */
-    public static Data.ItemResult buildResult(final String text, final Data.ItemQuery type, final List<? extends GeneratedMessage> data) {
+    static Data.ItemResult buildResult(final String text, final Data.ItemQuery type, final List<? extends GeneratedMessage> data) {
         final Data.ItemResult.Builder result = Data.ItemResult.newBuilder();
         if (data != null) {
             for (GeneratedMessage message : data) {
@@ -89,7 +84,7 @@ public final class ResultBuilder {
      *         The data from the result.
      * @return A built item result with no binary data.
      */
-    public static Data.ItemResult buildResult(final Data.ItemQuery type, final String data) {
+    static Data.ItemResult buildResult(final Data.ItemQuery type, final String data) {
         final Data.ItemResult.Builder result = Data.ItemResult.newBuilder();
         result.setReturnText(data);
         result.setQuery(type);
@@ -107,7 +102,7 @@ public final class ResultBuilder {
      *         The original request that was received.
      * @return A {@link protobuf.srl.request.Message.Request}.
      */
-    public static Message.Request buildRequest(final List<Data.ItemResult> results, final String message, final Message.Request req) {
+    static Message.Request buildRequest(final List<Data.ItemResult> results, final String message, final Message.Request req) {
 
         Data.DataResult.Builder dataResult = null;
         if (results != null && !results.isEmpty()) {
@@ -135,7 +130,7 @@ public final class ResultBuilder {
      *         The data from the result.
      * @return A fully built item result.
      */
-    public static Data.ItemResult buildResult(final Data.ItemQuery type, final GeneratedMessage... data) {
+    static Data.ItemResult buildResult(final Data.ItemQuery type, final GeneratedMessage... data) {
         final Data.ItemResult.Builder result = Data.ItemResult.newBuilder();
         if (data != null) {
             for (GeneratedMessage message : data) {
@@ -167,5 +162,22 @@ public final class ResultBuilder {
         }
         result.setQuery(type);
         return result.build();
+    }
+
+    /**
+     * Validates that the strings are valid.
+     *
+     * @param userId An id that uniquely identifies the user.
+     * @param authId An id used for authentication.
+     * @throws AuthenticationException Thrown if the authId is invalid.
+     * @throws DatabaseAccessException Thrown if the userId is invalid.
+     */
+    static void validateIds(final String userId, final String authId) throws AuthenticationException, DatabaseAccessException {
+        if (Strings.isNullOrEmpty(authId)) {
+            throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
+        }
+        if (Strings.isNullOrEmpty(userId)) {
+            throw new DatabaseAccessException("Invalid User Identification");
+        }
     }
 }

@@ -5,6 +5,8 @@ import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 
 /**
+ * An interface for checking if a user is authenticated.
+ *
  * Created by gigemjt on 9/3/15.
  */
 public interface AuthenticationChecker {

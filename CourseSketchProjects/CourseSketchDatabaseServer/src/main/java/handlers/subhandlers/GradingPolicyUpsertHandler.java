@@ -24,14 +24,14 @@ public final class GradingPolicyUpsertHandler {
      *
      * @param institution The database interface.
      * @param itemSet The upsert object being sent.
-     * @param userId The id of the user upserting the policy.
+     * @param authId The id of the user upserting the policy.
      * @throws AuthenticationException Thrown if user does not have correct permission to upsert policy.
      * @throws DatabaseAccessException Thrown if there is something not found in the database.
      * @throws InvalidProtocolBufferException Thrown if a protobuf object is not correctly formatted.
      */
-    public static void gradingPolicyUpsertHandler(final Institution institution, final Data.ItemSend itemSet, final String userId)
+    public static void gradingPolicyUpsertHandler(final Institution institution, final Data.ItemSend itemSet, final String authId)
             throws AuthenticationException, DatabaseAccessException, InvalidProtocolBufferException {
         final Grading.ProtoGradingPolicy policy = Grading.ProtoGradingPolicy.parseFrom(itemSet.getData());
-        institution.upsertGradingPolicy(userId, policy);
+        institution.upsertGradingPolicy(authId, policy);
     }
 }

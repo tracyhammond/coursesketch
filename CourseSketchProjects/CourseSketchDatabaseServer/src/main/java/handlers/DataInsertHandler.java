@@ -1,6 +1,5 @@
 package handlers;
 
-import com.google.common.base.Strings;
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.server.interfaces.SocketSession;
@@ -11,7 +10,7 @@ import handlers.subhandlers.GradingPolicyUpsertHandler;
 import handlers.subhandlers.GradingUpsertHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
+import protobuf.srl.school.Problem.LectureSlide;
 import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemResult;
@@ -29,6 +28,7 @@ import utilities.LoggingConstants;
 import java.util.ArrayList;
 
 import static handlers.ResultBuilder.ID_SEPARATOR;
+import static handlers.ResultBuilder.validateIds;
 
 /**
  * Handles data being added or edited.
@@ -79,16 +79,11 @@ public final class DataInsertHandler {
             final String authId = req.getServersideId();
             final String userId = req.getServerUserId();
             final DataSend request = DataSend.parseFrom(req.getOtherData());
-            if (Strings.isNullOrEmpty(authId)) {
-                throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
-            }
-            if (Strings.isNullOrEmpty(userId)) {
-                throw new DatabaseAccessException("Invalid User Identification");
-            }
-            final ArrayList<ItemResult> results = new ArrayList<ItemResult>();
+            validateIds(authId, userId);
+            final ArrayList<ItemResult> results = new ArrayList<>();
 
-            for (int p = 0; p < request.getItemsList().size(); p++) {
-                final ItemSend itemSet = request.getItemsList().get(p);
+            for (int itemInsertIndex = 0; itemInsertIndex < request.getItemsList().size(); itemInsertIndex++) {
+                final ItemSend itemSet = request.getItemsList().get(itemInsertIndex);
                 try {
                     switch (itemSet.getQuery()) {
                         case COURSE: {
@@ -132,7 +127,7 @@ public final class DataInsertHandler {
                         break;
                         case LECTURE: {
                             final SrlAssignment lecture = SrlAssignment.parseFrom(itemSet.getData());
-                            final String resultId = instance.insertLecture(null, authId, lecture);
+                            final String resultId = instance.insertLecture(userId, authId, lecture);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + lecture.getId()));
                         }
                         break;
@@ -143,11 +138,11 @@ public final class DataInsertHandler {
                         }
                         break;
                         case GRADE: {
-                            GradingUpsertHandler.gradingUpsertHandler(instance, itemSet, userId, req.getMessageTime());
+                            GradingUpsertHandler.gradingUpsertHandler(instance, itemSet, authId, req.getMessageTime());
                         }
                         break;
                         case GRADING_POLICY: {
-                            GradingPolicyUpsertHandler.gradingPolicyUpsertHandler(instance, itemSet, userId);
+                            GradingPolicyUpsertHandler.gradingPolicyUpsertHandler(instance, itemSet, authId);
                         }
                         break;
                         default:

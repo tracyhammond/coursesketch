@@ -7,7 +7,6 @@ import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
 import database.DbSchoolUtility;
 import org.bson.Document;
-import protobuf.srl.school.School;
 import protobuf.srl.utils.Util;
 
 import static database.utilities.MongoUtilities.convertStringToObjectId;
@@ -71,8 +70,8 @@ public final class MongoOptionChecker implements AuthenticationOptionChecker {
         if (access == null) {
             throw new DatabaseAccessException(MISSING_OBJECT_MESSAGE + DatabaseStringConstants.COURSE_ACCESS);
         }
-        final School.SrlCourse.Accessibility accessValue = School.SrlCourse.Accessibility.valueOf((int) access);
-        return !(accessValue == School.SrlCourse.Accessibility.PUBLIC || accessValue == School.SrlCourse.Accessibility.SUPER_PUBLIC);
+        final Util.Accessibility accessValue = Util.Accessibility.valueOf((int) access);
+        return !(accessValue == Util.Accessibility.PUBLIC || accessValue == Util.Accessibility.SUPER_PUBLIC);
     }
 
     @Override public boolean isItemPublished(final AuthenticationDataCreator dataCreator) throws DatabaseAccessException {

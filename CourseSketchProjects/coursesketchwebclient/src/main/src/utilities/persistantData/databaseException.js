@@ -1,11 +1,11 @@
 /**
  * An exception that is used to represent problems with the database.
  *
- * @class DatabaseException
+ * @constructor DatabaseException
  * @extends BaseException
  * @param {String} message - The message to show for the exception.
- * @param {Request} request - The request associated with the exception.
- * @param {BaseException} cause - The cause of the exception.
+ * @param {Request | BaseException | String} request - The request associated with the exception.
+ * @param {BaseException} [cause] - The cause of the exception.
  */
 function DatabaseException(message, request, cause) {
 

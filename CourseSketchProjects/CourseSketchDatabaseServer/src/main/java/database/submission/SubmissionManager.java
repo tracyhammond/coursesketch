@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.mongodb.client.model.Projections.fields;
+import static com.mongodb.client.model.Projections.include;
 import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SOLUTION_COLLECTION;
@@ -41,6 +43,11 @@ import static database.utilities.MongoUtilities.convertStringToObjectId;
  * @author gigemjt
  */
 public final class SubmissionManager {
+
+    /**
+     * An id when a partId is not created or asked for.
+     */
+    private static final String DEFAULT_ID = "NO_ID";
 
     /**
      * Declaration and Definition.
@@ -59,38 +66,50 @@ public final class SubmissionManager {
      * if {@code experiment} is true then {@code userId} is a userId otherwise
      * it is the bankProblem if {@code experiment} is true then {@code problem}
      * is a courseProblem otherwise it is the bankProblem.
-     *
      * @param dbs The database that contains the information about the submission.
      * @param userId Generally the userId.  But it is used to uniquely identify each submission.
-     * @param problemId The problem id.
+     * @param identifierList The list of ids that identify a set of submissions.
      * @param submissionId The id associated with the submission on the submission server.
      * @param experiment True if the object being submitted is an experiment
      */
     @SuppressWarnings({ "PMD.NPathComplexity" })
-    public static void mongoInsertSubmission(final MongoDatabase dbs, final String userId, final String problemId,
-            final String submissionId,
-            final boolean experiment) {
+    public static void mongoInsertSubmission(final MongoDatabase dbs, final String userId,
+            final List<String> identifierList, final String submissionId, final boolean experiment) {
         LOG.info("Inserting an experiment {}", experiment);
-        LOG.info("Database is {}", dbs);
+
+        final String key = identifierList.size() < 2 ? DEFAULT_ID : identifierList.get(1);
+        final String problemId = identifierList.get(0);
+
+        LOG.debug("Database is {}", dbs);
         LOG.info("Problem id: {}", problemId);
+        LOG.info("Part id: {}", key);
         final Document myDbRef = new Document(SELF_ID, new ObjectId(problemId));
         final MongoCollection<Document> collection = dbs.getCollection(experiment ? EXPERIMENT_COLLECTION : SOLUTION_COLLECTION);
-        final Document cursor = collection.find(myDbRef).first();
+        final Document cursor = collection.find(myDbRef).projection(fields(include(key))).first();
 
-        LOG.info("cursor: {}", cursor);
-        LOG.info("uniuq id: {}", userId);
+        LOG.debug("cursor: {}", cursor);
+        LOG.info("unique id: {}", userId);
 
-        final Document queryObj = new Document(experiment ? userId : SOLUTION_ID, submissionId);
-        if (cursor == null) {
-            LOG.info("Creating a new instance to this old itemid");
-            queryObj.append(SELF_ID, new ObjectId(problemId));
-            collection.insertOne(queryObj);
-            // we need to create a new cursor
-        } else {
-            LOG.info("adding a new submission to this old itemid");
-            // insert the submissionId, if it is an experiment then we need to
-            // use the userId to make it work.
+        final String userKey = (experiment ? userId : SOLUTION_ID);
+
+        if (cursor != null) {
+            final String updateKey = key + "." + userKey;
+            Document queryObj;
+            if (cursor.get(key) == null) {
+                LOG.info("adding a new submission to this new partId of existing object");
+                queryObj = new Document(key, new Document(userKey, submissionId));
+            } else {
+                LOG.info("adding a new submission to this old itemid");
+                queryObj = new Document(updateKey, submissionId);
+            }
+            // This part type does not exist yet.
             collection.updateOne(cursor, new Document("$set", queryObj));
+        } else {
+            LOG.info("Creating a new instance to this old itemid");
+            final Document insertObj = new Document(key, new Document(userKey, submissionId));
+            insertObj.append(SELF_ID, new ObjectId(problemId));
+            collection.insertOne(insertObj);
+            // we need to create a new cursor
         }
     }
 
@@ -102,16 +121,18 @@ public final class SubmissionManager {
      * @param userId The user who has access to the experiment.
      * @param authId The id used to authenticate the users permissions to the submission.
      * @param courseId The id of the course the problem belongs to.
-     * @param problemId The id of the problem associated with the sketch.
+     * @param identifierList The list of ids that identify a set of submissions.
      * @param submissionManager The connections of the submission server
      * @return {@link protobuf.srl.submission.Submission.SrlExperiment} that had the specific submission id.
      * @throws DatabaseAccessException Thrown is there is data missing in the database.
      * @throws AuthenticationException Thrown if the user does not have the authentication
      */
     public static Submission.SrlExperiment mongoGetExperiment(final Authenticator authenticator, final MongoDatabase dbs, final String userId,
-            final String authId, final String courseId, final String problemId,
+            final String authId, final String courseId, final List<String> identifierList,
             final SubmissionManagerInterface submissionManager) throws DatabaseAccessException, AuthenticationException {
 
+        final String key = identifierList.size() < 2 ? DEFAULT_ID : identifierList.get(1);
+        final String problemId = identifierList.get(0);
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
                 .build();
@@ -125,20 +146,26 @@ public final class SubmissionManager {
         final Data.ItemResult.Builder send = Data.ItemResult.newBuilder();
         send.setQuery(ItemQuery.EXPERIMENT);
         final MongoCollection<Document> collection = dbs.getCollection(DatabaseStringConstants.EXPERIMENT_COLLECTION);
-        final Document cursor = collection.find(convertStringToObjectId(problemId)).first();
+        LOG.info("Part id: {}", key);
+        final Document cursor = collection.find(convertStringToObjectId(problemId)).projection(fields(include(key))).first();
 
+        if (cursor == null) {
+            throw new DatabaseAccessException("The student has not submitted anything for this problem").setSendResponse(true);
+        }
+
+        final Document subDocument = (Document) cursor.get(key);
         final String hashedUserId = MongoInstitution.hashUserId(userId, courseId);
         LOG.debug("Grabbing user with userId: {}", hashedUserId);
-        if (cursor == null || !cursor.containsKey(hashedUserId)
-                || Strings.isNullOrEmpty((String) cursor.get(hashedUserId))) {
-            throw new DatabaseAccessException("The student has not submitted anything for this problem");
+        if (subDocument == null || !subDocument.containsKey(hashedUserId)
+                || Strings.isNullOrEmpty((String) subDocument.get(hashedUserId))) {
+            throw new DatabaseAccessException("The student has not submitted anything for this problem").setSendResponse(true);
         }
-        final String sketchId = cursor.get(hashedUserId).toString();
+        final String sketchId = subDocument.get(hashedUserId).toString();
         LOG.info("SubmissionId: ", sketchId);
 
         final List<Submission.SrlExperiment> experimentList = submissionManager.getSubmission(authId, null, problemId, sketchId);
         if (experimentList.isEmpty()) {
-            throw new DatabaseAccessException("No experiments were found");
+            throw new DatabaseAccessException("No experiments were found").setSendResponse(true);
         }
         return experimentList.get(0);
     }
@@ -149,7 +176,7 @@ public final class SubmissionManager {
      * @param authenticator The object being used to authenticate the user.
      * @param dbs The database where the data is stored.
      * @param authId The user that was requesting this information.
-     * @param problemId The problem for which the sketch data is being requested.
+     * @param identifierList The list of ids that identify a set of submissions.
      * @param submissionManager The connections of the submission server
      * @param identityManager The connection to the identity server.
      * @return {@link protobuf.srl.submission.Submission.SrlExperiment} that were found with the specific submission ids.
@@ -157,15 +184,23 @@ public final class SubmissionManager {
      * @throws AuthenticationException Thrown if the user does not have the authentication.
      */
     public static List<Submission.SrlExperiment> mongoGetAllExperimentsAsInstructor(final Authenticator authenticator, final MongoDatabase dbs,
-            final String authId, final String problemId,
-            final SubmissionManagerInterface submissionManager,
-            final IdentityManagerInterface identityManager)
-            throws DatabaseAccessException, AuthenticationException {
+            final String authId, final List<String> identifierList, final SubmissionManagerInterface submissionManager,
+            final IdentityManagerInterface identityManager) throws DatabaseAccessException, AuthenticationException {
 
-        final Document problemExperimentMap = dbs.getCollection(DatabaseStringConstants.EXPERIMENT_COLLECTION)
-                .find(convertStringToObjectId(problemId)).first();
+
+        final String key = identifierList.size() < 2 ? DEFAULT_ID : identifierList.get(1);
+        final String problemId = identifierList.get(0);
+        Document problemExperimentMap = dbs.getCollection(DatabaseStringConstants.EXPERIMENT_COLLECTION)
+                .find(convertStringToObjectId(problemId)).projection(fields(include(key))).first();
         if (problemExperimentMap == null) {
-            throw new DatabaseAccessException("Students have not submitted any data for this problem: " + problemId);
+            throw new DatabaseAccessException("Students have not submitted any data for this problem: " + problemId).setSendResponse(true);
+        }
+
+        problemExperimentMap = (Document) problemExperimentMap.get(key);
+
+        if (problemExperimentMap == null) {
+            throw new DatabaseAccessException("Students have not submitted any data for this problem part: " + problemId + " part: " + key)
+                    .setSendResponse(true);
         }
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
@@ -187,7 +222,7 @@ public final class SubmissionManager {
                 .getSubmission(authId, authenticator, problemId, submissionIds);
 
         if (experimentList.isEmpty()) {
-            throw new DatabaseAccessException("No experiments were found");
+            throw new DatabaseAccessException("No experiments were found").setSendResponse(true);
         }
 
         final Map<String, String> userIdToSubmissionId = createSubmissionIdToUserIdMap(problemExperimentMap);
@@ -209,7 +244,7 @@ public final class SubmissionManager {
 
         for (Submission.SrlExperiment experiment : experiments) {
             final String userId = experiment.getUserId();
-            String userName = null;
+            String userName;
 
             final String hashedUserId = submissionIdToUserId.get(experiment.getSubmission().getId());
             LOG.debug("unhahsed userId: {} Hashed userid: {} for experiment: {}", userId, hashedUserId, experiment.getSubmission().getId());

@@ -1,94 +1,95 @@
 <html>
 <head>
-<meta charset="utf-8">
-<title>Sketch Surface test</title>
-<!-- test Library -->
-<link rel="import" href="/test/testUtilities/testUtilities.html">
+    <meta charset="utf-8">
+    <title>Sketch Surface test</title>
+    <!-- test Library -->
+    <link rel="import" href="/test/testUtilities/testUtilities.html">
 
-<!-- files needed for testing -->
-<link id="sketchSurfaceTemplateImport" rel="import"
-      href="/src/sketching/sketchInclude.html">
+    <!-- files needed for testing -->
+    <link id="sketchSurfaceTemplateImport" rel="import"
+          href="/src/sketching/sketchInclude.html">
 
-<!-- file being tested. -->
-<script src="/src/sketching/sketchSurface.js" data-cover></script>
+    <!-- file being tested. -->
+    <script src="/src/sketching/sketchSurface.js" data-cover></script>
 
 </head>
 <body>
-	<div id="qunit"></div>
-	<div id="qunit-fixture"></div>
-	<div id="sketchLocationCreator"></div>
+<div id="sketchLocationCreator"></div>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
 
-	<script>
-        var template = (function() {
-            var link1 = document.querySelector('#sketchSurfaceTemplateImport');
-            var clone = safeImport(link1.import, document,'sketchSurfaceTemplateImport','template');
-            return clone;
-        })();
-
+<script>
+    var template = (function () {
+        var link1 = document.querySelector('#sketchSurfaceTemplateImport');
+        var clone = safeImport(link1.import, document, 'sketchSurfaceImport', 'sketch-surface-template');
+        return clone;
+    })();
+    $(document).ready(function () {
         QUnit.module("creation", {
-            setupOnce : function() {
+            setupOnce: function () {
                 try {
                     var newElement = new SketchSurface();
                     // test is not a typo
-                    SketchSurface.prototype.createdCallback = function() {
+                    SketchSurface.prototype.createdCallback = function () {
                         this.initializeElement(template.cloneNode(true));
                     };
 
-                    SketchSurface.prototype.attachedCallback = function() {
+                    SketchSurface.prototype.attachedCallback = function () {
                         this.initializeSurface(InputListener, UpdateManager);
                     };
 
                     document.registerElement('sketch-surface-test', {
-                        prototype : newElement
+                        prototype: newElement
                     });
                 } catch (exception) {
                 }
             }
         });
 
-        QUnit.test("test creation", function(assert) {
+        QUnit.test("test creation", function (assert) {
             expect(0);
             var sketch = new SketchSurface();
         });
 
-        QUnit.test("test getting an SrlSketch", function(assert) {
+        QUnit.test("test getting an SrlSketch", function (assert) {
             var sketch = document.createElement('sketch-surface-test');
 
             sketch.initializeSketch();
 
-            var srlSketch = sketch.getSrlSketch();
+            var srlSketch = sketch.getCurrentSketch();
             assert.ok(srlSketch instanceof SRL_Sketch);
         });
+        QUnit.test("binding update manager can be done with an object instead of a class", function (assert) {
+            var sketch = document.createElement('sketch-surface-test');
+            sketch.initializeSketch();
 
-        QUnit.test("binding update list throws exception if it already exist", function(assert) {
-            var sketch = new SketchSurface();
-            sketch.bindToUpdateList(UpdateManager);
-            assert.throws(function() {
-                sketch.bindToUpdateList(UpdateManager);
-            });
-        });
-
-        QUnit.test("binding update list can be done with an object instead of a class", function(assert) {
-            expect(0);
-            var sketch = new SketchSurface();
             var obj = new UpdateManager();
-            sketch.bindToUpdateList(obj);
+            sketch.bindToUpdateManager(obj);
+            assert.equal(sketch.getUpdateManager(), obj);
         });
 
-        QUnit.test("#createSketch will create an event in updateList", function(assert) {
-            var sketch = new SketchSurface();
+        QUnit.test("#createSketch will create an event in updateList", function (assert) {
+            var sketch = document.createElement('sketch-surface-test');
+            sketch.initializeSketch();
+
             var obj = new UpdateManager();
             var spy = this.spy(obj, "addUpdate");
-            sketch.bindToUpdateList(obj);
+            sketch.bindToUpdateManager(obj);
 
-            sketch.createSketchUpdate();
+            try {
+                sketch.createSketchUpdate().bind(sketch);
+            } catch (exception) {
+
+            }
             assert.ok(spy.calledOnce);
         });
 
-        QUnit.test("#createSketch will create an event in updateList but only if it is empty", function(assert) {
-            var sketch = new SketchSurface();
+        QUnit.test("#createSketch will create an event in updateList but only if it is empty", function (assert) {
+            var sketch = document.createElement('sketch-surface-test');
+            sketch.initializeSketch();
+
             var obj = new UpdateManager();
-            sketch.bindToUpdateList(obj);
+            sketch.bindToUpdateManager(obj);
 
             assert.equal(obj.getListLength(), 0);
             sketch.createSketchUpdate();
@@ -99,69 +100,70 @@
         });
 
         QUnit.module("tagCreation", {
-            teardown : function() {
+            teardown: function () {
                 document.getElementById("sketchLocationCreator").innerHTML = "";
             }
         });
 
-        QUnit.test("tag creation", function(assert) {
+        QUnit.test("tag creation", function (assert) {
             expect(0);
             var container = document.getElementById("sketchLocationCreator");
             var oddity = document.createElement("sketch-surface");
             container.appendChild(oddity);
         });
-    </script>
-	<script>
         QUnit.module("events", {
-            setup : function() {
-                try {
-                    this.elementSpy = sinon.spy(CourseSketch.SKETCHING_SURFACE_HANDLER, "addElement");
-                } catch(exception) {
-                }
+            beforeEach: function () {
+                this.clock = sinon.useFakeTimers();
             },
-            teardown : function() {
+            afterEach: function () {
                 document.getElementById("sketchLocationCreator").innerHTML = "";
-                if (!isUndefined(this.elementSpy)) {
-                    this.elementSpy.restore();
+                try {
+                    this.clock.restore();
+                } catch (exception) {
+
                 }
             },
-            setupOnce : function() {
+            setupOnce: function () {
                 try {
                     var newElement = new SketchSurface();
                     // test is not a typo
-                    SketchSurface.prototype.createdCallback = function() {
+                    SketchSurface.prototype.createdCallback = function () {
                         this.initializeElement(template.cloneNode(true));
                     };
 
-                    SketchSurface.prototype.attachedCallback = function() {
+                    SketchSurface.prototype.attachedCallback = function () {
                         this.initializeSurface(InputListener, UpdateManager);
                     };
 
                     document.registerElement('sketch-surface-test', {
-                        prototype : newElement
+                        prototype: newElement
                     });
                 } catch (exception) {
                 }
             }
         });
 
-        QUnit.test("a stroke will be added to the sketch when drawing", function(assert) {
+        test("a stroke will be added to the sketch when drawing", function (assert) {
+            var done = assert.async();
             var sketchSurface = document.createElement("sketch-surface-test");
             sketchSurface.dataset.existinglist = "";
             var container = document.getElementById("sketchLocationCreator");
 
             container.appendChild(sketchSurface);
-            CourseSketch.SKETCHING_SURFACE_HANDLER.addElementForced(sketchSurface);
-            var updateList = new UpdateManager(sketchSurface.getSrlSketch(), function(error) {
+            var updateManager = new UpdateManager(sketchSurface.getCurrentSketch(), function (error) {
                 assert.ok(false, error);
-            }, CourseSketch.SKETCHING_SURFACE_HANDLER);
+            });
 
-            sketchSurface.bindToUpdateList(updateList);
+            try {
+                sketchSurface.bindToUpdateManager(updateManager);
+            } catch (exception) {
+                updateManager = sketchSurface.getUpdateManager();
+            }
 
             sketchSurface.createSketchUpdate();
 
-            assert.equal(updateList.getListLength(), 1, "after creating the sketch the update list has a length of two");
-            var sketchStorage = sketchSurface.getSrlSketch();
+            assert.equal(updateManager.getListLength(), 1, "after creating the sketch the update list has a length of two");
+            var sketchStorage = sketchSurface.getCurrentSketch();
             assert.equal(sketchStorage.getList().length, 0, "the sketch should start out empty");
 
             /** SKETCH SURFACE HAS BEEN SET UP SIMULATING EVENTS***/
@@ -170,30 +172,45 @@
 
             var eventSurfaceSize = sketchSurface.getBoundingClientRect();
 
-            simulate(eventSurface, "mousedown", {
-                pointerX : 15 + eventSurfaceSize.left,
-                pointerY : 15 + eventSurfaceSize.top
-            });
-            var totalMovement = 50;
-            for (var i = 0; i < totalMovement; i++) {
-                simulate(eventSurface, "mousemove", {
-                    pointerX : 15 + eventSurfaceSize.left,
-                    pointerY : 15 + i + eventSurfaceSize.top
-                });
-            }
-            simulate(eventSurface, "mouseup", {
-                pointerX : 15 + eventSurfaceSize.left,
-                pointerY : 15 + totalMovement + eventSurfaceSize.top
-            });
+            var clock = this.clock;
 
-            assert.equal(updateList.getListLength(), 2, "the update list now has updates in it");
-            assert.equal(sketchStorage.getList().length, 1, "the sketch now has a single item in it");
-            var stroke = sketchStorage.getList()[0];
-            assert.ok(stroke instanceof SRL_Stroke, "the sketch contains a single stroke");
-            console.log(stroke);
+            setRealTimeout(function () {
+                var startingX = 100;
+                var startingY = 40;
+                simulate(eventSurface, "mousedown", {
+                    pointerX: startingX + eventSurfaceSize.left,
+                    pointerY: startingY + eventSurfaceSize.top,
+                    buttons: 1
+                });
+                clock.tick(10000);
+                var totalMovement = 10;
+                for (var i = 0; i < totalMovement; i++) {
+                    simulate(document, "mousemove", {
+                        pointerX: startingX + eventSurfaceSize.left,
+                        pointerY: startingY + (i * 5) + eventSurfaceSize.top,
+                        buttons: 1
+                    });
+                    clock.tick(10000);
+                }
+                simulate(document, "mouseup", {
+                    pointerX: startingX + eventSurfaceSize.left,
+                    pointerY: startingY + ((totalMovement + 1) * 5) + eventSurfaceSize.top,
+                    buttons: 0
+                });
+                clock.tick(10000);
+
+                setRealTimeout(function () {
+                    assert.equal(updateManager.getListLength(), 2, "the update list now has updates in it");
+                    assert.equal(sketchStorage.getList().length, 1, "the sketch now has a single item in it");
+                    var stroke = sketchStorage.getList()[0];
+                    assert.ok(stroke instanceof SRL_Stroke, "the sketch contains a single stroke");
+                    console.log(stroke);
+                    done();
+                }, 200);
+            }, 500);
         });
 
-        QUnit.test("canvas resizes correctly TODO: make better", function(assert) {
+        QUnit.test("canvas resizes correctly TODO: make better", function (assert) {
             expect(0);
 
             var sketchSurface = document.createElement("sketch-surface-test");
@@ -214,5 +231,6 @@
 
             var size2 = canvas.height;
         });
-    </script>
+    });
+</script>
 </body>

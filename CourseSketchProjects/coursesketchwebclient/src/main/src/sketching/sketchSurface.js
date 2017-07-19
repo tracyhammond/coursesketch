@@ -16,7 +16,7 @@
  * should resize itself every time the window changes size.</li>
  * </ul>
  *
- * @class
+ * @constructor
  */
 function SketchSurface() {
     this.bindUpdateListCalled = false;
@@ -30,6 +30,7 @@ function SketchSurface() {
         this.localInputListener = undefined;
         this.sketchEventConverter = undefined;
         this.sketch = undefined;
+        this.sketchManager.clearAllSketches();
         this.sketchManager = undefined;
         this.graphics.finalize();
     };
@@ -56,6 +57,10 @@ function SketchSurface() {
      */
     this.setErrorListener = function(error) {
         this.errorListener = error;
+    };
+
+    this.isInitialized = function() {
+        return this.initialized === true;
     };
 
     /**
@@ -142,9 +147,11 @@ function SketchSurface() {
      * Initializes the sketch and resets all values.
      */
     this.initializeSketch = function() {
-        this.sketchManager = new SketchSurfaceManager(this);
+        if (isUndefined(this.sketchManager)) {
+            this.sketchManager = new SketchSurfaceManager(this);
+        }
         this.updateManager = undefined;
-        bindUpdateListCalled = false;
+        this.bindUpdateListCalled = false;
         this.sketchManager.setParentSketch(new SRL_Sketch());
         this.eventListenerElement = undefined;
     };
@@ -157,7 +164,7 @@ function SketchSurface() {
     };
 
     /**
-     * Returns the element that listens to the input events.
+     * @returns {Element} the element that listens to the input events.
      */
     this.getElementForEvents = function() {
         return this.eventListenerElement;
@@ -187,7 +194,7 @@ function SketchSurface() {
     /**
      * This is a cleaned version of the list and modifying this list will not affect the update manager list.
      *
-     * @return {SrlUpdateList} proto object.
+     * @returns {SrlUpdateList} proto object.
      */
     this.getSrlUpdateListProto = function() {
         var updateProto = CourseSketch.prutil.SrlUpdateList();
@@ -299,5 +306,5 @@ SketchSurface.prototype.initializeSurface = function(InputListenerClass, UpdateM
         this.resizeSurface();
     }.bind(this));
 
-
+    this.initialized = true;
 };

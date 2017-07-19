@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Command Methods test</title>
+<title>Update manager test</title>
 <!-- test Library -->
 <link rel="import" href="/test/testUtilities/testUtilities.html">
 
@@ -12,7 +12,7 @@
 <script src="/src/sketching/storage/commandMethods.js"></script>
 
 <!-- file being tested. -->
-<script src="/src/sketching/storage/updatemanager.js" data-cover></script>
+<script src="/src/sketching/storage/updateManager.js" data-cover></script>
 </head>
 <body>
 	<div id="qunit"></div>
@@ -57,6 +57,12 @@
         });
     </script>
 	<script>
+        function mockTime() {
+            this.clock = sinon.useFakeTimers();
+        }
+        function restoreTime() {
+            this.clock.restore();
+        }
         var MinListNumber = 10;
         QUnit.config.testTimeout = 5000;
         QUnit.module("creation");
@@ -70,7 +76,9 @@
             sketch : {
                 resetSketch : function() {
                 }
-            }
+            },
+            beforeEach: mockTime.bind(this),
+            afterEach: restoreTime.bind(this)
         });
         QUnit.test("createMarker returns correct value", function(assert) {
             var update = new UpdateManager(undefined, undefined);
@@ -86,10 +94,11 @@
             assert.equal(markerData.otherData, otherData);
         });
 
-        QUnit.asyncTest("get Clean list returns the same list but different objects", function(assert) {
+        QUnit.test("get Clean list returns the same list but different objects", function(assert) {
+            var done = assert.async();
             var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
-                QUnit.start();
+                done();
             });
             CourseSketch.prutil.getSrlCommandClass().addRedoMethod(CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE, function() {
                 return false;
@@ -116,8 +125,10 @@
                 listCallback = listThree;
                 // do nothing it is fine;
             });
+            this.clock.tick(1000);
             assert.updateListEqual(listCallback, listOne);
-            restoreRealTime();
+
+           // restoreRealTime();
 
             updateList.getCleanUpdateList(function(list) {
                 assert.equal(listOne.length, list.length, "list size should be the same");
@@ -125,8 +136,9 @@
                     assert.notEqual(listOne[i], list[i]);
                     assert.updateEqual(listOne[i], list[i]);
                 }
-                QUnit.start();
+                done();
             });
+            this.clock.tick(1000);
             CourseSketch.prutil.getSrlCommandClass().removeRedoMethod(CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE);
             CourseSketch.prutil.getSrlCommandClass().removeUndoMethod(CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE);
         });
@@ -172,7 +184,7 @@
             var listCallback = undefined;
             var listOne = updateList.getUpdateList();
             assert.updateListEqual(listOne, localUpdateList);
-            restoreRealTime();
+           // restoreRealTime();
         });
 
         QUnit.test("setUpdateList calls with the correct values", function(assert) {
@@ -234,11 +246,14 @@
                 resetSketch : function() {
                 }
             },
+            beforeEach: mockTime.bind(this),
+            afterEach: restoreTime.bind(this)
         });
-        QUnit.asyncTest("testing adding an update Marker.SUBMISSION And test the last update is submission", function(assert) {
+        QUnit.test("testing adding an update Marker.SUBMISSION And test the last update is submission", function(assert) {
+            var done = assert.async();
             var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
-                QUnit.start();
+                done();
             });
 
             assert.equal(updateList.isLastUpdateSubmission(), false, "there are no submissions before the marker submission is added");
@@ -248,22 +263,21 @@
             updateList.addUpdate(update);
 
             assert.equal(updateList.isLastUpdateSubmission(), true, "afer marker is added the submission is the last update");
-            QUnit.start();
+            done();
         });
 
         QUnit.test("testing isValidForSubmission with empty list", function(assert) {
             var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
-                QUnit.start();
             });
             assert.equal(updateList.isValidForSubmission(), false, "empty list are not valid for submissions");
         });
 
-        QUnit.asyncTest("testing isValidForSubmission with last item being a submission marker", function(assert) {
-
+        QUnit.test("testing isValidForSubmission with last item being a submission marker", function(assert) {
+            var done = assert.async();
             var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
-                QUnit.start();
+                done();
             });
 
             var markerObject = updateList.createMarker(true, CourseSketch.prutil.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
@@ -271,14 +285,14 @@
             updateList.addUpdate(update);
 
             assert.equal(updateList.isValidForSubmission(), false, "afer marker is added the submission is the last update");
-            QUnit.start();
+            done();
         });
 
-        QUnit.asyncTest("testing isValidForSubmission with last item being a submission marker", function(assert) {
-
+        QUnit.test("testing isValidForSubmission with last item being a submission marker", function(assert) {
+            var done = assert.async();
             var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
-                QUnit.start();
+                done();
             });
 
             var markerObject = updateList.createMarker(true, CourseSketch.prutil.getMarkerClass().MarkerType.SAVE, "pounded you to saving");
@@ -286,7 +300,7 @@
             updateList.addUpdate(update);
 
             assert.equal(updateList.isValidForSubmission(), true, "afer marker is added the save is the last update");
-            QUnit.start();
+            done();
         });
     </script>
 	<script>
@@ -305,6 +319,8 @@
                 createSketch : function() {
                 }
             },
+            beforeEach: mockTime.bind(this),
+            afterEach: restoreTime.bind(this)
         });
 
         QUnit.test("testing adding an empty update should throw an exception", function(assert) {
@@ -443,13 +459,15 @@
                 resetSketch : function() {
                 }
             },
-            sketchManager : new SketchSurfaceManager()
+            sketchManager : new SketchSurfaceManager(),
+            beforeEach: mockTime.bind(this),
+            afterEach: restoreTime.bind(this)
         }); // basically a bunch of test about wether or not it is resetable.
-        QUnit.asyncTest("tests that the list is empty, and the submission pointer and current pointer is changed.", function(assert) {
-
+        QUnit.test("tests that the list is empty, and the submission pointer and current pointer is changed.", function(assert) {
+            var done = assert.async();
             var updateList = new UpdateManager(this.sketchManager, function(error) {
                 assert.ok(false, error);
-                QUnit.start();
+                done();
             });
 
 
@@ -476,7 +494,7 @@
             assert.equal(updateList.isLastUpdateSubmission(), false, "afer Clear there should not be a last update submission");
             assert.equal(updateList.getCurrentPointer(), 0, "afer SAVE the pointer should be 0");
             assert.deepEqual(updateList.getUpdateList(), [], "afer SAVE there should be an empty list");
-            QUnit.start();
+            done();
         });
     </script>
 	<script>
@@ -485,13 +503,16 @@
                 resetSketch : function() {
                 }
             },
-            sketchManager : new SketchSurfaceManager()
+            sketchManager : new SketchSurfaceManager(),
+            beforeEach: mockTime.bind(this),
+            afterEach: restoreTime.bind(this)
         });
-        QUnit.asyncTest("trying to redo when you can't redo throws an error", function(assert) {
+        QUnit.test("trying to redo when you can't redo throws an error", function(assert) {
 
+            var done = assert.async();
             var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(error instanceof UndoRedoException, error);
-                QUnit.start();
+                done();
             });
 
             var markerObject = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.REDO, false);
@@ -499,11 +520,12 @@
             updateList.addUpdate(update);
         });
 
-        QUnit.asyncTest("single undo throws error when list is empty", function(assert) {
+        QUnit.test("single undo throws error when list is empty", function(assert) {
 
+            var done = assert.async();
             var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(error instanceof UndoRedoException, error);
-                QUnit.start();
+                done();
             });
 
             var undoMarkerObject = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.UNDO, false);
@@ -511,12 +533,12 @@
             updateList.addUpdate(undoUpdate);
         });
 
-        QUnit.asyncTest("you can undo a marker (maybe it just skips over it?)", function(assert) {
-
+        QUnit.test("you can undo a marker (maybe it just skips over it?)", function(assert) {
+            var done = assert.async();
             var updateList = new UpdateManager(this.sketchManager, function(error) {
                 console.log(error);
                 assert.ok(false, error);
-                QUnit.start();
+                done();
             });
 
             var localSketch = this.sketch;
@@ -533,14 +555,14 @@
             updateList.addUpdate(update);
 
             assert.equal(updateList.getCurrentPointer(), 0, "after undoing once the pointer should be at zero");
-            QUnit.start();
+            done();
         });
 
-        QUnit.asyncTest("a single undo", function(assert) {
-
+        QUnit.test("a single undo", function(assert) {
+            var done = assert.async();
             var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
-                QUnit.start();
+                done();
             });
 
             var stub = this.stub();
@@ -563,15 +585,15 @@
 
             CourseSketch.prutil.getSrlCommandClass().removeRedoMethod(CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE);
             CourseSketch.prutil.getSrlCommandClass().removeUndoMethod(CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE);
-            QUnit.start();
+            done();
         });
 
-        QUnit.asyncTest("double undo throws error", function(assert) {
+        QUnit.test("double undo throws error", function(assert) {
             expect(1);
-
+            var done = assert.async();
             var updateList = new UpdateManager(this.sketchManager, function(error) {
                 assert.ok(error instanceof UndoRedoException, error);
-                QUnit.start();
+                done();
             });
 
             CourseSketch.prutil.getSrlCommandClass().addRedoMethod(CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE, function() {
@@ -594,11 +616,11 @@
             CourseSketch.prutil.getSrlCommandClass().removeUndoMethod(CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE);
         });
 
-        QUnit.asyncTest("a single undo then redo", function(assert) {
-
+        QUnit.test("a single undo then redo", function(assert) {
+            var done = assert.async();
             var updateList = new UpdateManager(this.sketchManager, function(error) {
                 assert.ok(false, error);
-                QUnit.start();
+                done();
             });
 
             var undoStub = this.stub();
@@ -631,14 +653,14 @@
 
             CourseSketch.prutil.getSrlCommandClass().removeRedoMethod(CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE);
             CourseSketch.prutil.getSrlCommandClass().removeUndoMethod(CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE);
-            QUnit.start();
+            done();
         });
 
-        QUnit.asyncTest("a single undo then redo using undoAction and redoAction methods", function(assert) {
-
+        QUnit.test("a single undo then redo using undoAction and redoAction methods", function(assert) {
+            var done = assert.async();
             var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
-                QUnit.start();
+                done();
             });
 
             var undoStub = this.stub();
@@ -667,14 +689,14 @@
 
             CourseSketch.prutil.getSrlCommandClass().removeRedoMethod(CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE);
             CourseSketch.prutil.getSrlCommandClass().removeUndoMethod(CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE);
-            QUnit.start();
+            done();
         });
 
-        QUnit.asyncTest("a undo/redo causing a split", function(assert) {
-
+        QUnit.test("a undo/redo causing a split", function(assert) {
+            var done = assert.async();
             var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
-                QUnit.start();
+                done();
             });
 
             var undoStub = this.stub();
@@ -708,7 +730,7 @@
             assert.equal(updateList[3].commands[0].commandType, CourseSketch.prutil.CommandType.REDO);
             assert.equal(updateList[4].commands[0].commandType, CourseSketch.prutil.CommandType.MARKER);
             assert.equal(updateList[5].commands[0].commandType, CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE);
-            QUnit.start();
+            done();
         });
 
         QUnit.test("adding a Create sketch command then calling undo on it", function(assert) {
@@ -882,13 +904,15 @@
                 resetSketch : function() {
                 }
             },
-            sketchManager : new SketchSurfaceManager()
+            sketchManager : new SketchSurfaceManager(),
+            beforeEach: mockTime.bind(this),
+            afterEach: restoreTime.bind(this)
         });
-        QUnit.asyncTest("a single split", function(assert) {
-
+        QUnit.test("a single split", function(assert) {
+            var done = assert.async();
             var updateList = new UpdateManager(this.sketch, function(error) {
                 assert.ok(false, error);
-                QUnit.start();
+                done();
             });
 
             var startSplitObject = updateList.createMarker(true, CourseSketch.prutil.getMarkerClass().MarkerType.SPLIT, "1");
@@ -914,7 +938,7 @@
             sinon.assert.notCalled(undoStub);
             CourseSketch.prutil.getSrlCommandClass().removeRedoMethod(CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE);
             CourseSketch.prutil.getSrlCommandClass().removeUndoMethod(CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE);
-            QUnit.start();
+            done();
         });
 
         QUnit.module("Complex tests", {
@@ -922,13 +946,15 @@
                 resetSketch : function() {
                 }
             },
+            beforeEach: mockTime.bind(this),
+            afterEach: restoreTime.bind(this)
         });
 
-        QUnit.asyncTest("a single split then an undo then a redo", function(assert) {
-
+        QUnit.test("a single split then an undo then a redo", function(assert) {
+            var done = assert.async();
             var updateList = new UpdateManager(this.sketchManager, function(error) {
                 assert.ok(false, error);
-                QUnit.start();
+                done();
             });
 
             var startSplitObject = updateList.createMarker(true, CourseSketch.prutil.getMarkerClass().MarkerType.SPLIT, "1");
@@ -966,7 +992,7 @@
             sinon.assert.notCalled(undoStub);
             CourseSketch.prutil.getSrlCommandClass().removeRedoMethod(CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE);
             CourseSketch.prutil.getSrlCommandClass().removeUndoMethod(CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE);
-            QUnit.start();
+            done();
         });
     </script>
 
@@ -986,6 +1012,8 @@
                 createSketch : function() {
                 }
             },
+            beforeEach: mockTime.bind(this),
+            afterEach: restoreTime.bind(this)
         });
 
         QUnit.test("plugin gets correct data for simple update", function(assert) {

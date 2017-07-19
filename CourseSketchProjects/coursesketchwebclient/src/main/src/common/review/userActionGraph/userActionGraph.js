@@ -1,19 +1,22 @@
-/*
+/**
  * The MvSketch function handles all the action that can take place
  * in the multiview units.
  * Attributes:
  * data-binary: if set then the button will be disabled.
  * data-max_points: if set then this is the max number of points that can be input
  * data-max_percent: if set then this is the max percent of score that can be used
+ *
+ * @constructor UserActionGraph
  */
-function userActionGraph() {
+function UserActionGraph() {
     this.maxValue = 100;
     this.gradeValue = undefined;
 
     /**
-     * sets the update list.
+     * Sets the update list.
      * after the update list is done loading
-     * @param updateList  a list that contains all the changes made in sketch.
+     *
+     * @param {SrlUpdateList} updateList - a list that contains all the changes made in sketch.
      */
     this.setUpdateList = function(updateList) {
         this.shadowRoot.querySelector('sketch-surface').loadUpdateList(updateList, undefined, function() {
@@ -22,8 +25,10 @@ function userActionGraph() {
         }.bind(this));
     };
 
-    /*
+    /**
      * This creates the shadow root and attaches it to the object in question.
+     *
+     * @param {Element} templateClone - a clone of the template.
      */
     this.initializeElement = function(templateClone) {
         this.createShadowRoot();
@@ -56,8 +61,10 @@ function userActionGraph() {
         }
     };
 
-    /*
+    /**
      * Marks the sketch at correct and changes the background to outercorrect.
+     *
+     * @param {Event} event - click event.
      */
     function correct(event) {
         event.stopPropagation();
@@ -66,8 +73,10 @@ function userActionGraph() {
         this.shadowRoot.querySelector('#gradeInput').value = parseFloat(this.gradeValue);
     }
 
-    /*
+    /**
      * Marks the sketch as wrong and changes the background to outerwrong.
+     *
+     * @param {Event} event - click event.
      */
     function wrong(event) {
         event.stopPropagation();
@@ -78,10 +87,12 @@ function userActionGraph() {
 
     /**
      * Sets the callback that is called when the sketch is clicked.
+     *
+     * @param {Function} sketchClickedFunction - called when the sketch surface is clicked.
      */
     this.setSketchClickedFunction = function(sketchClickedFunction) {
         this.shadowRoot.querySelector('sketch-surface').onclick = sketchClickedFunction;
     };
 }
 
-MvSketch.prototype = Object.create(HTMLElement.prototype);
+UserActionGraph.prototype = Object.create(HTMLElement.prototype);

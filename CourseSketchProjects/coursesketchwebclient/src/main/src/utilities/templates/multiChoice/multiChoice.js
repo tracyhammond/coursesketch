@@ -11,7 +11,7 @@ function MultiChoice() {
      * @param {Element} answer - the answer element to be removed
      */
     this.removeAnswer = function(event, answer) {
-        this.shadowRoot.querySelector('#answer-choices').removeChild(answer);
+        this.getAnswerHolderElement().removeChild(answer);
     };
 
     /**
@@ -33,6 +33,7 @@ function MultiChoice() {
      * Adds an answer choice to this multiple choice element.
      *
      * @param {Event} event - the event that triggered this function
+     * @returns {Element} The element that was created that holds the answer.
      */
     this.addAnswer = function(event) {
         // Set up the parent
@@ -40,9 +41,12 @@ function MultiChoice() {
         var lastAnswer = this.shadowRoot.querySelector('#answer-choices').lastChild;
         answer.className = 'answer-choice';
         if (isUndefined(lastAnswer) || lastAnswer.className !== 'answer-choice') {
-            answer.id = '1';
+            answer.id = 'A1';
+            answer.setAttribute('data-index', 1);
         } else {
-            answer.id = parseInt(lastAnswer.id, 10) + 1;
+            var nextIndex = parseInt(answer.getAttribute('data-index'), 10) + 1;
+            answer.id = 'A' + nextIndex;
+            answer.setAttribute('data-index', nextIndex);
         }
 
         // Radio button
@@ -91,7 +95,12 @@ function MultiChoice() {
         answer.appendChild(close);
 
         // Now that we are done creating the answer choice, add it
-        this.shadowRoot.querySelector('#answer-choices').appendChild(answer);
+        this.getAnswerHolderElement().appendChild(answer);
+        return answer;
+    };
+
+    this.getAnswerHolderElement = function() {
+        return this.shadowRoot.querySelector('#answer-choices');
     };
 
     /**
@@ -105,8 +114,10 @@ function MultiChoice() {
 
         /**
          * Bind addAnswer to click.
+         *
+         * @param {Event} event the event that was clicked.
          */
-        localScope.shadowRoot.querySelector('#add').onclick = function(event) {// jscs:ignore jsDoc
+        localScope.shadowRoot.querySelector('#add').onclick = function(event) {
             localScope.addAnswer(event);
         };
     };
@@ -115,7 +126,7 @@ function MultiChoice() {
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
      *
      * @param {Event} event - event that triggered this function.
-     * @return {MultipleChoice} the created protobuf object.
+     * @returns {MultipleChoice} the created protobuf object.
      */
     this.saveData = function(event) {
         var mcProto = CourseSketch.prutil.MultipleChoice();
@@ -139,7 +150,7 @@ function MultiChoice() {
         this.id = this.command.commandId;
         var callback = this.getFinishedCallback();
         if (!isUndefined(callback)) {
-            callback(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
+            callback(this.command, event, this.currentUpdate, mcProto); // Gets finishedCallback and calls it with command as parameter
         }
         return mcProto;
     };
@@ -154,18 +165,27 @@ function MultiChoice() {
             return;
         }
         for (var i = 0; i < mcProto.answerChoices.length; ++i) {
-            this.addAnswer();
-            var newAnswerId = '' + (i + 1);
-            var answer = this.shadowRoot.getElementById(newAnswerId);
+            var answer = this.addAnswer();
             answer.id = mcProto.answerChoices[i].id;
             answer.querySelector('.label').value = mcProto.answerChoices[i].text;
         }
         this.correctId = mcProto.correctId;
-        this.shadowRoot.getElementById(this.correctId).querySelector('.correct').textContent = '✔';
+        if (!isUndefined(this.correctId) && this.correctId !== '' && this.correctId !== null) {
+            var result = this.getAnswerHolderElement().querySelectorAll('#' + this.correctId)[0];
+            result.querySelector('.correct').textContent = '✔';
+        }
+    };
+
+    this.turnOnStudentMode = function() {
+        console.log('do nothing');
+    };
+
+    this.setSelected = function() {
+        console.log('do nothing2');
     };
 
     /**
-     * @return {Function} finishedCallback is the callback set at implementation.
+     * @returns {Function} finishedCallback is the callback set at implementation.
      * The callback can be called immediately using .getFinishedCallback()(argument) with argument being optional
      */
     this.getFinishedCallback = function() {
@@ -175,12 +195,15 @@ function MultiChoice() {
     /**
      * Sets the listener.
      *
+     * The listener is called with (SrlCommand, event, SrlUpdate, MultiChoice)
+     * With MultiChoice being the same type as LoadData.
+     *
      * @param {Function} listener - called when the data is finished saving.
      */
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
     };
 }
-MultiChoice.prototype = Object.create(HTMLDialogElement.prototype);
+MultiChoice.prototype = Object.create(HTMLElement.prototype);
 MultiChoice.prototype.finishedCallback = undefined; // Defined by whoever implements this by using setFinishedListener().
 MultiChoice.prototype.createdCommand = undefined;

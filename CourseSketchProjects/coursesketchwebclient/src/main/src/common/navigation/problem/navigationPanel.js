@@ -1,7 +1,7 @@
 /**
  * The custom element for navigating a problem.
  *
- * @class NavigationPanel
+ * @constructor NavigationPanel
  * @attribute loop {Existence} If this property exist the navigator will loop.  (Setting the navigator overrides this property).
  * @attribute assignment_id {String} uses the given value as the assignment id inside the navigator.
  * @attribute index {Number} if the value exist then this is the number used to define the current index.
@@ -20,7 +20,7 @@ function NavigationPanel() {
             this.shadowRoot.querySelector('#selectionBoxNumber').textContent = nav.getCurrentNumber();
             // set span state
             this.setUpButtons(nav);
-            var totalNumber = nav.getSubgroupSize();
+            var totalNumber = nav.getCurrentTotalNumber();
             if (totalNumber) {
                 this.shadowRoot.querySelector('#totalNumber').textContent = totalNumber;
             }
@@ -38,20 +38,31 @@ function NavigationPanel() {
      * @function setUpButtons
      */
     this.setUpButtons = function(nav) {
-        var button = this.shadowRoot.querySelector('#buttonNext');
-        var tt = this.shadowRoot.querySelector('#iop');
-
-        Waves.attach(tt);
         /* jscs:disable jsDoc */
-        button.onclick = function() {
-            nav.gotoNext();
-        };
-        button.disabled = !nav.hasNext();
-        button = this.shadowRoot.querySelector('#buttonPrev');
-        button.onclick = function() {
-            nav.gotoPrevious();
-        };
-        button.disabled = !nav.hasPrevious();
+        var hasNext = nav.hasNext();
+        var nextButton = this.shadowRoot.querySelector('#buttonNext');
+        nextButton.setAttribute('data-disabled', !hasNext);
+
+        if (hasNext) {
+            nextButton.onclick = function() {
+                nav.gotoNext();
+            };
+        } else {
+            nextButton.onclick = undefined;
+        }
+
+        var hasPrevious = nav.hasPrevious();
+        var previousButton = this.shadowRoot.querySelector('#buttonPrev');
+        previousButton.setAttribute('data-disabled', !hasPrevious);
+
+        if (hasPrevious) {
+            previousButton.onclick = function() {
+                nav.gotoPrevious();
+            };
+        } else {
+            previousButton.onclick = undefined;
+        }
+
         /* jscs:enable jsDoc */
     };
 
@@ -84,7 +95,7 @@ function NavigationPanel() {
     };
 
     /**
-     * @return {AssignmentNavigator}.
+     * @returns {AssignmentNavigator}.
      * @instance
      * @function getNavigator
      */

@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by dtracers on 12/15/2015.
+ * A service for submission.
  */
 public final class SubmissionWebSocketClient extends ClientWebSocket implements SubmissionManagerInterface {
 
@@ -73,7 +73,7 @@ public final class SubmissionWebSocketClient extends ClientWebSocket implements 
                 .addAllSubmissionIds(Arrays.asList(submissionIds))
                 .build();
 
-        SubmissionServer.ExperimentResponse response = null;
+        SubmissionServer.ExperimentResponse response;
         try {
             LOG.debug("Sending submission request");
             response = submissionService.getSubmission(getNewRpcController(), request);
@@ -110,7 +110,7 @@ public final class SubmissionWebSocketClient extends ClientWebSocket implements 
                 .setSubmissionTime(submissionTime)
                 .build();
 
-        SubmissionServer.SubmissionResponse response = null;
+        SubmissionServer.SubmissionResponse response;
         try {
             LOG.debug("Sending submission request");
             response = submissionService.insertExperiment(getNewRpcController(), request);
@@ -146,7 +146,7 @@ public final class SubmissionWebSocketClient extends ClientWebSocket implements 
                 .setSubmission(submission)
                 .build();
 
-        SubmissionServer.SubmissionResponse response = null;
+        SubmissionServer.SubmissionResponse response;
         try {
             LOG.debug("Sending submission request");
             response = submissionService.insertSolution(getNewRpcController(), request);

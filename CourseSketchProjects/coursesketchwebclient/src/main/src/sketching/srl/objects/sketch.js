@@ -127,7 +127,7 @@ function SRL_Sketch() {
     /**
      * Resets the sketch to its starting state.
      * Assigns new objects so any external references are now useless.
-     * @return {Array} A list that contains references to all of the existing objects.
+     * @returns {Array} A list that contains references to all of the existing objects.
      */
     this.resetSketch = function() {
         var oldList = objectList;
