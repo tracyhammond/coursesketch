@@ -7,17 +7,12 @@ CourseSketch.redirector = {};
 /**
  * @namespace Index
  */
-$(document).ready(
-function() {
+$(document).ready(function() {
     /**
-     * Gets tutorial and appends it to the document.
+     * A local instance of the document object used to maintain the correct instance when potentially called from IFrames.
+     * @type {document}
      */
-    CourseSketch.loadCreateTutorial = function() {
-        document.getElementById('tutorial').innerHTML = '';
-        var element = document.createElement('entire-timeline');
-        document.getElementById('tutorial').appendChild(element);
-        element.loadExistingTutorials();
-    };
+    var localDoc = document;
 
     /**
      * @returns {Element} The element that encapsulates the exception.
@@ -55,9 +50,13 @@ function() {
     };
 
     window.addEventListener('beforeunload', function(e) {
-        var r = CourseSketch.prutil.Request();
-        r.setRequestType(Request.MessageType.CLOSE);
-        connection.sendRequest(r);
+        try {
+            var r = CourseSketch.prutil.Request();
+            r.setRequestType(CourseSketch.prutil.getRequestClass().MessageType.CLOSE);
+            connection.sendRequest(r);
+        } catch (exception) {
+            return '' + exception;
+        }
         return 'you can close this window';
     });
 
@@ -71,12 +70,13 @@ function() {
      */
     var successLogin = function(loggedInConnection) {
         CourseSketch.connection = loggedInConnection;
-        $('#loginLocation').empty();
+        $(element).empty();
         var importPage = document.createElement('link');
         importPage.rel = 'import';
         importPage.href = '/src/main.html';
         /**
-         * Imports main.html.
+         * Imports {@code main.html}.
+         *
          * @memberof Index
          */
         importPage.onload = function() {
@@ -89,25 +89,28 @@ function() {
 
             loadHomePage();
         };
-        document.head.appendChild(importPage);
+        localDoc.head.appendChild(importPage);
         element.style.display = 'none';
     };
 
     /**
      * Creates a login element and a function so that when the register button is clicked the register is created.
      *
-     * This is called on the Register element when cancel is pressed.  This forms an infinite loop with {@link Index.createRegister}.
+     * This is called on the Register element when cancel is pressed.
      * They each call the other when clicked.
-     * @param {Function} register - the createRegister function
+     * This forms an infinite loop with {@link Index.createRegister}.
+     *
+     * @param {Function} register - The createRegister function
+     * @param {Function} successLoginCallback - called when the user log ins successfully.
      * @see {@link Index.createRegister}
      * @memberof Index
      */
-    function createLogin(register) {
-        $('#loginLocation').empty();
+    function createLogin(register, successLoginCallback) {
+        $(element).empty();
         var login = document.createElement('login-system');
-        login.setOnSuccessLogin(successLogin);
+        login.setOnSuccessLogin(successLoginCallback);
         login.setRegisterCallback(function() {
-            register(createLogin);
+            register(createLogin, successLoginCallback);
         });
         element.appendChild(login);
     }
@@ -115,49 +118,88 @@ function() {
     /**
      * Creates a register element and a function so that when the cancel button is clicked the login is created.
      *
-     * This is called on the Login element when register is pressed.  This forms an infinite loop with {@link Index.createLogin}.
+     * This is called on the Login element when register is pressed.
      * They each call the other when clicked.
-     * @param {Function} login - the createLogin function
+     * This forms an infinite loop with {@link Index.createLogin}.
+     *
+     * @param {Function} login - The createLogin function
+     * @param {Function} successLoginCallback - called when the user log ins successfully.
      * @see {@link Index.createLogin}
      * @memberof Index
      */
-    function createRegister(login) {
-        $('#loginLocation').empty();
+    function createRegister(login, successLoginCallback) {
+        $(element).empty();
         var register = document.createElement('register-system');
-        register.setOnSuccessLogin(successLogin);
+        register.setOnSuccessLogin(successLoginCallback);
         register.setCancelCallback(function() {
-            login(createRegister);
+            login(createRegister, successLoginCallback);
         });
         element.appendChild(register);
     }
-    createLogin(createRegister);
+
+    /**
+     * A public function that creates a login element.
+     */
+    CourseSketch.createLoginElement = function() {
+        createLogin(createRegister, successLogin);
+    };
+
+    CourseSketch.createLoginElement();
+
+    /**
+     * A public function that is used to display the login element anywhere.
+     */
+    CourseSketch.createReconnection = function() {
+        createLogin(createRegister, CourseSketch.successfulReconnection);
+        element.className = 'reconnectLogin';
+        element.style.display = 'initial';
+    };
+
+    /**
+     * Called when a reconnection occurs.
+     *
+     * @param {Connection} loggedInConnection - The object that handles the connection to the database.
+     */
+    CourseSketch.successfulReconnection = function(loggedInConnection) {
+        console.log('The user relogged in correctly');
+        CourseSketch.connection = loggedInConnection;
+        CourseSketch.dataListener.setupConnectionListeners();
+        $(element).empty();
+        element.className = '';
+
+        // Note that this function may be defined dynamically
+        CourseSketch.onSuccessfulReconnection();
+    };
 
     /**
      * Creates and loads the menu.
      *
-     * @param {Link} importDoc The link element that contains the menu template.
+     * @param {Element} importDoc - The link element that contains the menu template.
      * @memberof Index
      */
     function loadMenu(importDoc) {
-        var content = importDoc.querySelector('#menubarTemplate').import;
-        var template = undefined;
+        var menuToLoad;
         if (CourseSketch.connection.isInstructor) {
-            template = content.querySelector('#instructorMenu');
+            menuToLoad = 'instructorMenu';
         } else {
-            template = content.querySelector('#studentMenu');
+            menuToLoad = 'studentMenu';
         }
-        var clone = document.importNode(template.content, true);
+        var clone = safeImport(importDoc, document, 'menubarTemplate', menuToLoad);
         document.querySelector('.nav-wrapper').appendChild(clone);
+        var menuButton = document.querySelectorAll('.button-collapse')[0];
+        menuButton.style.display = 'inline-flex';
 
-        $('.button-collapse').sideNav({
-            closeOnClick: true // Closes side-nav on <a> clicks
+        $(menuButton).sideNav({
+            closeOnClick: true, // Closes side-nav on <a> clicks
+            edge: 'left'
         });
     }
 
     /**
-     * loads the homepage.
+     * Loads the homepage.
      *
      * This loads a different page depending on if the user is currently an instructor or a user.
+     *
      * @memberof Index
      */
     function loadHomePage() {
@@ -167,12 +209,22 @@ function() {
             CourseSketch.redirectContent('/src/student/homepage/homePage.html', 'Welcome Student');
         }
 
-        CourseSketch.dataListener = new AdvanceDataListener(CourseSketch.connection,
-                CourseSketch.prutil.getRequestClass(), function(evt, item) {
-            console.log('default listener');
-        });
+        CourseSketch.dataListener = new AdvanceDataListener(
+            CourseSketch.prutil.getRequestClass(), function(evt, item) {
+                console.log('default listener');
+            });
         CourseSketch.dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
-                CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
+            CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
         CourseSketch.DatabaseException = DatabaseException;
     }
+
+    /**
+     * Gets tutorial and appends it to the document.
+     */
+    CourseSketch.loadCreateTutorial = function() {
+        document.getElementById('tutorial').innerHTML = '';
+        var element = document.createElement('entire-timeline');
+        document.getElementById('tutorial').appendChild(element);
+        element.loadExistingTutorials();
+    };
 });

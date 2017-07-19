@@ -1,12 +1,12 @@
-
+/* eslint-disable valid-jsdoc, require-jsdoc */
 /**
  * Creates the text box dialog
  * The dialog is moveable and allows the creator to enter text to be displayed
  */
 function TextBox() {
     /**
-     * @param {String} textToRead contains the text to be read
-     * @param {Function} callback is the callback to be run after the text has been spoken
+     * @param {String} textToRead - contains the text to be read
+     * @param {Function} callback - is the callback to be run after the text has been spoken
      * This function speaks the text using the meSpeak library
      */
     this.speakText = function(textToRead, callback) {
@@ -19,9 +19,12 @@ function TextBox() {
      * It also ignores click and drag from textareas and buttons within the dialog
      * The dragging is restricted to the area of the parentNode the dialog is created in
      * NOTE: This code comes from the interact library examples page
+     *
+     * @param {Element} localElement - The host element.
      */
-    function enableDragging(localScope) {
-        interact(localScope.shadowRoot.querySelector('.draggable'))
+    function enableDragging(localElement) {
+        var element = localElement.shadowRoot.querySelectorAll('.draggable');
+        interact(element)
             .ignoreFrom('textarea, button')
             .draggable({
                 onmove: function(event) {
@@ -30,8 +33,8 @@ function TextBox() {
                     var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
                     target.style.webkitTransform =
-                    target.style.transform =
-                        'translate(' + x + 'px, ' + y + 'px)';
+                        target.style.transform =
+                            'translate(' + x + 'px, ' + y + 'px)';
 
                     target.setAttribute('data-x', x);
                     target.setAttribute('data-y', y);
@@ -40,14 +43,14 @@ function TextBox() {
             })
             .inertia(false)
             .restrict({
-                drag: localScope.parentNode,
+                drag: localElement.parentNode,
                 endOnly: false,
-                elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+                elementRect: {top: 0, left: 0, bottom: 1, right: 1}
             });
     }
 
     /**
-     * @param {Node} templateClone is a clone of the custom HTML Element for the text box
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
@@ -176,7 +179,7 @@ function TextBox() {
     };
 
     /**
-     * @param {ProtoCommand} textBoxProto is the data to be loaded from the proto
+     * @param {ProtoCommand} textBoxProto - is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
      * If the protoCommand does not exist, returns because data cannot be loaded
      */
@@ -198,7 +201,7 @@ function TextBox() {
 
         $(node).width(textBoxProto.getWidth()); // Sets node width
         $(node).height(textBoxProto.getHeight() - 16); // Sets node height minus 16px to account for default padding
-        $(dialog).css({ top: textBoxProto.getY(), left: textBoxProto.getX() }); // Sets dialog x and y positions
+        $(dialog).css({top: textBoxProto.getY(), left: textBoxProto.getX()}); // Sets dialog x and y positions
         node.textContent = textBoxProto.getText(); // Sets selected node (creatorText or viewTexet) text value
 
         // If the dialog is hidden, then the TTS display is the element. This speaks the text then removes the hidden element from the DOM.
@@ -213,7 +216,7 @@ function TextBox() {
     };
 
     /**
-     * @return {Function} finishedCallback is the callback set at implementation.
+     * @returns {Function} finishedCallback is the callback set at implementation.
      * The callback can be called immediately using .getFinishedCallback()(argument) with argument being optional
      */
     this.getFinishedCallback = function() {

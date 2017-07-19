@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recognition Example</title>
+    <link rel="import"
+          href="/src/utilities/libraries/materialize/materializeInclude.html">
+
+    <!-- basic utilities -->
+    <link rel="import" href="/src/utilities/defaultUtils.html">
+    <script type="text/javascript" src="/src/utilities/functions/childScript.js"
+            data-namespace="courseManagement"></script>
+
+    <!-- protobuf -->
+    <link rel="import" href="/src/utilities/connection/protobufInclude.html">
+
+    <!-- special elements -->
+    <link rel="import" href="/src/sketching/sketchInclude.html">
+    <link rel="import" href="/src/sketching/recognition/debug/recognitionDebugInclude.html">
+
+    <style>
+        .sketchObject {
+            display:block;
+            border-style:solid;
+            border-width:1px;
+        }
+
+        .subObjects {
+
+        }
+
+        .highlight {
+            background-color:yellow;
+        }
+
+        .updateInfo {
+            flex-direction: row;
+            display:flex;
+        }
+
+        .update {
+
+
+        }
+
+        .update .sketchObject {
+
+        }
+
+        .commands {
+            display: block;
+        }
+
+        #debug-panel {
+            overflow-y:scroll;
+        }
+
+    </style>
+
+</head>
+<body>
+<div style="height: 600px;position: relative;">
+    <div class="top panel" style="display: flex; flex-direction: row;">
+        <sketch-surface id="hello" style="height: 400px; border: 5px solid red; flex: 1"></sketch-surface>
+        <div id="sketchViewer" style = "flex: 1"></div>
+    </div>
+    <input id="label" type="text" />
+    <button id="submitTemplate">Submit Template</button>
+    <button id="enableLiveRecognition">Enable Live Recogntion</button>
+    <button id="recognize">Recognize Current Template</button>
+    <button id="enableDebugging">Enable Debugging</button>
+    <button id="generateSimilarShapes">Generate Similar Images</button>
+    <div id="moreButtons" style="display:none;">
+        <button id="yes">Yes</button>
+        <button id="no">No</button>
+        <button id="next">Next</button>
+        <div id="templates_left"></div>
+    </div>
+    <div id="debug-panel">
+        <div id ="commandViewer"></div>
+    </div>
+</div>
+    <script>
+        $(document).ready(function() {
+            var elements = document.getElementsByTagName('sketch-surface');
+            console.log(elements);
+            var sketchSurface = elements[0];
+            var updateManager = sketchSurface.getUpdateManager();
+
+            var resized = false;
+            updateManager.addPlugin({
+                addUpdate: function() {
+                    if (!resized) {
+                        sketchSurface.resizeSurface();
+                        sketchSurface.refreshSketch();
+                        resized = true;
+                    }
+                }
+            });
+            sketchSurface.resizeSurface();
+
+            function createShapeFromSketch(sketch) {
+                var sketchList = sketch.getList();
+                var shape = new SRL_Shape();
+                for (var i = 0; i < sketchList.length; i++) {
+                    shape.addSubObject(sketchList[i]);
+                }
+                return shape;
+            }
+
+            $('#submitTemplate').click(function() {
+                var shape = createShapeFromSketch(sketchSurface.getCurrentSketch());
+                var protoBuf = shape.sendToProtobuf();
+                var label = document.getElementById('label').value;
+                CourseSketch.recognition.addShapeTemplate(label, '' + sketchSurface.id, protoBuf, function(err, success) {
+                   console.log(err, success);
+                });
+            });
+            $('#enableLiveRecognition').click(function() {
+                // TODO: disable add template
+                updateManager.addPlugin(CourseSketch.createRecognitionPlugin(updateManager, sketchSurface.id));
+            });
+            $('#recognize').click(function() {
+                // TODO: disable add template
+                updateManager.getCleanUpdateList(function(updateList) {
+                    console.log(updateList);
+                    var srlUpdateList = CourseSketch.prutil.SrlUpdateList();
+                    srlUpdateList.list = updateList;
+                    CourseSketch.recognition.recognize(sketchSurface.id, srlUpdateList, function(err, msg) {
+                        console.log(err, msg);
+                        var updateList = msg.changes;
+                        var updates = updateList.list;
+                        for (var i = 0; i < updates.length; i++) {
+                            var update = updates[i];
+                            console.log('add update', update);
+                            updateManager.addUpdate(update);
+                        }
+                    });
+                });
+            });
+            $('#enableDebugging').click(function() {
+                updateManager.addPlugin(CourseSketch.createDebugRecognitionPlugin('commandViewer', 'sketchViewer', sketchSurface));
+            });
+
+            /**
+             *
+             * @param {SRL_Sketch} sketch
+             * @param template
+             */
+            function loadTemplateIntoSketch(sketch, template) {
+                sketch.clearSketch();
+                var shape = SRL_Shape.createFromProtobuf(template.getShape());
+                sketch.addSubObject(shape);
+                console.log(sketch);
+                sketchSurface.resizeSurface();
+                sketchSurface.refreshSketch();
+                console.log('sketch surface should be hwown');
+            }
+
+            $('#generateSimilarShapes').click(function () {
+                var shape = createShapeFromSketch(sketchSurface.getCurrentSketch());
+                var label = document.getElementById('label').value;
+                var recogTemplate = CourseSketch.prutil.ProtoRecognitionTemplate();
+                CourseSketch.recognition.setTemplateData(label, '' + sketchSurface.id, recogTemplate);
+                recogTemplate.setShape(shape.sendToProtobuf());
+                CourseSketch.recognition.generateTemplates(recogTemplate, function (err, msg) {
+                    console.log('generated teplates callback', err, msg);
+                    $('#moreButtons').show();
+                    console.log('loading templates', msg);
+                    var sketch = sketchSurface.getCurrentSketch();
+                    var templateList = msg.getGeneratedTemplates();
+                    var currentTemplate = templateList[0];
+                    console.log('setting up buttons');
+                    $('#next').click(function () {
+                        console.log('loading next template');
+                        currentTemplate = templateList.shift();
+                        loadTemplateIntoSketch(sketch, currentTemplate);
+                        console.log('there are ', templateList.length, 'templates left');
+                        $('#templates_left').textContent = 'there are ' + templateList.length + 'templates left'
+                    });
+
+                    $('#yes').click(function () {
+                        console.log('submitting positibe template');
+                        var positive = CourseSketch.prutil.getProtoRecognitionTemplateClass().TemplateType.POSITIVE;
+                        CourseSketch.recognition.addShapeTemplate(label, '' + currentTemplate.templateId,
+                                currentTemplate.shape, function(err, success) {
+                                    console.log(err, success);
+                        }, positive);
+                    });
+
+                    $('#no').click(function () {
+                        console.log('submitting negative tempalte');
+                        var negative = CourseSketch.prutil.getProtoRecognitionTemplateClass().TemplateType.NEGATIVE;
+                        CourseSketch.recognition.addShapeTemplate(label, '' + currentTemplate.templateId,
+                                currentTemplate.shape, function(err, success) {
+                                    console.log(err, success);
+                        }, negative);
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

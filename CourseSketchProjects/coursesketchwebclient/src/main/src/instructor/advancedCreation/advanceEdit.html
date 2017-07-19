@@ -1,0 +1,231 @@
+<html>
+<head>
+</head>
+<body>
+<template id="advanceEditTemplate">
+    <style>
+        @import "/src/instructor/advancedCreation/advanceEdit.css";
+        @import "/bower_components/materialize/dist/css/materialize.css";
+        @import "https://fonts.googleapis.com/icon?family=Material+Icons";
+    </style>
+    <div class="card" style="z-index: 100;">
+        <div>
+            <div style="display: inline;" data-prop="id" class="need-loading ">
+                <span>ID:</span>
+                <span class="data"></span>
+            </div>
+            <a class="saveButton waves-effect waves-light btn">Save Data</a>
+            <a class="closeButton waves-effect waves-light btn">Close Panel</a>
+        </div>
+        <ul class="collapsible" data-collapsible="accordion">
+        </ul>
+    </div>
+    <!-- details -->
+    <template class="Course Assignment Problem">
+        <li>
+            <div class="collapsible-header deep-purple accent-1 active"><i class="material-icons">mode_edit</i>Details
+            </div>
+            <div class="collapsible-body row blue lighten-4">
+                <div data-prop="name" class="need-saving need-loading col s6">
+                    <span>Name:</span>
+                    <input type="text" class="data">
+                </div>
+                <div class="col s6">
+                    <div data-prop="description" class="need-saving need-loading">
+                        <span>Description:</span>
+                        <textarea class="data"></textarea>
+                    </div>
+                    <div data-prop="question" class="need-saving need-loading">
+                        <span>Question:</span>
+                        <textarea class="data"></textarea>
+                    </div>
+                </div>
+                <div class="col s12 divider black" style="margin-bottom: 1rem;"></div>
+                <div data-prop="imageUrl" class="need-saving need-loading col s6">
+                    <span>Image:</span>
+                    <img class="data">
+                </div>
+                <div class="col s6">
+                    <div data-prop="assignmentType" class="need-saving need-loading">
+                        <span>Assignment Type:</span>
+                        <select class="data">
+                            <option value=0>Graded</option>
+                            <option value=1>FlashCard</option>
+                            <option value=2>Lecture</option>
+                            <option value=3>Practice</option>
+                        </select>
+                    </div>
+                    <div data-prop="access" class="need-saving need-loading">
+                        <span>Access type:</span>
+                        <select class="data">
+                            <option value=0>Public to everyone no registration is needed</option>
+                            <option value=1>Public (anyone can sign up)</option>
+                            <option value=2>Protected (can request to sign up)</option>
+                            <option value=3>Hidden (not searchable but access can be requested)</option>
+                            <option value=4>Private (Invitation only)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </template>
+    <!-- dates -->
+    <template class="Course Assignment">
+        <li>
+            <div class="collapsible-header deep-purple accent-1"><i class="material-icons">perm_contact_calendar</i>Dates
+            </div>
+            <div class="collapsible-body row blue lighten-4">
+                <div data-prop="accessDate" class="need-saving need-loading col s3">
+                    <span>accessDate:</span>
+                    <div data-date class="data">
+                        <input type="date" class="date">
+                        <input type="time" class="time">
+                    </div>
+                </div>
+                <div data-prop="dueDate" class="need-saving need-loading col s3">
+                    <span>dueDate:</span>
+                    <div data-date class="data">
+                        <input type="date" class="date">
+                        <input type="time" class="time">
+                    </div>
+                </div>
+                <div data-prop="closeDate" class="need-saving need-loading col s3">
+                    <span>closeDate:</span>
+                    <div data-date class="data">
+                        <input type="date" class="date">
+                        <input type="time" class="time">
+                    </div>
+                </div>
+                <div data-prop="reviewOpenDate" class="need-saving need-loading col s3">
+                    <span>reviewOpenDate:</span>
+                    <div data-date class="data">
+                        <input type="date" class="date">
+                        <input type="time" class="time">
+                    </div>
+                </div>
+            </div>
+        </li>
+    </template>
+    <!-- course specific -->
+    <template class="Course">
+        <li>
+            <div class="collapsible-header deep-purple accent-1"><i class="material-icons">vpn_key</i>Registration key
+            </div>
+            <div class="collapsible-body blue lighten-4">
+                <div data-prop="registrationKey" class="need-loading">
+                    <span>Registration key:</span>
+                    <span class="data">No Key Created yet</span>
+                    <!-- add copy to clipboard button -->
+                </div>
+            </div>
+        </li>
+    </template>
+    <!-- assignment specific -->
+    <template class="Assignment">
+        <li>
+            <div class="collapsible-header deep-purple accent-1"><i class="material-icons">av_timer</i>Late Policy</div>
+            <div class="collapsible-body blue lighten-4">
+                <div data-prop="latePolicy" class="need-loading need-saving row" style="margin-bottom: 0px;">
+                    <div class="data col s6 row" style="margin-bottom: 0px;">
+                        <div data-prop="functionType" class="col s4 need-loading need-saving">
+                            <span>Algorithm:</span>
+                            <select class="data">
+                                <option value="0">Stepping</option>
+                                <option value="1">Linear</option>
+                                <option value="2">Exponential</option>
+                            </select>
+                        </div>
+                        <div class="need-saving need-loading col s4" data-prop="timeFrameType">
+                            <span>Time Period:</span>
+                            <select class="data">
+                                <option value="0">Constantly</option>
+                                <option value="1">Every Minute</option>
+                                <option value="2">Every Hour</option>
+                                <option value="3">Every Day</option>
+                            </select>
+                        </div>
+                        <div class="need-saving need-loading col s4" data-prop="subtractionType">
+                            <span>Reduction Rule:</span>
+                            <select class="data">
+                                <option value="0">Cap grade</option>
+                                <option value="1">percent of actual grade</option>
+                            </select>
+                        </div>
+                        <div class="divider col s12 black" style="margin-bottom: 1rem; margin-top: 1rem;"></div>
+                        <div class="need-saving need-loading col s4" data-prop="rate">
+                            <span>Rate:</span>
+                            <input class="data" type="number" step="0.1" min="0" max="1">
+                        </div>
+                        <div class="need-saving need-loading col s4" data-prop="applyOnlyToLateProblems">
+                            <span>Apply late policy on:</span>
+                            <div class="switch data" data-lower>
+                                <label>
+                                    All problems
+                                    <input id="myonoffswitch" name="onoffswitch" type="checkbox" class="data">
+                                    <span class="lever"></span>
+                                    Late problems
+                                </label>
+                            </div>
+                        </div>
+                        <button class="col s4 btn">show example</button>
+                    </div>
+                    <div class="graph col s6"></div>
+                </div>
+
+            </div>
+        </li>
+        <li>
+            <div class="collapsible-header deep-purple accent-1"><i class="material-icons">grade</i>Grade specifics
+            </div>
+            <div class="collapsible-body blue lighten-4">
+            </div>
+        </li>
+    </template>
+    <!-- problem specific -->
+    <template class="Problem">
+        <li>
+            <div class="collapsible-header deep-purple accent-1"><i class="material-icons">perm_contact_calendar</i>Creation
+            </div>
+            <div class="collapsible-body row blue lighten-4">
+                <div data-prop="assignmentId" class="need-loading">
+                    <span data-hidden class="data"></span>
+                </div>
+                <div data-prop="subgroups" class="need-saving need-loading col s12">
+                    <button data-action="createPart" class="need-action waves-effect waves-light btn"
+                            data-actionProp="subgroups">add New Part
+                    </button>
+                    <div data-list class="data">
+                        <template class="template">
+                            <div class="templateData card">
+                                <div data-prop="id" class="need-loading">
+                                    <span data-hidden class="data"></span>
+                                </div>
+                                <div>Part <span class="listNumber"></span></div>
+                                <!-- data for a bank problem -->
+                                <div data-prop="problem" class="need-saving need-loading">
+                                    <div class="data center">
+                                        <div data-prop="questionText" class="need-loading">
+                                            <span class="data"></span>
+                                        </div>
+                                        <button data-prop="unlocked" data-action="editProblem" data-actionProp="script"
+                                                class="need-action need-loading waves-effect waves-light btn center"
+                                                style="padding: 2px 6px; margin: 0 auto; line-height: initial;">
+                                            editProblem
+                                            <span data-hidden class="data unlocked"></span>
+                                            <span data-hidden data-id class="data id"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <!-- add the ability to create multiple problem parts that scroll to the side. -->
+                <!-- these parts can be selected from existing problems and used with weights and whatnot -->
+            </div>
+        </li>
+        <!-- you are going to be interesting -->
+    </template>
+</template>
+
+</body>

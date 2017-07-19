@@ -1,7 +1,8 @@
-
-function Timeline () {
+/* eslint-disable */
+/* jshint ignore:start */
+function Timeline() {
     /**
-     * @param {Node} templateClone is a clone of the custom HTML Element for the text box
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
@@ -169,7 +170,7 @@ function Timeline () {
     /**
      * the plus button calls show tools to list out the available tools
      */
-    function addPlusButton (parent, localScope) {
+    function addPlusButton(parent, self) {
         var plusButton = document.createElement('div');
         plusButton.title = 'Add tutorial element';
         plusButton.className = 'plusbutton';
@@ -177,18 +178,18 @@ function Timeline () {
         plusButton.onclick = function() {
             $(plusButton).empty();
             $(plusButton).addClass('tall');
-            showTools(plusButton, parent, localScope);
+            showTools(plusButton, parent, self);
         };
     }
 
     /**
      * sketch surface is currently not fully implemented.  To see what it does, uncomment the line
      */
-    function showTools(plusButton, toolArea, localScope) {
-        addTextBoxButton(plusButton, toolArea, localScope);
-        addTtsBoxButton(plusButton, toolArea, localScope);
-        addHighlightButton(plusButton, toolArea, localScope);
-        //addSketchSurfaceButton(plusButton, toolArea, localScope);
+    function showTools(plusButton, toolArea, self) {
+        addTextBoxButton(plusButton, toolArea, self);
+        addTtsBoxButton(plusButton, toolArea, self);
+        addHighlightButton(plusButton, toolArea, self);
+        //addSketchSurfaceButton(plusButton, toolArea, self);
     }
 
     // adds marker for tutorial tool based on commandId
@@ -257,7 +258,7 @@ function Timeline () {
      * when clicked, the 'preview' button will be added to the step
      * This allows the user to create a text box to further explain steps in the tutorial
      */
-    function addTextBoxButton (plusButton, toolArea, localScope) {
+    function addTextBoxButton(plusButton, toolArea, self) {
         var textBoxButton = document.createElement('div');
         textBoxButton.title = 'Add text box';
         textBoxButton.className = 'textboxbutton';
@@ -269,7 +270,7 @@ function Timeline () {
             /* creating the textbox */
             var textBox = document.createElement('text-box-creation');
             document.body.appendChild(textBox);
-            var currentUpdate = localScope.index.getCurrentUpdate();
+            var currentUpdate = self.index.getCurrentUpdate();
             textBox.currentUpdate = currentUpdate;
             /* end of creating the textbox */
 
@@ -290,7 +291,7 @@ function Timeline () {
      * when clicked, the "preview" button will be added to the step
      * This allows the user to create audible text
      */
-    function addTtsBoxButton (plusButton, toolArea, localScope) {
+    function addTtsBoxButton(plusButton, toolArea, self) {
         var ttsBoxButton = document.createElement('div');
         ttsBoxButton.title = 'Add text to speech box';
         ttsBoxButton.className = 'ttsboxbutton';
@@ -302,7 +303,7 @@ function Timeline () {
             /* creating the textbox */
             var ttsBox = document.createElement('tts-box-creation');
             document.body.appendChild(ttsBox);
-            var currentUpdate = localScope.index.getCurrentUpdate();
+            var currentUpdate = self.index.getCurrentUpdate();
             ttsBox.currentUpdate = currentUpdate;
             /* end of creating the textbox */
 
@@ -320,7 +321,7 @@ function Timeline () {
      * when clicked, the "preview" button will be added to the step
      * The highlight tool will highlight any valid text  for a given step.  Saving the highlighting still needs to be worked on
      */
-    function addHighlightButton (plusButton, toolArea, localScope) {
+    function addHighlightButton(plusButton, toolArea, self) {
         var highlightButton = document.createElement('div');
         highlightButton.title = 'Highlight text';
         highlightButton.className = 'highlightbutton';
@@ -339,7 +340,7 @@ function Timeline () {
             /* creating the highlightTool */
             var highlightText = document.createElement('highlight-text-creation');
             document.body.appendChild(highlightText);
-            var currentUpdate = localScope.index.getCurrentUpdate();
+            var currentUpdate = self.index.getCurrentUpdate();
             highlightText.currentUpdate = currentUpdate;
             /* end of creating the highlightTool */
 
@@ -357,7 +358,7 @@ function Timeline () {
      * when clicked, the "preview" button will be added to the step
      * This will create a simple sketch surface to draw on.  Currently this isn't called because it isn't finished
      */
-    function addSketchSurfaceButton(plusButton, toolArea, localScope) {
+    function addSketchSurfaceButton(plusButton, toolArea, self) {
         var sketchSurfaceButton = document.createElement('div');
         sketchSurfaceButton.title = 'Sketch Surface';
         sketchSurfaceButton.className = 'sketchsurfacebutton';

@@ -19,9 +19,7 @@
 	<script>
         var template = (function() {
             var link1 = document.querySelector('#multiChoiceTemplateImport');
-            var link = link1.import.querySelector('#multiChoiceTemplateImport');
-            var template = link.import.querySelector('#multi-choice');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(link1.imort, document,'multiChoiceTemplateImport','multi-choice');
             return clone;
         })();
 

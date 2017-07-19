@@ -2,6 +2,11 @@
  * Creates a new connection to the wsUri.
  *
  * With this connection you can send information which is encoded via protobufs.
+ *
+ * @constructor Connection
+ * @param {URL} uri - The url where the websocket server is located.
+ * @param {Boolean} encrypted - True if encryption should be usec.
+ * @param {Boolean} attemptReconnect - True if a reconnection should be attempted if connection initially failed.
  */
 function Connection(uri, encrypted, attemptReconnect) {
 
@@ -18,7 +23,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     var onError = false;
 
     var websocket;
-    var wsUri = (encrypted?'wss://' : 'ws://') + uri;
+    var wsUri = (encrypted ? 'wss://' : 'ws://') + uri;
     var timeoutVariable = false;
     var localScope = this;
 
@@ -40,7 +45,7 @@ function Connection(uri, encrypted, attemptReconnect) {
             /**
              * Called when the websocekt opens.
              *
-             * @param {Event} evt An event containing data about opening.
+             * @param {Event} evt - An event containing data about opening.
              */
             websocket.onopen = function(evt) {
                 connected = true;
@@ -56,7 +61,7 @@ function Connection(uri, encrypted, attemptReconnect) {
             /**
              * Called when the websocket closes.
              *
-             * @param {Event} evt An event containing data about closing.
+             * @param {Event} evt - An event containing data about closing.
              */
             websocket.onclose = function(evt) {
                 connected = false;
@@ -78,14 +83,19 @@ function Connection(uri, encrypted, attemptReconnect) {
             /**
              * Called when the websocket receives a message.
              *
-             * @param {Event} evt An event containing data about receiving a message.
+             * @param {Event} evt - An event containing data about receiving a message.
              */
             websocket.onmessage = function(evt) {
-                /*jshint maxcomplexity:15 */
+                /*jshint maxcomplexity:18 */
                 try {
+
                     var MessageType = CourseSketch.prutil.getRequestClass().MessageType;
                     // Decode the Request
                     var msg = CourseSketch.prutil.getRequestClass().decode(evt.data);
+
+                    if (msg.requestType === MessageType.RECOGNITION) {
+                        console.log('YO REC YO');
+                    }
                     // console.log('request decoded succesfully ');
                     if (msg.requestType === MessageType.TIME) {
                         console.log('getting from time');
@@ -106,9 +116,9 @@ function Connection(uri, encrypted, attemptReconnect) {
                         console.log('getting from answer checker');
                         onAnswerChecker(evt, msg);
                     } else if ((msg.requestType === MessageType.DATA_REQUEST || msg.requestType === MessageType.DATA_INSERT ||
-                            msg.requestType === MessageType.DATA_UPDATE || msg.requestType === MessageType.DATA_REMOVE) && onSchoolData) {
+                        msg.requestType === MessageType.DATA_UPDATE || msg.requestType === MessageType.DATA_REMOVE) && onSchoolData) {
                         console.log('getting from school data');
-                        console.log(msg);
+                        //console.log(msg);
                         onSchoolData(evt, msg);
                     } else if (msg.requestType === MessageType.ERROR) {
                         var exception = CourseSketch.prutil.decodeProtobuf(msg.getOtherData(),
@@ -136,7 +146,7 @@ function Connection(uri, encrypted, attemptReconnect) {
             /**
              * Called when the websocket throws an error.
              *
-             * @param {Event} evt An event containing data about the error.
+             * @param {Event} evt - An event containing data about the error.
              */
             websocket.onerror = function(evt) {
                 if (onError) {
@@ -162,7 +172,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     };
 
     /**
-     * Returns true if the websocket is connected correctly.
+     * @returns {Boolean} True if the websocket is connected correctly.
      */
     this.isConnected = function() {
         return connected;
@@ -171,10 +181,17 @@ function Connection(uri, encrypted, attemptReconnect) {
     /**
      * Sets the listeners for the different functions:
      *
-     * On Open - called when the connection is open. Recieves event object.  (called after everything is set up too)
-     * On Close - called when the connection is closed. Recieves event object.
-     * On Recieve - called the client recieves a message. Recieves event object and message Object.
-     * On Error - called when an error is thrown. Recieves event object.  It may be passed an error object.
+     * <ul>
+     * <li>On Open - called when the connection is open. Recieves event object.  (called after everything is set up too)</li>
+     * <li>On Close - called when the connection is closed. Recieves event object.</li>
+     * <li>On Recieve - called the client recieves a message. Recieves event object and message Object.</li>
+     * <li>On Error - called when an error is thrown. Recieves event object.  It may be passed an error object.</li>
+     * </ul>
+     *
+     * @param {Function} open - A listener for opening the connection.
+     * @param {Function} close - A listener for closing the connection.
+     * @param {Function} message - A listener for every message received by the connection.
+     * @param {Function} error - A listener for every error caused by the connection.
      */
     this.setListeners = function(open, close, message, error) {
         onOpen = open;
@@ -186,7 +203,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     /**
      * Sets a listener to listen to login events.
      *
-     * @param {Function} listener the function that is called when the client receives a login message from the server
+     * @param {Function} listener - the function that is called when the client receives a login message from the server
      */
     this.setLoginListener = function(listener) {
         onLogin = listener;
@@ -195,7 +212,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     /**
      * Sets a listener to listen to recognition events.
      *
-     * @param {Function} listener the function that is called when the client receives a recognition message from the server.
+     * @param {Function} listener - the function that is called when the client receives a recognition message from the server.
      */
     this.setRecognitionListener = function(listener) {
         onRecognition = listener;
@@ -204,7 +221,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     /**
      * Sets a listener to listen to answer checker events.
      *
-     * @param {Function} listener the function that is called when the client receives a answer checker message from the server.
+     * @param {Function} listener - the function that is called when the client receives a answer checker message from the server.
      */
     this.setAnswerCheckingListener = function(listener) {
         onAnswerChecker = listener;
@@ -213,7 +230,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     /**
      * Sets a listener to listen to submission events.
      *
-     * @param {Function} listener the function that is called when the client receives a submission message from the server.
+     * @param {Function} listener - the function that is called when the client receives a submission message from the server.
      */
     this.setSubmissionListener = function(listener) {
         onSubmission = listener;
@@ -222,7 +239,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     /**
      * Sets a listener to listen to submission events.
      *
-     * @param {Function} listener the function that is called when the client receives a submission message from the server.
+     * @param {Function} listener - the function that is called when the client receives a submission message from the server.
      */
     this.setSchoolDataListener = function(listener) {
         onSchoolData = listener;
@@ -231,7 +248,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     /**
      * Sets a listener to listen to a connection opening.
      *
-     * @param {Function} listener the function that is called when the client opens a connection.
+     * @param {Function} listener - the function that is called when the client opens a connection.
      */
     this.setOnOpenListener = function(listener) {
         onOpen = listener;
@@ -240,7 +257,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     /**
      * Sets a listener to listen to a connection closing.
      *
-     * @param {Function} listener the function that is called when the client closes a connection.
+     * @param {Function} listener - the function that is called when the client closes a connection.
      */
     this.setOnCloseListener = function(listener) {
         onClose = listener;
@@ -249,7 +266,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     /**
      * Sets a listener to listen to any message.
      *
-     * @param {Function} listener the function that is called when the client receives any message.
+     * @param {Function} listener - the function that is called when the client receives any message.
      */
     this.setOnMessageListener = function(listener) {
         onRequest = listener;
@@ -258,7 +275,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     /**
      * Sets a listener to listen to an error event from the server.
      *
-     * @param {Function} listener the function that is called when the client receives an error from the server.
+     * @param {Function} listener - the function that is called when the client receives an error from the server.
      */
     this.setOnErrorListener = function(listener) {
         onError = listener;
@@ -268,6 +285,8 @@ function Connection(uri, encrypted, attemptReconnect) {
      * Given a Request object (message defined in proto), send it over the wire.
      *
      * The message must be a protobuf object.
+     *
+     * @param {Request} message - The message to be sent to the server.
      */
     this.sendRequest = function(message) {
         try {
@@ -286,6 +305,8 @@ function Connection(uri, encrypted, attemptReconnect) {
      * Only the data is the same right now.
      * The message is delayed but the function returns immediately.
      * TODO: complete the entirety of the event that can be spoofed.
+     *
+     * @param {Request} message - The message to be sent to the client pretending to be the server.
      */
     this.sendSelf = function(message) {
         setTimeout(function() {
@@ -293,7 +314,7 @@ function Connection(uri, encrypted, attemptReconnect) {
                 data: message.toArrayBuffer()
             };
             websocket.onmessage(event);
-        }, 100);
+        }, 20);
     };
     /**
      * Closes the websocket.
@@ -305,7 +326,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     };
 
     /**
-     * Gets the current time that is the same as the time the server sees.
+     * @returns {Long} The current time that is the same as the time the server sees.
      */
     this.getCurrentTime = function() {
         var longVersion = dcodeIO.Long.fromString('' + (createTimeStamp() + totalTimeDifferance));
@@ -317,8 +338,8 @@ function Connection(uri, encrypted, attemptReconnect) {
     /**
      * Called to synchronize time events.
      *
-     * @param {Event} evt An event about receiving a message
-     * @param {Request} msg The message the contains timing data.
+     * @param {Event} evt - An event about receiving a message
+     * @param {Request} msg - The message the contains timing data.
      * @returns {Request|Undefined} returns the time to send or null if no time is being sent
      */
     function onTime(evt, msg) {
@@ -334,7 +355,8 @@ function Connection(uri, encrypted, attemptReconnect) {
      * Computes the time difference and returns a request for the latency.
      *
      * Called when the server returns the request for the time difference.
-     * @param {Request} req the time request
+     *
+     * @param {Request} req - The time request
      * @returns {Request} A request that specifies a request to the server to return latency.
      */
     function clientReciveTimeDiff(req) {
@@ -351,7 +373,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     /**
      * Saves the offset locally.
      *
-     * @param {Request} req The time request.
+     * @param {Request} req - The time request.
      * @returns {Undefined} No more server actions are needed.  Return null to denote that.
      */
     function clientReciveLatency(req) {

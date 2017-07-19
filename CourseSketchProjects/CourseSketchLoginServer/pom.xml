@@ -20,8 +20,8 @@
         <mainClass>connection.LoginRunner</mainClass>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>0</projectBranchLevel>
-        <projectLineLevel>0</projectLineLevel>
+        <projectBranchLevel>51</projectBranchLevel>
+        <projectLineLevel>32</projectLineLevel>
     </properties>
     <build>
         <plugins>
@@ -54,10 +54,6 @@
                 <artifactId>exec-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>com.github.joelittlejohn.embedmongo</groupId>
-                <artifactId>embedmongo-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
@@ -72,7 +68,7 @@
         <dependency>
             <groupId>CourseSketch</groupId>
             <artifactId>ProtoFiles</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>${protoFileVersion}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -82,9 +78,15 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>RpcServer</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>2.12.3</version>
+            <version>${mongodbJavaDriverVersion}</version>
         </dependency>
     </dependencies>
 </project>

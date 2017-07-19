@@ -9,9 +9,7 @@
 <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#textBoxTemplateImport');
-            var template = link.import.querySelector('#textBoxCreation');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document,'textBoxTemplateImport','textBoxCreation');
 
             var newElement = new TextBox();
 
@@ -39,9 +37,7 @@
             });
         });
         $(document).ready(function() {
-            var link = importDoc.querySelector('#textBoxTemplateImport');
-            var template = link.import.querySelector('#textBoxViewing');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document,'textBoxTemplateImport','textBoxViewing');
 
             var newElement = new TextBox();
 

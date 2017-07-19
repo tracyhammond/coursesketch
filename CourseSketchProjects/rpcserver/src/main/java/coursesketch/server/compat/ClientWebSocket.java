@@ -195,6 +195,6 @@ public class ClientWebSocket extends AbstractClientWebSocket {
      * @return A new instance of{@link RpcController}.
      */
     public final RpcController getNewRpcController() {
-        return channel.newRpcController();
+        return getRpcChannel().newRpcController();
     }
 }

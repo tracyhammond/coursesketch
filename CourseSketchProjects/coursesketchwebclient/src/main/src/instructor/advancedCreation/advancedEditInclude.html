@@ -1,0 +1,28 @@
+<html>
+<head>
+    <link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
+    <link rel="import" href="/src/utilities/connection/protobufInclude.html">
+    <link rel="import" href="/src/utilities/defaultUtils.html">
+    <link rel="import" href="/src/utilities/templates/schoolItem/schoolItemInclude.html">
+    <link id="advanceEditImport" rel="import" href="/src/instructor/advancedCreation/advanceEdit.html">
+    <script src="advanceEdit.js"></script>
+
+    <script>
+        (function(importDoc) {
+            $(document).ready(function() {
+                var advanceNode = safeImport(importDoc, document, 'advanceEditImport', 'advanceEditTemplate');
+
+                /**
+                 * returns a clone of the node that can be used for creating an advance edit panel.
+                 */
+                function getAdvanceEditPanel() {
+                    return advanceNode.cloneNode(true);
+                }
+
+                CourseSketch.AdvanceEditPanel.prototype.getAdvanceEditPanel = getAdvanceEditPanel;
+            });
+        })(document.currentScript.ownerDocument);
+    </script>
+
+</head>
+</html>

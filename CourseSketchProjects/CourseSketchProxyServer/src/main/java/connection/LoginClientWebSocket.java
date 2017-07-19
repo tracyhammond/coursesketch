@@ -92,8 +92,9 @@ public final class LoginClientWebSocket extends ClientWebSocket {
             final LoginConnectionState state = (LoginConnectionState) getStateFromId(request.getSessionInfo());
             // If there was no connection state created then we can not log the student in.
             if (state == null) {
-                final Exception nullPointerException = new NullPointerException("No State was grabbed for session: [" + request.getSessionInfo() + "]");
-                LOG.error("Unable to create a state object for the given session ", nullPointerException);
+                final Exception nullPointerException = new NullPointerException("No State was grabbed for session:[ "
+                        + request.getSessionInfo() + "]");
+                LOG.error("Unable to create a state object for the given session", nullPointerException);
 
                 final Request result = createExceptionRequest(ProxyConnectionManager.createClientRequest(request),
                         ExceptionUtilities.createProtoException(nullPointerException));
@@ -127,7 +128,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
      */
     private void loginUser(final LoginInformation login, final Request request, final LoginConnectionState state) {
         if (login.getIsLoggedIn()) {
-            state.logIn(login.getIsInstructor(), request.getServersideId());
+            state.logIn(login.getIsInstructor(), request.getServersideId(), request.getServerUserId());
         }
 
         // strips away identification

@@ -5,6 +5,7 @@ import database.RequestConverter;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.utils.Util;
 import protobuf.srl.utils.Util.SrlPermission;
 
 import javax.swing.JOptionPane;
@@ -15,7 +16,7 @@ public class LocalAddCourses {
 		String[] description = new String[]{"Howdy! Welcome to Chem 107 where you learn about lewis dot diagrams"};
 		for (int k = 0; k < name.length; k ++) {
 			SrlCourse.Builder testBuilder = SrlCourse.newBuilder();
-			testBuilder.setAccess(SrlCourse.Accessibility.SUPER_PUBLIC);
+			testBuilder.setAccess(Util.Accessibility.SUPER_PUBLIC);
 			testBuilder.setSemester("FALL");
 			testBuilder.setName(name[k]);
 			testBuilder.setDescription(description[k]);
@@ -28,7 +29,7 @@ public class LocalAddCourses {
 
 			// testing inserting course
 			System.out.println("INSERTING COURSE");
-			String courseId = MongoInstitution.getInstance().insertCourse(instructionID, testBuilder.buildPartial());
+			String courseId = MongoInstitution.getInstance(null).insertCourse(null, instructionID, testBuilder.buildPartial());
 			System.out.println("INSERTING COURSE SUCCESSFUL");
 			System.out.println(courseId);
 			LocalAddAssignments.testAssignments(courseId, instructionID);
@@ -36,7 +37,7 @@ public class LocalAddCourses {
 	}
 
 	public static void main(String[] args) throws DatabaseAccessException {
-		new MongoInstitution(false, null); // makes the database point locally
+		new MongoInstitution(null, null, null, null); // makes the database point locally
 		new UserClient(false, null); // makes the database point locally
 		String id = JOptionPane.showInputDialog("Insert the Id of the person inserting the class");
 		//0b7ac244-b785-6961-9347-7621abeada88-277aa353914b7c5f

@@ -9,14 +9,16 @@
     var courseBarrier = barrier.getCallback();
     var assignmentBarrier = barrier.getCallback();
     var problemBarrier = barrier.getCallback();
+    var bankProblemBarrier = barrier.getCallback();
 
-    // barriers have been tested and work as expected with this function.
+    // barriers have been tested and work as expected with these function.
     var loadLectures = function() {
         var localBarrier = new CallbackBarrier();
         var lectureLoadedCallback = localBarrier.getCallbackAmount(CourseSketch.fakeLectures.length);
         localBarrier.finalize(lectureBarrier);
         for (var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
-            CourseSketch.dataManager.setLecture(CourseSketch.fakeLectures[i], lectureLoadedCallback, lectureLoadedCallback);
+            console.log(CourseSketch.fakeLectures[i]);
+            CourseSketch.dataManager.setAssignment(CourseSketch.fakeLectures[i], lectureLoadedCallback, lectureLoadedCallback);
         }
     };
 
@@ -56,6 +58,46 @@
         }
     };
 
+    var loadBankProblems = function() {
+        var localBarrier = new CallbackBarrier();
+        var loadedCallback = localBarrier.getCallbackAmount(CourseSketch.fakeBankProblems.length);
+        localBarrier.finalize(bankProblemBarrier);
+        for (var i = 0; i < CourseSketch.fakeBankProblems.length; ++i) {
+            CourseSketch.dataManager.setBankProblem(CourseSketch.fakeBankProblems[i], loadedCallback);
+        }
+        CourseSketch.dataManager.getAllBankProblems = function (courseId, assignmentId, page, callback) {
+            callback(CourseSketch.fakeBankProblems.slice(page * 10), (page + 1) * 10);
+        }
+    };
+
+    /**
+     *
+     */
+    function setDataListenerFunctions() {
+        CourseSketch.dataListener.sendDataInsert = function (queryType, data, callback, requestId, times) {
+            var oldId;
+            if (queryType === CourseSketch.prutil.ItemQuery.ASSIGNMENT) {
+                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlAssignmentClass()).id;
+            }
+            if (queryType === CourseSketch.prutil.ItemQuery.COURSE) {
+                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlCourseClass()).id;
+            }
+            if (queryType === CourseSketch.prutil.ItemQuery.COURSE_PROBLEM) {
+                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlProblemClass()).id;
+            }
+            if (queryType === CourseSketch.prutil.ItemQuery.BANK_PROBLEM) {
+                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlBankProblemClass()).id;
+            }
+            var result = {
+                getReturnText: function() { return oldId + ':' + oldId; }
+            };
+            callback(undefined, result);
+        };
+        CourseSketch.dataListener.sendDataUpdate = function (queryType, data, callback, requestId, times) {
+            callback();
+        }
+    }
+
     /**
      * Called when we can load our fake data into the database.
      */
@@ -87,25 +129,27 @@
                 }
             }
             callback(results);
-        }
+        };
 
         barrier.finalize(function() {
             console.log("DATABASE HAS ITS DATA LOADED");
             CourseSketch.dataManager.testDataLoaded = true;
         });
         loadCourses();
-        loadLectures();
         loadSlides();
-        loadAssignments();
         loadProblems();
+        loadBankProblems();
+        loadAssignments();
+        loadLectures();
+        setDataListenerFunctions();
     }
 
     // waits till the database is ready to set up our loading process
-    if (CourseSketch.dataManager.realDatabaseReady()) {
+    if (!isUndefined(CourseSketch.dataManager.realDatabaseReady) && CourseSketch.dataManager.realDatabaseReady()) {
         databaseIsReadForLoading();
     } else {
         var intervalVar = setInterval(function() {
-            if (CourseSketch.dataManager.realDatabaseReady()) {
+            if (!isUndefined(CourseSketch.dataManager.realDatabaseReady) && CourseSketch.dataManager.realDatabaseReady()) {
                 clearInterval(intervalVar);
                 databaseIsReadForLoading();
             }

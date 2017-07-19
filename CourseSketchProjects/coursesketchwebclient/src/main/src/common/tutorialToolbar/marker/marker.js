@@ -4,7 +4,7 @@
  */
 function TimelineMarker() {
     /**
-     * @param {node} templateClone is a clone of the custom HTML Element for the text box
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
@@ -14,8 +14,12 @@ function TimelineMarker() {
         addCross(shadowRoot.querySelector('#picture'), this);
 
     };
+
     /**
-     * straight through the timeline, the user is able to delete elements that were created
+     * Straight through the timeline, the user is able to delete elements that were created.
+     *
+     * @param {Element} element - The element that this cross is being added to.
+     * @param {Element} marker - The element that is being removed.
      */
     function addCross(element, marker) {
         element.onclick = function() {
@@ -34,7 +38,7 @@ function TimelineMarker() {
     }
 
     /**
-     * @param {Function} remove The element is removed and calls this function during the process
+     * @param {Function} remove - The element is removed and calls this function during the process
      */
     this.setRemoveFunction = function(remove) {
         this.removeFunction = remove;
