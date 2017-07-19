@@ -32,6 +32,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     var lectureDataManager;
     var slideDataManager;
     var gradeDataManager;
+    var tutorialDataManager;
 
     /*
      * END OF VARIABLE SETTING
@@ -94,6 +95,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         tables.push(database.createTable('Lectures', 'id', addFunction));
         tables.push(database.createTable('Slides', 'id', addFunction));
         tables.push(database.createTable('Other', 'id', addFunction));
+        tables.push(database.createTable('Tutorials', 'id', addFunction));
 
         database.setTables(tables);
         database.open();
@@ -121,6 +123,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         submissionManager = new SubmissionDataManager(this, dataListener, database, ByteBuffer);
         lectureDataManager = new LectureDataManager(this, dataListener, database, ByteBuffer);
         slideDataManager = new SlideDataManager(this, dataListener, database, ByteBuffer);
+        tutorialDataManager = new TutorialDataManager(this, dataListener, database, ByteBuffer);
 
         console.log('Database is ready for use! with user: ' + userId);
         databaseFinishedLoading = true;

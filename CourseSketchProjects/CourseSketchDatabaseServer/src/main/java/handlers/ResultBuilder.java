@@ -3,6 +3,8 @@ package handlers;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.protobuf.GeneratedMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import coursesketch.database.auth.AuthenticationException;
 import database.DatabaseAccessException;
 import protobuf.srl.query.Data;
@@ -15,6 +17,12 @@ import java.util.List;
  * A helper class that builds results.
  */
 public final class ResultBuilder {
+
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ResultBuilder.class);
 
     /**
      * The string used to separate ids when returning a result.
@@ -64,9 +72,12 @@ public final class ResultBuilder {
     static Data.ItemResult buildResult(final String text, final Data.ItemQuery type, final List<? extends GeneratedMessage> data) {
         final Data.ItemResult.Builder result = Data.ItemResult.newBuilder();
         if (data != null) {
+            LOG.debug("Building {} results ", data.size());
             for (GeneratedMessage message : data) {
                 result.addData(message.toByteString());
             }
+        } else {
+            LOG.warn("Data was null no results were built");
         }
         result.setQuery(type);
         if (text != null) {
@@ -131,14 +142,7 @@ public final class ResultBuilder {
      * @return A fully built item result.
      */
     static Data.ItemResult buildResult(final Data.ItemQuery type, final GeneratedMessage... data) {
-        final Data.ItemResult.Builder result = Data.ItemResult.newBuilder();
-        if (data != null) {
-            for (GeneratedMessage message : data) {
-                result.addData(message.toByteString());
-            }
-        }
-        result.setQuery(type);
-        return result.build();
+        return buildResult(null, type, data);
     }
 
     /**
@@ -154,14 +158,7 @@ public final class ResultBuilder {
      * @return A fully built item result.
      */
     public static Data.ItemResult buildResult(final Data.ItemQuery type, final List<? extends GeneratedMessage> data) {
-        final Data.ItemResult.Builder result = Data.ItemResult.newBuilder();
-        if (data != null) {
-            for (GeneratedMessage message : data) {
-                result.addData(message.toByteString());
-            }
-        }
-        result.setQuery(type);
-        return result.build();
+        return buildResult(null, type, data);
     }
 
     /**

@@ -13,6 +13,7 @@ import protobuf.srl.school.Assignment.SrlAssignment;
 import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.school.Problem.SrlProblem;
 import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.tutorial.TutorialOuterClass;
 import protobuf.srl.services.identity.Identity;
 import protobuf.srl.submission.Submission;
 
@@ -477,6 +478,42 @@ public interface Institution {
      */
     List<Submission.SrlExperiment> getExperimentAsInstructor(String authId, List<String> identifier, Message.Request sessionInfo,
             MultiConnectionManager internalConnections, ByteString review) throws DatabaseAccessException, AuthenticationException;
+
+    /**
+     * Inserts a tutorial into the database and returns the tutorial ID.
+     *
+     * @param userId User associated with the tutorial
+     * @param tutorialObject The tutorial being inserted
+     * @return tutorialId of inserted tutorial
+     * @throws DatabaseAccessException Thrown if there is an issue accessing data
+     * @throws AuthenticationException Thrown if the instructor does not have authentication to the experiments.
+     */
+    String insertTutorial(String userId, TutorialOuterClass.Tutorial tutorialObject)
+            throws DatabaseAccessException, AuthenticationException;
+
+    /**
+     * Gets a tutorial from the database.
+     *
+     * @param tutorialId ID of the tutorial to get
+     * @param userId User associated with the tutorial
+     * @return The requested tutorial
+     * @throws DatabaseAccessException Thrown if there is an issue accessing data.
+     * @throws AuthenticationException Thrown if the instructor does not have authentication to the experiments.
+     */
+    TutorialOuterClass.Tutorial getTutorial(final String userId, final String tutorialId)
+            throws DatabaseAccessException, AuthenticationException;
+
+    /**
+     * Gets a list of tutorials based on the url
+     * @param userId
+     * @param url
+     * @param page
+     * @return
+     * @throws DatabaseAccessException
+     * @throws AuthenticationException
+     */
+    List<TutorialOuterClass.Tutorial> getTutorialList(String userId, String url, int page)
+            throws DatabaseAccessException, AuthenticationException;
 
     /**
      * This method will set or insert the gradingPolicy in Mongo based on the proto object passed in.

@@ -38,6 +38,38 @@
             });
         });
     })(document.currentScript.ownerDocument);
+
+    (function(importDoc) {
+        $(document).ready(function() {
+            var clone = document.createElement('div');
+
+            var newElement = new HighlightText();
+
+            /**
+             * @Method
+             * Called when the element is created, using document.create()(but does nothing else)
+             */
+            HighlightText.prototype.createdCallback = function() {
+                this.open = "";
+            };
+
+            /**
+             * Creates the shadow root and adds that into the system.
+             */
+            HighlightText.prototype.attachedCallback = function() {
+                this.initializeElement(clone.cloneNode(true));
+            };
+
+            HighlightText.prototype.detachedCallback = function() {
+                // This makes it so when the highlightText tool is removed, the highlighting mechanism bound to mouseup is turned off
+                $(document).off("mouseup");
+            };
+
+            document.registerElement('highlight-text-viewing', {
+                prototype : newElement
+            });
+        });
+    })(document.currentScript.ownerDocument);
 </script>
 </head>
 </html>

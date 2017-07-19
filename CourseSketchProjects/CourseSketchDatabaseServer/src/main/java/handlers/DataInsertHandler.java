@@ -22,6 +22,9 @@ import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.Problem.SrlProblem;
 import protobuf.srl.school.School.SrlUser;
+
+import protobuf.srl.tutorial.TutorialOuterClass;
+
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
@@ -143,6 +146,12 @@ public final class DataInsertHandler {
                         break;
                         case GRADING_POLICY: {
                             GradingPolicyUpsertHandler.gradingPolicyUpsertHandler(instance, itemSet, authId);
+                        }
+                        break;
+                        case TUTORIAL: {
+                            final TutorialOuterClass.Tutorial tutorialObject = TutorialOuterClass.Tutorial.parseFrom(itemSet.getData());
+                            final String resultId = instance.insertTutorial(userId, tutorialObject);
+                            results.add(ResultBuilder.buildResult(resultId + ID_SEPARATOR + tutorialObject.getId(), itemSet.getQuery()));
                         }
                         break;
                         default:

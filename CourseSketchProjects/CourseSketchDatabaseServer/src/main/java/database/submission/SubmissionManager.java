@@ -1,7 +1,11 @@
 package database.submission;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.mongodb.DB;
 import com.google.common.base.Strings;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
@@ -13,17 +17,21 @@ import database.DatabaseStringConstants;
 import database.institution.mongo.MongoInstitution;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import protobuf.srl.commands.Commands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data;
 import protobuf.srl.query.Data.ItemQuery;
+import protobuf.srl.tutorial.TutorialOuterClass;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.submission.Submission;
 import protobuf.srl.utils.Util;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.mongodb.client.model.Projections.fields;
@@ -32,6 +40,12 @@ import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SOLUTION_COLLECTION;
 import static database.DatabaseStringConstants.SOLUTION_ID;
+import static database.DatabaseStringConstants.DESCRIPTION;
+import static database.DatabaseStringConstants.NAME;
+import static database.DatabaseStringConstants.TUTORIAL_COLLECTION;
+import static database.DatabaseStringConstants.UPDATELIST;
+import static database.DatabaseStringConstants.URL;
+import static database.DatabaseStringConstants.URL_HASH;
 import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
@@ -261,6 +275,107 @@ public final class SubmissionManager {
             // experiment.
         }
         return experimentListWithUserIds;
+    }
+
+    /**
+     * Inserts a tutorial into the database.
+     *
+     * @return ID of the inserted tutorial
+     * @param authenticator The object being used to authenticate the server.
+     * @param dbs The database where the data is stored.
+     * @param userId The user that was requesting this information
+     * @param tutorialObject the tutorial to be inserted
+     * @throws DatabaseAccessException Thrown if there are no problems data that exist.
+     * @throws AuthenticationException Thrown if the user does not have the authentication
+     */
+    public static String mongoInsertTutorial(final Authenticator authenticator, final MongoDatabase dbs, final String userId,
+            final TutorialOuterClass.Tutorial tutorialObject) throws DatabaseAccessException, AuthenticationException {
+        final MongoCollection<Document> tutorialCollection = dbs.getCollection(TUTORIAL_COLLECTION);
+
+        final Document query = new Document(DESCRIPTION, tutorialObject.getDescription()).append(NAME, tutorialObject.getName())
+                .append(URL, tutorialObject.getUrl()).append(URL_HASH, tutorialObject.getUrl().hashCode())
+                .append(UPDATELIST, tutorialObject.getSteps().toByteArray());
+
+        tutorialCollection.insertOne(query);
+        final Document cursor = tutorialCollection.find(query).first();
+        return cursor.get(SELF_ID).toString();
+    }
+
+    /**
+     * Builds a request to the server for a tutorial.
+     *
+     * @return ID of the inserted tutorial
+     * @param authenticator The object being used to authenticate the server.
+     * @param dbs The database where the data is stored.
+     * @param userId The user that was requesting this information
+     * @param tutorialId the tutorial to be inserted
+     * @throws DatabaseAccessException Thrown if there are no problems data that exist.
+     * @throws AuthenticationException Thrown if the user does not have the authentication
+     */
+    public static TutorialOuterClass.Tutorial mongoGetTutorial(final Authenticator authenticator, final MongoDatabase dbs, final String userId,
+            final String tutorialId) throws DatabaseAccessException, AuthenticationException {
+        final MongoCollection<Document> tutorialCollection = dbs.getCollection(TUTORIAL_COLLECTION);
+
+        final Document cursor = tutorialCollection.find(new Document(SELF_ID, new ObjectId(tutorialId))).first();
+        if (cursor == null) {
+            throw new DatabaseAccessException("Tutorial was not found with the following ID " + tutorialId);
+        }
+
+        return extractTutorial(cursor);
+    }
+
+    /**
+     * Builds a request to the server for all tutorials associated with a URL.
+     *
+     * @return list of tutorials
+     * @param authenticator The object being used to authenticate the server.
+     * @param dbs The database where the data is stored.
+     * @param userId The user that was requesting this information
+     * @param tutorialUrl the url of the tutorials
+     * @param pageNumber number of page of tutorial list
+     * @throws DatabaseAccessException Thrown if there are no problems data that exist.
+     * @throws AuthenticationException Thrown if the user does not have the authentication
+     */
+    public static List<TutorialOuterClass.Tutorial> mongoGetTutorialList(final Authenticator authenticator, final MongoDatabase dbs, final String userId,
+            final String tutorialUrl, final int pageNumber) throws DatabaseAccessException, AuthenticationException {
+        final MongoCollection<Document> tutorialCollection = dbs.getCollection(TUTORIAL_COLLECTION);
+
+        final int hash = tutorialUrl.hashCode();
+        FindIterable<Document> cursor = tutorialCollection.find(new Document(URL_HASH, hash));
+        final List<TutorialOuterClass.Tutorial> tutorialList = new ArrayList<>();
+        if (cursor == null) {
+            throw new DatabaseAccessException("No tutorials were found with the following URL: " + tutorialUrl);
+        }
+
+        for (Document aCursor : cursor) {
+            tutorialList.add(extractTutorial(aCursor));
+        }
+
+        return tutorialList;
+    }
+
+    /**
+     * Extracts a single tutorial from a URL (used in a while loop for mongoGetTutorialList).
+     *
+     * @return tutorial object
+     * @param dbTutorial tutorial to be extracted from the database
+     * @throws DatabaseAccessException Thrown if there are no problems data that exist.
+     */
+    private static TutorialOuterClass.Tutorial extractTutorial(final Document dbTutorial) throws DatabaseAccessException {
+        final TutorialOuterClass.Tutorial.Builder tutorial = TutorialOuterClass.Tutorial.newBuilder();
+        tutorial.setId(dbTutorial.get(SELF_ID).toString());
+        tutorial.setName(dbTutorial.get(NAME).toString());
+        tutorial.setDescription(dbTutorial.get(DESCRIPTION).toString());
+        tutorial.setUrl(dbTutorial.get(URL).toString());
+        if (dbTutorial.containsField(UPDATELIST)) {
+            try {
+                tutorial.setSteps(Commands.SrlUpdateList.parseFrom((byte[]) dbTutorial.get(UPDATELIST)));
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+                throw new DatabaseAccessException("unable to decode steps", e);
+            }
+        }
+        return tutorial.build();
     }
 
     /**

@@ -33,6 +33,7 @@ import protobuf.srl.school.Problem.LectureSlide;
 import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.school.Problem.SrlProblem;
 import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.tutorial.TutorialOuterClass;
 import protobuf.srl.services.identity.Identity;
 import protobuf.srl.submission.Submission;
 import protobuf.srl.utils.Util;
@@ -558,6 +559,23 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
+    public String insertTutorial(final String userId, final TutorialOuterClass.Tutorial tutorialObject)
+            throws DatabaseAccessException, AuthenticationException {
+        return SubmissionManager.mongoInsertTutorial(auth, database, userId, tutorialObject);
+    }
+
+    @Override
+    public TutorialOuterClass.Tutorial getTutorial(final String userId, final String tutorialId)
+            throws DatabaseAccessException, AuthenticationException {
+        return SubmissionManager.mongoGetTutorial(auth, database, userId, tutorialId);
+    }
+
+    @Override
+    public List<TutorialOuterClass.Tutorial> getTutorialList(final String userId, final String url, final int page)
+            throws DatabaseAccessException, AuthenticationException {
+        return SubmissionManager.mongoGetTutorialList(auth, database, userId, url, page);
+    }
+
     public ProtoGradingPolicy getGradingPolicy(final String authId, final String courseId) throws AuthenticationException, DatabaseAccessException {
         return GradingPolicyManager.getGradingPolicy(auth, database, courseId, authId);
     }

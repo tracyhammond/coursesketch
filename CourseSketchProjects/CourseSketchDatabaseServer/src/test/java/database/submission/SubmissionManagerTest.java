@@ -25,9 +25,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import protobuf.srl.utils.Util;
+import protobuf.srl.commands.Commands;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.submission.Submission;
+import protobuf.srl.tutorial.TutorialOuterClass;
+import protobuf.srl.utils.Util;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,8 +37,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static database.DatabaseStringConstants.DESCRIPTION;
 import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
+import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.SELF_ID;
+import static database.DatabaseStringConstants.TUTORIAL_COLLECTION;
+import static database.DatabaseStringConstants.UPDATELIST;
+import static database.DatabaseStringConstants.URL;
+import static database.DatabaseStringConstants.URL_HASH;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyLong;
@@ -46,7 +54,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * 
+ *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SubmissionManagerTest {
@@ -55,8 +63,10 @@ public class SubmissionManagerTest {
     public FongoRule fongo = new FongoRule();
     public MongoDatabase db;
 
-    @Mock private AuthenticationChecker authChecker;
-    @Mock private AuthenticationOptionChecker optionChecker;
+    @Mock
+    private AuthenticationChecker authChecker;
+    @Mock
+    private AuthenticationOptionChecker optionChecker;
     private Authenticator authenticator;
 
     @Mock
@@ -67,7 +77,13 @@ public class SubmissionManagerTest {
     private Submission.SrlExperiment experiment;
     private List<String> idList;
 
+    TutorialOuterClass.Tutorial.Builder tutorialObject;
+    Commands.SrlUpdateList.Builder steps;
 
+    private static final String id = "randomWhateverWeDontCare";
+    private static final String name = "TestTutorial";
+    private static final String url = "http://www.reddit.com";
+    private static final String description = "This is a test lol";
     private static final String COURSE_ID = new ObjectId().toHexString();
     private static final String SUBMISSION_ID = new ObjectId().toHexString();
     private static final String SUBMISSION_ID2 = new ObjectId().toHexString();
@@ -75,6 +91,7 @@ public class SubmissionManagerTest {
     private static final String PART_ID = "5";
     private static final String ADMIN_USER = new ObjectId().toHexString();
     private static final String USER_USER = new ObjectId().toHexString();
+    private Document fakeDocument;
 
     @Before
     public void setUp() throws Exception {
@@ -87,21 +104,33 @@ public class SubmissionManagerTest {
                 .setSubmission(Submission.SrlSubmission.newBuilder().setId(SUBMISSION_ID))
                 .build();
 
-            // general rules
-            AuthenticationHelper.setMockPermissions(authChecker, null, null, null, null, Authentication.AuthResponse.PermissionLevel.NO_PERMISSION);
+        // general rules
+        AuthenticationHelper.setMockPermissions(authChecker, null, null, null, null, Authentication.AuthResponse.PermissionLevel.NO_PERMISSION);
 
-            when(optionChecker.authenticateDate(any(AuthenticationDataCreator.class), anyLong()))
-                    .thenReturn(false);
+        when(optionChecker.authenticateDate(any(AuthenticationDataCreator.class), anyLong()))
+                .thenReturn(false);
 
-            when(optionChecker.isItemPublished(any(AuthenticationDataCreator.class)))
-                    .thenReturn(false);
+        when(optionChecker.isItemPublished(any(AuthenticationDataCreator.class)))
+                .thenReturn(false);
 
-            when(optionChecker.isItemRegistrationRequired(any(AuthenticationDataCreator.class)))
-                    .thenReturn(true);
+        when(optionChecker.isItemRegistrationRequired(any(AuthenticationDataCreator.class)))
+                .thenReturn(true);
 
         authenticator = new Authenticator(authChecker, optionChecker);
 
         idList = Lists.newArrayList(PROBLEM_ID, PART_ID);
+
+        tutorialObject = TutorialOuterClass.Tutorial.newBuilder();
+        tutorialObject.setId(id);
+        tutorialObject.setName(name);
+        tutorialObject.setUrl(url);
+        tutorialObject.setDescription(description);
+        steps = Commands.SrlUpdateList.newBuilder();
+        tutorialObject.setSteps(steps.build());
+
+        fakeDocument = new Document(DESCRIPTION, tutorialObject.getDescription()).append(NAME, tutorialObject.getName())
+                .append(URL, tutorialObject.getUrl()).append(URL_HASH, tutorialObject.getUrl().hashCode())
+                .append(UPDATELIST, tutorialObject.getSteps().toByteArray());
     }
 
     @Test
@@ -161,7 +190,7 @@ public class SubmissionManagerTest {
         when(submissionManagerInterface.getSubmission(eq(USER_USER), any(Authenticator.class), eq(PROBLEM_ID),
                 eq(SUBMISSION_ID))).thenReturn(experimentList);
 
-        Submission.SrlExperiment actualExperiment = SubmissionManager.mongoGetExperiment(authenticator, db, USER_USER, USER_USER, COURSE_ID,idList
+        Submission.SrlExperiment actualExperiment = SubmissionManager.mongoGetExperiment(authenticator, db, USER_USER, USER_USER, COURSE_ID, idList
                 , submissionManagerInterface);
         new ProtobufComparisonBuilder().build().equals(experiment, actualExperiment);
     }
@@ -201,7 +230,7 @@ public class SubmissionManagerTest {
                 PROBLEM_ID, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         when(submissionManagerInterface.getSubmission(eq(USER_USER), any(Authenticator.class), eq(PROBLEM_ID),
-               eq(SUBMISSION_ID))).thenThrow(DatabaseAccessException.class);
+                eq(SUBMISSION_ID))).thenThrow(DatabaseAccessException.class);
 
         Submission.SrlExperiment actualExperiment = SubmissionManager.mongoGetExperiment(authenticator, db, ADMIN_USER, ADMIN_USER, COURSE_ID, idList
                 , submissionManagerInterface);
@@ -262,7 +291,7 @@ public class SubmissionManagerTest {
 
         when(submissionManagerInterface.getSubmission(anyString(), any(Authenticator.class), anyString(),
                 Mockito.argThat(CourseSketchMatcher.iterableEqualAnyOrder(submissionIds))))
-                        .thenReturn(experiments);
+                .thenReturn(experiments);
 
         AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM,
                 PROBLEM_ID, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
@@ -275,5 +304,39 @@ public class SubmissionManagerTest {
 
         verify(submissionManagerInterface).getSubmission(eq(ADMIN_USER), any(Authenticator.class), eq(PROBLEM_ID),
                 Mockito.argThat(CourseSketchMatcher.iterableEqualAnyOrder(submissionIds)));
+    }
+
+    @Test
+    public void testTutorialInsertCorrectly() throws Exception {
+        String tutorialObjectId = SubmissionManager.mongoInsertTutorial(authenticator, db, "userId", tutorialObject.build());
+
+        fakeDocument.append(SELF_ID, new ObjectId(tutorialObjectId));
+        Document first = db.getCollection(TUTORIAL_COLLECTION).find(new Document(SELF_ID, new ObjectId(tutorialObjectId))).first();
+
+        Assert.assertEquals(fakeDocument, first);
+    }
+
+    @Test
+    public void testTutorialGetCorrectly() throws Exception {
+        String tutorialObjectId = SubmissionManager.mongoInsertTutorial(authenticator, db, "userId", tutorialObject.build());
+
+        TutorialOuterClass.Tutorial tutorial = SubmissionManager.mongoGetTutorial(authenticator, db, "userId", tutorialObjectId);
+        tutorialObject.setId(tutorialObjectId);
+        Assert.assertEquals(tutorialObject.build(), tutorial);
+    }
+
+    @Test(expected = DatabaseAccessException.class)
+    public void testTutorialThrowsExceptionWhenItDoesNotExist() throws DatabaseAccessException, AuthenticationException {
+        SubmissionManager.mongoGetTutorial(authenticator, db, "userId", new ObjectId().toString());
+    }
+
+    @Test
+    public void testTutorialListGetCorrectly() throws Exception {
+        String tutorialObjectId1 = SubmissionManager.mongoInsertTutorial(authenticator, db, "userId", tutorialObject.build());
+        tutorialObject.setName("Tutorial 1");
+        String tutorialObjectId2 = SubmissionManager.mongoInsertTutorial(authenticator, db, "userId", tutorialObject.build());
+
+        List<TutorialOuterClass.Tutorial> tutorialList = SubmissionManager.mongoGetTutorialList(authenticator, db, "userId", url, 0);
+        Assert.assertEquals(2, tutorialList.size());
     }
 }

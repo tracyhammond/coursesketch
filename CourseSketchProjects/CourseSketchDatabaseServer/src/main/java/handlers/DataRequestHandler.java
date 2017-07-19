@@ -9,6 +9,7 @@ import coursesketch.services.submission.SubmissionWebSocketClient;
 import database.DatabaseAccessException;
 import database.institution.Institution;
 import database.user.UserClient;
+import handlers.subhandlers.TutorialRequestHandler;
 import handlers.subhandlers.GradingPolicyRequestHandler;
 import handlers.subhandlers.GradingRequestHandler;
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ import protobuf.srl.school.Problem.LectureSlide;
 import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.school.Problem.SrlProblem;
 import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.tutorial.TutorialOuterClass;
 import protobuf.srl.services.identity.Identity;
 import protobuf.srl.submission.Submission;
 import utilities.ExceptionUtilities;
@@ -191,6 +193,12 @@ public final class DataRequestHandler {
                         case LECTURESLIDE: {
                             final List<LectureSlide> lectureSlideLoop = instance.getLectureSlide(authId, itemRequest.getItemIdList());
                             results.add(ResultBuilder.buildResult(ItemQuery.LECTURESLIDE, lectureSlideLoop));
+                        }
+                        break;
+                        case TUTORIAL: {
+                            final List<TutorialOuterClass.Tutorial> tutorials = TutorialRequestHandler.handleTutorialRequest(instance,
+                                    itemRequest, userId);
+                            results.add(ResultBuilder.buildResult(ItemQuery.TUTORIAL, tutorials));
                         }
                         break;
                         case GRADE: {

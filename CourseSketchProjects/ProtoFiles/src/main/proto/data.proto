@@ -62,6 +62,7 @@ enum ItemQuery {
     LECTURESLIDE = 16; // used to get the lecture slides for a course
     GRADE = 17; // used to handle grades for a course
     GRADING_POLICY = 18; // used to handle grading policies for a course
+    TUTORIAL = 19; // used to get the tutorial for a certain page
 }
 
 /**

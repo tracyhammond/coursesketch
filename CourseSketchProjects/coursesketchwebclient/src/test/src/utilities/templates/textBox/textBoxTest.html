@@ -141,6 +141,39 @@
             real.saveData();
         });
 
+        test("Data Converts to byteArray correctly", function(assert) {
+            expect(5);
+            var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
+            textBoxProto.setText("Test text");
+            textBoxProto.setHeight(100);
+            textBoxProto.setWidth(250);
+            textBoxProto.setX(100);
+            textBoxProto.setY(200);
+
+            var real = document.createElement('test-box-creation');
+            document.getElementById('textbox').appendChild(real);
+            real.initializeElement(template.cloneNode(true));
+            real.loadData(textBoxProto);
+            real.setFinishedListener(function(commandFromBox) {
+                var byteArray = commandFromBox.toArrayBuffer();
+                var command = CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().decode(byteArray);
+                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,
+                        'Expecting command type CREATE_TEXTBOX from commands.proto');
+                assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
+                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+                var height = decoded.getHeight();
+                var width = decoded.getWidth();
+                var x = decoded.getX();
+                var y = decoded.getY();
+                var text = decoded.getText();
+                assert.equal(x, '100', 'Expected 100 for data-x. Got ' + x);
+                assert.equal(y, '200', 'Expected 200 for data-y. Got ' + y);
+                assert.equal(text, 'Test text', 'Expected "Test text" for value. Got "' + text + '"');
+            });
+            real.saveData();
+        });
+
         test("Save data button calls saveData()", function(assert) {
             expect(1);
             var real = document.createElement('test-box-creation');

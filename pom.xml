@@ -667,7 +667,7 @@
         <jettyVersion>9.2.3.v20140905</jettyVersion>
         <!-- 9.2.2.v20140723 -->
         <protobufVersion>3.3.1</protobufVersion>
-        <protoFileVersion>1.0.1</protoFileVersion>
+        <protoFileVersion>1.0.2</protoFileVersion>
         <recognitionFrameworkVersion>4.0.0</recognitionFrameworkVersion>
         <jodaVersion>[2.1,)</jodaVersion>
         <sitepluginVersion>2.3.3</sitepluginVersion>
