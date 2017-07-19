@@ -11,19 +11,29 @@ function MvSketch() {
     this.gradeValue = undefined;
 
     /**
-     * Sets the update list.
+     * Sets the submissions data.
      *
-     * After the update list is done loading this attempts to resize the sketch surface so that it fills the canvas correctly.
+     * After the submission data is done loading this attempts to resize the sketch surface so that it fills the canvas correctly.
      *
-     * @param {SrlUpdateList} updateList - A list that contains all the changes made in sketch.
+     * @param {QuestionType} questionType - The type of question this data applies to.
+     * @param {SrlSubmission} submission - A list that contains all the changes made in sketch.
      * @instance
      * @memberof MvSketch
      */
-    this.setUpdateList = function(updateList)  {
-        this.shadowRoot.querySelector('sketch-surface').loadUpdateList(updateList, undefined, function() {
-            console.log('Resizing the canvas');
-            this.shadowRoot.querySelector('sketch-surface').fillCanvas();
-        }.bind(this));
+    this.setSubmission = function(questionType, submission) {
+        this.studentSubmission = submission;
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
+        bankProblem.questionType = questionType;
+        this.problemRenderer.renderSubmission(bankProblem, submission, function() {
+            console.log('Submission has been rendered');
+        });
+    };
+
+    /**
+     * @returns {QuestionData} The submission data stored in this multiview panel.
+     */
+    this.getSubmission = function() {
+        return this.studentSubmission;
     };
 
     /**
@@ -46,6 +56,11 @@ function MvSketch() {
     this.setGrade = function(grade) {
         this.gradeValue = grade;
         this.shadowRoot.querySelector('#gradeInput').value = grade;
+        if (grade === this.maxValue) {
+            correct.bind(this)();
+        } else if (grade === 0) {
+            wrong.bind(this)();
+        }
     };
 
     /**
@@ -62,13 +77,15 @@ function MvSketch() {
     /**
      * Marks the sketch at correct and changes the background to outercorrect.
      *
-     * @param {Event} event - The event propagation is stopped.
+     * @param {Event} [event] - The event propagation is stopped.
      * @instance
      * @memberof MvSketch
      * @access private
      */
     function correct(event) {
-        event.stopPropagation();
+        if (event) {
+            event.stopPropagation();
+        }
         this.gradeValue = this.maxValue;
         this.shadowRoot.querySelector('#outline').className = 'green accent-1';
         this.shadowRoot.querySelector('#outer').className = 'outerCorrect';
@@ -84,7 +101,9 @@ function MvSketch() {
      * @access private
      */
     function wrong(event) {
-        event.stopPropagation();
+        if (event) {
+            event.stopPropagation();
+        }
         this.gradeValue = 0;
         this.shadowRoot.querySelector('#outline').className = 'red accent-1';
         this.shadowRoot.querySelector('#outer').className = 'outerWrong';
@@ -157,7 +176,9 @@ function MvSketch() {
                 event.stopPropagation();
             }, false);
         this.setupAttributes();
-
+        this.problemRenderer = new CourseSketch.ProblemRenderer(this.shadowRoot.querySelectorAll('#problemPanel')[0]);
+        this.problemRenderer.setReadOnly(true);
+        this.problemRenderer.setFullScreen(true);
     };
 
     /**
@@ -188,8 +209,8 @@ function MvSketch() {
      * @instance
      * @memberof MvSketch
      */
-    this.setSketchClickedFunction = function(sketchClickedFunction) {
-        this.shadowRoot.querySelector('sketch-surface').onclick = sketchClickedFunction;
+    this.setSubmissionClickedFunction = function(sketchClickedFunction) {
+        this.shadowRoot.querySelector('#problemPanel').onclick = sketchClickedFunction.bind(this);
     };
 
     /**

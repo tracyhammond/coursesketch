@@ -4,7 +4,11 @@
     <title>Instructor Gradebook Test</title>
     <!-- test Library -->
     <link rel="import" href="/test/testUtilities/testUtilities.html">
-    <link rel="import" href="/test/testUtilities/fakePage/mockedObjects/mockedObjectsInclude.html">
+
+    <link rel="import"
+          href="/test/testUtilities/fakePage/mockedObjects/mockedObjectsInclude.html">
+
+    <link rel="import" href="/src/utilities/defaultUtils.html">
 
     <!-- files needed for testing -->
     <link rel="import" href="/src/instructor/gradebook/instructorGradebook.html">
@@ -18,7 +22,7 @@
 <div id="textbox"></div>
 
 <script>
-    QUnit.module("initialization", {
+    module("initialization", {
         setup : function() {
             var table = document.createElement('table');
             table.className = "tabletalk";

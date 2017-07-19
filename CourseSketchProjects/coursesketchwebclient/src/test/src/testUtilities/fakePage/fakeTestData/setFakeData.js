@@ -124,11 +124,20 @@
         CourseSketch.dataManager.getAllExperiments = function(problemId, callback) {
             var results = [];
             for (var i = 0; i<CourseSketch.fakeSketches.length; ++i){
-                if (CourseSketch.fakeExperiments[i].problemId == problemId){
+                if (CourseSketch.fakeExperiments[i].problemId === problemId[0]){
                     results.push(CourseSketch.fakeExperiments[i]);
                 }
             }
             callback(results);
+        };
+
+        CourseSketch.dataManager.getCourseRoster = function(courseId, callback) {
+            //var studentRoster = studentList.concat('noGradeStudnet', 'noGrade2', 'failure');
+            callback(CourseSketch.fakeRoster);
+        };
+
+        CourseSketch.dataManager.getAllAssignmentGrades = function(courseId, callback) {
+            callback(CourseSketch.fakeGradeList);
         };
 
         barrier.finalize(function() {

@@ -9,6 +9,9 @@ validateFirstRun(document.currentScript);
     CourseSketch.multiViewPage.waitScreenManager = new WaitScreenManager();
 
     $(document).ready(function() {
+        CourseSketch.multiViewPage.renderer = new CourseSketch.ProblemRenderer(document.getElementById('problemPanel'));
+        CourseSketch.multiViewPage.renderer.setStartWaitingFunction(CourseSketch.multiViewPage.addWaitOverlay);
+        CourseSketch.multiViewPage.renderer.setFinishWaitingFunction(CourseSketch.multiViewPage.removeWaitOverlay);
         /**
          * Closes the dialog panel.
          */
@@ -48,20 +51,20 @@ validateFirstRun(document.currentScript);
      * @param {AssignmentNavigator} navigator - The navigator used to navigate the assignment.
      * @memberof multiViewPage
      */
-    function getSketches(callback, navigator) {
+    function getSubmissions(callback, navigator) {
         console.log(navigator.getSubmissionIdentifier());
-        CourseSketch.dataManager.getAllExperiments(navigator.getSubmissionIdentifier(), function(sketchList) {
-            console.log(sketchList);
-            if (isException(sketchList)) {
-                CourseSketch.clientException(sketchList);
+        CourseSketch.dataManager.getAllExperiments(navigator.getSubmissionIdentifier(), function(submission) {
+            console.log(submission);
+            if (isException(submission)) {
+                CourseSketch.clientException(submission);
                 return;
             }
-            if (isUndefined(sketchList)) {
+            if (isUndefined(submission)) {
                 alert('This problem has no student submissions.');
                 return;
             }
             if (!isUndefined(callback)) {
-                callback(sketchList, navigator);
+                callback(submission, navigator);
             }
         });
     }
@@ -73,56 +76,46 @@ validateFirstRun(document.currentScript);
      * @memberof multiViewPage
      */
     function createMvList(navigator) {
-        getSketches(createMvSketch, navigator);
+        getSubmissions(createMvSketch, navigator);
     }
 
     /**
      * Creates a multiview sketch panel and attaches it to the grading area this can be done dynamically.
      *
-     * @param {Array<SrlExperiment>} array - An array of sketches that the MvPanel creates.
+     * @param {Array<SrlExperiment>} submissions - An array of sketches that the MvPanel creates.
      * @param {AssignmentNavigator} navigator - The navigator used to navigate the assignment.
      * @memberof multiViewPage
      */
-    function createMvSketch(array, navigator) {
-        for (var i = 0; i < array.length; i++) {
-            var mvSketch = document.createElement('mv-sketch');
-            document.querySelector('.sketches').appendChild(mvSketch);
-            mvSketch.setUserId(array[i].userId);
-            mvSketch.setUpdateList(getUpdateList(array, i).getList());
-            mvSketch.setSketchClickedFunction(function() {
-                CourseSketch.multiViewPage.loadProblem(navigator, this.getUpdateList());
+    function createMvSketch(submissions, navigator) {
+        var questionType = navigator.getCurrentInfo().questionType;
+        for (var i = 0; i < submissions.length; i++) {
+            var reviewPanel = document.createElement('mv-sketch');
+            document.querySelector('.submissions').appendChild(reviewPanel);
+            reviewPanel.setUserId(submissions[i].userId);
+            reviewPanel.setSubmission(questionType, submissions[i].getSubmission());
+            reviewPanel.setSubmissionClickedFunction(function() {
+                CourseSketch.multiViewPage.loadProblem(navigator, this.getSubmission());
             });
 
             var protoGrade = CourseSketch.prutil.ProtoGrade();
-            protoGrade.userId = array[i].userId;
-            mvSketch.courseId = protoGrade.courseId = array[i].courseId;
-            mvSketch.assignmentId = protoGrade.assignmentId = array[i].assignmentId;
-            mvSketch.problemId = protoGrade.problemId = array[i].problemId;
+            protoGrade.userId = submissions[i].userId;
+            reviewPanel.courseId = protoGrade.courseId = submissions[i].courseId;
+            reviewPanel.assignmentId = protoGrade.assignmentId = submissions[i].assignmentId;
+            reviewPanel.problemId = protoGrade.problemId = submissions[i].problemId;
             console.log('before I get the grade ', protoGrade);
 
-            // TODO: don't merge in until refactor is complete.
-            // Only one of the callbacks will be called right now...
-            CourseSketch.dataManager.getGrade(protoGrade, function(dbGrade) {
-                console.log('LOADING GRADE FROM SERVER', dbGrade);
-                mvSketch.setGrade(dbGrade.currentGrade);
-                var history = dbGrade.gradeHistory;
-                if (!isUndefined(history)) {
-                    mvSketch.setComment(history[history.length - 1].comment);
-                }
-            });
+            (function(multiViewPanel) {
+                // Only one of the callbacks will be called right now...
+                CourseSketch.dataManager.getGrade(protoGrade, function(dbGrade) {
+                    console.log('LOADING GRADE FROM SERVER', dbGrade);
+                    multiViewPanel.setGrade(dbGrade.currentGrade);
+                    var history = dbGrade.gradeHistory;
+                    if (!isUndefined(history)) {
+                        multiViewPanel.setComment(history[history.length - 1].comment);
+                    }
+                });
+            })(reviewPanel);
         }
-    }
-
-    /**
-     * Gets a specific set of sketch data to be used in the multiview sketch panel.
-     *
-     * @memberof multiViewPage
-     * @param {Arrau<SrlExperiment>} array - The array of experiments.
-     * @param {Integer} index - The index at which to get the update lists.
-     * @returns {SrlUpdateList} The update list.
-     */
-    function getUpdateList(array, index) {
-        return array[index].getSubmission().getSubmissionData().getSketchArea().getRecordedSketch();
     }
 
     /**
@@ -141,7 +134,7 @@ validateFirstRun(document.currentScript);
      * @memberof multiViewPage
      */
     function multiviewSketchDelete() {
-        var parent = document.getElementById('sketch-area');
+        var parent = document.getElementById('submission-area');
         parent.innerHTML = '';
     }
 
@@ -149,76 +142,31 @@ validateFirstRun(document.currentScript);
      * Loads the problem, called every time a user navigates to a different problem.
      *
      * @param {AssignmentNavigator} navigator - The navigator used to navigate the assignment.
-     * @param {SrlExperiment} submissionData - the data that was submitted.
+     * @param {SrlSubmission} submissionData - the data that was submitted.
      * @memberof multiViewPage
      */
     CourseSketch.multiViewPage.loadProblem = function(navigator, submissionData) {
         document.getElementById('dialogPanel').show();
         var problemInfo = navigator.getCurrentInfo();
-        var problemType = problemInfo.questionType;
-        var parentPanel = document.getElementById('problemPanel');
-        var oldElement = parentPanel.querySelector('.sub-panel');
-        if (oldElement instanceof Node) {
-            parentPanel.removeChild(oldElement);
-        }
-        if (problemType === CourseSketch.prutil.QuestionType.SKETCH) {
-            console.log('Loading sketch problem');
-            CourseSketch.multiViewPage.loadSketch(submissionData);
-        } else if (problemType === CourseSketch.prutil.QuestionType.FREE_RESP) {
-            console.log('Loading typing problem');
-            loadTyping(submissionData);
-        }
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
+        bankProblem.questionType = problemInfo.questionType;
+        CourseSketch.multiViewPage.renderer.renderSubmission(bankProblem, submissionData, function() {
+            console.log('submission Loaded');
+            var parentPanel = document.getElementById('problemPanel');
+            parentPanel.problemIndex = navigator.getCurrentNumber();
+            parentPanel.setProblemType(problemInfo.questionType);
+            parentPanel.refreshPanel();
+            parentPanel.isStudent = false;
+            parentPanel.isGrader = true;
 
-        parentPanel.problemIndex = navigator.getCurrentNumber();
-        parentPanel.setProblemType(problemType);
-        parentPanel.refreshPanel();
-        parentPanel.isStudent = false;
-        parentPanel.isGrader = true;
-
-        // THIS WILL BE DONE A TINY BIT LATER
-        parentPanel.setWrapperFunction(function(submission) {
-            var studentExperiment = CourseSketch.prutil.SrlExperiment();
-            navigator.setSubmissionInformation(studentExperiment, true);
-            studentExperiment.submission = submission;
-            return studentExperiment;
+            // THIS WILL BE DONE A TINY BIT LATER
+            parentPanel.setWrapperFunction(function(submission) {
+                var studentExperiment = CourseSketch.prutil.SrlExperiment();
+                navigator.setSubmissionInformation(studentExperiment, true);
+                studentExperiment.submission = submission;
+                return studentExperiment;
+            });
         });
-    };
-
-    /**
-     * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
-     *
-     * @param {SrlUpdateList} updateList - The list of updates that were applied to the sketch.
-     * @memberof multiViewPage
-     */
-    CourseSketch.multiViewPage.loadSketch = function(updateList) {
-        var sketchSurface = document.createElement('sketch-surface');
-        sketchSurface.className = 'wide_rule sub-panel';
-        sketchSurface.style.width = '100%';
-        sketchSurface.style.height = 'calc(100%)';
-        var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
-        CourseSketch.multiViewPage.addWaitOverlay();
-        document.getElementById('percentBar').appendChild(element);
-        element.startWaiting();
-        var realWaiting = element.finishWaiting.bind(element);
-
-        /**
-         * Called when the sketch has been completely loaded.
-         */
-        element.finishWaiting = function() {
-            realWaiting();
-            sketchSurface.refreshSketch();
-            CourseSketch.multiViewPage.removeWaitOverlay();
-            sketchSurface = undefined;
-            element = undefined;
-        };
-        document.getElementById('problemPanel').appendChild(sketchSurface);
-        // Tell the surface not to create its own sketch.
-        sketchSurface.dataset.existinglist = '';
-
-        sketchSurface.refreshSketch();
-        sketchSurface.loadUpdateList(updateList, element);
-        updateList = null;
-        element = null;
     };
 
     /**

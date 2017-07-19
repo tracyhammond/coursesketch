@@ -1,4 +1,14 @@
 <head>
+    <script>
+        // QUnit is not yet loaded here
+        window.QUnit = {
+            config: {
+                autoStart: false,
+                noGlobals: true
+            }
+        };
+        QUnit.config.autostart = false;
+    </script>
     <!-- Caches the timing function so I can restore them at any time. -->
     <script>
         var setRealTimeout = (function(scope) {
@@ -33,6 +43,9 @@
     <link rel="stylesheet" href="/bower_components/qunit/qunit/qunit.css">
     <script src="/bower_components/jquery/dist/jquery.js"></script>
     <script src="/bower_components/qunit/qunit/qunit.js"></script>
+    <script>
+        QUnit.config.autostart = false;
+    </script>
     <script src="/bower_components/qunit-assert-compare/qunit-assert-compare.js"></script>
     <!-- http://sinonjs.org/qunit/ -->
     <script src="/bower_components/sinon/index.js"></script>
@@ -62,5 +75,11 @@
         CourseSketch.getExceptionParentElement = function() {
             return document.body;
         };
+    </script>
+    <script>
+        var scripts = document.querySelectorAll('[data-cover]');
+        for (var i = 0; i < scripts.length; i++) {
+
+        }
     </script>
 </head>

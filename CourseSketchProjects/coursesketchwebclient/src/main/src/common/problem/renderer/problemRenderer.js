@@ -33,6 +33,8 @@ function ProblemRenderer(problemPanel) {
     var finishWaiting;
     var isRunning;
     var isStudent;
+    var isReadOnly;
+    var isFullScreen;
     var defaultErrorListener = function(error) {
         console.log(error);
     };
@@ -42,6 +44,7 @@ function ProblemRenderer(problemPanel) {
      * Resets the data in the renderer to its initial value.
      */
     this.reset = function() {
+        isReadOnly = undefined;
         isStudent = undefined;
         startWaiting = undefined;
         finishWaiting = undefined;
@@ -117,6 +120,20 @@ function ProblemRenderer(problemPanel) {
     };
 
     /**
+     * @param {Boolean} readOnly - True if the rendered data should be read only and not editable.
+     */
+    this.setReadOnly = function(readOnly) {
+        isReadOnly = readOnly;
+    };
+
+    /**
+     * @param {Boolean} fullScreen - True if the rendered data should be full screen.
+     */
+    this.setFullScreen = function(fullScreen) {
+        isFullScreen = fullScreen;
+    };
+
+    /**
      * Renders the bank problem.
      *
      * @param {SrlBankProblem} bankProblem - The bank problem that is being rendered.
@@ -142,7 +159,7 @@ function ProblemRenderer(problemPanel) {
      * @param {SrlBankProblem} bankProblem - The bank problem that is being rendered.
      * @param {SrlSubmission} submission - The student submission data.
      * @param {Function} callback - Called after the data is rendered.
-     * @param {Boolean} stopWaiting - If false the {@code finishWaiting} function will not be called.
+     * @param {Boolean} [stopWaiting] - If false the {@code finishWaiting} function will not be called.
      */
     this.renderSubmission = function(bankProblem, submission, callback, stopWaiting) {
         if (isUndefined(submission)) {
@@ -211,7 +228,11 @@ function ProblemRenderer(problemPanel) {
      */
     function loadSketch(questionData, callback) {
         var sketchSurface = document.createElement('sketch-surface');
+        if (!isUndefined(isReadOnly) && isReadOnly) {
+            sketchSurface.setAttribute('read-only', '');
+        }
         sketchSurface.className = 'sub-panel submittable';
+        setFullScreen(sketchSurface);
         sketchSurface.style.width = '100%';
         sketchSurface.style.height = '100%';
         if (!isUndefined(errorListener)) {
@@ -258,6 +279,14 @@ function ProblemRenderer(problemPanel) {
         return !isUndefined(questionData) && questionData !== null;
     }
 
+    /**
+     * @param {Element} element - The element that is being set with full screen.
+     */
+    function setFullScreen(element) {
+        if (isFullScreen) {
+            element.className += ' full-screen';
+        }
+    }
 
     /**
      * Loads the typing from the {@link SrlBankProblem}.
@@ -269,6 +298,10 @@ function ProblemRenderer(problemPanel) {
         var typingSurface = document.createElement('textarea');
         typingSurface.className = 'sub-panel card-panel';
         typingSurface.contentEditable = true;
+        setFullScreen(typingSurface);
+        if (isReadOnly) {
+            typingSurface.setAttribute('disabled', '');
+        }
         problemPanel.appendChild(typingSurface);
         var freeResponse = questionData.freeResponse;
         loadIntoTyping(freeResponse, typingSurface, callback);
@@ -298,6 +331,7 @@ function ProblemRenderer(problemPanel) {
     function loadMultipleChoice(questionData, isSubmission, callback) {
         var multiChoice = document.createElement('multi-choice');
         multiChoice.className = 'sub-panel card-panel submittable col offset-s3 s9';
+        setFullScreen(multiChoice);
         multiChoice.style.marginTop = '60px';
 
         problemPanel.appendChild(multiChoice);
@@ -316,6 +350,9 @@ function ProblemRenderer(problemPanel) {
     function loadIntoMultipleChoice(multipleChoice, multiChoiceElement, isSubmission, callback) {
         if (isSubmission) {
             multiChoiceElement.turnOnStudentMode();
+        }
+        if (isReadOnly) {
+            multiChoiceElement.turnOnReadOnlyMode();
         }
         if (isUndefined(multipleChoice) || multipleChoice === null) {
             if (!isSubmission) {

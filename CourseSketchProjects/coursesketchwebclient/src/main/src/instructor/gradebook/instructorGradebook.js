@@ -1,15 +1,5 @@
 (function() {
     var keyEventHandler;
-    $(document).ready(function() {
-        CourseSketch.dataManager.waitForDatabase(function() {
-            var courseId = CourseSketch.dataManager.getState('gradebookCourseid');
-            CourseSketch.gradeBook.loadGrades(courseId);
-            CourseSketch.gradeBook.createTabs([ 'Quiz', 'Homework', 'Test' ], document.querySelector('.tabholder'));
-        });
-        var table = $('.tabletalk');
-        CourseSketch.gradeBook.initializeTableScrolling(document.querySelector('.tabletalk'), table.offset());
-        table.keyup(keyEventHandler);
-    });
 
     /**
      * Loads grades for the given course.
@@ -18,6 +8,9 @@
      */
     CourseSketch.gradeBook.loadGrades = function(courseId) {
         CourseSketch.dataManager.getCourse(courseId, function(course) {
+            if (course instanceof CourseSketch.BaseException) {
+                throw course;
+            }
             CourseSketch.gradeBook.course = course;
             CourseSketch.dataManager.getCourseRoster(courseId, function(idToNameMap) {
                 // loads all of the grades
@@ -29,6 +22,13 @@
                 });
             });
         });
+    };
+
+    /**
+     * @param {Element} table Initializes the key event handler for the table.
+     */
+    CourseSketch.gradeBook.initializeKeyEvents = function(table) {
+        table.keyup(keyEventHandler);
     };
 
     /**
@@ -67,18 +67,22 @@
      */
     function addNewStudent(idToRowMap, studentId, assignmentList, table) {
         var row = document.createElement('tr');
-        for (var i = 0; i < assignmentList.length; i++) {
-            var column = document.createElement('td');
-            column.style.width = '10ch';
-            column.style.maxWidth = '10ch';
-            column.style.position = 'relative';
-            column.className = 'gradecell';
-            column.onclick = gradeCellSelected;
-            column.dataset.student = studentId;
-            // note that this is i minus the offset
-            // column.dataset.column = i;
-            column.dataset.assignment = assignmentList[i];
-            row.appendChild(column);
+        if (!isUndefined(assignmentList)) {
+            for (var i = 0; i < assignmentList.length; i++) {
+                var column = document.createElement('td');
+                column.style.width = '10ch';
+                column.style.maxWidth = '10ch';
+                column.style.position = 'relative';
+                column.className = 'gradecell';
+                column.onclick = gradeCellSelected;
+                column.dataset.student = studentId;
+                // note that this is i minus the offset
+                // column.dataset.column = i;
+                column.dataset.assignment = assignmentList[i];
+                row.appendChild(column);
+            }
+        } else {
+            console.log('invalid assignment');
         }
         table.appendChild(row);
         idToRowMap.set(studentId, row);
@@ -106,7 +110,8 @@
             }
             var studentRow = idToRowMap.get(studentId);
             var columnList = studentRow.children;
-            var cell = columnList[assignmentMap.get(assignmentId)];
+            var assignmentColumn = assignmentMap.get(assignmentId);
+            var cell = columnList[assignmentColumn];
             var stringGrade = '' + protoGrade.getCurrentGrade();
             cell.textContent = stringGrade.substring(0, 6);
         }
