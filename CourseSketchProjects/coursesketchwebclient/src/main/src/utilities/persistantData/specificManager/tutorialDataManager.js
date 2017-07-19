@@ -4,6 +4,7 @@
  * Talks with the remote server to simplify getting data from the database.
  * Created by gigemjt on 5/12/15.
  *
+ *
  * @param {CourseSketchDatabase} parent the parent server
  * @param {AdvanceDataListener} advanceDataListener makes listening to the server easier
  * @param {IndexedDB} database (Not used in this manager)
