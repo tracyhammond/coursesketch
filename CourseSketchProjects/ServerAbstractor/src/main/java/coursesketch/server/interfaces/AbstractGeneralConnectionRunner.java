@@ -1,5 +1,7 @@
 package coursesketch.server.interfaces;
 
+import com.google.common.collect.Lists;
+import com.mongodb.ServerAddress;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Sets up the server and manages calling the methods needed to start the server.
@@ -23,7 +27,7 @@ import java.util.Arrays;
  * @since 10/19/14
  * @version 1
  */
-@SuppressWarnings("PMD.TooManyMethods")
+@SuppressWarnings({ "PMD.TooManyMethods", "PMD.TooManyFields" })
 public abstract class AbstractGeneralConnectionRunner {
 
     /**
@@ -123,6 +127,22 @@ public abstract class AbstractGeneralConnectionRunner {
      * True if the server is currently accepting input.
      */
     private boolean inputRunning;
+
+    /**
+     * Only true during times where setup happens and certain values can be set.
+     */
+    private boolean setup = false;
+
+    /**
+     * A list of addresses where the database can be found at.
+     */
+    private List<ServerAddress> databaseUrl;
+
+    /**
+     * The name of the database.
+     */
+    private String databaseName;
+
     /**
      * Parses the arguments from the server. This only expects a single argument
      * which is if it is local.
@@ -156,6 +176,7 @@ public abstract class AbstractGeneralConnectionRunner {
      * </ol>
      */
     protected final void start() {
+        setup = true;
         loadConfigurations();
         if (local) {
             privateLocalEnvironment();
@@ -164,13 +185,17 @@ public abstract class AbstractGeneralConnectionRunner {
             privateRemoteEnvironment();
             executeRemoteEnvironment();
         }
+        setup = false;
         createServer();
 
         if (secure) {
             configureSSL(keystorePath, certificatePath);
         }
-        socketInitializerInstance = createSocketInitializer(
-                new ServerInfo(this.getHostName(), this.getPort(), getTimeoutTime(), secure, isLocal()));
+
+        final ServerInfo serverInfo = new ServerInfo(this.getHostName(), this.getPort(), getTimeoutTime(), secure, isLocal(),
+                getDatabaseName(), getDatabaseUrl());
+
+        socketInitializerInstance = createSocketInitializer(serverInfo);
 
         addConnections();
 
@@ -455,7 +480,7 @@ public abstract class AbstractGeneralConnectionRunner {
     }
 
     /**
-     * False if the server has not been started (basically {@link #startServer()} has not been called yet)
+     * False if the server has not been started (basically {@link #startServer()} has not been called yet).
      *
      * @return False if the server has not been started.
      */
@@ -553,5 +578,50 @@ public abstract class AbstractGeneralConnectionRunner {
      */
     protected final String[] getArgs() {
         return Arrays.copyOf(args, args.length);
+    }
+
+    /**
+     * Returns a list of valid {@link ServerAddress} the database can connect to.
+     *
+     * @return An unmodifiable list that represents the addresses the database can connect to.
+     */
+    private List<ServerAddress> getDatabaseUrl() {
+        if (databaseUrl == null) {
+            return Collections.unmodifiableList(Lists.newArrayList(new ServerAddress()));
+        }
+        return Collections.unmodifiableList(databaseUrl);
+    }
+
+    /**
+     * Sets the list of addresses the database can connect to.
+     *
+     * @param databaseUrl The list of addresses the database can connect to.
+     */
+    protected final void setDatabaseUrl(final List<ServerAddress> databaseUrl) {
+        if (!setup) {
+            throw new IllegalStateException("Can only set this variable during setup");
+        }
+        this.databaseUrl = databaseUrl;
+    }
+
+    /**
+     * Gets the database name.
+     *
+     * @return The database name.
+     */
+    private String getDatabaseName() {
+        return databaseName;
+    }
+
+    /**
+     * Sets the database name.
+     *
+     * @param databaseName The name of the database.
+     */
+    protected final void setDatabaseName(final String databaseName) {
+        if (!setup) {
+            throw new IllegalStateException("Can only set this variable during setup");
+        }
+        this.databaseName = databaseName;
     }
 }

@@ -1,16 +1,23 @@
 package database;
 
+import utilities.CourseSketchException;
+
 /**
  * An exception that occurs if data from the database is not accessible or has errors in it.
  * @author gigemjt
  *
  */
-public class DatabaseAccessException extends Exception {
+public class DatabaseAccessException extends CourseSketchException {
 
     /**
      * True if the exception is recoverable.
      */
-    private boolean recoverable = false;
+    private boolean recoverable;
+
+    /**
+     * True if the server should send a response that is not an error proto.
+     */
+    private boolean sendResponse;
 
     /**
      * Accepts a message and if it is recoverable error.
@@ -54,5 +61,21 @@ public class DatabaseAccessException extends Exception {
      */
     public final boolean isRecoverable() {
         return recoverable;
+    }
+
+    /**
+     * @return True if the server should still send a valid response.
+     */
+    public final boolean isSendResponse() {
+        return sendResponse;
+    }
+
+    /**
+     * @param shouldSendResponse Set to true if the server should send a response
+     * @return Self.
+     */
+    public final DatabaseAccessException setSendResponse(final boolean shouldSendResponse) {
+        this.sendResponse = shouldSendResponse;
+        return this;
     }
 }

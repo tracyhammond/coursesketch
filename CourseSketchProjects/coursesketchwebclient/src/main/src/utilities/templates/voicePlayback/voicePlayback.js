@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Sets up and saves recordings.
  * Calls playback.js and starts music when play button is pushed.
@@ -57,7 +58,7 @@ function VoicePlayback() {
 
     /**
      * Blink the elem passed in
-     * @param {Element} element The element that needs to blink
+     * @param {Element} element - The element that needs to blink
      */
     this.blink = function(element) {
         localScope.voiceBtnTimer = setInterval(function() {
@@ -101,7 +102,7 @@ function VoicePlayback() {
     /**
      * Initialize the passed in element.
      * Used for initializing the video
-     * @param {Node} templateClone is a clone of the custom HTML Element for the voicePlayback
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the voicePlayback
      */
     this.initializeElement = function(templateClone) {
         localScope = this;

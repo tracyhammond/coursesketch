@@ -4,7 +4,16 @@
 <body>
 <template id="navigationPanel">
     <style>
-        @import "/bower_components/materialize/bin/materialize.css";
+        @import "/bower_components/materialize/dist/css/materialize.css";
+        @import "https://fonts.googleapis.com/icon?family=Material+Icons";
+        [data-disabled="true"] {
+            color: #757575;
+            cursor: default;
+        }
+
+        [data-disabled="false"] {
+            cursor: pointer;
+        }
     </style>
     <!--
     |---------------------------------|
@@ -19,14 +28,15 @@
             <div class="card blue-grey darken-2 z-depth-3" style="overflow:visible; margin:10;">
                 <div class="card-content white-text center-align">
                     <div id="selectionBox" class="valign-wrapper">
-                        <i id="buttonPrev" class="small mdi-navigation-arrow-back left"></i>
-                        <span id="selectionBoxNumber" class="card-title" style="font-size:48px;">1</span>
-                        <i id="buttonNext" class="small mdi-navigation-arrow-forward right"></i>
+
+                        <i id="buttonPrev" class="small material-icons left">keyboard_arrow_left</i>
+                        <span id="selectionBoxNumber" class="card-title" style="font-size:48px; cursor: default;">1</span>
+                        <i id="buttonNext" class="small material-icons right">keyboard_arrow_right</i>
                         <span id="problemState"></span>
                     </div>
 
                 </div>
-                <div class="card-action blue white-text center-align" style="padding:5; border:0;">
+                <div class="card-action blue white-text center-align" style="padding:5; border:0; cursor: default;">
                     <p  style="margin:0;">out of <span id="totalNumber">1</span></p>
                 </div>
             </div>

@@ -4,14 +4,12 @@
     <link rel="import" href="/src/utilities/libraries/materialize/materializeInclude.html">
     <link id="navigationTemplateImport" rel="import" href="/src/common/navigation/problem/navigationPanel.html">
     <script src="/src/common/navigation/problem/navigationPanel.js"></script>
-    <script src="/src/common/navigation/problem/problemNavigator.js"></script>
+    <script src="/src/common/navigation/assignmentNavigation.js"></script>
 
     <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#navigationTemplateImport');
-            var template = link.import.querySelector('#navigationPanel');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document, 'navigationTemplateImport', 'navigationPanel');
 
             var newElement = new NavigationPanel();
 

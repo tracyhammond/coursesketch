@@ -31,12 +31,13 @@ import utilities.TimeManager;
     private static final Logger LOG = LoggerFactory.getLogger(ServerSocketWrapper.class);
 
     /**
-     * The actual socket handler that this object wraps around
+     * The actual socket handler that this object wraps around.
      */
     private final ServerWebSocketHandler socketHandler;
 
     /**
-     * Constructor for {@ServerSocketWrapper}
+     * Constructor for {@ServerSocketWrapper}.
+     *
      * @param handler The handler for the server side of the socket.
      * @param secure True if the socket should use SSL.
      */

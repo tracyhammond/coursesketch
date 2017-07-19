@@ -10,38 +10,42 @@
     <modules>
         <module>CourseSketchProjects/ProtoFiles</module>
         <module>CourseSketchProjects/coursesketchwebclient</module>
+        <module>TestUtilities</module>
         <module>CourseSketchProjects/ServerAbstractor</module>
         <module>CourseSketchProjects/jettyBlank</module>
         <module>CourseSketchProjects/nettyBlank</module>
         <module>CourseSketchProjects/rpcserver</module>
+        <module>CourseSketchProjects/AuthenticationServer</module>
+        <module>CourseSketchProjects/IdentityServer</module>
         <module>CourseSketchProjects/CourseSketchDatabaseServer</module>
         <module>CourseSketchProjects/CourseSketchLoginServer</module>
         <module>CourseSketchProjects/CourseSketchProxyServer</module>
         <module>CourseSketchProjects/CourseSketchSubmissionServer</module>
         <module>CourseSketchProjects/CourseSketchAnswerCheckerServer</module>
+        <module>CourseSketchProjects/CourseSketchRecognitionServer</module>
         <module>TestUtilities/Integration</module>
     </modules>
 
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>central</id>
             <name>Central Repository</name>
             <url>http://repo.maven.apache.org/maven2</url>
-        </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </pluginRepository>
+        <pluginRepository>
             <id>central</id>
             <name>Central Repository</name>
             <url>http://repo.maven.apache.org/maven2</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
         </pluginRepository>
     </pluginRepositories>
 
@@ -104,6 +108,56 @@
                         </executions>
                     </plugin>
                 </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>skipChecks</id>
+            <activation>
+                <property>
+                    <name>skipChecks</name>
+                </property>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-checkstyle-plugin</artifactId>
+                            <version>${checkstyleVersion}</version>
+                            <configuration>
+                                <skip>true</skip>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-pmd-plugin</artifactId>
+                            <configuration>
+                                <skip>true</skip>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>findbugs-maven-plugin</artifactId>
+                            <configuration>
+                                <skip>true</skip>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <configuration>
+                                <skipTests>true</skipTests>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>cobertura-maven-plugin</artifactId>
+                            <configuration>
+                                <skip>true</skip>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
             </build>
         </profile>
     </profiles>
@@ -187,8 +241,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -240,6 +294,22 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${basedir}/CourseSketchProjects/coursesketchwebclient/src/main/resources/other
+                            </directory>
+                            <includes>
+                                <include>**/*.proto</include>
+                            </includes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
             </plugin>
         </plugins>
         <pluginManagement>
@@ -309,7 +379,7 @@
                                 <encoding>UTF-8</encoding>
                                 <consoleOutput>true</consoleOutput>
                                 <checkstyle>
-                                    <failsOnError>false</failsOnError>
+                                    <failsOnError>true</failsOnError>
                                 </checkstyle>
                                 <check>
                                     <failsOnError>true</failsOnError>
@@ -317,6 +387,7 @@
                             </configuration>
                             <goals>
                                 <goal>checkstyle</goal>
+                                <goal>check</goal>
                             </goals>
                         </execution>
                     </executions>
@@ -460,6 +531,8 @@
                                 <!-- link to github repo -->
                                 <!-- https://github.com/joelittlejohn/embedmongo-maven-plugin -->
 
+                                <version>${mongodbVersion}</version>
+
                                 <!-- optional (file|console|none), default console -->
                                 <logging>file</logging>
 
@@ -509,8 +582,8 @@
                                 <file>${basedir}/src/main/resources/logback.xml</file>
                                 <replacements>
                                     <replacement>
-                                        <token>DEBUG</token>
-                                        <value>INFO</value>
+                                        <token>root level="DEBUG"</token>
+                                        <value>root level="INFO"</value>
                                     </replacement>
                                 </replacements>
                             </configuration>
@@ -525,8 +598,8 @@
                                 <file>${basedir}/src/main/resources/logback.xml</file>
                                 <replacements>
                                     <replacement>
-                                        <token>INFO</token>
-                                        <value>DEBUG</value>
+                                        <token>root level="INFO"</token>
+                                        <value>root level="DEBUG"</value>
                                     </replacement>
                                 </replacements>
                             </configuration>
@@ -543,7 +616,8 @@
                                     <propertyFile>${parentConfigLocationDir}/config/local/ips.prop</propertyFile>
                                 </propertyFiles>
                                 <backupPropertyFiles>
-                                    <backupPropertyFile>${parentConfigLocationDir}/config/local/ips_default.prop</backupPropertyFile>
+                                    <backupPropertyFile>${parentConfigLocationDir}/config/local/ips_default.prop
+                                    </backupPropertyFile>
                                 </backupPropertyFiles>
                             </configuration>
                         </execution>
@@ -559,7 +633,25 @@
                                     <propertyFile>${parentConfigLocationDir}/config/local/ips.prop</propertyFile>
                                 </propertyFiles>
                                 <backupPropertyFiles>
-                                    <backupPropertyFile>${parentConfigLocationDir}/config/local/ips_default.prop</backupPropertyFile>
+                                    <backupPropertyFile>${parentConfigLocationDir}/config/local/ips_default.prop
+                                    </backupPropertyFile>
+                                </backupPropertyFiles>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>ip_prop_reverse2</id>
+                            <phase>clean</phase>
+                            <goals>
+                                <goal>replace</goal>
+                            </goals>
+                            <configuration>
+                                <reverseProperties>true</reverseProperties>
+                                <propertyFiles>
+                                    <propertyFile>${parentConfigLocationDir}/config/local/ips.prop</propertyFile>
+                                </propertyFiles>
+                                <backupPropertyFiles>
+                                    <backupPropertyFile>${parentConfigLocationDir}/config/local/ips_default.prop
+                                    </backupPropertyFile>
                                 </backupPropertyFiles>
                             </configuration>
                         </execution>
@@ -571,31 +663,42 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- version -->
-        <jettyVersion>9.3.0.M2</jettyVersion>
+        <!-- versioning -->
+        <jettyVersion>9.2.3.v20140905</jettyVersion>
         <!-- 9.2.2.v20140723 -->
-        <protobufVersion>[2.6.1,)</protobufVersion>
+        <protobufVersion>3.3.1</protobufVersion>
+        <protoFileVersion>1.0.2</protoFileVersion>
+        <recognitionFrameworkVersion>4.0.0</recognitionFrameworkVersion>
         <jodaVersion>[2.1,)</jodaVersion>
-        <mongodbVersion>[2.12.3,)</mongodbVersion>
-        <mockitoVersion>1.9.5</mockitoVersion>
-        <puppyVersion>[5.6,)</puppyVersion>
-        <junitVersion>4.11</junitVersion>
-        <fongoVersion>1.5.9</fongoVersion>
+        <sitepluginVersion>2.3.3</sitepluginVersion>
+        <replacerVersion>1.6.2</replacerVersion>
+        <resourcePluginVersion>2.7</resourcePluginVersion>
+
+        <!-- logging -->
         <slf4jVersion>1.7.9</slf4jVersion>
         <log4jVersion>2.1</log4jVersion>
         <logbackVersion>1.1.1</logbackVersion>
+
+        <!-- checkstyle -->
         <checkstyleVersion>2.13</checkstyleVersion>
         <findbugVersion>3.0.0</findbugVersion>
-        <powermock.version>1.5.6</powermock.version>
-        <easymock.version>3.3</easymock.version>
-        <sitepluginVersion>2.3.3</sitepluginVersion>
-        <coberturaVersion>2.6</coberturaVersion>
+        <puppyVersion>[5.6,)</puppyVersion>
         <pmdVersion>3.3</pmdVersion>
-        <embeddedMongoVersion>0.1.12</embeddedMongoVersion>
+
+        <!-- mongo-->
+        <embeddedMongoVersion>0.3.4</embeddedMongoVersion>
+        <mongodbJavaDriverVersion>[3.4.2,)</mongodbJavaDriverVersion>
+        <mongodbVersion>3.4.4</mongodbVersion>
+        <fongoVersion>2.1.0</fongoVersion>
+
+        <!-- unit testing versions -->
         <failSafeVersion>2.18.1</failSafeVersion>
         <surefireVersion>2.17</surefireVersion>
-        <replacerVersion>1.6.2</replacerVersion>
-        <resourcePluginVersion>2.7</resourcePluginVersion>
+        <junitVersion>4.11</junitVersion>
+        <coberturaVersion>2.6</coberturaVersion>
+        <mockitoVersion>1.9.5</mockitoVersion>
+        <powermock.version>1.5.6</powermock.version>
+        <easymock.version>3.3</easymock.version>
 
         <!-- testing -->
         <testLevel>85</testLevel>
@@ -609,7 +712,8 @@
         <!-- config locations -->
         <checkstyleLocation>${absoluteConfigLocation}/checkstyle.xml</checkstyleLocation>
         <absoluteCheckstyleLocation>${checkstyleLocation}</absoluteCheckstyleLocation>
-        <checkstyleSuppressionLocation>${moduleConfigLocation}/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
+        <checkstyleSuppressionLocation>${moduleConfigLocation}/checkstyle-suppressions.xml
+        </checkstyleSuppressionLocation>
         <findbugSupressionLocation>${moduleConfigLocation}/findbugs-exclude.xml</findbugSupressionLocation>
         <moduleConfigLocation>${basedir}/config</moduleConfigLocation>
         <pmdExclude>${moduleConfigLocation}/${pmdFile}</pmdExclude>
@@ -627,6 +731,8 @@
         <!-- This needs to be overwritten in child poms -->
         <mainClass>fully.qualified.MainClass</mainClass>
         <parentConfigLocationDir>${basedir}</parentConfigLocationDir>
+
+
         <!-- Property files in local config -->
         <ipPropFile>${parentConfigLocationDir}/config/local/ips_default.prop</ipPropFile>
     </properties>
@@ -657,7 +763,7 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>${mongodbVersion}</version>
+            <version>${mongodbJavaDriverVersion}</version>
         </dependency>
 
         <dependency>
@@ -689,7 +795,6 @@
             <artifactId>logback-core</artifactId>
             <version>${logbackVersion}</version>
         </dependency>
-
 
         <dependency>
             <groupId>com.puppycrawl.tools</groupId>

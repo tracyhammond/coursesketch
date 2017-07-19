@@ -10,9 +10,7 @@
 <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#textToSpeechTemplateImport');
-            var template = link.import.querySelector('#ttsCreation');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document,'textToSpeechTemplateImport','ttsCreation');
 
             var newElement = new TextBox();
 
@@ -40,9 +38,7 @@
             });
         });
         $(document).ready(function() {
-            var link = importDoc.querySelector('#textToSpeechTemplateImport');
-            var template = link.import.querySelector('#ttsViewing');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document,'textToSpeechTemplateImport','ttsViewing');
 
             var newElement = new TextBox();
 

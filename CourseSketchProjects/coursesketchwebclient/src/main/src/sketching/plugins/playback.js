@@ -2,9 +2,10 @@
  * Plays back the user's commands from the beginning.
  * Strokes are drawn in real time, in sequence.
  * The other commands, such as undo/redo/clear are also called in sequence.
- * @param {Array} updateList the list of updates to be inserted in real time.
- * @param {UpdateManager} updateManager  The manager of the updates.
- * @param {Graphics} graphics used to draw objects to the screen.
+ *
+ * @param {Array} updateList - The list of updates to be inserted in real time.
+ * @param {UpdateManager} updateManager - The manager of the updates.
+ * @param {Graphics} graphics - Used to draw objects to the screen.
  */
 function Playback(updateList, updateManager, graphics) {
     var ps = graphics.getPaper();
@@ -50,11 +51,13 @@ function Playback(updateList, updateManager, graphics) {
     /**
      * Adds an update that is played back slowly.
      *
-     * @param {SrlUpdate} update The update that the sketch list is currently replaying
-     * @param {Boolean} redraw True if the sketch surface needs to be redrawn.
-     * @param {Integer} updateIndex The index that this update is in the update list.
+     * @param {SrlUpdate} update - The update that the sketch list is currently replaying
+     * @param {Boolean} redraw - True if the sketch surface needs to be redrawn.
+     * @param {Integer} updateIndex - The index that this update is in the update list.
+     * @param {Integer} updateType - The type of update to check against.
+     * @param {Integer} updatePluginId - The id of the plugin to make sure we do not create loops.
      */
-    this.addUpdate = function addUpdate(update, redraw, updateIndex) {
+    this.addUpdate = function addUpdate(update, redraw, updateIndex, updateType, updatePluginId) {
         var commandList = update.commands;
 
         /**
@@ -97,8 +100,7 @@ function Playback(updateList, updateManager, graphics) {
                         pauseDuringStroke = false;
                         lastPausedIndex = Number.MAX_VALUE;
                     }
-                    for (var i = startingIndex; i < pointList.length; i++) {
-
+                    for (var pointIndex = startingIndex; pointIndex < pointList.length; pointIndex++) {
                         (function(index) {
                             timeOut = setTimeout(function() {
                                 if (isPlaying) {
@@ -119,7 +121,7 @@ function Playback(updateList, updateManager, graphics) {
                                 }
                             }, pointList[index].getTime() - startingTime);
                             timeOutList.push(timeOut);
-                        })(i);
+                        })(pointIndex);
                     } // end of for loop
                 })();
             } else {
@@ -135,6 +137,9 @@ function Playback(updateList, updateManager, graphics) {
      * Calculates time between strokes and plays them back with a delay corresponding to this time.
      *
      * Also playback the sketch back from saved stroke index if it is paused.
+     *
+     * @param {Long} startTime - the time for when the sketch started.
+     * @param {SketchSurface} surface - the surface.
      */
     this.playNext = function(startTime, surface) {
         if (!isUndefined(startTime)) {

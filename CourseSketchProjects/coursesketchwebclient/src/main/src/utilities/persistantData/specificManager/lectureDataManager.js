@@ -1,17 +1,18 @@
+/* eslint-disable require-jsdoc */
 /**
  * A manager for lectires that talks with the remote server.
  *
- * @param {CourseSketchDatabase} parent The database that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener A listener for the database.
- * @param {IndexedDB} parentDatabase  The local database
- * @param {Function} sendData A function that makes sending data much easier
- * @param {SrlRequest} Request A shortcut to a request
- * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
+ * @param {CourseSketchDatabase} parent - The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
+ * @param {IndexedDB} parentDatabase -  The local database
+ * @param {Function} sendData - A function that makes sending data much easier
+ * @param {SrlRequest} Request - A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
 function LectureDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
     var database = parentDatabase;
-    var localScope = parent;
+    var parentScope = parent;
 
     /**
      * Sets a lecture in local database.
@@ -241,9 +242,9 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
         for (var i = 0; i < lectureIds.length; i++) {
             var currentLectureId = lectureIds[i];
             (function(lectureId) {
-                getLectureLocal(lectureId, function(lecture) {
-                    if (!isUndefined(lecture) && !(lecture instanceof DatabaseException)) {
-                        lecturesFound.push(lecture);
+                getLectureLocal(lectureId, function(localLecture) {
+                    if (!isUndefined(localLecture) && !(localLecture instanceof DatabaseException)) {
+                        lecturesFound.push(localLecture);
                     } else {
                         lectureIdsNotFound.push(lectureId);
                     }
@@ -252,34 +253,34 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
                         if (lectureIdsNotFound.length >= 1) {
                             advanceDataListener.setListener(Request.MessageType.DATA_REQUEST,
                                     CourseSketch.prutil.ItemQuery.LECTURE, function(evt, item) {
-                                advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.prutil.ItemQuery.LECTURE);
+                                        advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.prutil.ItemQuery.LECTURE);
                                 // after listener is removed
-                                if (isUndefined(item.data) || item.data === null) {
-                                    serverCallback(new DatabaseException('The data sent back from the server does not exist.'));
-                                    return;
-                                }
-                                var school = CourseSketch.prutil.getSrlLectureDataHolderClass().decode(item.data);
-                                var lecture = school.lectures[0];
-                                if (isUndefined(lecture) || lecture instanceof DatabaseException) {
-                                    var result = lecture;
-                                    if (isUndefined(result)) {
-                                        result = new DatabaseException('Nothing is in the server database!',
+                                        if (isUndefined(item.data) || item.data === null) {
+                                            serverCallback(new DatabaseException('The data sent back from the server does not exist.'));
+                                            return;
+                                        }
+                                        var school = CourseSketch.prutil.getSrlLectureDataHolderClass().decode(item.data);
+                                        var lecture = school.lectures[0];
+                                        if (isUndefined(lecture) || lecture instanceof DatabaseException) {
+                                            var result = lecture;
+                                            if (isUndefined(result)) {
+                                                result = new DatabaseException('Nothing is in the server database!',
                                             'Grabbing lecture from server: ' + lectureIds);
-                                    }
-                                    if (!isUndefined(serverCallback)) {
-                                        serverCallback(result);
-                                    }
-                                    return;
-                                } // end error check
-                                for (var i = 0; i < school.lectures.length; i++) {
-                                    localScope.setLecture(school.lectures[i]);
-                                    lecturesFound.push(school.lectures[i]);
-                                } // end for
-                                if (!isUndefined(serverCallback)){
-                                    serverCallback(lecturesFound);
-                                } // end if serverCallback
+                                            }
+                                            if (!isUndefined(serverCallback)) {
+                                                serverCallback(result);
+                                            }
+                                            return;
+                                        } // end error check
+                                        for (var lectureIndex = 0; lectureIndex < school.lectures.length; lectureIndex++) {
+                                            parentScope.setLecture(school.lectures[lectureIndex]);
+                                            lecturesFound.push(school.lectures[lectureIndex]);
+                                        } // end for
+                                        if (!isUndefined(serverCallback)){
+                                            serverCallback(lecturesFound);
+                                        } // end if serverCallback
 
-                            }); // setListener
+                                    }); // setListener
                             sendData.sendDataRequest(CourseSketch.prutil.ItemQuery.LECTURE, lectureIdsNotFound);
                         } // end if lectureIdsNotFound
                         if (lecturesFound.length > 0 && !isUndefined(localCallback)) {

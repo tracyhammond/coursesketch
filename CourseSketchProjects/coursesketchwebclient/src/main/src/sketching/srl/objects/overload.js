@@ -1,4 +1,5 @@
 /* jshint camelcase: false */
+//jscs:disable
 /*******************************************************************************
  *
  *
@@ -24,7 +25,7 @@ function Overloads() {
      * type (e.g. {@link SRL_Object}, {@link SRL_Shape}, {@link SRL_Point},
      * {@link SRL_Stroke}, {@link SRL_Line})
      *
-     * @return a string class_type
+     * @returns a string class_type
      */
     var classType = false;
     this.check_type = function() {
@@ -59,7 +60,7 @@ function Overloads() {
      * associated with that object See SRL_Shape.getArea() and
      * SRL_Line.getArea() for more details.
      *
-     * @return the return value of the function it calls
+     * @returns the return value of the function it calls
      */
     this.getArea = function() {
         if (this.check_type() === "SRL_Shape") {
@@ -74,7 +75,7 @@ function Overloads() {
      * associated with that object See SRL_Stroke.getMinX(), SRL_Line.getMinX()
      * SRL_Point.getMinX() for more details.
      *
-     * @return the return value of the function it calls
+     * @returns the return value of the function it calls
      */
     this.getMinX = function() {
         if (this.check_type() === "SRL_Stroke") {
@@ -91,7 +92,7 @@ function Overloads() {
      * associated with that object See SRL_Stroke.getMinY(), SRL_Line.getMinY()
      * SRL_Point.getMinY() for more details.
      *
-     * @return the return value of the function it calls
+     * @returns the return value of the function it calls
      */
     this.getMinY = function() {
         if (this.check_type() === "SRL_Stroke") {
@@ -108,7 +109,7 @@ function Overloads() {
      * associated with that object See SRL_Stroke.getMaxX(), SRL_Line.getMaxX()
      * SRL_Point.getMinX() for more details.
      *
-     * @return the return value of the function it calls
+     * @returns the return value of the function it calls
      */
     this.getMaxX = function() {
         if (this.check_type() === "SRL_Stroke") {
@@ -125,7 +126,7 @@ function Overloads() {
      * associated with that object See SRL_Stroke.getMaxY(), SRL_Line.getMaxY()
      * SRL_Point.getMaxY() for more details.
      *
-     * @return the return value of the function it calls
+     * @returns the return value of the function it calls
      */
     this.getMaxY = function() {
         if (this.check_type() === "SRL_Stroke") {
@@ -142,7 +143,7 @@ function Overloads() {
      * associated with that object See SRL_Point.distance() SRL_Line.distance()
      * for more details.
      *
-     * @return the return value of the function it calls
+     * @returns the return value of the function it calls
      */
     this.distance = function() {
         if (this.check_type() === "SRL_Point") {
@@ -157,7 +158,7 @@ function Overloads() {
      * associated with that object See SRL_Point.size() SRL_Shape.size() for
      * more details.
      *
-     * @return the return value of the function it calls
+     * @returns the return value of the function it calls
      */
     this.getSize = function() {
         if (this.check_type() === "SRL_Point") {
@@ -173,7 +174,7 @@ function Overloads() {
      * SRL_Shape.getObjectById(), SRL_Stroke.getObjectById(), and
      * SRL_Point.getObjectById() for more details.
      *
-     * @return the return value of the function it calls
+     * @returns the return value of the function it calls
      */
     this.getSubObjectById = function() {
         if (this.check_type() === "SRL_Stroke") {

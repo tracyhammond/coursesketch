@@ -1,27 +1,22 @@
 /**
- *
- * The Sketch Surface is actually used as part of an element. but can be used
+ * The Sketch Surface is actually used as part of an element. But can be used
  * without actually being an element if you spoof some methods.
  *
  * Supported attributes.
  * <ul>
  * <li>data-existingList: This is meant to tell the surface that the update
  * list will be provided for it.</li>
- *
  * <li>data-existingManager: This is meant to tell the surface that the update
  * manager will be provided for it. and to not bind an update manager</li>
- *
  * <li>data-customId: This is meant to tell the surface that the Id of the
  * element will be provided to it and to not assign a random id to it.</li>
- *
  * <li>data-readOnly: This tells the sketch surface to ignore any input and it
  * will only display sketches.</li>
- *
  * <li>data-autoResize: This is meant to tell the sketch surface that it
  * should resize itself every time the window changes size.</li>
  * </ul>
  *
- * @class
+ * @constructor
  */
 function SketchSurface() {
     this.bindUpdateListCalled = false;
@@ -35,6 +30,7 @@ function SketchSurface() {
         this.localInputListener = undefined;
         this.sketchEventConverter = undefined;
         this.sketch = undefined;
+        this.sketchManager.clearAllSketches();
         this.sketchManager = undefined;
         this.graphics.finalize();
     };
@@ -56,21 +52,28 @@ function SketchSurface() {
 
     /**
      * Sets the listener that is called when an error occurs.
+     *
+     * @param {Function} error - callback for when an error occurs.
      */
     this.setErrorListener = function(error) {
         this.errorListener = error;
     };
 
+    this.isInitialized = function() {
+        return this.initialized === true;
+    };
+
     /**
-     * Returns the sketch object used by this sketch surface.
+     * @returns {SRL_Sketch} The sketch object used by this sketch surface.
      */
     this.getCurrentSketch = function() {
         return this.sketchManager.getCurrentSketch();
     };
 
     /**
-     * binds the sketch surface to an update manager.
-     * @param {UpdateManager_Instance|UpdateManager_Class} UpdateManagerClass this takes an either an instance of an update manager.
+     * Binds the sketch surface to an update manager.
+     *
+     * @param {UpdateManager_Instance|UpdateManager_Class} UpdateManagerClass - This takes an either an instance of an update manager.
      * Or a update manager class that is then constructed.
      * You can only bind an update list to a sketch once.
      */
@@ -97,7 +100,7 @@ function SketchSurface() {
      * Draws the stroke then creates an update that is added to the update
      * manager, given a stroke.
      *
-     * @param {SRL_Stroke} stroke a stroke that is added to the sketch.
+     * @param {SRL_Stroke} stroke - A stroke that is added to the sketch.
      */
     function addStrokeCallback(stroke) {
 
@@ -110,7 +113,7 @@ function SketchSurface() {
     }
 
     /**
-     * @param {InputListenerClass} InputListener a class that represents an input listener.
+     * @param {InputListenerClass} InputListener - A class that represents an input listener.
      */
     this.initializeInput = function(InputListener) {
         this.localInputListener = new InputListener();
@@ -144,9 +147,11 @@ function SketchSurface() {
      * Initializes the sketch and resets all values.
      */
     this.initializeSketch = function() {
-        this.sketchManager = new SketchSurfaceManager(this);
+        if (isUndefined(this.sketchManager)) {
+            this.sketchManager = new SketchSurfaceManager(this);
+        }
         this.updateManager = undefined;
-        bindUpdateListCalled = false;
+        this.bindUpdateListCalled = false;
         this.sketchManager.setParentSketch(new SRL_Sketch());
         this.eventListenerElement = undefined;
     };
@@ -159,36 +164,37 @@ function SketchSurface() {
     };
 
     /**
-     * Returns the element that listens to the input events.
+     * @returns {Element} the element that listens to the input events.
      */
     this.getElementForEvents = function() {
         return this.eventListenerElement;
     };
 
     /**
-     * returns the element where the sketch is drawn to.
+     * @returns {Element} The element where the sketch is drawn to.
      */
     this.getElementForDrawing = function() {
         return this.sketchCanvas;
     };
 
     /**
-     * returns the update list of the element.
+     * @returns {SrlUpdateList} The update list of the element.
      */
     this.getUpdateList = function() {
         return this.updateManager.getUpdateList();
     };
 
     /**
-     * Returns the manager for this sketch surface.
+     * @returns {UpdateManager} Returns the manager for this sketch surface.
      */
     this.getUpdateManager = function() {
         return this.updateManager;
     };
 
     /**
-     * @return {SrlUpdateList} proto object.
      * This is a cleaned version of the list and modifying this list will not affect the update manager list.
+     *
+     * @returns {SrlUpdateList} proto object.
      */
     this.getSrlUpdateListProto = function() {
         var updateProto = CourseSketch.prutil.SrlUpdateList();
@@ -205,6 +211,8 @@ function SketchSurface() {
 
     /**
      * Extracts the canvas id from the sketch list.
+     *
+     * @param {SrlUpdateList} updateList - The update list from which the id is being extracted.
      */
     this.extractIdFromList = function(updateList) {
         var update = updateList[0];
@@ -222,7 +230,10 @@ function SketchSurface() {
     /**
      * Loads all of the updates into the sketch.
      * This should only be done after the sketch surface is inserted into the dom.
-     * @param {Array<SrlUpdate>} updateList
+     *
+     * @param {Array<SrlUpdate>} updateList - The update list that is being loaded into the update manager.
+     * @param {PercentBar} percentBar - The object that is used to update how much of the sketch is updated.
+     * @param {Function} finishedCallback - called when the sketch is done loading.
      */
     this.loadUpdateList = function(updateList, percentBar, finishedCallback) {
         try {
@@ -236,7 +247,7 @@ function SketchSurface() {
 
     /**
      * Tells the sketch surface to fill the screen so it is completely visible.
-     * This currently is only allowed on read-only canvases
+     * This currently is only allowed on read-only canvases.
      */
     this.fillCanvas = function() {
         if (isUndefined(this.dataset) || isUndefined(this.dataset.readonly)) {
@@ -248,7 +259,7 @@ function SketchSurface() {
 SketchSurface.prototype = Object.create(HTMLElement.prototype);
 
 /**
- * @param {Element} templateClone an element representing the data inside tag, its content
+ * @param {Element} templateClone - An element representing the data inside tag, its content
  *            has already been imported and then added to this element.
  */
 SketchSurface.prototype.initializeElement = function(templateClone) {
@@ -263,8 +274,9 @@ SketchSurface.prototype.initializeElement = function(templateClone) {
  * Called to initialize the sketch surface.
  *
  * Looks at attributes and sets up the sketch surface based on these attributes.
- * @param {InputListener} InputListenerClass
- * @param {UpdateManager} UpdateManagerClass
+ *
+ * @param {InputListener} InputListenerClass - The class used to listen for input.
+ * @param {UpdateManager} UpdateManagerClass - The class used to manage updates to the sketch.
  */
 SketchSurface.prototype.initializeSurface = function(InputListenerClass, UpdateManagerClass) {
     /*jshint maxcomplexity:13 */
@@ -294,5 +306,5 @@ SketchSurface.prototype.initializeSurface = function(InputListenerClass, UpdateM
         this.resizeSurface();
     }.bind(this));
 
-
+    this.initialized = true;
 };

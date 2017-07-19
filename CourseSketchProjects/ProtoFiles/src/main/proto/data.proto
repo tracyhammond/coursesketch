@@ -56,11 +56,13 @@ enum ItemQuery {
     COURSE_SEARCH = 10;
     BANK_SEARCH = 11;
     REGISTER = 12; // userId = 0 courseId = 1
-    COURSE_LIST = 13; // returns a list of Ids
+    COURSE_ROSTER = 13; // returns a list of user Ids
     UPDATE = 14; // polls the database for any updates/changes that have happened.
     LECTURE = 15; // used to get the lectures for a course
     LECTURESLIDE = 16; // used to get the lecture slides for a course
-    TUTORIAL = 17; // used to get the tutorial for a certain page
+    GRADE = 17; // used to handle grades for a course
+    GRADING_POLICY = 18; // used to handle grading policies for a course
+    TUTORIAL = 19; // used to get the tutorial for a certain page
 }
 
 /**

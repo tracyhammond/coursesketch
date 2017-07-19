@@ -1,0 +1,11 @@
+*[data-prop] {
+    margin-bottom: 10px;
+}
+
+*[data-hidden] {
+    display: none;
+}
+
+textarea {
+    border-color: #757575;
+}

@@ -1,0 +1,296 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>BankProblem DataManager</title>
+    <!-- test Library -->
+    <link rel="import" href="/test/testUtilities/testUtilities.html">
+
+    <link rel="import"
+          href="/test/testUtilities/fakePage/mockedObjects/mockedObjectsInclude.html">
+    <!-- file being tested. -->
+    <script src="/src/utilities/persistantData/specificManager/bankProblemDataManager.js" data-cover></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<script>
+    QUnit.module("bankProblem creation");
+    test("create new database", function (assert) {
+        expect(1);
+        var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
+            CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
+        if (!isUndefined(dataManager)) {
+            assert.ok(true, "The datamanager was successfully created.");
+        }
+    });
+    test("insert bankProblem local", function (assert) {
+        expect(1);
+        var done = assert.async();
+        var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
+            CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
+        var assignment = CourseSketch.prutil.SrlAssignment();
+        assignment.id = generateUUID();
+        assignment.courseId = generateUUID();
+        waitForDatabase(dataManager, function () {
+            dataManager.setAssignment(assignment, function () {
+                var bankProblem = CourseSketch.prutil.SrlBankProblem();
+                bankProblem.id = generateUUID();
+                bankProblem.assignmentId = assignment.id;
+                bankProblem.courseId = assignment.courseId;
+                bankProblem.questionText = "I AM TEST";
+                dataManager.insertBankProblem(bankProblem, function () {
+                    assert.ok(true, "Local callback called.");
+                    done();
+                }, undefined);
+            });
+        });
+    });
+
+    test("insert bank problem from bank problem local", function (assert) {
+        expect(1);
+        var done = assert.async();
+        var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
+            CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
+        waitForDatabase(dataManager, function () {
+            var bankProblem = CourseSketch.prutil.SrlBankProblem();
+            bankProblem.questionText = "I AM TEST";
+            bankProblem.id = generateUUID();
+
+            var dataResult = CourseSketch.prutil.DataResult();
+            var itemResult = CourseSketch.prutil.ItemResult();
+            var req = CourseSketch.prutil.Request();
+            req.requestId = generateUUID();
+            req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_INSERT;
+            itemResult.query = CourseSketch.prutil.ItemQuery.BANK_PROBLEM;
+            dataResult.results = [itemResult];
+            var serverBankProblemId = generateUUID();
+            itemResult.returnText = serverBankProblemId + ":" + bankProblem.id;
+            CourseSketch.connection.sendRequest = function (message) {
+                req.otherData = dataResult.toArrayBuffer();
+                req.requestId = message.requestId;
+                CourseSketch.connection.sendSelf(req);
+            }; //send request
+            dataManager.insertBankProblem(bankProblem, function (localBankProblem) {
+                assert.equal(bankProblem.id, localBankProblem.id, "Local callback called.");
+                done();
+            });
+        });
+    });
+
+    //next test
+
+    test("create new bankProblem server", function (assert) {
+        expect(1);
+        var done = assert.async();
+        var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
+            CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
+        var assignment = CourseSketch.prutil.SrlAssignment();
+        var dataResult = CourseSketch.prutil.DataResult();
+        var itemResult = CourseSketch.prutil.ItemResult();
+        var req = CourseSketch.prutil.Request();
+        req.requestId = generateUUID();
+        req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_INSERT;
+        itemResult.query = CourseSketch.prutil.ItemQuery.BANK_PROBLEM;
+        dataResult.results = [itemResult];
+        req.otherData = dataResult.toArrayBuffer();
+        assignment.id = generateUUID();
+        assignment.courseId = generateUUID();
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
+        bankProblem.id = generateUUID();
+        bankProblem.problemBankId = generateUUID();
+        bankProblem.assignmentId = assignment.id;
+        bankProblem.courseId = assignment.courseId;
+        bankProblem.questionText = "I AM TEST";
+        itemResult.returnText = "1:" + bankProblem.id;
+        CourseSketch.connection.sendRequest = function (message) {
+            console.log('sending data to server ', message);
+            req.otherData = dataResult.toArrayBuffer();
+            req.requestId = message.requestId;
+            CourseSketch.connection.sendSelf(req);
+        }; //send request
+        waitForDatabase(dataManager, function () {
+            console.log('database started!');
+            dataManager.setAssignment(assignment, function () {
+                console.log('assignment set');
+                dataManager.insertBankProblem(bankProblem, undefined, function (bankProblem2) {
+                    assert.ok(true, "Server callback called.");
+                    done();
+                });
+            });
+        });
+    });
+
+    // next test
+
+    test("get bankProblem server", function (assert) {
+        expect(1);
+        var done = assert.async();
+        var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
+            CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
+        var req = CourseSketch.prutil.Request();
+        req.requestId = generateUUID();
+        req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST;
+        var dataResult = CourseSketch.prutil.DataResult();
+        var fakeId = generateUUID();
+        var assignment = CourseSketch.prutil.SrlAssignment();
+        assignment.id = generateUUID();
+        assignment.courseId = generateUUID();
+        var itemResult = CourseSketch.prutil.ItemResult();
+        itemResult.query = CourseSketch.prutil.ItemQuery.BANK_PROBLEM;
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
+        var bankProblem2 = CourseSketch.prutil.SrlBankProblem();
+        bankProblem.id = fakeId;
+        bankProblem.assignmentId = assignment.id;
+        bankProblem.courseId = assignment.courseId;
+        itemResult.data = [bankProblem.toArrayBuffer()];
+        dataResult.results = [itemResult];
+        req.otherData = dataResult.toArrayBuffer();
+        CourseSketch.connection.sendRequest = function (message) {
+            req.requestId = message.requestId;
+            CourseSketch.connection.sendSelf(req);
+        }; //send request
+        waitForDatabase(dataManager, function () {
+            dataManager.getBankProblem(fakeId, undefined, function (result1) {
+                bankProblem2.id = result1.id;
+                assert.equal(bankProblem2.id, bankProblem.id, "Sent a bankProblem to server and recieved it");
+                done();
+            }); //get bankProblem
+        });
+    });
+
+    //next test
+
+    test("test connection send request", function (assert) {
+        expect(1);
+        var done = assert.async();
+        var fakeId = generateUUID();
+        CourseSketch.connection.sendRequest = function (message) {
+            assert.equal(message.requestType, CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST,
+                "Message type is valid.");
+            done();
+        };
+        var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
+            CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
+        waitForDatabase(dataManager, function () {
+            dataManager.getBankProblem(fakeId, function () {
+            });
+        });
+    });
+
+    //next test
+
+
+    test("Testing Delete ", function (assert) {
+        expect(1);
+        var done = assert.async();
+        var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
+            CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
+        var fakeId = generateUUID();
+        var assignment = CourseSketch.prutil.SrlAssignment();
+        assignment.id = generateUUID();
+        assignment.courseId = generateUUID();
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
+        bankProblem.id = fakeId;
+        bankProblem.assignmentId = assignment.id;
+        bankProblem.courseId = assignment.courseId;
+        bankProblem.questionText = "Preupdated";
+        waitForDatabase(dataManager, function () {
+            dataManager.setBankProblem(bankProblem, function () {
+                dataManager.deleteBankProblem(bankProblem.id, function () {
+                    setTimeout(function () {
+                        dataManager.getBankProblemLocal(bankProblem.id, function (bankProblem) {
+                            assert.ok(bankProblem instanceof CourseSketch.DatabaseException,
+                                "BankProblems can be fetched from the database.");
+                            done();
+                        }); // getBankProblem
+                    }, 100);
+                });
+                // end deleteBankProblem
+            });
+            // end set BankProblem
+        });
+        // end wait for database
+    });
+    // end test
+
+    // next tests
+
+    test("update BankProblem server callback", function (assert) {
+        expect(1);
+        var done = assert.async();
+        var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
+            CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
+        var req = CourseSketch.prutil.Request();
+        req.requestId = generateUUID();
+        req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_UPDATE;
+        var dataResult = CourseSketch.prutil.DataResult();
+        var fakeId = generateUUID();
+        var itemResult = CourseSketch.prutil.ItemResult();
+        itemResult.query = CourseSketch.prutil.ItemQuery.BANK_PROBLEM;
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
+        var bankProblem2 = CourseSketch.prutil.SrlBankProblem();
+        bankProblem.id = fakeId;
+        bankProblem.questionText = 'preupdate';
+        bankProblem2.id = bankProblem.id;
+        bankProblem2.questionText = "Update complete!";
+        itemResult.data = [bankProblem.toArrayBuffer()];
+        dataResult.results = [itemResult];
+        req.otherData = dataResult.toArrayBuffer();
+        CourseSketch.connection.sendRequest = function (message) {
+            req.otherData = dataResult.toArrayBuffer();
+            req.requestId = message.requestId;
+            CourseSketch.connection.sendSelf(req);
+        }; //send request
+
+        waitForDatabase(dataManager, function () {
+            dataManager.setBankProblem(bankProblem, function () {
+                dataManager.updateBankProblem(bankProblem2, undefined, function () {
+                    dataManager.getBankProblem(fakeId, function (result1) {
+                        assert.equal(result1.questionText, bankProblem2.questionText, "Sent a bankProblem to server and updated it");
+                        done();
+                    });
+                    // get courseBankProblem
+                });
+                // updateBankProblem
+            });
+            // setBankProblem
+        });
+        // waitfor database
+    });
+    // end test
+
+    // next test
+
+    test("update BankProblem local callback", function (assert) {
+        expect(2);
+        var done = assert.async();
+        var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
+            CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
+        var fakeId = generateUUID();
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
+        var bankProblem2 = CourseSketch.prutil.SrlBankProblem();
+        bankProblem.id = fakeId;
+        bankProblem.questionText = "Preupdated";
+        bankProblem2.id = bankProblem.id;
+        bankProblem2.questionText = "Update complete!";
+        waitForDatabase(dataManager, function () {
+            dataManager.setBankProblem(bankProblem, function () {
+                dataManager.updateBankProblem(bankProblem2, function () {
+                    dataManager.getBankProblem(fakeId, function (result1) {
+                        bankProblem2.id = result1.id;
+                        assert.notEqual(result1.questionText, bankProblem.questionText, "text should not be before update");
+                        assert.equal(result1.questionText, bankProblem2.questionText, "Sent a bankProblem to local and updated it");
+                        done();
+                    });
+                    // get bankProblem
+                });
+                // update bank problem
+            });
+            // set BankProblem
+        });
+        // wait for database
+    });
+    // end test
+</script>
+</body>

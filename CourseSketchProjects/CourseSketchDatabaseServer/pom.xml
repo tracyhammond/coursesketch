@@ -19,8 +19,8 @@
         <mainClass>connection.DatabaseRunner</mainClass>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>5</projectBranchLevel>
-        <projectLineLevel>10</projectLineLevel>
+        <projectBranchLevel>37</projectBranchLevel>
+        <projectLineLevel>38</projectLineLevel>
     </properties>
 
     <build>
@@ -54,10 +54,6 @@
                 <artifactId>exec-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>com.github.joelittlejohn.embedmongo</groupId>
-                <artifactId>embedmongo-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
@@ -77,6 +73,12 @@
                             <file>${basedir}/src/main/java/connection/DatabaseConnectionManager.java</file>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>ip_prop_reverse2</id>
+                        <configuration>
+                            <file>${basedir}/src/main/java/connection/DatabaseConnectionManager.java</file>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
@@ -86,7 +88,13 @@
         <dependency>
             <groupId>CourseSketch</groupId>
             <artifactId>ProtoFiles</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>${protoFileVersion}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>RpcServer</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -98,7 +106,7 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>2.12.3</version>
+            <version>${mongodbJavaDriverVersion}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -111,11 +119,41 @@
             <version>2.3.2</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.dbunit</groupId>
             <artifactId>dbunit</artifactId>
             <version>2.4.3</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>AuthenticationTestHelper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>DatabaseTestHelper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>ProtobufComparison</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>MatcherHelper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 </project>
