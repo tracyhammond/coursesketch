@@ -143,7 +143,7 @@ public final class Authenticator {
 
         // hasAccess will be true if they have a permission level that is above NO_PERMISSION or no registration is required for access.
         if (checkType.getCheckAccess()) {
-            authBuilder.setHasAccess(authBuilder.getHasAccess() || !authBuilder.getIsRegistrationRequired());
+            authBuilder.setHasAccess(authBuilder.getHasAccess() || authBuilder.getIsNoRegistrationRequired());
         }
 
         authThreadData.checkException();
@@ -246,7 +246,7 @@ public final class Authenticator {
         }
         if ((checkType.getCheckAccess() || checkType.getCheckIsRegistrationRequired())
                 && (Util.ItemType.COURSE == collectionType || Util.ItemType.BANK_PROBLEM == collectionType)) {
-            authBuilder.setIsRegistrationRequired(optionChecker.isItemRegistrationRequired(dataCreator));
+            authBuilder.setIsNoRegistrationRequired(!optionChecker.isItemRegistrationRequired(dataCreator));
         }
         // Course Problems can not be published only assignments!
         if (checkType.getCheckIsPublished() && Util.ItemType.COURSE_PROBLEM != collectionType) {

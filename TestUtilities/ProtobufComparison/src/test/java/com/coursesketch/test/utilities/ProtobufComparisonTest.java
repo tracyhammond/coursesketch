@@ -1,8 +1,7 @@
 package com.coursesketch.test.utilities;
 
-import com.coursesketch.test.utilities.ProtobufComparison;
-import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.google.common.collect.Lists;
+import com.google.protobuf.Timestamp;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -10,9 +9,6 @@ import protobuf.srl.commands.Commands;
 import protobuf.srl.query.Data;
 import protobuf.srl.request.Message;
 
-/**
- * Created by gigemjt on 9/6/15.
- */
 @RunWith(MockitoJUnitRunner.class)
 public class ProtobufComparisonTest {
     @Test
@@ -187,7 +183,7 @@ public class ProtobufComparisonTest {
         final Commands.SrlUpdateList.Builder updateList2 = Commands.SrlUpdateList.newBuilder();
 
         for (int i = 0; i <= 10; i++) {
-            updateList1.addList(Commands.SrlUpdate.newBuilder().setTime(i* 30).setUpdateId("" + i));
+            updateList1.addList(Commands.SrlUpdate.newBuilder().setTime(Timestamp.newBuilder().setSeconds(i* 30)).setUpdateId("" + i));
         }
         updateList2.addAllList(Lists.reverse(updateList1.getListList()));
         comp.equals(updateList1.build(), updateList2.build());

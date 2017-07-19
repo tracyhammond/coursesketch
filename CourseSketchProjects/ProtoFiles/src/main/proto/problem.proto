@@ -1,3 +1,5 @@
+syntax = "proto3";
+
 import "util.proto";
 import "tutorial.proto";
 import "commands.proto";
@@ -6,25 +8,25 @@ import "questionData.proto";
 package protobuf.srl.school;
 
 message SrlProblem {
-    required string id = 1; // This must be unique within an assignment.
-    optional string courseId = 2; // To know who the grandParent is.
-    optional string assignmentId = 3; // To know who the parent is.
+    string id = 1; // This must be unique within an assignment.
+    string courseId = 2; // To know who the grandParent is.
+    string assignmentId = 3; // To know who the parent is.
 
     // display info 5 - 9
-    optional string name = 5;
-    optional int32 problemNumber = 6; // the order in which the problem appears in the assignment.
-    optional protobuf.srl.utils.State state = 7;
+    string name = 5;
+    int32 problemNumber = 6; // the order in which the problem appears in the assignment.
+    protobuf.srl.utils.State state = 7;
 
     // grade data 10 - 14
-    optional string gradeWeight = 10; // Percentage of assignment grade
-    optional float grade = 11; // Calculated grade of all subproblems for this problem
+    string gradeWeight = 10; // Percentage of assignment grade
+    float grade = 11; // Calculated grade of all subproblems for this problem
 
     // problem and navigation data 15 - 19
     repeated ProblemSlideHolder subgroups = 15;
     repeated QuestionAction actions = 16;
     repeated ProblemRestriction restrictions = 17;
 
-    optional protobuf.srl.utils.Accessibility access = 20 [default=PROTECTED]; // Access for other classes to use this question
+    protobuf.srl.utils.Accessibility access = 20; // Access for other classes to use this question
 
     /*
     SUPER_PUBLIC
@@ -47,8 +49,8 @@ message SrlProblem {
  */
 message ProblemSlideHolder {
     // The id of the item being held.
-    optional string id = 1;
-    optional protobuf.srl.utils.ItemType itemType = 2;
+    string id = 1;
+    protobuf.srl.utils.ItemType itemType = 2;
     oneof problemSlide {
         SrlBankProblem problem = 3;
         LectureSlide slide = 4;
@@ -56,50 +58,50 @@ message ProblemSlideHolder {
 
     // For instructors this holds if the problem is editable
     // For students this hold if the problem is currently viewable
-    optional bool unlocked = 5;
+    bool unlocked = 5;
 
     // The index of the item inside this group
-    optional int32 index = 6;
+    int32 index = 6;
 }
 
 message QuestionAction {
-    optional LectureNavigator lectureNavigation = 1;
+    LectureNavigator lectureNavigation = 1;
 }
 
 /**
  * used for navigating different lectures or lecture subgroups
  */
 message LectureNavigator {
-    optional string nextLectureId = 1;
-    optional int32 nextSlide = 2;
-    optional string nextLectureGroupId = 3;
+    string nextLectureId = 1;
+    int32 nextSlide = 2;
+    string nextLectureGroupId = 3;
 }
 
 message ProblemRestriction {
     // The next answer (or slide) can not be moved until the answer is correct.
-    optional bool onlyUntilCorrect = 1;
+    bool onlyUntilCorrect = 1;
 }
 
 message SrlBankProblem {
-    required string id = 1;
-    optional string questionText = 2;
-    optional protobuf.srl.utils.QuestionType questionType = 3 [default=SKETCH];
-    optional string solutionId = 4;
-    optional string registrationKey = 5;
+    string id = 1;
+    string questionText = 2;
+    protobuf.srl.utils.QuestionType questionType = 3;
+    string solutionId = 4;
+    string registrationKey = 5;
 
     // question data 6 - 14
-    optional string script = 6; // a script string that is used for custom setups in experiments
+    string script = 6; // a script string that is used for custom setups in experiments
 
     // used for containing special information required for submitting the problem
-    optional protobuf.srl.question.QuestionData specialQuestionData = 7;
+    protobuf.srl.question.QuestionData specialQuestionData = 7;
 
     // used for containing special visual information. This is not required for submitting the problem.
-    optional LectureSlide specialVisualData = 8;
+    LectureSlide specialVisualData = 8;
 
     // meta data 25 - 34
-    optional string courseTopic = 25;
-    optional string subTopic = 26;
-    optional string source = 27;
+    string courseTopic = 25;
+    string subTopic = 26;
+    string source = 27;
     repeated string otherKeywords = 28;
 }
 
@@ -108,9 +110,9 @@ message SrlBankProblem {
  */
 message LectureSlide {
     // Ids
-    optional string id = 1;
-    optional string assignmentId = 2;
-    optional string courseProblemId = 3;
+    string id = 1;
+    string assignmentId = 2;
+    string courseProblemId = 3;
 
     // The elements that are displayed for each slide
     repeated ProblemElement elements = 4;
@@ -118,11 +120,11 @@ message LectureSlide {
 
 message ProblemElement {
     //id of this element
-    optional string id = 2;
-    optional int32 x_position = 3;
-    optional int32 y_position = 4;
-    optional int32 x_dimension = 5;
-    optional int32 y_dimension = 6;
+    string id = 2;
+    int32 x_position = 3;
+    int32 y_position = 4;
+    int32 x_dimension = 5;
+    int32 y_dimension = 6;
 
     oneof ElementType {
         protobuf.srl.tutorial.ActionCreateTextBox textBox = 7;
@@ -134,6 +136,6 @@ message ProblemElement {
 
 
 message Image {
-    optional string src = 8;
-    optional float orientation = 9;
+    string src = 8;
+    float orientation = 9;
 }

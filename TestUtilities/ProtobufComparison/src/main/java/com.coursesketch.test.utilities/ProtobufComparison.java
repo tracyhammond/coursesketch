@@ -2,7 +2,8 @@ package com.coursesketch.test.utilities;
 
 import com.google.common.collect.Lists;
 import com.google.protobuf.Descriptors;
-import com.google.protobuf.GeneratedMessage;
+import com.google.protobuf.GeneratedMessageV3;
+import com.google.protobuf.GeneratedMessageV3;
 import org.junit.Assert;
 
 import javax.naming.OperationNotSupportedException;
@@ -90,7 +91,7 @@ public class ProtobufComparison {
      * @param actual The protobuf that was generated during the test.
      */
     @SuppressWarnings("checkstyle:designforextension")
-    public void equals(final GeneratedMessage expected, final GeneratedMessage actual) {
+    public void equals(final GeneratedMessageV3 expected, final GeneratedMessageV3 actual) {
         // FUTURE: instead of field descriptor use a field descriptor chain in case there are duplicate (or repeated) objects.
         final Map<Descriptors.FieldDescriptor, List<ExpectationPair<Object, Object>>> incorrectFields = new HashMap<>();
         equals(expected, actual, incorrectFields);
@@ -114,7 +115,7 @@ public class ProtobufComparison {
      * @param actual The protobuf that was generated during the test.
      * @param incorrectFields A map containing fields that were found to be incorrect.
      */
-    private void equals(final GeneratedMessage expected, final GeneratedMessage actual,
+    private void equals(final GeneratedMessageV3 expected, final GeneratedMessageV3 actual,
             final Map<Descriptors.FieldDescriptor, List<ExpectationPair<Object, Object>>> incorrectFields) {
         if (!expected.getDescriptorForType().equals(actual.getDescriptorForType())) {
             Assert.fail("Expected Message " + expected.getDescriptorForType().getFullName()
@@ -166,12 +167,12 @@ public class ProtobufComparison {
             compareRepeatedFields(expectedValue, actualValue, field, incorrectFields);
             return;
         }
-        if (expectedValue instanceof GeneratedMessage) {
-            if (!(actualValue instanceof GeneratedMessage)) {
+        if (expectedValue instanceof GeneratedMessageV3) {
+            if (!(actualValue instanceof GeneratedMessageV3)) {
                 Assert.fail("Different types");
             }
             if (isDeepEquals) {
-                equals((GeneratedMessage) expectedValue, (GeneratedMessage) actualValue, incorrectFields);
+                equals((GeneratedMessageV3) expectedValue, (GeneratedMessageV3) actualValue, incorrectFields);
             }
             return;
         }
@@ -197,10 +198,10 @@ public class ProtobufComparison {
     private boolean compareDataOfRepeatedField(final Object expectedValue, final Object actualValue, final Descriptors.FieldDescriptor field,
             final Map<Descriptors.FieldDescriptor, List<ExpectationPair<Object, Object>>> incorrectFields,
             final ProtobufComparison nestedComparator) {
-        if (expectedValue instanceof GeneratedMessage) {
+        if (expectedValue instanceof GeneratedMessageV3) {
             final Map<Descriptors.FieldDescriptor, List<ExpectationPair<Object, Object>>> incorrectFieldClone = new HashMap<>();
             if (isDeepEquals) {
-                nestedComparator.equals((GeneratedMessage) expectedValue, (GeneratedMessage) actualValue, incorrectFieldClone);
+                nestedComparator.equals((GeneratedMessageV3) expectedValue, (GeneratedMessageV3) actualValue, incorrectFieldClone);
             }
             if (incorrectFieldClone.size() > 0) {
                 if (this.ignoreListOrder) {

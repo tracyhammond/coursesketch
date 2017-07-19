@@ -1,5 +1,6 @@
 package utilities;
 
+import com.google.protobuf.Any;
 import coursesketch.database.auth.AuthenticationException;
 import database.DatabaseAccessException;
 import org.slf4j.Logger;
@@ -94,7 +95,7 @@ public final class ExceptionUtilities {
             final String responseText) {
         final Message.Request.Builder builder = ProtobufUtilities.createBaseResponse(inputRequest);
         builder.setRequestType(Message.Request.MessageType.ERROR);
-        builder.setOtherData(exception.toByteString());
+        builder.setOtherData(Any.pack(exception));
         if (responseText != null) {
             builder.setResponseText(responseText);
         } else {

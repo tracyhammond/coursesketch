@@ -65,7 +65,6 @@
             </plugin>
         </plugins>
     </build>
-
     <dependencies>
         <dependency>
             <groupId>CourseSketch</groupId>

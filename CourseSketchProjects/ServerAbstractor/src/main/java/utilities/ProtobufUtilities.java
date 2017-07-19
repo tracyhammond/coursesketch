@@ -1,5 +1,6 @@
 package utilities;
 
+import com.google.protobuf.Any;
 import com.google.protobuf.GeneratedMessage;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import protobuf.srl.request.Message;
@@ -165,7 +166,7 @@ public final class ProtobufUtilities {
         final Message.Request.Builder response = Message.Request.newBuilder();
         response.setRequestType(type);
         if (data != null) {
-            response.setOtherData(data.toByteString());
+            response.setOtherData(Any.pack(data));
         }
         if (requestId != null) {
             response.setRequestId(requestId);

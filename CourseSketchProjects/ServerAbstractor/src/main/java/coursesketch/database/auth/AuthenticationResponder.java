@@ -45,7 +45,7 @@ public class AuthenticationResponder {
      * @return True if the item is published.  By default this returns false.
      */
     public final boolean isItemPublished() {
-        return response.hasIsItemPublished() && response.getIsItemPublished();
+        return response.getIsItemPublished();
     }
 
     /**
@@ -55,7 +55,7 @@ public class AuthenticationResponder {
         // if we do not have a value for registration we assume the more restrictive option.
         // this is the opposite of most values so this method is required
         // even though the default is true...
-        return !response.hasIsRegistrationRequired() || response.getIsRegistrationRequired();
+        return !response.getIsNoRegistrationRequired();
     }
 
     /**
@@ -63,8 +63,7 @@ public class AuthenticationResponder {
      * By default this returns false.
      */
     public final boolean hasStudentPermission() {
-        return response.hasPermissionLevel()
-                && response.getPermissionLevel().compareTo(STUDENT) >= 0;
+        return response.getPermissionLevel().compareTo(STUDENT) >= 0;
     }
 
     /**
@@ -72,8 +71,7 @@ public class AuthenticationResponder {
      *         By default this returns false.
      */
     public final boolean hasPeerTeacherPermission() {
-        return response.hasPermissionLevel()
-                && response.getPermissionLevel().compareTo(PEER_TEACHER) >= 0;
+        return response.getPermissionLevel().compareTo(PEER_TEACHER) >= 0;
     }
 
     /**
@@ -81,8 +79,7 @@ public class AuthenticationResponder {
      * By default this returns false.
      */
     public final boolean hasModeratorPermission() {
-        return response.hasPermissionLevel()
-                && response.getPermissionLevel().compareTo(MODERATOR) >= 0;
+        return response.getPermissionLevel().compareTo(MODERATOR) >= 0;
     }
 
     /**
@@ -90,7 +87,6 @@ public class AuthenticationResponder {
      * By default this returns false.
      */
     public final boolean hasTeacherPermission() {
-        return response.hasPermissionLevel()
-                && response.getPermissionLevel().compareTo(TEACHER) >= 0;
+        return response.getPermissionLevel().compareTo(TEACHER) >= 0;
     }
 }
