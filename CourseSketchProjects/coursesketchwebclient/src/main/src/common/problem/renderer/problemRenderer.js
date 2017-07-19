@@ -279,6 +279,9 @@ function ProblemRenderer(problemPanel) {
         return !isUndefined(questionData) && questionData !== null;
     }
 
+    /**
+     * @param {Element} element - The element that is being set with full screen.
+     */
     function setFullScreen(element) {
         if (isFullScreen) {
             element.className += ' full-screen';

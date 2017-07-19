@@ -89,32 +89,32 @@ validateFirstRun(document.currentScript);
     function createMvSketch(submissions, navigator) {
         var questionType = navigator.getCurrentInfo().questionType;
         for (var i = 0; i < submissions.length; i++) {
-            var submissionPanel = document.createElement('mv-sketch');
-            document.querySelector('.submissions').appendChild(submissionPanel);
-            submissionPanel.setUserId(submissions[i].userId);
-            submissionPanel.setSubmission(questionType, submissions[i].getSubmission());
-            submissionPanel.setSubmissionClickedFunction(function() {
+            var reviewPanel = document.createElement('mv-sketch');
+            document.querySelector('.submissions').appendChild(reviewPanel);
+            reviewPanel.setUserId(submissions[i].userId);
+            reviewPanel.setSubmission(questionType, submissions[i].getSubmission());
+            reviewPanel.setSubmissionClickedFunction(function() {
                 CourseSketch.multiViewPage.loadProblem(navigator, this.getSubmission());
             });
 
             var protoGrade = CourseSketch.prutil.ProtoGrade();
             protoGrade.userId = submissions[i].userId;
-            submissionPanel.courseId = protoGrade.courseId = submissions[i].courseId;
-            submissionPanel.assignmentId = protoGrade.assignmentId = submissions[i].assignmentId;
-            submissionPanel.problemId = protoGrade.problemId = submissions[i].problemId;
+            reviewPanel.courseId = protoGrade.courseId = submissions[i].courseId;
+            reviewPanel.assignmentId = protoGrade.assignmentId = submissions[i].assignmentId;
+            reviewPanel.problemId = protoGrade.problemId = submissions[i].problemId;
             console.log('before I get the grade ', protoGrade);
 
-            (function(submissionPanel) {
+            (function(multiViewPanel) {
                 // Only one of the callbacks will be called right now...
                 CourseSketch.dataManager.getGrade(protoGrade, function(dbGrade) {
                     console.log('LOADING GRADE FROM SERVER', dbGrade);
-                    submissionPanel.setGrade(dbGrade.currentGrade);
+                    multiViewPanel.setGrade(dbGrade.currentGrade);
                     var history = dbGrade.gradeHistory;
                     if (!isUndefined(history)) {
-                        submissionPanel.setComment(history[history.length - 1].comment);
+                        multiViewPanel.setComment(history[history.length - 1].comment);
                     }
                 });
-            })(submissionPanel);
+            })(reviewPanel);
         }
     }
 

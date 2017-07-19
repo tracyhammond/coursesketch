@@ -1,17 +1,5 @@
-validateFirstRun(document.currentScript);
-
 (function() {
     var keyEventHandler;
-    $(document).ready(function() {
-        CourseSketch.dataManager.waitForDatabase(function() {
-            var courseId = CourseSketch.dataManager.getState('gradebookCourseid');
-            CourseSketch.gradeBook.loadGrades(courseId);
-            CourseSketch.gradeBook.createTabs([ 'Quiz', 'Homework', 'Test' ], document.querySelector('.tabholder'));
-        });
-        var table = $('.tabletalk');
-        CourseSketch.gradeBook.initializeTableScrolling(document.querySelector('.tabletalk'), table.offset());
-        table.keyup(keyEventHandler);
-    });
 
     /**
      * Loads grades for the given course.
@@ -34,6 +22,13 @@ validateFirstRun(document.currentScript);
                 });
             });
         });
+    };
+
+    /**
+     * @param {Element} table Initializes the key event handler for the table.
+     */
+    CourseSketch.gradeBook.initializeKeyEvents = function(table) {
+        table.keyup(keyEventHandler);
     };
 
     /**

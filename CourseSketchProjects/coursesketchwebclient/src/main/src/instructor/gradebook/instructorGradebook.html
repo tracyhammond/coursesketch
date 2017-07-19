@@ -11,6 +11,21 @@
     <script type="text/javascript" src="/src/instructor/gradebook/instructorGradebookStyling.js"> </script>
 
     <link rel="import" href="/src/utilities/libraries/materialize/materializeInclude.html">
+
+    <script>
+        $(document).ready(function() {
+            CourseSketch.dataManager.waitForDatabase(function() {
+                var courseId = CourseSketch.dataManager.getState('gradebookCourseid');
+                if (!isUndefined(courseId)) {
+                    CourseSketch.gradeBook.loadGrades(courseId);
+                    CourseSketch.gradeBook.createTabs(['Quiz', 'Homework', 'Test'], document.querySelector('.tabholder'));
+                }
+            });
+            var table = $('.tabletalk');
+            CourseSketch.gradeBook.initializeTableScrolling(document.querySelector('.tabletalk'), table.offset());
+            CourseSketch.gradeBook.initializeKeyEvents(table);
+        });
+    </script>
 </head>
 <template id="inputTemplate">
     <div class = 'filledGradeCell'>
