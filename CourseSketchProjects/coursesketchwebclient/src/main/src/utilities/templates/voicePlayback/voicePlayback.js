@@ -13,9 +13,9 @@ function VoicePlayback() {
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
             navigator.getUserMedia = (navigator.getUserMedia ||
-            navigator.webkitGetUserMedia ||
-            navigator.mozgetUserMedia ||
-            navigator.msGetUserMedia);
+                navigator.webkitGetUserMedia ||
+                navigator.mozgetUserMedia ||
+                navigator.msGetUserMedia);
             window.URL = window.URL || window.webkitURL;
         } catch (e) {
             alert('Web audio is not supported in this browser.');
@@ -24,7 +24,7 @@ function VoicePlayback() {
         /**
          * Create the recorder and check to see if failed or not
          */
-        navigator.getUserMedia({ audio: true }, function(stream) {
+        navigator.getUserMedia({audio: true}, function(stream) {
             localScope.recorder = new Recorder(stream);
         }, function(e) {
         });
@@ -154,7 +154,6 @@ function VoicePlayback() {
             }.bind(this);
         }, 2000);
     };
-
 }
 
 VoicePlayback.prototype = Object.create(HTMLElement.prototype);

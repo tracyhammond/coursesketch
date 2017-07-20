@@ -12,7 +12,8 @@ function VoiceRecording() {
         var localScope = this;
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
-
+        var surface = document.body.querySelector('sketch-surface');
+        var updateManager = surface.getUpdateManager();
         /**
          * Calls blink if the button is blinking or starts blink if it is not blinking
          */
@@ -54,7 +55,6 @@ function VoiceRecording() {
          */
         this.stopRecording = function() {
             this.recorder.stop();
-
             this.saveFile();
         }.bind(this);
 
@@ -80,13 +80,13 @@ function VoiceRecording() {
         /**
          * Initialize the recorder
          */
-        init = function() {
+        this.init = function() {
             try {
                 window.AudioContext = window.AudioContext || window.webkitAudioContext;
                 navigator.getUserMedia = (navigator.getUserMedia ||
-                navigator.webkitGetUserMedia ||
-                navigator.mozgetUserMedia ||
-                navigator.msGetUserMedia);
+                    navigator.webkitGetUserMedia ||
+                    navigator.mozgetUserMedia ||
+                    navigator.msGetUserMedia);
                 console.log('Audio context set up');
                 console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not available'));
                 window.URL = window.URL || window.webkitURL;
@@ -94,7 +94,7 @@ function VoiceRecording() {
                 alert('Web audio is not supported in this browser.');
             }
 
-            navigator.getUserMedia({ audio: true }, function(stream) {
+            navigator.getUserMedia({audio: true}, function(stream) {
                 localScope.recorder = new Recorder(stream);
             }, function(e) {
             });

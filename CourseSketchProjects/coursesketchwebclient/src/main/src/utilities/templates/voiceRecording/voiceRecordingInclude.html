@@ -1,32 +1,33 @@
 <html>
-    <head>
-        <link id="voiceRecordingImport" rel="import" href="voiceRecording.html">
-        <link rel="import" href="/src/sketching/sketchInclude.html">
-        <script src="voiceRecording.js"></script>
-        <script>
-            (function(importDoc) {
-                $(document).ready(function() {
-                    var link = importDoc.querySelector('#voiceRecordingImport');
-                    var template = link.import.querySelector('template');
-                    var clone = document.importNode(template.content, true);
+<head>
+    <link id="voiceRecordingImport" rel="import" href="voiceRecording.html">
+    <link rel="import" href="/src/sketching/sketchInclude.html">
+    <script src="voiceRecording.js"></script>
+    <script src="/src/utilities/libraries/cdn/recordmp3.js"></script>
+    <script>
+        (function(importDoc) {
+            $(document).ready(function() {
+                var link = importDoc.querySelector('#voiceRecordingImport');
+                var template = link.import.querySelector('template');
+                var clone = document.importNode(template.content, true);
 
-                    var newElement = new VoiceRecording();
+                var newElement = new VoiceRecording();
 
-                    VoiceRecording.prototype.attachedCallback = function() {
-                        this.initializeElement(clone.cloneNode(true));
-                    };
+                VoiceRecording.prototype.attachedCallback = function() {
+                    this.initializeElement(clone.cloneNode(true));
+                };
 
-                    VoiceRecording.prototype.detachedCallback = function() {
-                        if (this.finalize) {
-                            this.finalize();
-                        }
-                    };
+                VoiceRecording.prototype.detachedCallback = function() {
+                    if (this.finalize) {
+                        this.finalize();
+                    }
+                };
 
-                    document.registerElement('voice-recording', {
-                        prototype : newElement
-                    });
+                document.registerElement('voice-recording', {
+                    prototype: newElement
                 });
-            })(document.currentScript.ownerDocument);
-        </script>
-    </head>
+            });
+        })(document.currentScript.ownerDocument);
+    </script>
+</head>
 </html>
