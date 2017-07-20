@@ -1,94 +1,112 @@
-function SubmissionDataManager(parent, advanceDataListener, parentDatabase, sendData, request, buffer) {
-    var userCourses = {};
-    var userCourseId = [];
-    var userHasCourses = true;
-    var dataListener = advanceDataListener;
+/**
+ * A manager for assignments that talks with the remote server.
+ *
+ * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
+ * @param {ProtoDatabase} parentDatabase - The local database
+ * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
+ * @constructor
+ */
+function SubmissionDataManager(parent, advanceDataListener, parentDatabase, ByteBuffer) {
     var database = parentDatabase;
-    var Request = request;
-    var localScope = parent;
-    var ByteBuffer = buffer;
+    var parentScope = parent;
 
     /**
-     * Returns a submission.  but right now only treats it as an exerpiment.
+     * Returns a submission.  But right now only treats it as an exerpiment.
      * TODO: have it be able to get solutions as well.
-     * of Ids.
      *
      * This does attempt to pull experiment from the server!
      *
-     * @param {String} problemId
-     *            submission
-     * @param {Function} submissionCallback
-     *            called when experiment is grabbed from the database.
+     * @param {List<String>} submissionIdentifier - The identifier for the submission
+     * @param {Function} submissionCallback - called when experiment is grabbed from the database.
      *              This is only called once.  Either it exists in the local database or it is grabbed from the server database.
      */
-    function getSubmission(problemId, submissionCallback) {
+    function getSubmission(submissionIdentifier, submissionCallback) {
+        var problemId = submissionIdentifier.join('');
         database.getFromSubmissions(problemId, function(e, request, result) {
             // TODO: change it so the database can pull locally as well.
             if (isUndefined(result) || isUndefined(result.data) || true) {
-
+                var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.EXPERIMENT, submissionIdentifier);
                 // the listener from the server of the request
                 // it stores the course locally then cals the callback with the course
-                advanceDataListener.setListener(Request.MessageType.DATA_REQUEST,
-                        CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, function(evt, item) {
-                    advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT);
-                    if (isUndefined(item.data) || item.data === null) {
-                        submissionCallback(new DatabaseException('The data sent back from the server does not exist.'));
+                advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
+                    if (isException(item)) {
+                        submissionCallback(new DatabaseException('exception thrown while waiting for server response.'), item);
                         return;
                     }
-                    var experiment = CourseSketch.PROTOBUF_UTIL.getSrlExperimentClass().decode(item.data);
+                    if (!parent.isItemValid(item)) {
+                        submissionCallback(new DatabaseException(
+                            item.returnText ? item.returnText : 'The data sent back from the server does not exist.'));
+                        return;
+                    }
+                    var experiment = CourseSketch.prutil.getSrlExperimentClass().decode(item.data[0]);
                     var sub = experiment.submission;
-                    localScope.setSubmission(problemId, sub);
+                    parentScope.setSubmission(problemId, sub);
                     submissionCallback(sub);
                     sub = undefined;
                     experiment = undefined;
-
+                    // The times parameter is 2 because it is called ones with NO_OP and once with the actual submission.
                 });
-                // creates a request that is then sent to the server
-                sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, [ problemId ]);
+
             } else {
                 // gets the data from the database and calls the callback
                 var bytes = ByteBuffer.fromBase64(result.data);
-                submissionCallback(CourseSketch.PROTOBUF_UTIL.getSrlSubmissionClass().decode(bytes));
+                submissionCallback(CourseSketch.prutil.getSrlSubmissionClass().decode(bytes));
                 bytes = null;
             }
         });
     }
+
     parent.getSubmission = getSubmission;
 
-    function getAllExperiments(problemId, submissionCallback) {
-        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, function(evt, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT);
-            console.log('SERVER RESPONDED WITH EXPERIMENT');
-            console.log(item.data);
-            if (isUndefined(item.data) || item.data === null) {
-                submissionCallback(new DatabaseException('The data sent back from the server does not exist.'));
+    /**
+     * Attempts to get all experiments from the specific problem id.
+     *
+     * @param {List<String>} submissionIdentifier - The problem we are currently looking at.
+     * @param {Function} submissionCallback - called after the server responds with all experiments.
+     */
+    function getAllExperiments(submissionIdentifier, submissionCallback) {
+
+        // creates a request that is then sent to the server
+        var advanceQuery = CourseSketch.prutil.ExperimentReview();
+        advanceQuery.allowEditing = true;
+        advanceQuery.showUserNames = false;
+        var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.EXPERIMENT, submissionIdentifier, advanceQuery);
+
+        advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
+            if (isException(item)) {
+                submissionCallback(new DatabaseException('exception thrown while waiting for server response.'), item);
                 return;
             }
-            var list;
+            console.log('SERVER RESPONDED WITH EXPERIMENT');
+            if (!parent.isItemValid(item)) {
+                submissionCallback(new DatabaseException(
+                    item.returnText ? item.returnText : 'The data sent back from the server does not exist.'));
+                return;
+            }
+            var list = [];
             try {
-                list = CourseSketch.PROTOBUF_UTIL.getSrlExperimentListClass().decode(item.data);
+                for (var i = 0; i < item.data.length; i++) {
+                    list.push(CourseSketch.prutil.getSrlExperimentClass().decode(item.data[i]));
+                }
             } catch (exception) {
                 console.log(exception);
                 submissionCallback(new DatabaseException('Exception decoding experiment data data: ' + exception.toString()));
                 return;
             }
-            console.log(list.experiments);
-            submissionCallback(list.experiments);
-            list = null;
+            submissionCallback(list);
+            list = undefined;
+            // The times parameter is 2 because it is called ones with NO_OP and once with the actual submission.
         });
 
-        // creates a request that is then sent to the server
-        var advanceQuery = CourseSketch.PROTOBUF_UTIL.ExperimentReview();
-        advanceQuery.allowEditing = true;
-        advanceQuery.showUserNames = false;
-        sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, [ problemId ], advanceQuery);
     }
+
     parent.getAllExperiments = getAllExperiments;
 
     /**
-     * @param {String} problemId the id to which this submission is being added.
-     * @param {SrlSubmission} submission the submission that is being added.
-     * @param {Function} submissionCallback called when the submission is saved.
+     * @param {String} problemId - the id to which this submission is being added.
+     * @param {SrlSubmission} submission - the submission that is being added.
+     * @param {Function} submissionCallback - called when the submission is saved.
      */
     function setSubmission(problemId, submission, submissionCallback) {
         database.putInSubmissions(problemId, submission.toBase64(), function(e, request) {
@@ -97,14 +115,25 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
             }
         });
     }
+
     parent.setSubmission = setSubmission;
 
-    function deleteSubmission(problemId, couresCallback) {
+    /**
+     * Deletes a submissions from local database.
+     * This does not delete the id pointing to this item in the respective course.
+     *
+     * @param {String} problemId
+     *                ID of the submissions to delete
+     * @param {Function} submissionsCallback
+     *                function to be called after the deletion is done
+     */
+    function deleteSubmission(problemId, submissionsCallback) {
         database.deleteFromSubmissions(problemId, function(e, request) {
-            if (courseCallback) {
-                courseCallback(e, request);
+            if (submissionsCallback) {
+                submissionsCallback(e, request);
             }
         });
     }
+
     parent.deleteSubmission = deleteSubmission;
 }

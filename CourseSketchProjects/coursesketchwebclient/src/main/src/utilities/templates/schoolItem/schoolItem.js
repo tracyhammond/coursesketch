@@ -1,9 +1,10 @@
+/* eslint-disable valid-jsdoc */
 /**
  * This method traverses up the parent chain until it reaches a null node. It then returns the host.
  * This is used to find the parent of a shadow root which contains the given node.
  *
- * @param {Node} parent the parent of a node contained within a school item shadow dom.
- * @return {Node} the host element that contains this node.
+ * @param {Node} parent - the parent of a node contained within a school item shadow dom.
+ * @returns {Node} the host element that contains this node.
  */
 var getHostElement = function(parent) {
     var grandParent = parent.parentNode;
@@ -15,13 +16,12 @@ var getHostElement = function(parent) {
 };
 
 /**
- * @class SchoolItem
+ * @constructor SchoolItem
  */
 function SchoolItem() {
 
     /**
-     * @param {Element} templateClone
-     *            an element representing the data inside tag, its
+     * @param {Element} templateClone - an element representing the data inside tag, its
      *            content has already been imported and then added to this
      *            element.
      */
@@ -49,7 +49,7 @@ function SchoolItem() {
         var text = element.textContent;
 
         var widths = [ descriptionHolder.clientWidth, descriptionHolder.offsetWidth, descriptionHolder.scrollWidth, this.style.width,
-                this.style.maxwidth ];
+            this.style.maxwidth ];
         var usedWidth = $(window).width();
         for (var i = 0; i < widths.length; i++) {
             var width = widths[i];
@@ -75,7 +75,7 @@ function SchoolItem() {
      * Given an allowed width, text and font it returns true if the element is
      * over 3 lines long.
      */
-    function checkTextOverflow(widthAllowed, text, font) {
+    function checkTextOverflow(widthAllowed, text, font) {// eslint-disable-line require-jsdoc
         var totalWidth = getTextWidth(text, font);
         var lines = totalWidth / widthAllowed;
         var numberOfLines = Math.round(lines);
@@ -136,6 +136,9 @@ function SchoolItem() {
                 var nodes = content.getDistributedNodes();
                 var contentElement = nodes[0];
                 var editorElement = getEditorElement(parentNode);
+                /**
+                 * Called when a user is done editing a certain part of the edit panel.
+                 */
                 var finishEditing = function() {
                     localScope.dataset.isediting = false;
                     $(parentNode).removeClass(editingClass);
@@ -157,13 +160,12 @@ function SchoolItem() {
                         localScope.editFunction(element.dataset.type, oldData, newData, realParent);
                     }
                 };
-                // do something else for the advance button.
-                if ($(element).hasClass('advanceButton')) {
-                    if (localScope.createAdvanceEditPanel) {
-                        localScope.createAdvanceEditPanel(element, localScope, parentNode);
-                    }
-                    return;
-                }
+                /**
+                 * Called when an edit button has been pressed to toggle editing.
+                 *
+                 * @param {Event} event - On Click event.
+                 * @returns {Boolean} returns false.
+                 */
                 element.onclick = function(event) {
                     localScope.dataset.isediting = true;
                     event.stopPropagation();
@@ -190,8 +192,10 @@ function SchoolItem() {
 
     /**
      * Should create a special editor element based on its state.
+     *
+     * @returns {Element} an input element.
      */
-    function getEditorElement(parentNode) {
+    function getEditorElement() {
         return document.createElement('input');
     }
 

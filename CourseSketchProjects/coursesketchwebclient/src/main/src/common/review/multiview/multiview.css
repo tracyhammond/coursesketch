@@ -2,39 +2,42 @@
     position:relative;
 }
 
+#outline {
+    z-index: 0;
+    padding: 2px;
+}
+
 #outer {
     display:flex;
-    flex-direction: row;
+    flex-direction: column;
     position:relative;
     padding: 10px 10px 10px 10px;
-    background-color: #CEE;
+    background-color: #FFF;
+    z-index: 0;
 }
 
 .buttons {
-    background-color: #B8B8B8;
-    width: 15%;
-    display:flex;
-    flex-direction: column;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 10%;
 }
-.buttons > * {
-    flex-grow: 1;
+
+#correct, #wrong {
+    display: block;
 }
-button, input[type='number'] {
+
+
+.header {
+    display:block;
+    /*margin-bottom: 4px;*/
+    z-index: 1;
+}
+
+
+input[type='number'] {
     /*height:calc(100% / 3);*/
-    width:100%;
-}
-
-.correctButton {
-     background: url("/images/MultiView/correctbtn.svg");
-     background-repeat: no-repeat;
-     background-position: center;
-
-}
-
-.wrongButton {
-     background: url("/images/MultiView/wrongbtn.svg");
-     background-repeat: no-repeat;
-     background-position: center;
+    width:4ch;
 }
 
 .one-to-one {
@@ -54,56 +57,35 @@ button, input[type='number'] {
 	padding-top: 100%; 	/* initial ratio of 1:1*/
 }
 
-.sketch {
-    width:85%;
+#gradeInput {
+    width: 6ch;
 }
-
+#comment {
+    width: calc(100% - 8ch);
+}
 sketch-surface {
     background:#FFFFFF;
 }
 
-/*these classes are for cahnging the background color of the div tag outer*/
+/*these classes are for changing the background color of the div tag outer*/
 
 #outer.outerCorrect {
-    background-color: #00FF00;
+    background-color: #66bb6a;
 }
 
 #outer.outerWrong {
-    background-color: #FF0000;
+    background-color: #ef5350;
 }
 
-/* sets the font size to make it pretty large */
-input[type='number'] {
-    font-size: 1.3em;
-    overflow:visible;
-}
-
-/* sets the font size to make it pretty large */
 input[type='number']:not(:valid) {
-    background:red;
+    background: #ef5350;;
 }
 
-/* this makes the spinner in chrome not overlap with the number */
-input[type='number']:not(:hover) /deep/ #spin {
-    -webkit-appearance: none;
-    background: #000;
+#comment:focus, #gradeInput:focus {
+    border-bottom: 1px solid #e0f7fa;
+    box-shadow: 0 1px 0 0 #e0f7fa;
 }
 
-/*
-currently does not work
-input[type='number'].percent /deep/ #inner-editor {
-    width: 10px;
+#comment, #gradeInput {
+    border-bottom: 1px solid #000;
 }
-*/
-
-/* makes percent stuff */
-/*
-currently does not work.
-input[type='number'].percent /deep/ #inner-editor:after {
-    display:inline-block;
-    content: "PLEASE SHOW ME!";
-    color:black;
-    font-size: 2em;
-    z-index:3;
-}
-*/

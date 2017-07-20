@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>CourseSketch</groupId>
     <artifactId>WebClient</artifactId>
@@ -17,7 +17,7 @@
                 </os>
             </activation>
             <properties>
-                <nodeVersion>v0.10.28</nodeVersion>
+                <nodeVersion>v8.0.0</nodeVersion>
             </properties>
         </profile>
         <profile>
@@ -78,7 +78,7 @@
                         <groupId>com.github.eirslett</groupId>
                         <artifactId>frontend-maven-plugin</artifactId>
                         <!-- NB! Set <version> to the latest released version of frontend-maven-plugin, like in README.md -->
-                        <version>0.0.23</version>
+                        <version>1.4</version>
                         <executions>
                             <!-- ensures node is installed so that we can use npm -->
                             <execution>
@@ -138,7 +138,9 @@
         <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
         <sourceDirectory>${basedir}/src/main/src</sourceDirectory>
         <testDirectory>${basedir}/src/main/test</testDirectory>
-        <nodeVersion>v0.10.30</nodeVersion>
+        <nodeVersion>v4.2.2</nodeVersion>
+        <protoDirectory>${basedir}/src/main/resources/other/protobuf</protoDirectory>
+        <sketchSurfaceVersion>0.0.3</sketchSurfaceVersion>
     </properties>
 
     <reporting>
@@ -150,13 +152,84 @@
         <sourceDirectory>${basedir}/src/main/src</sourceDirectory>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
+                <executions>
+                    <execution>
+                        <id>unpack recognition libraries</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.github.dtracers</groupId>
+                                    <artifactId>SketchRecognitionFramework</artifactId>
+                                    <version>${recognitionFrameworkVersion}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${protoDirectory}</outputDirectory>
+                                    <includes>**/*.proto</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.github.dtracers</groupId>
+                                    <artifactId>SketchRecognitionFramework</artifactId>
+                                    <version>${recognitionFrameworkVersion}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/temp</outputDirectory>
+                                    <includes>website/**/*.js</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.github.dtracers</groupId>
+                                    <artifactId>Srl-SketchSurface</artifactId>
+                                    <version>${sketchSurfaceVersion}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/temp</outputDirectory>
+                                    <includes>website/**/*</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/bower_components</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/target/temp/website</directory>
+                                    <includes>
+                                        <include>website/**/*.js</include>
+                                        <include>website/**/*.html</include>
+                                        <include>website/**/*.cs</include>
+                                    </includes>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <!-- NB! Set <version> to the latest released version of frontend-maven-plugin, like in README.md -->
-                <version>0.0.23</version>
-
+                <version>1.4</version>
                 <executions>
-
                     <execution>
                         <id>install node and npm</id>
                         <goals>
@@ -195,7 +268,54 @@
                             <goal>grunt</goal>
                         </goals>
                         <configuration>
-                            <arguments>--no-color</arguments>
+                            <argument>-d</argument>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.dtracers</groupId>
+                <artifactId>maven-replacer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Replace</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                        <configuration>
+                            <file>${basedir}/target/website/index.html</file>
+                            <replacements>
+                                <replacement>
+                                    <token>VERSION_NUMBER</token>
+                                    <value>${project.artifactId}-${project.version}-r${buildNumber}</value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>Reverse</id>
+                        <configuration>
+                            <file>${basedir}/target/website/index.html</file>
+                            <replacements>
+                                <replacement>
+                                    <token>VERSION_NUMBER</token>
+                                    <value>${project.artifactId}-${project.version}-r${buildNumber}</value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>ip_prop_replace</id>
+                        <configuration>
+                            <includes>
+                                <include>
+                                    ${basedir}/target/website/src/main/src/utilities/connection/login/loginInclude.html
+                                </include>
+                                <include>
+                                    ${basedir}/target/website/src/main/src/utilities/connection/register/registerInclude.html
+                                </include>
+                            </includes>
                         </configuration>
                     </execution>
                 </executions>
@@ -207,8 +327,14 @@
         <dependency>
             <groupId>CourseSketch</groupId>
             <artifactId>ProtoFiles</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>${protoFileVersion}</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.dtracers</groupId>
+            <artifactId>SketchRecognitionFramework</artifactId>
+            <version>${recognitionFrameworkVersion}</version>
         </dependency>
     </dependencies>
 

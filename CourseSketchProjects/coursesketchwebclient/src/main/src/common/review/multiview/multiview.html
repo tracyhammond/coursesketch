@@ -2,25 +2,39 @@
 <head>
 </head>
 <body>
-	<template id="mvSketch">
+<template id="mvSketch">
 
-		<style>
-			@import "/src/common/review/multiview/multiview.css";
-		</style>
-		<p id="userName"></p>
-		<div id = "outer" class="outer">
-
-			<div class="one-to-one sketch">
-				<sketch-surface data-readOnly="" data-existingList="" data-customId="" data-autoResize=""></sketch-surface>
-			</div>
-			<div class="buttons">
-				<button class="correctButton" id="correct" type = "button">
-				</button>
-				<input type="number" id="gradeInput" min="0" value="0"step=".1">
-				<button class="wrongButton"id="wrong" type = "button" >
-				</button>
-			</div>
-		</div>
-	</template>
+    <style>
+        @import "/src/common/review/multiview/multiview.css";
+        @import "/bower_components/materialize/dist/css/materialize.css";
+    </style>
+    <div id="shadow" class="z-depth-1">
+        <div id="outline" class="light-blue accent-1">
+            <div class="buttons">
+                <button class="btn waves-effect correctButton mdi-action-thumb-up green lighten-1"
+                        id="correct"></button>
+                <button class="btn waves-effect wrongButton mdi-action-thumb-down red lighten-1" id="wrong"></button>
+            </div>
+            <div class="header z-depth-1">
+                <div id="userName"></div>
+            </div>
+            <div class="z-depth-1">
+                <div id="outer" class="outer light-blue lighten-2">
+                    <div class="one-to-one">
+                        <submit-panel id="problemPanel" class="full-screen">
+                        </submit-panel>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom">
+                <input type="number" class="" id="gradeInput" min="0" value="0" step=".1">
+                <input type="text" class="" id="comment" maxlength="50">
+                <button id="submitButton" class="btn cyan lighten-5 black-text" type="submit" name="action">Submit
+                    <i class="mdi-content-send right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
 </body>
 </html>

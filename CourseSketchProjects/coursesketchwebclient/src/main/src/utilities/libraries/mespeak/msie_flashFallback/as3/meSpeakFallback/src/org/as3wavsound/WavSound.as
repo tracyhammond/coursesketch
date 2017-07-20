@@ -129,7 +129,7 @@ package org.as3wavsound {
 		 * @param	startTime The starting time in milliseconds, applies to each loop (as with regular MP3 Sounds).
 		 * @param	loops The number of loops to take in *addition* to the default playback (loops == 2 means 3 playthroughs).
 		 * @param	sndTransform An optional soundtransform to apply for playback that controls volume and panning.
-		 * @return The SoundChannel used for playing back the sound (and stopping the sound).
+		 * @returns The SoundChannel used for playing back the sound (and stopping the sound).
 		 */
 		public function play(startTime:Number = 0, loops:int = 0, sndTransform:SoundTransform = null): WavSoundChannel {
 			return player.play(this, startTime, loops, sndTransform);

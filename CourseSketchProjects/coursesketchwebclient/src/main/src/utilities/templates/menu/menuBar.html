@@ -3,22 +3,14 @@
 </head>
 <body>
 <template id="instructorMenu">
-<style>
-@import '/src/utilities/templates/menu/menu.css';
-</style>
-<div id="menu">
-	<h1>
-		<a href="/src/instructor/homepage/homePage.html" target="wrapper"><img
-			src="images/smallTitle.svg"></a>
-	</h1>
-	<ul id="menuList">
+	<ul id="slide-out" class="side-nav" style="z-index: 999">
 		<li><a href="/src/instructor/homepage/homePage.html" target="wrapper"
 			class="contentLink"
 			onclick="CourseSketch.redirectContent('/src/instructor/homepage/homePage.html','Welcome Instructor')">Home</a></li>
-		<li class="header"><h3>Classes I'm Teaching</h3></li>
-		<li><a href="html/instructor/homepage/gradebook.html" target="wrapper"
+		<li class="header"><h6>Classes I'm Teaching</h6></li>
+		<li><a href="/src/common/gradebook/gradebookSelection.html" target="wrapper"
 			class="contentLink"
-			onclick="CourseSketch.redirectContent('/html/instructor/homepage/gradebook.html','Grading')">Grades</a></li>
+			onclick="CourseSketch.redirectContent('/src/common/gradebook/gradebookSelection.html','Grading')">Grades</a></li>
 		<li><a href="/src/common/lecture/lectureSelection.html" target="wrapper"
 			   class="contentLink"
 			   onclick="CourseSketch.redirectContent('/src/common/lecture/lectureSelection.html','Lectures')">Lectures</a></li>
@@ -26,6 +18,9 @@
 			class="contentLink"
 			onclick="CourseSketch.redirectContent('/src/instructor/homepage/homePage.html','Welcome Instructor')">Course
 				Management</a></li>
+		<li><a href="/src/common/recognition/debug/recognitionExample.html" target="wrapper"
+			   class="contentLink"
+			   onclick="CourseSketch.redirectContent('/src/common/recognition/recogntionExample.html','Welcome Recognition Guy')">Recognition example</a></li>
 		<li><a href="viewClassKeys.php" target="wrapper"
 			data-ajax="false" class="contentLink">View Class Keys</a></li>
 		<li><a href="html/instructor/homepage/roster.html" target="wrapper"
@@ -37,33 +32,27 @@
 		<!-- returns to login screen, but does not prevent user from re-accessing pages through the back button.  -->
 		<li><a href="index.html" class="contentLink">Sign Out</a></li>
 	</ul>
-</div>
 </template>
 
 <template id="studentMenu">
-<style>
-@import '/src/utilities/templates/menu/menu.css';
-</style>
-<div id="menu">
-	<h1>
-		<a href="/src/instructor/homepage/homePage.html" target="wrapper" onclick="CourseSketch.redirectContent('/src/instructor/homepage/homePage.html','Welcome Student')"><img
-			src="images/smallTitle.svg"></a>
-	</h1>
-	<ul id="menuList">
+	<ul id="slide-out" class="side-nav" style="z-index: 999">
 		<li><a href="/src/student/homepage/homePage.html" target="wrapper"
 			class="contentLink" onclick="CourseSketch.redirectContent('/src/student/homepage/homePage.html','Welcome Student')">Home</a></li>
-		<li class="header"><h3>Classes I'm In</h3></li>
+		<li class="header"><h6>Classes I'm In</h6></li>
 		<li><a href="/src/student/homepage/homePage.html" target="wrapper" onclick="CourseSketch.redirectContent('/src/instructor/homepage/homePage.html','Welcome Student')">My
 				Courses</a></li>
 		<li><a href="/src/student/search/classSearch.html" target="wrapper"
 			class="contentLink" onclick="CourseSketch.redirectContent('/src/student/search/classSearch.html','Search for Classes')">Add New Class</a></li>
 		<li><a href="html/student/homepage/classOptions.html" target="wrapper"
 			class="contentLink" onclick="CourseSketch.redirectContent('html/student/homepage/classOptions.html','Class options')">Remove Class</a></li>
-		<li><a href="html/student/homepage/grades.html" target="wrapper"
-			class="contentLink" onclick="CourseSketch.redirectContent('html/student/homepage/grades.html','My Grades')">My Grades</a></li>
+		<li><a href="/src/common/gradebook/gradebookSelection.html" target="wrapper"
+			class="contentLink" onclick="CourseSketch.redirectContent('/src/common/gradebook/gradebookSelection.html','My Grades')">My Grades</a></li>
 		<li><a href="/src/common/lecture/lectureSelection.html" target="wrapper"
 			   class="contentLink"
 			   onclick="CourseSketch.redirectContent('/src/common/lecture/lectureSelection.html','Lectures')">Lectures</a></li>
+		<li><a href="/src/common/recognition/debug/recognitionExample.html" target="wrapper"
+			   class="contentLink"
+			   onclick="CourseSketch.redirectContent('/src/common/recognition/recogntionExample.html','Welcome Recognition Guy')">Recognition example</a></li>
 		<li><a href="html/student/homepage/roster.html" target="wrapper"
 			class="contentLink" onclick="CourseSketch.redirectContent('html/student/homepage/roster.html','Class Rosters')">Rosters</a></li>
 		<li class="header"><h3>Account</h3></li>
@@ -72,7 +61,6 @@
 		<!-- returns to login screen, but does not prevent user from re-accessing pages through the back button.  -->
 		<li><a href="index.html" class="contentLink">Sign Out</a></li>
 	</ul>
-</div>
 </template>
 </body>
 </html>

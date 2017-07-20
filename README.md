@@ -1,17 +1,8 @@
-coursesketch
-============
-Successfully got github work within ubuntu! lol~
+[![Build Status](https://travis-ci.org/tracyhammond/coursesketch.svg?branch=master)](https://travis-ci.org/tracyhammond/coursesketch)
+
+Coursesketch
 
 
-AggieChallenge 2013 Fall GitHub
- 
-Logic Game Team:
+setup instructions are here https://github.com/tracyhammond/coursesketch/blob/master/config/setup_instructions/CourseSketchSetupinstructions.pdf
 
-    Austin Martin
-    Husain Alshehhi
-    Michael Curry
-
-    Dr. Dwayne Raymond
-    David Turner    
-    
-LogicGame Team
+Course sketch is meant to be a system that uses sketch recogntion to automatically recognize sketches and perform automatic grading

@@ -1,0 +1,71 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Instructor Gradebook Test</title>
+    <!-- test Library -->
+    <link rel="import" href="/test/testUtilities/testUtilities.html">
+
+    <link rel="import"
+          href="/test/testUtilities/fakePage/mockedObjects/mockedObjectsInclude.html">
+
+    <link rel="import" href="/src/utilities/defaultUtils.html">
+
+    <!-- files needed for testing -->
+    <link rel="import" href="/src/instructor/gradebook/instructorGradebook.html">
+
+    <!-- file being tested. -->
+    <script src="/src/instructor/gradebook/instructorGradebook.js" data-cover></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div id="textbox"></div>
+
+<script>
+    module("initialization", {
+        setup : function() {
+            var table = document.createElement('table');
+            table.className = "tabletalk";
+            for(var i = 0; i < 2; i++) {
+                var row = document.createElement('tr');
+                for(var j = 0; j < 2; j++) {
+                    var cell = document.createElement('td');
+                    cell.id = "cell" + i.toString() + j.toString();
+                    row.appendChild(cell);
+                }
+                table.appendChild(row);
+            }
+            document.querySelector('body').appendChild(table);
+        },
+        teardown : function() {
+            var table = document.querySelector(".tabletalk");
+            table.parentElement.removeChild(table);
+        }
+    });
+
+    test("buildProtoGrade correctly builds a ProtoGrade", function(assert) {
+        expect(7);
+        var cell = document.querySelector("#cell00");
+        CourseSketch.gradeBook.course = {};
+        CourseSketch.gradeBook.course.id = "course";
+        cell.dataset.student = "student";
+        cell.dataset.assignment = "assignment";
+        cell.dataset.problem = "problem";
+        var grade = 90;
+        var comment = "comment";
+
+        var testGrade = CourseSketch.gradeBook.buildProtoGrade(cell, grade, comment);
+        console.log(testGrade);
+        assert.equal(CourseSketch.gradeBook.course.id, testGrade.getCourseId(), "courseId does not match");
+        assert.equal(cell.dataset.student, testGrade.getUserId(), "userId does not match");
+        assert.equal(cell.dataset.assignment, testGrade.getAssignmentId(), "assignmentId does not match");
+        assert.equal(cell.dataset.problem, testGrade.getProblemId(), "problemId does not match");
+        assert.equal(grade, testGrade.getCurrentGrade(), "currentGrade does not match");
+        assert.equal(grade, testGrade.getGradeHistory()[0].getGradeValue(), "gradeHistory gradeValue does not match");
+        assert.equal(comment, testGrade.getGradeHistory()[0].getComment(), "gradeHistory comment does not match");
+    });
+
+</script>
+
+</body>
+</html>

@@ -36,7 +36,6 @@
     </div>
     <script>
     $(document).ready(function() {
-        QUnit.stop();
         var loadCourses = function() {
             var courseList = CourseSketch.fakeCourses;
             CourseSketch.dataManager.getAllCourses = function(coursesCallback) {
@@ -47,21 +46,23 @@
                     CourseSketch.dataManager.insertLecture(CourseSketch.fakeLectures[i]);
                 }
                 coursesCallback(courseList);
-            }
+            };
             CourseSketch.dataManager.testDataLoaded = true;
 
             // Tests
             QUnit.config.testTimeout = 10000;
             QUnit.module("lecture UI");
             CourseSketch.lectureSelection.courseSelectionManager = new ClickSelectionManager();
-            asyncTest("show courses", function(assert) {
+            test("show courses", function(assert) {
+                var done = assert.async();
                 expect(1);
                 CourseSketch.lectureSelection.showCourses(courseList);
                 assert.ok(true, "Show courses successfully called.");
-                QUnit.start();
+                done();
             });
 
-            asyncTest("course selection", function(assert) {
+            test("course selection", function(assert) {
+                var done = assert.async();
                 var courseDomList = document.querySelector("#col1>.content").children;
                 var courseProtoList = CourseSketch.lectureSelection.schoolItemBuilder.list;
                 expect(courseDomList.length);
@@ -69,10 +70,11 @@
                     simulate(courseDomList[i], "click");
                     assert.equal(courseDomList[i].className, " selectedBox", "Box shows as selected when clicked.");
                 }
-                QUnit.start();
+                done();
             });
 
-            asyncTest("add lecture", function(assert) {
+            test("add lecture", function(assert) {
+                var done = assert.async();
                 var courseDomList = document.querySelector("#col1>.content").children;
                 expect(courseDomList.length);
                 var i;
@@ -86,7 +88,7 @@
                     });
                 }
                 var interval = setInterval(function() {
-                        QUnit.start();
+                        done();
                         clearInterval(interval);
                 }, 1000);
             });

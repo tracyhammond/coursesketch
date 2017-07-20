@@ -34,7 +34,7 @@ message DataResult {
 message ItemResult {
     optional ItemQuery query = 1;
     optional string returnText = 2;
-    optional bytes data = 3;
+    repeated bytes data = 3;
     optional bool noData = 4; // if there is no data to return then this flag is set to true.
     optional string errorMessage = 5; // if noData is true then this may contain why.
     optional bytes advanceQuery = 6; // if additional items need to be queried.
@@ -56,10 +56,12 @@ enum ItemQuery {
     COURSE_SEARCH = 10;
     BANK_SEARCH = 11;
     REGISTER = 12; // userId = 0 courseId = 1
-    COURSE_LIST = 13; // returns a list of Ids
+    COURSE_ROSTER = 13; // returns a list of user Ids
     UPDATE = 14; // polls the database for any updates/changes that have happened.
     LECTURE = 15; // used to get the lectures for a course
     LECTURESLIDE = 16; // used to get the lecture slides for a course
+    GRADE = 17; // used to handle grades for a course
+    GRADING_POLICY = 18; // used to handle grading policies for a course
 }
 
 /**

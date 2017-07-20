@@ -1,42 +1,48 @@
 /**
- * @class UpdateException
+ * @constructor UpdateException
  * @extends BaseException
+ *
+ * @param {String} message - The message to show for the exception.
+ * @param {BaseException} [cause] - The cause of the exception.
  */
-function UpdateException(message) {
+function UpdateException(message, cause) {
     this.name = 'UpdateException';
     this.setMessage(message);
     this.message = '';
-    this.htmlMessage = '';
+    this.setCause(cause);
+    this.createStackTrace();
 }
 
-UpdateException.prototype = BaseException;
+UpdateException.prototype = new BaseException();
 
 /**
- * @class UndoRedoException
+ * @constructor UndoRedoException
  * @extends UpdateException
+ *
+ * @param {String} message - The message to show for the exception.
+ * @param {BaseException} cause - The cause of the exception.
  */
-function UndoRedoException(message) {
+function UndoRedoException(message, cause) {
     this.name = 'UndoRedoException';
     this.setMessage(message);
+    this.setCause(cause);
 }
 UndoRedoException.prototype = new UpdateException();
 
 /**
  * The update manager manages the lists of actions that have occurred for a
- * sketch (or multiple sketches)
- *
+ * sketch, or multiple sketches.
  * Goals: The update manager can be used for multiple sketches (using the switch
  * sketch command)
  *
- * @param {SketchManager} sketchManager
- * @param {Function} onError A method that is called when an error occurs
- * @class UpdateManager
+ * @param {SketchManager} sketchManager - The manager that the sketch deals with.
+ * @param {Function} onError - A method that is called when an error occurs.
+ * @constructor UpdateManager
  */
 function UpdateManager(sketchManager, onError) {
 
     /**
-     * The id of the current sketch that is being used by the update list (this
-     * may switch multiple times)
+     * The id of the current sketch that is being used by the update list (this may switch multiple times)
      */
     var currentSketchId;
 
@@ -49,7 +55,9 @@ function UpdateManager(sketchManager, onError) {
     var currentUpdateIndex = 0;
 
     /**
-     * Holds the pointer to the end of the list (only really used with markers)
+     * Holds the pointer to the end of the list (only really used with markers).
+     *
+     * @type {Number}
      */
     var currentEndingIndex = 0;
 
@@ -60,6 +68,12 @@ function UpdateManager(sketchManager, onError) {
     var skippingMarkerMode = false;
     var amountToSkip = 0;
     var localScope = this;
+
+    /**
+     * Updates to the current index on every submission.
+     *
+     * @type {Number}
+     */
     var lastSubmissionPointer = 0;
 
     /**
@@ -68,16 +82,22 @@ function UpdateManager(sketchManager, onError) {
      * -1 = undo
      * 1 = redo
      * 2 =
+     *
+     * @type {Number}
      */
     var lastUpdateType = 0;
 
     /**
-     * Updates on every save and every submission.
+     * Updates to the current index on every save and every submission.
+     *
+     * @type {Number}
      */
     var lastSavePointer = 0;
 
     /**
      * A list of plugins whose methods are called when addUpdate is called.
+     *
+     * @type {List<Plugin>}
      */
     var plugins = [];
 
@@ -99,34 +119,37 @@ function UpdateManager(sketchManager, onError) {
     var updateList = [];
 
     /**
-     * Adds an update to the updateList
+     * Adds an update to the updateList.
      *
      * Adds an update to the queue that then executes them as quick as possible.  This will not freeze up the browser.
      *
-     * @param {SrlUpdate} update The update that is being added to this specific
+     * @param {SrlUpdate} update - The update that is being added to this specific
      *            update manager.
+     * @param {String} [pluginId] - The id of the plugin that added the update.
      */
-    this.addUpdate = function(update) {
+    this.addUpdate = function(update, pluginId) {
         // TODO: find a better way to manage cleaning updates if possible.
         var cleanedUpdate = cleanUpdate(update);
         cleanedUpdate.sketchManager = sketchManager;
+        cleanedUpdate.pluginId = pluginId;
         queuedLocalUpdates.push(cleanedUpdate);
         emptyLocalQueue();
     };
 
     /**
-     * Adds an update to the updateList
+     * Adds an update to the updateList.
      *
      * Adds the update in a synchronous manner, if the local queue is not empty this will empty it then add the update list.
      * Throws an exception if the queue is currently locked.  Please do not use often.
      *
-     * @param {SrlUpdate} update The update that is being added to this specific
+     * @param {SrlUpdate} update - The update that is being added to this specific
      *            update manager.
+     * @param {String} [pluginId] - The id of the plugin that added the update.
      */
-    this.addSynchronousUpdate = function(update) {
-        // TODO: find a better way to manage cleaning updates if possible.
+    this.addSynchronousUpdate = function(update, pluginId) {
         var cleanedUpdate = cleanUpdate(update);
         cleanedUpdate.sketchManager = sketchManager;
+        cleanedUpdate.pluginId = pluginId;
         queuedLocalUpdates.push(cleanedUpdate);
         emptyLocalQueueSynchronously();
     };
@@ -134,11 +157,14 @@ function UpdateManager(sketchManager, onError) {
     /**
      * Adds a plugin that is called after each update is added.
      * This can be used by graphics or for recognition purposes.
-     * @param {Object.addUpdate} plugin Plugin that has an addUpdate method that can be called.
+     *
+     * @param {Object.addUpdate} plugin - Plugin that has an addUpdate method that can be called.
      * @callback {Function} addUpdate
-     * @callbackParam {ProtobufUpdate} update The update the was just executed by the update manager.
-     * @callbackParam {Boolean} redraw True if the sketch should be redrawn after executing this update.
-     * @callbackParam {Integer} index What index this update was.  (Typically is or close to the number of updates in the list)
+     * @callbackParam {ProtobufUpdate} update - The update the was just executed by the update manager.
+     * @callbackParam {Boolean} redraw - True if the sketch should be redrawn after executing this update.
+     * @callbackParam {Integer} index - What index this update was.  (Typically is or close to the number of updates in the list)
+     * @callbackParam {Integer} updateType - The last update type
+     * @callbackParam {String} pluginId - The id of the plugin that added this update. (Undefined if no plugin added the update)
      */
     this.addPlugin = function(plugin) {
         plugins.push(plugin);
@@ -147,8 +173,8 @@ function UpdateManager(sketchManager, onError) {
     /**
      * Clears the current updates.
      *
-     * @param {Boolean} redraw If true then the sketch will be redrawn.
-     * @param {Boolean} deepClear If true does some manual unlinking to hopefully help out the gc
+     * @param {Boolean} redraw - If true then the sketch will be redrawn.
+     * @param {Boolean} deepClear - If true does some manual unlinking to hopefully help out the gc
      */
     this.clearUpdates = function clearUpdates(redraw, deepClear) {
         currentUpdateIndex = 0;
@@ -175,7 +201,9 @@ function UpdateManager(sketchManager, onError) {
     };
 
     /**
-     * Switches to a certain sketch with the given Id
+     * Switches to a certain sketch with the given Id.
+     *
+     * @param {UUID} id - The id of which sketch to switch to.
      */
     function switchToSketch(id) {
         if (isUndefined(sketchManager)) {
@@ -193,20 +221,20 @@ function UpdateManager(sketchManager, onError) {
      *
      * Returns the result as a Command.
      *
-     * @param {Boolean} userCreated True if the user created this marker.
-     * @param {MarkerType} markerType The type that the marker is.
-     * @param {String} otherData Contains other important data.
-     * @returns {SrlCommand}
+     * @param {Boolean} userCreated - True if the user created this marker.
+     * @param {MarkerType} markerType - The type that the marker is.
+     * @param {String} otherData - Contains other important data.
+     * @returns {SrlCommand} The command of the created marker.
      */
     this.createMarker = function createMarker(userCreated, markerType, otherData) {
-        var marker = CourseSketch.PROTOBUF_UTIL.Marker();
+        var marker = CourseSketch.prutil.Marker();
         marker.setType(markerType);
         if (!isUndefined(otherData)) {
             marker.setOtherData(otherData);
         }
 
-        var command = CourseSketch.PROTOBUF_UTIL.SrlCommand();
-        command.setCommandType(CourseSketch.PROTOBUF_UTIL.CommandType.MARKER);
+        var command = CourseSketch.prutil.SrlCommand();
+        command.setCommandType(CourseSketch.prutil.CommandType.MARKER);
         command.setIsUserCreated(userCreated);
         command.setCommandData(marker.toArrayBuffer());
         command.setCommandId(generateUUID());
@@ -220,6 +248,7 @@ function UpdateManager(sketchManager, onError) {
     function executeUpdateLocked() {
         executionLock = true;
         var nextUpdate = removeObjectByIndex(queuedLocalUpdates, 0);
+        var updateCreatedByPlugin = nextUpdate.pluginId;
         try {
             var redraw = executeUpdate(nextUpdate);
             if (!skippingMarkerMode) {
@@ -229,7 +258,7 @@ function UpdateManager(sketchManager, onError) {
                 var updateType = lastUpdateType;
                 for (var i = 0; i < plugins.length; i++) {
                     if (!isUndefined(plugins[i].addUpdate)) {
-                        plugins[i].addUpdate(pluginUpdate, redraw, updateIndex, updateType);
+                        plugins[i].addUpdate(pluginUpdate, redraw, updateIndex, updateType, updateCreatedByPlugin);
                     }
                 }
                 updateType = undefined;
@@ -291,9 +320,9 @@ function UpdateManager(sketchManager, onError) {
     /**
      * Executes an update.
      *
-     * Does special handling with redo and undo
+     * Does special handling with redo and undo.
      *
-     * @param {SrlUpdate} update
+     * @param {SrlUpdate} update - The update that is being executed.
      * @returns {Boolean} True if the object needs to be redrawn.
      */
     function executeUpdate(update) {
@@ -316,22 +345,22 @@ function UpdateManager(sketchManager, onError) {
             return;
         }
         if (inRedoUndoMode) {
-            if ((command !== CourseSketch.PROTOBUF_UTIL.CommandType.REDO && command !== CourseSketch.PROTOBUF_UTIL.CommandType.UNDO)) {
+            if ((command !== CourseSketch.prutil.CommandType.REDO && command !== CourseSketch.prutil.CommandType.UNDO)) {
                 // We do a bunch of changing then we call the executeUpdate
                 // method again
                 var splitDifference = updateList.length - currentUpdateIndex;
 
                 // Creates and inserts the first marker [update] -> [marker] ->
                 // [unreachable update]
-                var startingMarker = localScope.createMarker(false, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, '' +
+                var startingMarker = localScope.createMarker(false, CourseSketch.prutil.getMarkerClass().MarkerType.SPLIT, '' +
                         splitDifference);
-                updateList.splice(currentUpdateIndex, 0, CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ startingMarker ]));
+                updateList.splice(currentUpdateIndex, 0, CourseSketch.prutil.createUpdateFromCommands([ startingMarker ]));
 
                 // Creates and inserts the second marker [unreachable update
                 // (probably undo or redo)] -> [marker] -> [index out of range]
-                var endingMarker = localScope.createMarker(false, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, '' +
+                var endingMarker = localScope.createMarker(false, CourseSketch.prutil.getMarkerClass().MarkerType.SPLIT, '' +
                         (0 - splitDifference));
-                updateList.push(CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ endingMarker ]));
+                updateList.push(CourseSketch.prutil.createUpdateFromCommands([ endingMarker ]));
 
                 // Reset the information
                 inRedoUndoMode = false;
@@ -340,7 +369,7 @@ function UpdateManager(sketchManager, onError) {
                 return executeUpdate(update);
             }
         }
-        if (command === CourseSketch.PROTOBUF_UTIL.CommandType.REDO) {
+        if (command === CourseSketch.prutil.CommandType.REDO) {
             lastUpdateType = 1;
             if (netCount >= 0) {
                 throw new UndoRedoException('Can not Redo Anymore');
@@ -348,10 +377,10 @@ function UpdateManager(sketchManager, onError) {
             updateList.push(update);
             currentEndingIndex += 1;
             netCount += 1;
-            var redraw = redoUpdate(updateList[currentUpdateIndex]);
+            var redrawRedo = redoUpdate(updateList[currentUpdateIndex]);
             currentUpdateIndex += 1;
-            return redraw;
-        } else if (command === CourseSketch.PROTOBUF_UTIL.CommandType.UNDO) {
+            return redrawRedo;
+        } else if (command === CourseSketch.prutil.CommandType.UNDO) {
             lastUpdateType = -1;
             if (currentUpdateIndex <= 0) {
                 throw new UndoRedoException('Can not Undo Anymore');
@@ -363,17 +392,17 @@ function UpdateManager(sketchManager, onError) {
             netCount -= 1;
             updateList.push(update);
             currentEndingIndex += 1;
-            var redraw = undoUpdate(updateList[currentUpdateIndex - 1]);
+            var redrawUndo = undoUpdate(updateList[currentUpdateIndex - 1]);
             currentUpdateIndex -= 1;
-            return redraw;
+            return redrawUndo;
         } else {
             lastUpdateType = 0;
             // A normal update
             currentEndingIndex += 1;
             updateList.push(update);
-            var redraw = redoUpdate(update);
+            var redrawExecute = redoUpdate(update);
             currentUpdateIndex += 1;
-            return redraw;
+            return redrawExecute;
         }
     }
 
@@ -381,76 +410,75 @@ function UpdateManager(sketchManager, onError) {
      * If the update is a marker than it will skip that parts that can not be
      * reached.
      *
-     * @param {SrlUpdate} update
+     * @param {SrlUpdate} update - The update that is being redone.
      * @returns {Boolean} True if the sketch needs to be redrawn.
      */
     function redoUpdate(update) {
         /*jshint maxcomplexity:13 */
         var command = update.getCommands()[0];
         // Marker will not have any other commands with its update
-        if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.MARKER) {
-            var marker = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getMarkerClass());
-            if (marker.type === CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT) {
+        if (command.commandType === CourseSketch.prutil.CommandType.MARKER) {
+            var marker = CourseSketch.prutil.decodeProtobuf(command.commandData, CourseSketch.prutil.getMarkerClass());
+            if (marker.type === CourseSketch.prutil.getMarkerClass().MarkerType.SPLIT) {
                 var tempIndex = currentUpdateIndex;
                 currentUpdateIndex += parseInt(marker.otherData, 10) + 1;
                 if (currentUpdateIndex > updateList.length) {
                     amountToSkip = parseInt(marker.otherData, 10) + 1;
                     skippingMarkerMode = true;
                 }
-            } else if (marker.type === CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION) {
+            } else if (marker.type === CourseSketch.prutil.getMarkerClass().MarkerType.SUBMISSION) {
                 if (currentUpdateIndex > lastSubmissionPointer) {
                     lastSubmissionPointer = currentUpdateIndex;
                 }
                 if (currentUpdateIndex > lastSavePointer) {
                     lastSavePointer = currentUpdateIndex;
                 }
-            }  else if (marker.type === CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE) {
+            }  else if (marker.type === CourseSketch.prutil.getMarkerClass().MarkerType.SAVE) {
                 if (currentUpdateIndex > lastSavePointer) {
                     lastSavePointer = currentUpdateIndex;
                 }
             }
             return false;
         // This can have other commands with its update.
-        } else if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
+        } else if (command.commandType === CourseSketch.prutil.CommandType.CREATE_SKETCH) {
             // For undo we need the sketch id before we switch
             command.decodedData = currentSketchId;
-            var sketchData = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getActionCreateSketchClass());
-            var id = sketchData.sketchId.idChain[0];
+            var sketchData = CourseSketch.prutil.decodeProtobuf(command.commandData, CourseSketch.prutil.getActionCreateSketchClass());
+            var newSketchId = sketchData.sketchId.idChain[0];
             if (!isUndefined(sketchManager) &&
-                    (!isUndefined(sketchManager.getCurrentSketch()) && sketchManager.getCurrentSketch().id !== id) ||
+                    (!isUndefined(sketchManager.getCurrentSketch()) && sketchManager.getCurrentSketch().id !== newSketchId) ||
                     isUndefined(sketchManager.getCurrentSketch())) {
-                sketchManager.createSketch(id, sketchData);
+                sketchManager.createSketch(newSketchId, sketchData);
             }
-            switchToSketch(id);
+            switchToSketch(newSketchId);
         // This can have other commands with its update.
-        } else if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH) {
+        } else if (command.commandType === CourseSketch.prutil.CommandType.SWITCH_SKETCH) {
             // For undoing
             command.decodedData = currentSketchId;
-            var id = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getIdChainClass()).idChain[0];
-            switchToSketch(id);
+            var sketchId = CourseSketch.prutil.decodeProtobuf(command.commandData, CourseSketch.prutil.getIdChainClass()).idChain[0];
+            switchToSketch(sketchId);
         }
         return update.redo();
     }
 
     /**
-     * If the update is a marker than it will skip that parts that can not be
-     * reached
+     * If the update is a marker than it will skip that parts that can not be reached.
      *
-     * @param {SrlUpdate} update
+     * @param {SrlUpdate} update - The update that is being undone.
      * @returns {Boolean} True if the sketch needs to be redrawn.
      */
     function undoUpdate(update) {
 
         var command = update.getCommands()[0];
-        if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.MARKER) {
-            var marker = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getMarkerClass());
-            if (marker.type === CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT) {
+        if (command.commandType === CourseSketch.prutil.CommandType.MARKER) {
+            var marker = CourseSketch.prutil.decodeProtobuf(command.commandData, CourseSketch.prutil.getMarkerClass());
+            if (marker.type === CourseSketch.prutil.getMarkerClass().MarkerType.SPLIT) {
                 currentUpdateIndex += parseInt(marker.otherData, 10) - 1;
             }
             // Does not actually change sketch so no drawing happens
             return false;
-        } else if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
-            var sketchData = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getActionCreateSketchClass());
+        } else if (command.commandType === CourseSketch.prutil.CommandType.CREATE_SKETCH) {
+            var sketchData = CourseSketch.prutil.decodeProtobuf(command.commandData, CourseSketch.prutil.getActionCreateSketchClass());
             var id = sketchData.sketchId.idChain[0];
 
             // Undo happens in reverse order so it must happen before switchToSketchHappens
@@ -461,7 +489,7 @@ function UpdateManager(sketchManager, onError) {
             }
             switchToSketch(command.decodedData);
             return true;
-        } else if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH) {
+        } else if (command.commandType === CourseSketch.prutil.CommandType.SWITCH_SKETCH) {
             // Undo happens in reverse order so it must happen before switchToSketchHappens
             update.undo();
 
@@ -477,7 +505,7 @@ function UpdateManager(sketchManager, onError) {
      *
      * This is a delayed method to prevent javascript from freezing the browser.
      *
-     * @param {Function} callback
+     * @param {Function} callback - Called after the list is cleaned.
      */
     this.getCleanUpdateList = function(callback) {
         var index = 0;
@@ -504,6 +532,9 @@ function UpdateManager(sketchManager, onError) {
 
     /**
      * Changes the time of the update at index to be the new time.
+     *
+     * @param {Number} time - The time at which the update took place.
+     * @param {Number} index - Used to specify what update to update.
      */
     this.setUpdateTime = function(time, index) {
         updateList[index].setTime(time.toString());
@@ -511,6 +542,8 @@ function UpdateManager(sketchManager, onError) {
 
     /**
      * Changes the time of the last save or submission update to be the new time.
+     *
+     * @param {Number} time - Used to specify what update to update.
      */
     this.setLastSaveTime = function(time) {
         this.setUpdateTime(time, lastSavePointer);
@@ -518,6 +551,9 @@ function UpdateManager(sketchManager, onError) {
 
     /**
      * Returns a direct copy of the update list that is modifiable.
+     *
+     * @param {Function} [callback] - called with the update list.
+     * @returns {SrlUpdateList} The updateList.
      */
     this.getUpdateList = function(callback) {
         if (callback) {
@@ -544,9 +580,9 @@ function UpdateManager(sketchManager, onError) {
         var update = updateList[updateList.length - 1];
         var commandList = update.getCommands();
         var currentCommand = commandList[0];
-        if (currentCommand.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.MARKER) {
-            var marker = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(currentCommand.commandData, CourseSketch.PROTOBUF_UTIL.getMarkerClass());
-            if (marker.type === CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION) {
+        if (currentCommand.commandType === CourseSketch.prutil.CommandType.MARKER) {
+            var marker = CourseSketch.prutil.decodeProtobuf(currentCommand.commandData, CourseSketch.prutil.getMarkerClass());
+            if (marker.type === CourseSketch.prutil.getMarkerClass().MarkerType.SUBMISSION) {
                 return true;
             }
         }
@@ -564,9 +600,9 @@ function UpdateManager(sketchManager, onError) {
         var update = updateList[updateList.length - 1];
         var commandList = update.getCommands();
         var currentCommand = commandList[0];
-        if (currentCommand.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.MARKER) {
-            var marker = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(currentCommand.commandData, CourseSketch.PROTOBUF_UTIL.getMarkerClass());
-            if (marker.type === CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE) {
+        if (currentCommand.commandType === CourseSketch.prutil.CommandType.MARKER) {
+            var marker = CourseSketch.prutil.decodeProtobuf(currentCommand.commandData, CourseSketch.prutil.getMarkerClass());
+            if (marker.type === CourseSketch.prutil.getMarkerClass().MarkerType.SAVE) {
                 return true;
             }
         }
@@ -594,6 +630,9 @@ function UpdateManager(sketchManager, onError) {
         return !(this.isLastUpdateSubmission() || this.isLastUpdateSave());
     };
 
+    /**
+     * @returns {Number} The current update index.
+     */
     this.getCurrentPointer = function() {
         return currentUpdateIndex;
     };
@@ -601,8 +640,9 @@ function UpdateManager(sketchManager, onError) {
     /**
      * This clears any current updates and replaces the list with a new list.
      *
-     * @param {Array} list The list that is will be added to the sketch
-     * @param {Object} percentBar The bar that will show these updates. It is called with how much is left to be completed.
+     * @param {Array} list - The list that is will be added to the sketch
+     * @param {Object} [percentBar] - The bar that will show these updates. It is called with how much is left to be completed.
+     * @param {Function} [finishedCallback] - Called when the update list is set and executed.
      */
     this.setUpdateList = function(list, percentBar, finishedCallback) {
         if (!Array.isArray(list)) {
@@ -619,7 +659,7 @@ function UpdateManager(sketchManager, onError) {
                 if (percentBar) {
                     percentBar.updatePercentBar(index, maxIndex);
                 }
-                localScope.addUpdate(list[index], false, true);
+                localScope.addUpdate(list[index]);
                 index++;
             }
             if (index >= maxIndex) {
@@ -641,37 +681,42 @@ function UpdateManager(sketchManager, onError) {
     /**
      * Creates and adds a redo update to the stack.
      *
-     * @param {Boolean} userCreated True if the userCreated the command false otherwise.
+     * @param {Boolean} userCreated - True if the userCreated the command false otherwise.
      */
     this.redoAction = function(userCreated) {
-        var redoCommand = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.REDO, userCreated);
-        var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ redoCommand ]);
+        var redoCommand = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.REDO, userCreated);
+        var update = CourseSketch.prutil.createUpdateFromCommands([ redoCommand ]);
         this.addUpdate(update, false);
     };
 
     /**
      * Creates and adds a redo update to the stack.
      *
-     * @param {Boolean} userCreated True if the userCreated the command false otherwise.
+     * @param {Boolean} userCreated - True if the userCreated the command false otherwise.
      */
     this.undoAction = function(userCreated) {
-        var undoCommand = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.UNDO, userCreated);
-        var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ undoCommand ]);
+        var undoCommand = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.UNDO, userCreated);
+        var update = CourseSketch.prutil.createUpdateFromCommands([ undoCommand ]);
         var tempIndex = currentUpdateIndex;
         this.addUpdate(update, false);
     };
 
     /**
      * Sets the new sketch manager.
+     *
+     * @param {SketchManager} sketch - The manager of the current sketch.
      */
     this.setSketchManager = function(sketch) {
         sketchManager = sketch;
     };
 
     /**
-     * Cleans the update to make sure it is the same as all new versions
+     * Cleans the update to make sure it is the same as all new versions.
+     *
+     * @param {SrlUpdate} update - the update being cleaned.
+     * @returns {SrlUpdate} the cleaned version of the update.
      */
     function cleanUpdate(update) {
-        return CourseSketch.PROTOBUF_UTIL.decodeProtobuf(update.toArrayBuffer(), CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass());
+        return CourseSketch.prutil.decodeProtobuf(update.toArrayBuffer(), CourseSketch.prutil.getSrlUpdateClass());
     }
 }

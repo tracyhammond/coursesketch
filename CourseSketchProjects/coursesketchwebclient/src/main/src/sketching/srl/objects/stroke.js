@@ -1,5 +1,6 @@
 /* jshint camelcase: false */
 /* depends on objectAndInheritance.js */
+//jscs:disable
 
 /**
  * ******************************
@@ -46,7 +47,7 @@ function SRL_Stroke(startPoint) {
     /**
      * Gets the complete list of points in the stroke
      *
-     * @return list of points in the stroke
+     * @returns list of points in the stroke
      */
     this.getPoints = function() {
         return points;
@@ -60,10 +61,10 @@ function SRL_Stroke(startPoint) {
      *
      * @param i
      *            the index of the stroke
-     * @return the point at index i
+     * @returns the point at index i
      */
     this.getPoint = function(i) {
-        if (typeof i === "number") {
+        if (typeof i === 'number') {
             if (i >= points.length) {
                 return null;
             }
@@ -74,7 +75,7 @@ function SRL_Stroke(startPoint) {
     /**
      * Goes through every object in this list of objects. (Brute force).
      *
-     * @return the object if it exist, returns false otherwise.
+     * @returns the object if it exist, returns false otherwise.
      */
     this.getSubObjectById = function(objectId) {
         for (var object in points) {
@@ -88,7 +89,7 @@ function SRL_Stroke(startPoint) {
     /**
      * Goes through every object in this list of objects. (Brute force).
      *
-     * @return the object if it exist, returns false otherwise.
+     * @returns the object if it exist, returns false otherwise.
      */
     this.removeSubObjectById = function(objectId) {
         for (var i = 0; i < points.length; i++) {
@@ -109,7 +110,7 @@ function SRL_Stroke(startPoint) {
     /**
      * Gets the list of subobjects
      *
-     * @return list of objects that make up this object
+     * @returns list of objects that make up this object
      */
     this.getSubObjects = function() {
         return points;
@@ -118,7 +119,7 @@ function SRL_Stroke(startPoint) {
     /**
      * Gets the number of points in the stroke
      *
-     * @return number of points in the stroke
+     * @returns number of points in the stroke
      */
     this.getNumPoints = function() {
         return points.length;
@@ -128,7 +129,7 @@ function SRL_Stroke(startPoint) {
      * Returns the first point in the stroke. if the stroke has no points, it
      * returns null.
      *
-     * @return first point in the stroke
+     * @returns first point in the stroke
      */
     this.getFirstPoint = function() {
         if (points.length === 0) {
@@ -141,7 +142,7 @@ function SRL_Stroke(startPoint) {
      * Returns the last point in the stroke If the stroke has no points, it
      * returns null.
      *
-     * @return last point in the stroke.
+     * @returns last point in the stroke.
      */
     this.getLastPoint = function() {
         if (points.length === 0) {
@@ -208,11 +209,11 @@ function SRL_Stroke(startPoint) {
      *
      * @param secondPoint
      *            which number point should be used for the second point
-     * @return cosine of the starting angle of the stroke
+     * @returns cosine of the starting angle of the stroke
      */
     this.getStartAngleCosine = function(inputSecondPoint) {
         var secondPoint = inputSecondPoint;
-        if (typeof secondPoint === "number") {
+        if (typeof secondPoint === 'number') {
             if (this.getNumPoints() <= 1) return Number.NaN;
             if (this.getNumPoints() <= secondPoint) {
                 secondPoint = this.getNumPoints() - 1;
@@ -233,7 +234,7 @@ function SRL_Stroke(startPoint) {
             var hypotenuse = Math.sqrt(sectionWidth * sectionWidth + sectionHeight * sectionHeight);
             return sectionWidth / hypotenuse;
         }
-        throw ".getStartAngleCosine needs an int argument";
+        throw '.getStartAngleCosine needs an int argument';
     };
 
     /**
@@ -245,11 +246,11 @@ function SRL_Stroke(startPoint) {
      *
      * @param secondPoint
      *            which number point should be used for the second point
-     * @return cosine of the starting angle of the stroke
+     * @returns cosine of the starting angle of the stroke
      */
     this.getStartAngleSine = function(inputSecondPoint) {
         var secondPoint = inputSecondPoint;
-        if (typeof secondPoint === "number") {
+        if (typeof secondPoint === 'number') {
             if (this.getNumPoints() <= 1) return Number.NaN;
             if (this.getNumPoints() <= secondPoint) {
                 secondPoint = this.getNumPoints() - 1;
@@ -276,7 +277,7 @@ function SRL_Stroke(startPoint) {
      * Return the Euclidean distance from the starting point to the ending point
      * of the stroke
      *
-     * @return the distance between the starting and ending points of the stroke
+     * @returns the distance between the starting and ending points of the stroke
      */
     this.getEuclideanDistance = function() {
         var x0, xn, y0, yn;
@@ -291,7 +292,7 @@ function SRL_Stroke(startPoint) {
     /**
      * Return the cosine of the angle between the start and end point
      *
-     * @return cosine of the ending angle
+     * @returns cosine of the ending angle
      */
     this.getEndAngleCosine = function() {
         if (this.getNumPoints() <= 1) return Number.NaN;
@@ -303,7 +304,7 @@ function SRL_Stroke(startPoint) {
     /**
      * Return the cosine of the angle between the start and end point
      *
-     * @return cosine of the ending angle
+     * @returns cosine of the ending angle
      */
     this.getEndAngleSine = function() {
         if (this.getNumPoints() <= 1) return Number.NaN;
@@ -315,7 +316,7 @@ function SRL_Stroke(startPoint) {
     /**
      * Returns the length of the stroke, complete with all of its turns
      *
-     * @return length of the stroke
+     * @returns length of the stroke
      */
     this.getStrokeLength = function() {
         var sum = 0;
@@ -331,10 +332,10 @@ function SRL_Stroke(startPoint) {
     /**
      * Return the total stroke time
      *
-     * @return total time of the stroke
+     * @returns total time of the stroke
      */
     this.getTotalTime = function() {
-        console.log("TODO - need to implement a .getTime()");
+        console.log('TODO - need to implement a .getTime()');
         throw 'unspoorted function call: "getTotalTime"';
         // if (this.getPoints().length === 0) return Number.NaN;
         // return this.getLastPoint().getTime()-this.getFirstPoint().getTime();
@@ -344,10 +345,10 @@ function SRL_Stroke(startPoint) {
      * Auxiliary method used to return a list containing all points but with
      * duplicated (based on time) removed
      *
-     * @return list of points with duplicates (based on time) removed
+     * @returns list of points with duplicates (based on time) removed
      */
     this.removeTimeDuplicates = function() {
-        console.log("TODO - need to implement a .getTime()");
+        console.log('TODO - need to implement a .getTime()');
         throw 'unspoorted function call: "removeTimeDuplicates"';
         /*
         var points = [];
@@ -366,7 +367,7 @@ function SRL_Stroke(startPoint) {
      * Auxiliary method used to return a list containing all points but with
      * duplicated (based on X,Y coordinates) removed
      *
-     * @return list of points with duplicates (based on coordinates) removed
+     * @returns list of points with duplicates (based on coordinates) removed
      */
     this.removeCoordinateDuplicates = function() {
         var p = [];
@@ -385,10 +386,10 @@ function SRL_Stroke(startPoint) {
     /**
      * Return the maximum stroke speed reached
      *
-     * @return maximum stroke speed reached
+     * @returns maximum stroke speed reached
      */
     this.getMaximumSpeed = function() {
-        console.log("TODO - need to implement a .getTime()");
+        console.log('TODO - need to implement a .getTime()');
         throw 'unspoorted function call: "getMaximumSpeed"';
         /*
         if (this.getPoints().length === 0) return Number.NaN;
@@ -414,10 +415,10 @@ function SRL_Stroke(startPoint) {
      *
      * @param points
      * @param startP
-     * @return
+     * @returns
      */
     this.rotationAtAPoint = function(startP) {
-        if (points[0] instanceof SRL_Point && typeof startP === "number") {
+        if (points[0] instanceof SRL_Point && typeof startP === 'number') {
             if (points.length < startP + 2) {
                 return Number.NaN;
             }
@@ -431,7 +432,7 @@ function SRL_Stroke(startPoint) {
     /**
      * Return the total rotation of the stroke from start to end points
      *
-     * @return total rotation of the stroke
+     * @returns total rotation of the stroke
      */
     this.getRotationSum = function() {
         var p = this.removeCoordinateDuplicates();
@@ -454,7 +455,7 @@ function SRL_Stroke(startPoint) {
     /**
      * Return the absolute rotation of the stroke from start to end points
      *
-     * @return total absolute rotation of the stroke
+     * @returns total absolute rotation of the stroke
      */
     this.getRotationAbsolute = function() {
         var p = this.removeCoordinateDuplicates();
@@ -477,7 +478,7 @@ function SRL_Stroke(startPoint) {
     /**
      * Return the squared rotation of the stroke from start to end points
      *
-     * @return total squared rotation of the stroke
+     * @returns total squared rotation of the stroke
      */
     this.getRotationSquared = function() {
         var p = this.removeCoordinateDuplicates();

@@ -1,19 +1,28 @@
 /**
- * @class DatabaseException
+ * An exception that is used to represent problems with the database.
+ *
+ * @constructor DatabaseException
  * @extends BaseException
+ * @param {String} message - The message to show for the exception.
+ * @param {Request | BaseException | String} request - The request associated with the exception.
+ * @param {BaseException} [cause] - The cause of the exception.
  */
-function DatabaseException(message, request) {
-    if (message) {
-        this.message = message;
+function DatabaseException(message, request, cause) {
+
+    this.name = 'DatabaseException';
+    this.message = '';
+    this.setMessage(message);
+    this.createStackTrace();
+
+    if (!isUndefined(request) && (typeof request !== 'string')) {
+        this.setCause(request);
+    } else {
+        this.setCause(cause);
     }
-    if (request) {
-        this.request = request;
+
+    if (typeof request === 'string') {
+        this.setMessage(': [' + message  + '] for request [' + request + ']');
     }
 }
 
-DatabaseException.prototype.message = 'Generic database message';
-DatabaseException.prototype.request = 'Generic request';
-DatabaseException.prototype.name = 'DatabaseException';
-DatabaseException.prototype.toString = function() {
-    return this.name + ': [' + this.message  + '] for request [' + this.request + ']';
-};
+DatabaseException.prototype = new BaseException();

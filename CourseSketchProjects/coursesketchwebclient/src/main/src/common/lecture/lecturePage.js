@@ -1,10 +1,19 @@
 validateFirstRun(document.currentScript);
+/**
+ * @namespace lecturePage
+ */
 
 (function() {
     CourseSketch.lecturePage = [];
     CourseSketch.lecturePage.waitScreenManager = new WaitScreenManager();
-    CourseSketch.lecturePage.selectedSlideIndex = undefined;
+    CourseSketch.lecturePage.navigation = new AssignmentNavigator();
 
+    /**
+     * Resizes the element that was affected by the event.
+     *
+     * @param {Event} event - The event that contains the element needing a resize.
+     * @memberof lecturePage
+     */
     CourseSketch.lecturePage.doResize = function(event) {
         var target = event.target;
 
@@ -19,21 +28,45 @@ validateFirstRun(document.currentScript);
         target.textContent = newWidth + '×' + newHeight;
     };
 
+    /**
+     * Creates a new text box and loads data into it.
+     *
+     * @param {TextBoxProto} textBox - The data needed for the text box.
+     * @memberof lecturePage
+     */
     CourseSketch.lecturePage.loadTextBox = function(textBox) {
         var elem = CourseSketch.lecturePage.newTextBox();
         elem.loadData(textBox);
     };
 
+    /**
+     * Creates a new question element and loads data into it.
+     *
+     * @param {QuestionProto} question - The data needed for the question.
+     * @memberof lecturePage
+     */
     CourseSketch.lecturePage.loadMultiChoiceQuestion = function(question) {
         var elem = CourseSketch.lecturePage.newMultiChoiceQuestion();
         elem.loadData(question);
     };
 
+    /**
+     * Creates a new imageBox element and loads data into it.
+     *
+     * @param {ImageProto} imageBox - The data needed for the image.
+     * @memberof lecturePage
+     */
     CourseSketch.lecturePage.loadImageBox = function(imageBox) {
         var elem = CourseSketch.lecturePage.newImage();
         elem.loadData(imageBox);
     };
 
+    /**
+     * Creates a new embeddedHtml element and loads data into it.
+     *
+     * @param {embeddedHtmlProto} embeddedHtml - The data needed for the embedded html page.
+     * @memberof lecturePage
+     */
     CourseSketch.lecturePage.loadEmbeddedHtml = function(embeddedHtml) {
         var elem = CourseSketch.lecturePage.newEmbeddedHtml();
         elem.loadData(embeddedHtml);
@@ -41,6 +74,9 @@ validateFirstRun(document.currentScript);
 
     /**
      * Adds a new text box to the currently selected lecture slide.
+     *
+     * @memberof lecturePage
+     * @returns {Element} The text box that was created.
      */
     CourseSketch.lecturePage.newTextBox = function() {
         var textBox = undefined;
@@ -55,7 +91,10 @@ validateFirstRun(document.currentScript);
     };
 
     /**
-     * Adds a new sketch content element to the currently selected slide
+     * Adds a new sketch content element to the currently selected slide.
+     *
+     * @memberof lecturePage
+     * @returns {Element} The sketch surface that was created.
      */
     CourseSketch.lecturePage.newSketchContent = function() {
         var sketchSurface = document.createElement('sketch-surface');
@@ -67,8 +106,11 @@ validateFirstRun(document.currentScript);
     };
 
     /**
-     * Adds a new image to the currently selected slide
-     * @param {element} input the input element from the form specifying the image
+     * Adds a new image to the currently selected slide.
+     *
+     * @memberof lecturePage
+     * @param {Element} input - The input element from the form specifying the image.
+     * @returns {Element} The image box that was created.
      */
     CourseSketch.lecturePage.newImage = function(input) {
         var imagebox = document.createElement('image-box');
@@ -79,10 +121,12 @@ validateFirstRun(document.currentScript);
 
         if (!isUndefined(input) && input !== null && input.files && input.files[0]) {
             var reader = new FileReader();
+            /* jscs:disable jsDoc */
             reader.onload = function(e) {
                 imagebox.setSrc(e.target.result);
             };
             reader.readAsDataURL(input.files[0]);
+            /* jscs:enable jsDoc */
         }
         imagebox.setFinishedListener(CourseSketch.lecturePage.saveImageBox);
         return imagebox;
@@ -90,7 +134,10 @@ validateFirstRun(document.currentScript);
 
     /**
      * Adds a new embedded HTML element to the currently selected slide.
-     * @param {element} form the form that contains the HTML element to be added
+     *
+     * @memberof lecturePage
+     * @param {Element} form - The form that contains the HTML element to be added.
+     * @returns {Element} The embedded html that was created.
      */
     CourseSketch.lecturePage.newEmbeddedHtml = function(form) {
         var embeddedHtml = document.createElement('embedded-html');
@@ -104,6 +151,9 @@ validateFirstRun(document.currentScript);
 
     /**
      * Adds a new multiple choice question to the currently selected slide.
+     *
+     * @memberof lecturePage
+     * @returns {Element} The question element that was created.
      */
     CourseSketch.lecturePage.newMultiChoiceQuestion = function() {
         var question = document.createElement('question-element');
@@ -116,11 +166,12 @@ validateFirstRun(document.currentScript);
 
     /**
      * Renders a slide to the DOM.
-
-     * @param {protoObject} slide
-     *            protobuf slide element to be rendered
+     *
+     * @param {LectureSlide | SrlBankProblem} slide - Protobuf slide element to be rendered.
+     * @memberof lecturePage
      */
     CourseSketch.lecturePage.renderSlide = function(slide) {
+        console.log('Rendering slide', slide);
         document.getElementById('slide-content').innerHTML = '';
         CourseSketch.lecturePage.currentSlide = slide;
         for (var i = 0; i < slide.elements.length; ++i) {
@@ -144,7 +195,21 @@ validateFirstRun(document.currentScript);
     };
 
     /**
+     * Callback for when a slide is navigated.
+     *
+     * @param {AssignmentNavigator} nav - The navigator used to select the slide.
+     * @memberof lecturePage
+     */
+    CourseSketch.lecturePage.navigationCallback = function(nav) {
+        CourseSketch.lecturePage.renderSlide(nav.getCurrentInfo());
+    };
+
+    CourseSketch.lecturePage.navigation.addCallback(CourseSketch.lecturePage.navigationCallback);
+
+    /**
      * Adds a wait overlay, preventing the user from interacting with the page until it is removed.
+     *
+     * @memberof lecturePage
      */
     CourseSketch.lecturePage.addWaitOverlay = function() {
         CourseSketch.lecturePage.waitScreenManager.buildOverlay(document.querySelector('body'));
@@ -154,6 +219,8 @@ validateFirstRun(document.currentScript);
 
     /**
      * Removes the wait overlay from the DOM if it exists.
+     *
+     * @memberof lecturePage
      */
     CourseSketch.lecturePage.removeWaitOverlay = function() {
         if (!isUndefined(document.getElementById('overlay')) && document.getElementById('overlay') !== null) {
@@ -164,40 +231,65 @@ validateFirstRun(document.currentScript);
     /**
      * Adds a slide thumbnail to the DOM.
      *
-     * @param {int} slideIndex
-     *            index of the slide in the current lecture's protobuf
-     *            object.
+     * @param {Integer} slideIndex - Index of the slide in the current lecture's protobuf object.
+     * @memberof lecturePage
      */
     CourseSketch.lecturePage.addSlideToDom = function(slideIndex) {
         var slideThumb = document.createElement('span');
         slideThumb.id = slideIndex;
         slideThumb.className = 'slide-thumb';
         slideThumb.textContent = slideIndex + 1;
+        /* jscs:disable jsDoc */
         slideThumb.onclick = function() {
-            CourseSketch.lecturePage.selectSlide(slideIndex);
+            CourseSketch.lecturePage.navigation.goToSubgroupPart(slideIndex);
         };
+        /* jscs:enable jsDoc */
         document.querySelector('#slides>.content').appendChild(slideThumb);
     };
 
     /**
      * Displays all of the slides for the current lecture.
+     *
+     * @memberof lecturePage
      */
     CourseSketch.lecturePage.displaySlides = function() {
-        $('#lecture-title').text(CourseSketch.lecturePage.lecture.name);
-        $('.slide-thumb:not("#add")').each(function() {
-            $(this).remove();
-        });
-        for (var i = 0; i < CourseSketch.lecturePage.lecture.idList.length; ++i) {
-            CourseSketch.lecturePage.addSlideToDom(i);
-        }
-        if (CourseSketch.lecturePage.lecture.idList.length > 0) {
-            if (!isUndefined(CourseSketch.lecturePage.selectedSlideIndex)) {
-                CourseSketch.lecturePage.selectSlide(CourseSketch.lecturePage.selectedSlideIndex);
-            } else {
-                CourseSketch.lecturePage.selectSlide(0);
+        CourseSketch.lecturePage.loadDisplayData(CourseSketch.lecturePage.navigation, 10, function(slideDataList) {
+            for (var i = 0; i < slideDataList.length; ++i) {
+                CourseSketch.lecturePage.addSlideToDom(i);
             }
-        } else {
-            CourseSketch.lecturePage.newSlide();
-        }
+        });
+    };
+
+
+    /**
+     * Loads the data for the next {@code amountToNavigate} number of info.
+     *
+     * This can be used to render the thumbnail or used for just queueing the data in the client.
+     *
+     * @param {AssignmentNavigator} navigator - The navigator
+     * @param {Number} amountToNavigate - the number of elements to grab (including the one in the current position)
+     * @param {Function} callback - The callback called with the list of data.
+     * @memberof lecturePage
+     */
+    CourseSketch.lecturePage.loadDisplayData = function(navigator, amountToNavigate, callback) {
+        var assignmentId = navigator.getAssignmentId();
+        var currentIndex = navigator.getCurrentSubgroupIndex();
+        var currentPartIndex = navigator.getCurrentSubgroupIndex();
+
+        var listData = [];
+        var copyNavigator = new AssignmentNavigator(assignmentId, currentIndex, currentPartIndex);
+        copyNavigator.reloadAssignment(function() {
+            function loadData() { // eslint-disable-line require-jsdoc
+                listData.push(copyNavigator.getCurrentInfo());
+
+                if (!copyNavigator.hasNext() || listData.length === amountToNavigate) {
+                    callback(listData);
+                    copyNavigator = null;
+                    return;
+                }
+                copyNavigator.gotoNext(loadData);
+            }
+            loadData();
+        });
     };
 })();

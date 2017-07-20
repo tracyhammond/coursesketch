@@ -1,19 +1,50 @@
 /**
- * Contains input listeners for canvas interaction and functions for creating points using drawing events
+ * Contains input listeners for canvas interaction and functions for creating points using drawing events.
+ *
+ * @constructor InputListener
  */
 function InputListener() {
+    /**
+     * @type {SRL_Point}
+     */
     var currentPoint;
+
+    /**
+     * @type {SRL_Point}
+     */
     var pastPoint;
+
+    /**
+     * @type {SRL_Stroke}
+     */
     var currentStroke;
+
+    /**
+     * @typedef {Object} PSTool.
+     * @member {PSTool}
+     * @memberof InputListener
+     */
     var tool = undefined;
     var totalZoom = 0;
 
     /**
-     * Creates mouse listeners that enable strokes, panning and zooming
+     * Creates mouse listeners that enable strokes, panning, and zooming.
+     *
+     * @function initializeCanvas
+     * @instance
+     * @memberof InputListener
+     * @param {Element} sketchCanvas - The element that takes in the user input.
+     * @param {Function} strokeCreationCallback - The function that is called when a stroke is created.
+     * @param {Graphics} graphics - The graphics object used to display the sketch.
      */
     this.initializeCanvas = function(sketchCanvas, strokeCreationCallback, graphics) {
         var ps = graphics.getPaper();
         tool = new ps.Tool();
+        /**
+         * The pixel distance between points when recording points.
+         * @member {Number}
+         * @memberof PSTool
+         */
         tool.fixedDistance = 5;
 
         //used for panning and zooming
@@ -21,7 +52,14 @@ function InputListener() {
         var startingPoint;
         var lastPoint;
 
-        // allows you to zoom in or out based on a delta
+        /**
+         * Allows you to zoom in or out based on a delta.
+         * Attempts to limit zoom out to an exponential decay function.
+         * This also makes sure that the final zoom function is in fact linear.
+         *
+         * @memberof InputListener#initializeCanvas
+         * @param {Number} delta - The amount with witch the zoom was changed.
+         */
         function zoom(delta) {
             var oldZoom = totalZoom;
             totalZoom += delta;
@@ -37,9 +75,10 @@ function InputListener() {
 
         /**
          * A listener that attempts to listen for 2 finger scroll events so that tablets can scroll the sketch surface.
-         * @param {Event} event - the event that contains normal event data.
+         *
+         * @param {Event} event - The event that contains normal event data.
          * @param {String} phase - The phases of the event.  ("start", "move", "end")
-         * @param {Element} $target - the element the event is based off of.
+         * @param {Element} $target - The element the event is based off of.
          * @param {Object} data - Contains:<ul>
          *                  <li>movePoint</li>
          *                  <li>lastMovePoint</li>
@@ -58,8 +97,13 @@ function InputListener() {
         });
         $(sketchCanvas).data('touchy-drag').settings.requiredTouches = 2;
 
-        //if shift is held, pans
-        //if shift is not held, it starts a new path from the mouse point
+        /**
+         * If shift is held, pans else if shift is not held, it starts a new path from the mouse point.
+         *
+         * @function onMouseDown
+         * @memberof PSTool
+         * @param {Event} event - The event from pressing the mouseDown.
+         */
         tool.onMouseDown = function(event) {
             if (Key.isDown('shift') || event.event.button === 1) {
                 // do panning
@@ -75,8 +119,13 @@ function InputListener() {
             }
         };
 
-        //if shift is held, pans the view to follow the mouse
-        //if shift is not held, it adds more points to the path created on MouseDown
+        /**
+         * If shift is held, pans the view to follow the mouse else if shift is not held, it adds more points to the path created on MouseDown.
+         *
+         * @function onMouseDown
+         * @memberof PSTool
+         * @param {Event} event - The event from dragging the mouse.
+         */
         tool.onMouseDrag = function(event) {
             if (Key.isDown('shift') || event.event.button === 1) {
                 // do panning
@@ -86,15 +135,28 @@ function InputListener() {
             } else {
                 currentPoint = createPointFromEvent(event);
                 //currentPoint.setSpeed(pastPoint);
+                if (!currentStroke) {
+                    tool.onMouseUp(event);
+                }
                 currentStroke.addPoint(currentPoint);
                 graphics.updatePath(event.point);
                 pastPoint = currentPoint;
             }
         };
 
-        //finishes up the path that has been created by the mouse pointer
-        //unless shift has been held, then it throws up
+        /**
+         * Finishes up the path that has been created by the mouse pointer, unless shift has been held, then it throws up.
+         *
+         * @function onMouseDown
+         * @memberof PSTool
+         * @param {Event} event - The event from releasing the mouse.
+         */
         tool.onMouseUp = function(event) {
+            if (!currentStroke) {
+                currentStroke = false;
+                currentPoint = false;
+                return;
+            }
             currentPoint = createPointFromEvent(event);
             //currentPoint.setSpeed(pastPoint);
             currentStroke.addPoint(currentPoint);
@@ -142,23 +204,32 @@ function InputListener() {
     };
 
     /**
-     * Creates an {@link SRL_Point} from a drawing event. Returns the SRL_Point
+     * Creates an {@link SRL_Point} from a drawing event. Returns the SRL_Point.
+     *
+     * @memberof InputListener
+     * @private
+     * @param {Event} drawingEvent - The event from paper drawing.
+     * @returns {SRL_Point} The point created from this event.
      */
     function createPointFromEvent(drawingEvent) {
-        var currentPoint = new SRL_Point(drawingEvent.point.x, drawingEvent.point.y);
-        currentPoint.setId(generateUUID());
-        currentPoint.setTime(drawingEvent.event.timeStamp);
+        var newPoint = new SRL_Point(drawingEvent.point.x, drawingEvent.point.y);
+        newPoint.setId(generateUUID());
+        newPoint.setTime(drawingEvent.event.timeStamp);
         if (!isUndefined(drawingEvent.pressure)) {
-            currentPoint.setPressure(drawingEvent.pressure);
+            newPoint.setPressure(drawingEvent.pressure);
         } else {
-            currentPoint.setPressure(0.5);
+            newPoint.setPressure(0.5);
         }
-        currentPoint.setSize(0.5/*drawingEvent.size*/);
-        currentPoint.setUserCreated(true);
-        return currentPoint;
+        newPoint.setSize(0.5/*drawingEvent.size*/);
+        newPoint.setUserCreated(true);
+        return newPoint;
     }
 
-    // Creates a time stamp for every point.
+    /**
+     * Creates and returns a time stamp every time this function is called.
+     *
+     * @returns {Number} - The time stamp.
+     */
     function createTimeStamp() {
         return new Date().getTime();
     }

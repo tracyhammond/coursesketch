@@ -9,14 +9,16 @@
     var courseBarrier = barrier.getCallback();
     var assignmentBarrier = barrier.getCallback();
     var problemBarrier = barrier.getCallback();
+    var bankProblemBarrier = barrier.getCallback();
 
-    // barriers have been tested and work as expected with this function.
+    // barriers have been tested and work as expected with these function.
     var loadLectures = function() {
         var localBarrier = new CallbackBarrier();
         var lectureLoadedCallback = localBarrier.getCallbackAmount(CourseSketch.fakeLectures.length);
         localBarrier.finalize(lectureBarrier);
         for (var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
-            CourseSketch.dataManager.setLecture(CourseSketch.fakeLectures[i], lectureLoadedCallback, lectureLoadedCallback);
+            console.log(CourseSketch.fakeLectures[i]);
+            CourseSketch.dataManager.setAssignment(CourseSketch.fakeLectures[i], lectureLoadedCallback, lectureLoadedCallback);
         }
     };
 
@@ -56,6 +58,46 @@
         }
     };
 
+    var loadBankProblems = function() {
+        var localBarrier = new CallbackBarrier();
+        var loadedCallback = localBarrier.getCallbackAmount(CourseSketch.fakeBankProblems.length);
+        localBarrier.finalize(bankProblemBarrier);
+        for (var i = 0; i < CourseSketch.fakeBankProblems.length; ++i) {
+            CourseSketch.dataManager.setBankProblem(CourseSketch.fakeBankProblems[i], loadedCallback);
+        }
+        CourseSketch.dataManager.getAllBankProblems = function (courseId, assignmentId, page, callback) {
+            callback(CourseSketch.fakeBankProblems.slice(page * 10), (page + 1) * 10);
+        }
+    };
+
+    /**
+     *
+     */
+    function setDataListenerFunctions() {
+        CourseSketch.dataListener.sendDataInsert = function (queryType, data, callback, requestId, times) {
+            var oldId;
+            if (queryType === CourseSketch.prutil.ItemQuery.ASSIGNMENT) {
+                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlAssignmentClass()).id;
+            }
+            if (queryType === CourseSketch.prutil.ItemQuery.COURSE) {
+                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlCourseClass()).id;
+            }
+            if (queryType === CourseSketch.prutil.ItemQuery.COURSE_PROBLEM) {
+                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlProblemClass()).id;
+            }
+            if (queryType === CourseSketch.prutil.ItemQuery.BANK_PROBLEM) {
+                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlBankProblemClass()).id;
+            }
+            var result = {
+                getReturnText: function() { return oldId + ':' + oldId; }
+            };
+            callback(undefined, result);
+        };
+        CourseSketch.dataListener.sendDataUpdate = function (queryType, data, callback, requestId, times) {
+            callback();
+        }
+    }
+
     /**
      * Called when we can load our fake data into the database.
      */
@@ -82,30 +124,41 @@
         CourseSketch.dataManager.getAllExperiments = function(problemId, callback) {
             var results = [];
             for (var i = 0; i<CourseSketch.fakeSketches.length; ++i){
-                if (CourseSketch.fakeExperiments[i].problemId == problemId){
+                if (CourseSketch.fakeExperiments[i].problemId === problemId[0]){
                     results.push(CourseSketch.fakeExperiments[i]);
                 }
             }
             callback(results);
-        }
+        };
+
+        CourseSketch.dataManager.getCourseRoster = function(courseId, callback) {
+            //var studentRoster = studentList.concat('noGradeStudnet', 'noGrade2', 'failure');
+            callback(CourseSketch.fakeRoster);
+        };
+
+        CourseSketch.dataManager.getAllAssignmentGrades = function(courseId, callback) {
+            callback(CourseSketch.fakeGradeList);
+        };
 
         barrier.finalize(function() {
             console.log("DATABASE HAS ITS DATA LOADED");
             CourseSketch.dataManager.testDataLoaded = true;
         });
         loadCourses();
-        loadLectures();
         loadSlides();
-        loadAssignments();
         loadProblems();
+        loadBankProblems();
+        loadAssignments();
+        loadLectures();
+        setDataListenerFunctions();
     }
 
     // waits till the database is ready to set up our loading process
-    if (CourseSketch.dataManager.realDatabaseReady()) {
+    if (!isUndefined(CourseSketch.dataManager.realDatabaseReady) && CourseSketch.dataManager.realDatabaseReady()) {
         databaseIsReadForLoading();
     } else {
         var intervalVar = setInterval(function() {
-            if (CourseSketch.dataManager.realDatabaseReady()) {
+            if (!isUndefined(CourseSketch.dataManager.realDatabaseReady) && CourseSketch.dataManager.realDatabaseReady()) {
                 clearInterval(intervalVar);
                 databaseIsReadForLoading();
             }
@@ -116,10 +169,10 @@
      * Returns a request given an input request from the server for some certain data.
      */
     CourseSketch.serverResponseForBankProblems = function(req) {
-        var dataRequest = CourseSketch.PROTOBUF_UTIL.getDataRequestClass().decode(req.otherData);
+        var dataRequest = CourseSketch.prutil.getDataRequestClass().decode(req.otherData);
         var itemRequest = dataRequest.items[0];
         var totalLength = CourseSketch.fakeBankProblems.length;
-        var school = CourseSketch.PROTOBUF_UTIL.SrlSchool();
+        var school = CourseSketch.prutil.SrlSchool();
         school.bankProblems = [];
 
         // maybe use slice in the future! but not today.
@@ -127,7 +180,7 @@
             school.bankProblems.push(CourseSketch.fakeBankProblems[i]);
         }
 
-        var result = CourseSketch.PROTOBUF_UTIL.ItemResult();
+        var result = CourseSketch.prutil.ItemResult();
         if (school.bankProblems.length > 0) {
             result.data = school.toArrayBuffer();
         } else {
@@ -135,9 +188,9 @@
         }
         result.query = itemRequest.query;
 
-        var dataResults = CourseSketch.PROTOBUF_UTIL.DataResult();
+        var dataResults = CourseSketch.prutil.DataResult();
         dataResults.results = [result];
-        var resultingRequest = CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataResults,
+        var resultingRequest = CourseSketch.prutil.createRequestFromData(dataResults,
                 req.requestType);
         return resultingRequest;
     };

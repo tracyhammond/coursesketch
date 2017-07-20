@@ -19,9 +19,7 @@
 	<script>
         var template = (function() {
             var link1 = document.querySelector('#embeddedHtmlTemplateImport');
-            var link = link1.import.querySelector('#embeddedHtmlTemplateImport');
-            var template = link.import.querySelector('#embedded-html');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(link1.import, document,'embeddedHtmlTemplateImport','embedded-html');
             return clone;
         })();
 

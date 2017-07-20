@@ -1,33 +1,25 @@
 package connection;
 
-import coursesketch.server.base.GeneralConnectionRunner;
-import coursesketch.server.base.ServerWebSocketInitializer;
-import database.DatabaseClient;
+import coursesketch.server.interfaces.ServerInfo;
+import coursesketch.server.rpc.GeneralConnectionRunner;
+import coursesketch.server.rpc.ServerWebSocketInitializer;
+import database.DatabaseStringConstants;
 
 /**
- * The class that contains the method for starting the server.
+ * A subclass of the runner and sets up some special information for running the
+ * environment.
  */
 public final class SubmissionRunner extends GeneralConnectionRunner {
-    /**
-     * Port number for this server.
-     */
-    private static final int PORT = 8883;
+
+    /** 30 minutes * 60 seconds * 1000 milliseconds. */
+    private static final long TIMEOUT_TIME = 30 * 60 * 1000;
+
+    /** port of the proxy server. */
+    private static final int SUBMISSION = 8892;
 
     /**
-     * Parses the arguments from the server. This only expects a single argument
-     * which is if it is local.
-     *
-     * @param arguments
-     *            the arguments from the server are then parsed.
-     */
-    public SubmissionRunner(final String... arguments) {
-        super(arguments);
-        super.setPort(PORT);
-    }
-
-    /**
-     * The main method that can be used to run a server.
-     * @param args Input arguments that are running the server.
+     * @param args
+     *            arguments from the command line.
      */
     public static void main(final String... args) {
         final SubmissionRunner run = new SubmissionRunner(args);
@@ -36,19 +28,40 @@ public final class SubmissionRunner extends GeneralConnectionRunner {
 
     /**
      * {@inheritDoc}
-     * Creates the local database client.
      */
-    @SuppressWarnings("unused")
     @Override
-    public void executeLocalEnvironment() {
-        new DatabaseClient(false);
+    protected void loadConfigurations() {
+        super.setDatabaseName(DatabaseStringConstants.SUBMISSION_DATABASE);
+    }
+
+    /**
+     * sets some SSL information. FUTURE: this should be read from a file
+     * instead of listed in code.
+     */
+    @Override
+    public void executeRemoteEnvironment() {
+        setCertificatePath("Challeng3");
+        setKeystorePath("srl01_tamu_edu.jks");
+    }
+
+    /**
+     * Creates a new proxy runner.
+     *
+     * @param args
+     *            arguments from the command line.
+     */
+    public SubmissionRunner(final String... args) {
+        super(args);
+        super.setPort(SUBMISSION);
+        super.setTimeoutTime(TIMEOUT_TIME);
     }
 
     /**
      * {@inheritDoc}
+     * @return {@link SubmissionServiceInitializer}
      */
     @Override
-    public ServerWebSocketInitializer createSocketInitializer(final long time, final boolean secure, final boolean local) {
-        return new SubmissionServlet(time, secure, local);
+    public ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
+        return new SubmissionServiceInitializer(serverInfo);
     }
 }

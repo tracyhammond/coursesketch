@@ -9,9 +9,7 @@
 <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#markerTemplateImport');
-            var template = link.import.querySelector('#markerCreation');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document, 'markerTemplateImport', 'markerCreation');
 
             var newElement = new TimelineMarker();
 

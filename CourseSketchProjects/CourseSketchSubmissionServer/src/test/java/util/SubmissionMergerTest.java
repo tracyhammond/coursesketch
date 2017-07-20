@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString;
 import org.junit.Assert;
 import org.junit.Test;
 import protobuf.srl.commands.Commands;
+import protobuf.srl.utils.SketchUtil;
 import protobuf.srl.utils.Util;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class SubmissionMergerTest {
         command.setCommandType(useSwitchSketch ? Commands.CommandType.SWITCH_SKETCH : Commands.CommandType.CREATE_SKETCH);
         command.setCommandId(commandId);
         command.setCommandData(Commands.ActionCreateSketch.newBuilder().setSketchId(
-                Util.IdChain.newBuilder().addIdChain(sketchId)).build().toByteString());
+                SketchUtil.IdChain.newBuilder().addIdChain(sketchId)).build().toByteString());
         command.setIsUserCreated(true);
         return command.build();
     }
@@ -71,7 +72,7 @@ public class SubmissionMergerTest {
         middle.add(makeNewUpdateFromCommands("Update8", time + 70, makeNewCommand("Shape1", Commands.CommandType.ADD_SHAPE, null),
                 makeNewCommand("Clear3", Commands.CommandType.CLEAR, null)));
 
-        Util.IdChain idChain= Util.IdChain.newBuilder().addIdChain(sketch1Id).build();
+        SketchUtil.IdChain idChain= SketchUtil.IdChain.newBuilder().addIdChain(sketch1Id).build();
         middle.add(makeNewUpdateFromCommands("Update9", time + 80, makeNewCommand("Switch1", Commands.CommandType.SWITCH_SKETCH,
                 idChain.toByteString())));
         Commands.SrlUpdateList.Builder result = Commands.SrlUpdateList.newBuilder();
