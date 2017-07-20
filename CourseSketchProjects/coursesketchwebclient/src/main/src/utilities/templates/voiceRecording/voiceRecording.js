@@ -12,7 +12,7 @@ function VoiceRecording() {
         var localScope = this;
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
-        var surface = document.body.querySelector("sketch-surface");
+        var surface = document.body.querySelector('sketch-surface');
         var updateManager = surface.getUpdateManager();
         /**
          * Calls blink if the button is blinking or starts blink if it is not blinking
