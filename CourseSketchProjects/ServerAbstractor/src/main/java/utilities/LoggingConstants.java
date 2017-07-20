@@ -13,9 +13,10 @@ public final class LoggingConstants {
     public static final String EXCEPTION_MESSAGE = "Exception: {}";
 
     /**
-     * Private constructor.
+     * Stuff.
      */
-    private LoggingConstants() { }
+    private LoggingConstants() {
+    }
 
     /**
      * Pretty Prints json for logging.

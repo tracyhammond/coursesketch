@@ -84,6 +84,11 @@
             <version>t2.3</version>
         </dependency>
         <dependency>
+            <groupId>com.github.DonaldMcRonald</groupId>
+            <artifactId>SketchRecognitionWithTensorFlow</artifactId>
+            <version>-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>CourseSketch</groupId>
             <artifactId>RpcServer</artifactId>
             <version>0.0.1-SNAPSHOT</version>
