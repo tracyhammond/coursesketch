@@ -1,10 +1,12 @@
 package connection;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.database.submission.SubmissionManagerInterface;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionState;
 import coursesketch.server.interfaces.SocketSession;
+import coursesketch.services.submission.SubmissionWebSocketClient;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,7 @@ import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
+import protobuf.srl.submission.Submission;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import utilities.ConnectionException;
 import utilities.ExceptionUtilities;
@@ -58,55 +61,54 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
         if (req.getRequestType() == Request.MessageType.SUBMISSION) {
             // then we submit!
             if (req.getResponseText().equals("student")) {
-                final MultiConnectionState state = getConnectionToId().get(conn);
-                LOG.info("Parsing as an experiment");
-                SrlExperiment student = null;
-                try {
-                    student = SrlExperiment.parseFrom(req.getOtherData());
-                } catch (InvalidProtocolBufferException e1) {
-                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e1);
-                    conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
-                    return; // sorry but we are bailing if anything does not look right.
-                }
-
-                ((AnswerConnectionState) state).addPendingExperiment(
-                        req.getSessionInfo(), student);
-                LOG.info("Student experiment {}", student);
-                try {
-                    getConnectionManager().send(req,
-                            req.getSessionInfo() + "+" + state.getSessionId(),
-                            SubmissionClientWebSocket.class);
-                } catch (ConnectionException e1) {
-                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
-                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e1);
-                    conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-                } // pass submission on
-
-                // request the solution for checking FUTURE: need to
-                // actually retrieve answer.
-                final Request.Builder builder = ProtobufUtilities.createRequestFromData(MessageType.DATA_REQUEST, null,
-                        req.getSessionInfo() + "+" + state.getSessionId());
-
-                final ItemRequest.Builder itemRequest = ItemRequest.newBuilder();
-                itemRequest.setQuery(ItemQuery.SOLUTION);
-                itemRequest.addItemId(student.getProblemId());
-                builder.setOtherData(itemRequest.build().toByteString());
-                // FIXME this needs to change probably to make this work
-                // internalconnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(),
-                // state.getSessionId(), SubmissionConnection.class);
-            } else {
-                try {
-                    getConnectionManager().send(req, req.getSessionInfo(),
-                            SubmissionClientWebSocket.class);
-                } catch (ConnectionException e) {
-                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                    conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-                }
+                handleStudentSubmission(conn, req);
+            } else if(req.getResponseText().equals("instructor")) {
+                handleInstructorSubmission(conn, req);
             }
         }
     }
+
+    private void handleStudentSubmission(final SocketSession conn, final Request req) {
+        final SubmissionManagerInterface submissionInterface = getConnectionManager().getBestConnection(SubmissionWebSocketClient.class);
+        SrlExperiment studentExperiment;
+        try {
+            studentExperiment = SrlExperiment.parseFrom(req.getOtherData());
+        } catch (InvalidProtocolBufferException e1) {
+            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e1);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
+            return; // sorry but we are bailing if anything does not look right.
+        }
+
+        // submissionInterface.getSolutionForSubmission()
+    }
+
+    private void handleInstructorSubmission(final SocketSession conn, final Request req) {
+        final SubmissionManagerInterface submissionInterface = getConnectionManager().getBestConnection(SubmissionWebSocketClient.class);
+        Submission.SrlSolution solution;
+        try {
+            solution = Submission.SrlSolution.parseFrom(req.getOtherData());
+        } catch (InvalidProtocolBufferException e) {
+            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+            return; // sorry but we are bailing if anything does not look right.
+        }
+        generateUniqueKey();
+        // If a solution is being submitted then we store a key for the answer checker server to grab later
+        // This key is unique to the solution and is used as an auth id to authenticate the solution.
+        // This key is mapped to the problemId+partId
+    }
+
+    private void generateUniqueKey() {
+        //
+    }
+    // do submission stuff
+
+
+
+
+
     /**
      * @return {@link AnswerConnectionState} that can be used for holding experiments for checking.
      */

@@ -314,9 +314,9 @@ function Connection(uri, encrypted, attemptReconnect) {
      */
     this.sendRequest = function(message) {
         try {
-            console.log('sending message', message);
             var arrayBuffer = message.toArrayBuffer();
             arrayBuffer = addMessageLength(arrayBuffer);
+            console.log('sending message', message, arrayBuffer.byteLength);
             websocket.send(arrayBuffer);
         } catch (err) {
             console.error(err);

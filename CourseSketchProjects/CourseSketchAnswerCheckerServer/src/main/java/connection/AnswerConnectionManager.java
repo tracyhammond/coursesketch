@@ -3,6 +3,7 @@ package connection;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
+import coursesketch.services.submission.SubmissionWebSocketClient;
 import utilities.ConnectionException;
 
 import org.slf4j.Logger;
@@ -22,16 +23,6 @@ public class AnswerConnectionManager extends MultiConnectionManager {
     private static final Logger LOG = LoggerFactory.getLogger(AnswerConnectionManager.class);
 
     /**
-     * IP address.
-     */
-    private static final String SUBMISSION_ADDRESS = "SUBMISSION_IP_PROP";
-
-    /**
-     * Port number.
-     */
-    private static final int SUBMISSION_PORT = 8883;
-
-    /**
      * Creates a default {@link MultiConnectionManager}.
      * @param parent  The server that is using this object.
      * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
@@ -46,8 +37,8 @@ public class AnswerConnectionManager extends MultiConnectionManager {
     @Override
     public final void connectServers(final AbstractServerWebSocketHandler parent) {
         try {
-            createAndAddConnection(parent, isConnectionLocal(), SUBMISSION_ADDRESS,
-                    SUBMISSION_PORT, this.isSecure(), SubmissionClientWebSocket.class);
+            createAndAddConnection(parent, this.isConnectionLocal(), SubmissionWebSocketClient.ADDRESS, SubmissionWebSocketClient.PORT,
+                    this.isSecure(), SubmissionWebSocketClient.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }

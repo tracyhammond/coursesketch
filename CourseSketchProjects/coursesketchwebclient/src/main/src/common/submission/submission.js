@@ -189,7 +189,7 @@ function SubmissionPanel() {
         submissionRequest.setResponseText(this.isStudent ? 'student' : this.isGrader ? 'grader' : 'instructor');
         CourseSketch.dataListener.sendRequestWithTimeout(submissionRequest, function(event, request) {
             console.log(request);
-            alert(request.responseText);
+            console.log(request.responseText);
             if (problemIndex === this.problemIndex && this.problemType === CourseSketch.prutil.QuestionType.SKETCH) {
                 var sketchSurface = this.querySelector('.submittable');
                 // Potential conflict if it was save multiple times in quick succession.

@@ -66,7 +66,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
      * Handles the handshake upgrade request.
      */
     private WebSocketServerHandshaker handshaker;
-    private List<WebSocketFrame> fragmentedList;
+    private List<ByteBuffer> fragmentedList;
     private boolean flushFragmentedList;
 
     /**
@@ -185,6 +185,11 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
     @SuppressWarnings("PMD.UnusedPrivateMethod")
     private void handleWebSocketFrame(final ChannelHandlerContext ctx, final WebSocketFrame frame) {
 
+        if (flushFragmentedList) {
+            fragmentedList = null;
+            flushFragmentedList = false;
+        }
+
         // Check for closing frame
         if (frame instanceof CloseWebSocketFrame) {
             close(ctx, (CloseWebSocketFrame) frame);
@@ -199,10 +204,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
         if (frame instanceof BinaryWebSocketFrame) {
             if (isFirstOfMany(frame.content())) {
-                if (fragmentedList == null) {
-                    fragmentedList = new ArrayList<>();
-                }
-                fragmentedList.add(frame);
+                addFrameToList(frame);
                 return;
             }
             onMessage(ctx, ((BinaryWebSocketFrame) frame));
@@ -210,27 +212,19 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
         }
 
         if (frame instanceof ContinuationWebSocketFrame) {
-            if (flushFragmentedList) {
-                fragmentedList = null;
-                flushFragmentedList = false;
-            }
-            if (fragmentedList == null) {
-                fragmentedList = new ArrayList<>();
-            }
-            fragmentedList.add(frame);
+            addFrameToList(frame);
             if (frame.isFinalFragment()) {
                 flushFragmentedList = true;
                 socketHandler.nettyOnMessage(ctx, mergeList(fragmentedList));
                 fragmentedList = null;
             }
+            return;
         }
 
-        if (!(frame instanceof BinaryWebSocketFrame)) {
-            final RuntimeException exp = new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass()
-                    .getName()));
-            socketHandler.nettyOnError(ctx, exp);
-            throw exp;
-        }
+        final RuntimeException exp = new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass()
+                .getName()));
+        socketHandler.nettyOnError(ctx, exp);
+        throw exp;
     }
 
     private boolean isFirstOfMany(ByteBuf content) {
@@ -247,17 +241,28 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
         return false;
     }
 
-    private ByteBuffer mergeList(List<WebSocketFrame> fragmentedList) {
+    private void addFrameToList(WebSocketFrame frame) {
+        byte[] buffer = new byte[frame.content().readableBytes()];
+        frame.content().readBytes(buffer);
+
+        if (fragmentedList == null) {
+            fragmentedList = new ArrayList<>();
+        }
+
+        fragmentedList.add(ByteBuffer.wrap(buffer));
+    }
+
+    private ByteBuffer mergeList(List<ByteBuffer> fragmentedList) {
         final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        for (WebSocketFrame socketFrame : fragmentedList) {
+        for (ByteBuffer socketFrame : fragmentedList) {
             try {
-                socketFrame.content().readBytes(stream, socketFrame.content().readableBytes());
+                stream.write(socketFrame.array());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         byte[] bytes = stream.toByteArray();
-        return ByteBuffer.wrap(bytes, 8, bytes.length - 8);
+        return ByteBuffer.wrap(bytes);
     }
 
     /**
