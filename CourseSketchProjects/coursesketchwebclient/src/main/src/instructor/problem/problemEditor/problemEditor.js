@@ -6,23 +6,32 @@ validateFirstRun(document.currentScript);
     var editPanel = undefined;
     var questionTextPanel = undefined;
     var currentProblem = undefined;
+    var solutionMode = false;
     var problemRenderer = undefined;
     var originalMap = undefined;
+    var navigator = undefined;
+    var submissionPanel = undefined;
+    var currentSubmission = undefined;
+    var waiter = undefined;
     $(document).ready(function() {
+        waiter = new DefaultWaiter(CourseSketch.problemEditor.waitScreenManager,
+            document.getElementById('percentBar'));
+
         editPanel = document.getElementById('editPanel');
         questionTextPanel = document.querySelector('problem-text-panel');
         CourseSketch.dataManager.waitForDatabase(function() {
             advancedEdit = new CourseSketch.AdvanceEditPanel();
             var panel = document.querySelector('navigation-panel');
-            var navigator = panel.getNavigator();
+            navigator = panel.getNavigator();
             var courseProblemId = CourseSketch.dataManager.getState('courseProblemId');
             var bankProblem = CourseSketch.dataManager.getState('bankProblem');
             var problemIndex = CourseSketch.dataManager.getState('partIndex');
             var addCallback = isUndefined(panel.dataset.callbackset);
+            submissionPanel = document.getElementById('problemPanel');
 
-            problemRenderer = new CourseSketch.ProblemRenderer(document.getElementById('problemPanel'));
-            problemRenderer.setStartWaitingFunction(startWaiting);
-            problemRenderer.setFinishWaitingFunction(finishWaiting);
+            problemRenderer = new CourseSketch.ProblemRenderer(submissionPanel);
+            problemRenderer.setStartWaitingFunction(waiter.startWaiting);
+            problemRenderer.setFinishWaitingFunction(waiter.finishWaiting);
 
             if (!isUndefined(bankProblem)) {
                 loadBankProblem(bankProblem);
@@ -62,14 +71,12 @@ validateFirstRun(document.currentScript);
             problemRenderer.stashData(function() {
                 currentProblem.questionType = advancedEdit.getDataFromElement(element, undefined, 'questionType', undefined);
                 problemRenderer.renderBankProblem(currentProblem, function() {
+                    submissionPanel.setProblemType(questionType);
+                    submissionPanel.refreshPanel();
                     console.log(' rendering is finished');
                 });
             });
         };
-    };
-
-    actions.createSolution = function(question, buttonElement, optionalParams) {
-        console.log(arguments);
     };
 
     /**
@@ -93,9 +100,10 @@ validateFirstRun(document.currentScript);
     function loadProblem(navigator) {
         var bankProblem = navigator.getCurrentInfo();
         problemRenderer.reset();
-        problemRenderer.setStartWaitingFunction(startWaiting);
-        problemRenderer.setFinishWaitingFunction(finishWaiting);
+        problemRenderer.setStartWaitingFunction(waiter.startWaiting);
+        problemRenderer.setFinishWaitingFunction(waiter.finishWaiting);
         currentProblem = bankProblem;
+        resetSubmissionPanel(submissionPanel, navigator, bankProblem.questionType);
         loadBankProblem(bankProblem);
     }
 
@@ -109,6 +117,7 @@ validateFirstRun(document.currentScript);
         originalMap = advancedEdit.loadData(bankProblem, editPanel);
 
         problemRenderer.renderBankProblem(bankProblem, function() {
+            submissionPanel.refreshPanel();
             console.log(' rendering is finished');
         });
     }
@@ -123,54 +132,54 @@ validateFirstRun(document.currentScript);
                 console.log(argument);
             }, function(argument) {
                 console.log(argument);
-            }) ;
+            });
         });
     }
 
-    /**
-     * Starts a waiting screen.
-     */
-    function startWaiting() {
-        document.getElementById('percentBar').innerHTML = '';
-        waitingElement = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
-        CourseSketch.problemEditor.addWaitOverlay();
-        document.getElementById('percentBar').appendChild(waitingElement);
-        waitingElement.startWaiting();
-        var realWaiting = waitingElement.finishWaiting.bind(waitingElement);
-
-        /**
-         * Called when the sketch surface is done loading to remove the overlay.
-         */
-        waitingElement.finishWaiting = function() {
-            realWaiting();
-            CourseSketch.problemEditor.removeWaitOverlay();
-        };
-    }
-
-    /**
-     * Ends a waiting screen.
-     */
-    function finishWaiting() {
-        if (!isUndefined(waitingElement) && waitingElement.isRunning()) {
-            waitingElement.finishWaiting();
-            CourseSketch.problemEditor.removeWaitOverlay();
+    actions.createSolution = function(question, buttonElement, optionalParams) {
+        if (solutionMode) {
+            loadProblem(navigator);
+            return;
         }
-    }
-
-    /**
-     * Adds a wait overlay, preventing the user from interacting with the page until it is removed.
-     */
-    CourseSketch.problemEditor.addWaitOverlay = function() {
-        CourseSketch.problemEditor.waitScreenManager.buildOverlay(document.querySelector('body'));
-        CourseSketch.problemEditor.waitScreenManager.buildWaitIcon(document.getElementById('overlay'));
+        setupSolutionSubmissionPanel(submissionPanel, navigator, currentProblem.questionType);
+        problemRenderer.renderSubmission(currentProblem, currentSubmission, function() {
+            submissionPanel.refreshPanel();
+            console.log('submission');
+        });
+        // take the question and render it also set up the button and rename it
     };
 
     /**
-     * Removes the wait overlay from the DOM if it exists.
+     * Sets data in the submission panel.
+     *
+     * @param {SubmissionPanel} submissionPanel - The element that has submission data.
+     * @param {AssignmentNavigator} navigator - The navigator that is performing navigation.
+     * @param {QuestionType} questionType - The type of question on this panel.
      */
-    CourseSketch.problemEditor.removeWaitOverlay = function() {
-        if (!isUndefined(document.getElementById('overlay')) && document.getElementById('overlay') !== null) {
-            document.querySelector('body').removeChild(document.getElementById('overlay'));
-        }
-    };
+    function resetSubmissionPanel(submissionPanel, navigator, questionType) {
+        submissionPanel.problemIndex = navigator.getCurrentNumber();
+        submissionPanel.setProblemType(questionType);
+        submissionPanel.setWrapperFunction(undefined);
+        submissionPanel.isStudent = false;
+    }
+
+    /**
+     * Sets data in the submission panel.
+     *
+     * @param {SubmissionPanel} submissionPanel - The element that has submission data.
+     * @param {AssignmentNavigator} navigator - The navigator that is performing navigation.
+     * @param {QuestionType} questionType - The type of question on this panel.
+     */
+    function setupSolutionSubmissionPanel(submissionPanel, navigator, questionType) {
+        resetSubmissionPanel(submissionPanel, navigator, questionType);
+
+        submissionPanel.isGrader = false;
+        submissionPanel.setWrapperFunction(function(submission) {
+            var studentExperiment = CourseSketch.prutil.SrlSolution();
+            navigator.setSubmissionInformation(studentExperiment, true);
+            console.log('student experiment data set', studentExperiment);
+            studentExperiment.submission = submission;
+            return studentExperiment;
+        });
+    }
 })();

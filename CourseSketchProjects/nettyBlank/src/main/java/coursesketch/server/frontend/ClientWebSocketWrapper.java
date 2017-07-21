@@ -103,7 +103,7 @@ class ClientWebSocketWrapper extends SimpleChannelInboundHandler<Object> {
      * {@inheritDoc}
      */
     @Override
-    protected void messageReceived(final ChannelHandlerContext ctx, final Object msg) {
+    protected void channelRead0(final ChannelHandlerContext ctx, final Object msg) {
         final Channel channel = ctx.channel();
         if (!handshaker.isHandshakeComplete()) {
             handshaker.finishHandshake(channel, (FullHttpResponse) msg);

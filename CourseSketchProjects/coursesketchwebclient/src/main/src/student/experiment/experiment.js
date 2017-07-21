@@ -5,8 +5,7 @@ validateFirstRun(document.currentScript);
     var questionTextPanel = undefined;
     var currentProblem = undefined;
     var problemRenderer = undefined;
-    var originalMap = undefined;
-    var waitingElement = undefined;
+    var waiter = undefined;
     $(document).ready(function() {
         CourseSketch.dataManager.waitForDatabase(function() {
             var panel = document.querySelector('navigation-panel');
@@ -16,9 +15,12 @@ validateFirstRun(document.currentScript);
             var problemIndex = CourseSketch.dataManager.getState('currentProblemIndex');
             var addCallback = isUndefined(panel.dataset.callbackset);
 
+            waiter = new DefaultWaiter(CourseSketch.studentExperiment.waitScreenManager,
+                document.getElementById('percentBar'));
+
             problemRenderer = new CourseSketch.ProblemRenderer(document.getElementById('problemPanel'));
-            problemRenderer.setStartWaitingFunction(startWaiting);
-            problemRenderer.setFinishWaitingFunction(finishWaiting);
+            problemRenderer.setStartWaitingFunction(waiter.startWaiting);
+            problemRenderer.setFinishWaitingFunction(waiter.finishWaiting);
 
             CourseSketch.dataManager.clearStates();
 
@@ -45,8 +47,8 @@ validateFirstRun(document.currentScript);
         var bankProblem = navigator.getCurrentInfo();
         problemRenderer.reset();
         problemRenderer.setIsStudentProblem(true);
-        problemRenderer.setStartWaitingFunction(startWaiting);
-        problemRenderer.setFinishWaitingFunction(finishWaiting);
+        problemRenderer.setStartWaitingFunction(waiter.startWaiting);
+        problemRenderer.setFinishWaitingFunction(waiter.finishWaiting);
         currentProblem = bankProblem;
         loadBankProblem(bankProblem, navigator);
     }
@@ -93,51 +95,4 @@ validateFirstRun(document.currentScript);
             return studentExperiment;
         });
     }
-
-    /**
-     * Starts a waiting screen.
-     */
-    function startWaiting() {
-        document.getElementById('percentBar').innerHTML = '';
-        waitingElement = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
-        CourseSketch.studentExperiment.addWaitOverlay();
-        document.getElementById('percentBar').appendChild(waitingElement);
-        waitingElement.startWaiting();
-        var realWaiting = waitingElement.finishWaiting.bind(waitingElement);
-
-        /**
-         * Called when the sketch surface is done loading to remove the overlay.
-         */
-        waitingElement.finishWaiting = function() {
-            realWaiting();
-            CourseSketch.studentExperiment.removeWaitOverlay();
-        };
-    }
-
-    /**
-     * Ends a waiting screen.
-     */
-    function finishWaiting() {
-        if (!isUndefined(waitingElement) && waitingElement.isRunning()) {
-            waitingElement.finishWaiting();
-            CourseSketch.studentExperiment.removeWaitOverlay();
-        }
-    }
-
-    /**
-     * Adds a wait overlay, preventing the user from interacting with the page until it is removed.
-     */
-    CourseSketch.studentExperiment.addWaitOverlay = function() {
-        CourseSketch.studentExperiment.waitScreenManager.buildOverlay(document.querySelector('body'));
-        CourseSketch.studentExperiment.waitScreenManager.buildWaitIcon(document.getElementById('overlay'));
-    };
-
-    /**
-     * Removes the wait overlay from the DOM if it exists.
-     */
-    CourseSketch.studentExperiment.removeWaitOverlay = function() {
-        if (!isUndefined(document.getElementById('overlay')) && document.getElementById('overlay') !== null) {
-            document.querySelector('body').removeChild(document.getElementById('overlay'));
-        }
-    };
 })();
