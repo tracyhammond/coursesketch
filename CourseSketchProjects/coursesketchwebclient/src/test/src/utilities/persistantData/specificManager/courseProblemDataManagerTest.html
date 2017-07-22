@@ -16,7 +16,7 @@
 
         <script>
             QUnit.module("courseProblem creation");
-            test("create new coursesketch.database.database", function(assert) {
+            test("create new database", function(assert) {
                 expect(1);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
                         CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
@@ -77,7 +77,7 @@
                     CourseSketch.connection.sendSelf(req);
                 }; //send request
                 waitForDatabase(dataManager, function() {
-                    console.log('coursesketch.database.database started!');
+                    console.log('database started!');
                     dataManager.setAssignment(assignment, function() {
                         console.log('assignment set');
                         dataManager.insertCourseProblem(courseProblem, undefined, function(courseProblem2) {
@@ -135,7 +135,7 @@
                                     // cleaning the sendRequest function
                                     CourseSketch.connection.sendRequest = function(){};
                                     dataManager.getCourseProblems(updatedAssignment.problemGroups,  function(courseProblemList) {
-                                        assert.ok(true, "courseProblems can be fetched from the coursesketch.database.database.");
+                                        assert.ok(true, "courseProblems can be fetched from the database.");
                                         assert.equal(courseProblemList.length, 2,
                                                 "Two courseProblems were inserted and two courseProblems were returned.");
                                         assert.equal(courseProblemList[0].id, '1Two', "courseProblem 1 was correct");
@@ -225,7 +225,7 @@
                             setTimeout(function() {
                                 dataManager.getCourseProblemLocal(courseProblem.id,  function(courseProblem) {
                                     assert.ok(courseProblem instanceof CourseSketch.DatabaseException,
-                                            "CourseProblems can be fetched from the coursesketch.database.database.");
+                                            "CourseProblems can be fetched from the database.");
                                     QUnit.start();
                                 }); // getCourseProblem
                             }, 100);

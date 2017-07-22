@@ -30,7 +30,7 @@
                     CourseSketch.connection.sendRequest = function(message) {};
                 }
             });
-            test("create new coursesketch.database.database", function(assert) {
+            test("create new database", function(assert) {
                 expect(1);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
                     CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
@@ -95,7 +95,7 @@
 
             // next test
 
-            asyncTest("insert course into remote coursesketch.database.database", function(assert) {
+            asyncTest("insert course into remote database", function(assert) {
                 expect(4);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
                     CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
@@ -134,7 +134,7 @@
                             // Used to prevent issues with server stuff.
                             CourseSketch.connection.sendRequest = function(){};
                             dataManager.getAllCourses(function(courseList) {
-                                assert.ok(true, "Courses can be fetched from the coursesketch.database.database.");
+                                assert.ok(true, "Courses can be fetched from the database.");
                                 assert.equal(courseList.length, 2, "Two courses were inserted and two courses were returned.");
                                 assert.equal(courseList[0].id, "1Two", "The id has been replaced.");
                                 assert.equal(courseList[1].id, "2Two", "The id has been replaced.");
