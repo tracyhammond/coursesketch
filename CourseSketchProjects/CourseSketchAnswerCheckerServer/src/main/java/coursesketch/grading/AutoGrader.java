@@ -1,6 +1,6 @@
 package coursesketch.grading;
 
-import coursesketch.database.util.AnswerCheckerDatabase;
+import coursesketch.database.AnswerCheckerDatabase;
 import protobuf.srl.question.QuestionDataOuterClass;
 import protobuf.srl.submission.Feedback;
 import protobuf.srl.submission.Submission;
@@ -18,8 +18,7 @@ public class AutoGrader {
         QuestionDataOuterClass.QuestionData experimentQuestionData = experiment.getSubmission().getSubmissionData();
         QuestionDataOuterClass.QuestionData solutionQuestionData = solution.getSubmission().getSubmissionData();
 
-        Feedback.FeedbackData.Builder builder = gradeProblem(experimentQuestionData, solutionQuestionData, solution.getProblemDomain(),
-                solution.getProblemBankId());
+        Feedback.FeedbackData.Builder builder = gradeProblem(experimentQuestionData, solutionQuestionData, solution.getProblemDomain());
         builder.setGrade(builder.getGradeBuilder()
                 .setUserId(experiment.getUserId())
                 .setCourseId(experiment.getCourseId())

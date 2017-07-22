@@ -9,6 +9,7 @@ import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.DatabaseStringConstants;
 import coursesketch.server.interfaces.ServerInfo;
 import org.bson.Document;
 import org.bson.types.ObjectId;
