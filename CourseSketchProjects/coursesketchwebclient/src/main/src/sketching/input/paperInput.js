@@ -27,6 +27,13 @@ function InputListener() {
     var tool = undefined;
     var totalZoom = 0;
 
+    var initialWidth;
+    var initialHeight;
+
+    var scaleX = 1;
+    var scaleY = 1;
+    var mutationObserver;
+
     /**
      * Creates mouse listeners that enable strokes, panning, and zooming.
      *
@@ -114,7 +121,7 @@ function InputListener() {
                 currentPoint = createPointFromEvent(event);
                 currentStroke = new SRL_Stroke(currentPoint);
                 currentStroke.setId(generateUUID());
-                graphics.createNewPath(event.point);
+                graphics.createNewPath(scalePoint(event.point));
                 pastPoint = currentPoint;
             }
         };
@@ -139,7 +146,7 @@ function InputListener() {
                     tool.onMouseUp(event);
                 }
                 currentStroke.addPoint(currentPoint);
-                graphics.updatePath(event.point);
+                graphics.updatePath(scalePoint(event.point));
                 pastPoint = currentPoint;
             }
         };
@@ -162,7 +169,7 @@ function InputListener() {
             currentStroke.addPoint(currentPoint);
             currentStroke.setTime(currentPoint.getTime());
             currentStroke.finish();
-            graphics.endPath(event.point, currentStroke);
+            graphics.endPath(scalePoint(event.point), currentStroke);
             try {
                 if (strokeCreationCallback) {
                     strokeCreationCallback(currentStroke); // Sends back the current stroke.
@@ -201,7 +208,61 @@ function InputListener() {
 
         // makes zoom public.
         this.zoom = zoom;
+
+        /**
+         * Called for resizing the graphics.
+         *
+         * @param width
+         * @param height
+         */
+        this.resize = function(width, height) {
+            if (!graphics.isActivated()) {
+                setCanvasSize(width, height);
+            } else {
+                rescaleCanvas(width, height);
+            }
+        };
+
+        /**
+         * Some manual unlinking to help out the garbage collector.
+         */
+        this.finalize = function() {
+            strokeCreationCallback = undefined;
+            graphics = undefined;
+            sketchCanvas = undefined;
+        };
     };
+
+    function rescaleCanvas(width, height) {
+        console.log('initial', initialWidth);
+        console.log('new', width);
+        scaleX = 1 // convertValue(initialWidth, width);
+        scaleY = 1 // convertValue(initialHeight, height);
+    }
+
+    function convertValue(initialValue, newValue) {
+        if (initialValue === newValue) {
+            return 1;
+        }
+        if (initialValue < newValue) {
+            return 1.0 - (initialValue / newValue);
+        }
+        if (initialValue > newValue) {
+            return 1.0 + (newValue / initialValue);
+        }
+    }
+
+    function setCanvasSize(width, height) {
+        initialWidth = width ;
+        initialHeight = height;
+    }
+    this.setCanvasSize = setCanvasSize;
+
+    function scalePoint(eventPoint) {
+        eventPoint.x = eventPoint.x * scaleX;
+        eventPoint.y = eventPoint.y * scaleY;
+        return eventPoint;
+    }
 
     /**
      * Creates an {@link SRL_Point} from a drawing event. Returns the SRL_Point.
@@ -212,7 +273,9 @@ function InputListener() {
      * @returns {SRL_Point} The point created from this event.
      */
     function createPointFromEvent(drawingEvent) {
-        var newPoint = new SRL_Point(drawingEvent.point.x, drawingEvent.point.y);
+        console.log(scaleX);
+        console.log(scaleY);
+        var newPoint = new SRL_Point(drawingEvent.point.x * scaleX, drawingEvent.point.y * scaleY);
         newPoint.setId(generateUUID());
         newPoint.setTime(drawingEvent.event.timeStamp);
         if (!isUndefined(drawingEvent.pressure)) {

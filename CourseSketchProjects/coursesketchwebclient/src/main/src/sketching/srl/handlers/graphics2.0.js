@@ -6,7 +6,7 @@
  * @param {Element} canvas - The canvas element that is being drawn to.
  * @param {SketchSurfaceManager} sketchManager - The manager that handles which sketch is currently active.
  */
-function Graphics(canvas, sketchManager) {
+function Graphics(canvas, sketchManager, resizeCallback) {
     paper.install(window);
 
     /**
@@ -18,6 +18,7 @@ function Graphics(canvas, sketchManager) {
     var livePath = undefined;
     var canvasElement = $(canvas)[0];
     var drawUpdate = true;
+    var activated;
     var mutationObserver;
 
     ps = new paper.PaperScope(canvasElement);
@@ -34,6 +35,7 @@ function Graphics(canvas, sketchManager) {
         if (oldHeight !== canvasElement.height || oldWidth !== canvasElement.width) {
             ps.view.viewSize.setHeight(canvasElement.height);
             ps.view.viewSize.setWidth(canvasElement.width);
+            resizeCallback(canvasElement.width, canvasElement.height);
         }
     };
 
@@ -43,6 +45,7 @@ function Graphics(canvas, sketchManager) {
                 if (mutation.attributeName === 'height' || mutation.attributeName === 'width') {
                     ps.view.viewSize.setHeight(canvasElement.height);
                     ps.view.viewSize.setWidth(canvasElement.width);
+                    resizeCallback(canvasElement.width, canvasElement.height);
                 }
             });
         });
@@ -56,6 +59,15 @@ function Graphics(canvas, sketchManager) {
 
     })();
 
+    function activate() {
+        activated = true;
+        ps.activate();
+    }
+
+    this.isActivated = function() {
+        return activated;
+    };
+
     /**
      * Expands or shrinks the sketch so that it fills the canvas while keeping the same aspect ratio.
      * This does modify the data of the sketch so this can only be used on read only sketches.
@@ -63,7 +75,7 @@ function Graphics(canvas, sketchManager) {
      * Uses the canvas size.
      */
     this.fillCanvas = function() {
-        ps.activate();
+        activate();
         var boundary = new ps.Rectangle(ps.view.bounds);
         ps.project.activeLayer.fitBounds(boundary);
         ps.view.update();
@@ -167,7 +179,7 @@ function Graphics(canvas, sketchManager) {
      * @param {*} color The color the object should be loaded with.
      */
     function loadStroke(stroke, color) {
-        ps.activate();
+        activate();
         var object = ps.project.getItem({data: {id: stroke.getId()}});
         if (!isUndefined(object) && object !== null) {
             return; // already added to the sketch.
@@ -206,7 +218,6 @@ function Graphics(canvas, sketchManager) {
      * @instance
      */
     this.addUpdate = function addUpdate(update, redraw, updateIndex, lastUpdateType) {
-        ps.activate();
         if (!drawUpdate) {
             return;
         }
@@ -237,6 +248,7 @@ function Graphics(canvas, sketchManager) {
                 removeItem(stroke.getId());
             }
         } else if (command.commandType === CourseSketch.prutil.CommandType.CLEAR) {
+            activate();
             if (lastUpdateType === 0 || lastUpdateType === 1) {
                 ps.project.activeLayer.removeChildren();
             } else {
@@ -260,5 +272,6 @@ function Graphics(canvas, sketchManager) {
         canvasElement = undefined;
         ps = undefined;
         mutationObserver.disconnect();
+        resizeCallback = undefined;
     };
 }

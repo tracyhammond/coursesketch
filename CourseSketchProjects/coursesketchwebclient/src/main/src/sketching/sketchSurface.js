@@ -27,12 +27,13 @@ function SketchSurface() {
     this.finalize = function() {
         this.updateManager.clearUpdates(false, true);
         this.updateManager = undefined;
-        this.localInputListener = undefined;
-        this.sketchEventConverter = undefined;
         this.sketch = undefined;
         this.sketchManager.clearAllSketches();
         this.sketchManager = undefined;
         this.graphics.finalize();
+        this.graphics = undefined;
+        this.localInputListener.finalize();
+        this.localInputListener = undefined;
     };
 
     /**
@@ -113,7 +114,7 @@ function SketchSurface() {
     }
 
     /**
-     * @param {InputListenerClass} InputListener - A class that represents an input listener.
+     * @param {InputListener} InputListener - A class that represents an input listener.
      */
     this.initializeInput = function(InputListener) {
         this.localInputListener = new InputListener();
@@ -131,6 +132,15 @@ function SketchSurface() {
     this.resizeSurface = function() {
         this.sketchCanvas.height = $(this.sketchCanvas).height();
         this.sketchCanvas.width = $(this.sketchCanvas).width();
+    };
+
+    /**
+     * Resize the canvas so that its dimensions are the same as the css dimensions.  (this makes it a 1-1 ratio).
+     * And it makes sure that input is accounted for this new size change.
+     */
+    this.resizeViewPort = function() {
+        this.resizeSurface();
+        this.graphics.correctSize();
     };
 
     /**
@@ -160,7 +170,9 @@ function SketchSurface() {
      * Initializes the graphics for the sketch surface.
      */
     this.initializeGraphics = function() {
-        this.graphics = new Graphics(this.sketchCanvas, this.sketchManager);
+        this.graphics = new Graphics(this.sketchCanvas, this.sketchManager, function(width, height) {
+            this.localInputListener.resize(width, height);
+        }.bind(this));
     };
 
     /**
