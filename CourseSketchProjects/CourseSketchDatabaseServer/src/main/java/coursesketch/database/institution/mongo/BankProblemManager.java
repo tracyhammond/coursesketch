@@ -209,7 +209,7 @@ public final class BankProblemManager {
      *
      * @param query a Document from the mongo database that is a slide
      * @return a Problem.ProblemElement of the Document that was passed in
-     * @throws coursesketch.database.util.DatabaseAccessException a DatabaseAccessException if something goes wrong parsing a blob of a LectureElement
+     * @throws DatabaseAccessException a DatabaseAccessException if something goes wrong parsing a blob of a LectureElement
      */
     static QuestionDataOuterClass.QuestionData createElementFromQuery(final Document query) throws DatabaseAccessException {
         final QuestionDataOuterClass.QuestionData.Builder element = QuestionDataOuterClass.QuestionData.newBuilder();

@@ -229,7 +229,7 @@ public final class SlideManager {
      *
      * @param exactSlide The lecture that the data is being set to.
      * @param cursor The database cursor pointing to a specific slide.
-     * @throws coursesketch.database.util.DatabaseAccessException passes exception through to createElementFromQuery
+     * @throws DatabaseAccessException passes exception through to createElementFromQuery
      */
     public static void setSlideData(final Problem.LectureSlide.Builder exactSlide, final Document cursor) throws DatabaseAccessException {
         exactSlide.setAssignmentId(cursor.get(DatabaseStringConstants.ASSIGNMENT_ID).toString());
@@ -248,7 +248,7 @@ public final class SlideManager {
      *
      * @param query a Document from the mongo database that is a slide
      * @return a Problem.ProblemElement of the Document that was passed in
-     * @throws coursesketch.database.util.DatabaseAccessException a DatabaseAccessException if something goes wrong parsing a blob of a LectureElement
+     * @throws DatabaseAccessException a DatabaseAccessException if something goes wrong parsing a blob of a LectureElement
      */
     public static Problem.ProblemElement createElementFromQuery(final Document query) throws DatabaseAccessException {
         final Problem.ProblemElement.Builder element = Problem.ProblemElement.newBuilder();

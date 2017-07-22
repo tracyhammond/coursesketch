@@ -1,6 +1,5 @@
 package coursesketch.database.util;
 
-import coursesketch.database.util.DatabaseAccessException;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
