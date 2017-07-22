@@ -15,8 +15,8 @@ import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.authentication.HashManager;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
-import database.DatabaseAccessException;
-import database.DatabaseStringConstants;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.DatabaseStringConstants;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static database.DbSchoolUtility.getCollectionFromType;
-import static database.DbSchoolUtility.getParentItemType;
+import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
+import static coursesketch.database.util.DbSchoolUtility.getParentItemType;
 
 /**
  * Created by dtracers on 10/7/2015.
@@ -47,15 +47,15 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
     private static final Logger LOG = LoggerFactory.getLogger(IdentityManager.class);
 
     /**
-     * The database that the auth checker grabs data from.
+     * The coursesketch.util.util that the auth checker grabs data from.
      */
     private DB database;
 
     /**
-     * Creates An IdentityManager with a database.
+     * Creates An IdentityManager with a coursesketch.util.util.
      *
      * @param database
-     *         The database where all of the data is stored.
+     *         The coursesketch.util.util where all of the data is stored.
      */
     public IdentityManager(final DB database) {
         super(null);
@@ -66,7 +66,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * Creates An Identity Manager with a server information.
      *
      * @param serverInfo
-     *         The information about the database location.
+     *         The information about the coursesketch.util.util location.
      */
     public IdentityManager(final ServerInfo serverInfo) {
         super(serverInfo);
@@ -84,7 +84,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * {@inheritDoc}
      *
      * @throws DatabaseAccessException
-     *         thrown if the database already exist when the database is created.
+     *         thrown if the coursesketch.util.util already exist when the coursesketch.util.util is created.
      */
     @Override protected void onStartDatabase() throws DatabaseAccessException {
         if (this.database != null) {
@@ -139,7 +139,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
     }
 
     /**
-     * Creates a basic query for inserting items into the database.
+     * Creates a basic query for inserting items into the coursesketch.util.util.
      *
      * @param userId
      *         The userId of the user that is inserting the new item.
@@ -165,7 +165,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * Copies the details of the parent item (mainly groups and CourseId) into the current item.
      *
      * @param insertQuery
-     *         An existing query for an item that is going to be inserted into the database.
+     *         An existing query for an item that is going to be inserted into the coursesketch.util.util.
      * @param itemId
      *         The id of the item being inserted
      * @param itemType
@@ -186,7 +186,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
                         .append(DatabaseStringConstants.COURSE_ID, true)
                         .append(DatabaseStringConstants.OWNER_ID, true));
         if (result == null) {
-            throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the database");
+            throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the coursesketch.util.util");
         }
 
         // This would overwrite existing id but there is already a valid id in here.
@@ -195,7 +195,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
     }
 
     /**
-     * Creates a new group in the database.
+     * Creates a new group in the coursesketch.util.util.
      *
      * @param userId
      *         The id of the owner of the new group.
@@ -288,7 +288,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
                 new BasicDBObject(DatabaseStringConstants.USER_LIST, true));
 
         if (result == null) {
-            throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the database");
+            throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the coursesketch.util.util");
         }
 
         final AuthenticationResponder responder = authChecker.checkAuthentication(itemType, itemId, authId, 0,
@@ -323,7 +323,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
                     .append(DatabaseStringConstants.USER_NAME, userName)
                     .append(DatabaseStringConstants.PASSWORD, hashPassword));
         } else {
-            throw new DatabaseAccessException("User [" + userName + "] already exists in the database");
+            throw new DatabaseAccessException("User [" + userName + "] already exists in the coursesketch.util.util");
         }
 
         final Map<String, String> result = new HashMap<>();
@@ -492,7 +492,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
         if (identity.size() != userNameMap.size() && LOG.isWarnEnabled()) {
             for (String userId : identity) {
                 if (!userNameMap.containsKey(userId)) {
-                    LOG.warn("User id {} not found in the database", userId);
+                    LOG.warn("User id {} not found in the coursesketch.util.util", userId);
                 }
             }
         }
@@ -519,7 +519,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
         final DBCollection collection = this.database.getCollection(getCollectionFromType(itemType));
         final DBObject result = collection.findOne(new ObjectId(itemId));
         if (result == null) {
-            throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the database");
+            throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the coursesketch.util.util");
         }
 
         final List<String> groupList = (List<String>) result.get(DatabaseStringConstants.USER_LIST);

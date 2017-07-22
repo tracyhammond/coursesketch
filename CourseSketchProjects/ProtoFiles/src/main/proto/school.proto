@@ -68,5 +68,5 @@ message SrlGroup {
     required string groupId = 2;
     optional string groupName = 3;
     repeated string admin = 4; // this is the only group of people who are allowed to use this group.
-    //(and see it outside the database)
+    //(and see it outside the util)
 }

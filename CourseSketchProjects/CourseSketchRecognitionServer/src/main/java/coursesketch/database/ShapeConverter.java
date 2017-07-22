@@ -169,7 +169,7 @@ public final class ShapeConverter implements ShapeConverterInterface<com.mongodb
 
 
     /**
-     * Parses a template that was found in the database.
+     * Parses a template that was found in the coursesketch.util.util.
      *
      * @param templateObject The db object that is being parsed.
      * @return A Recognition Tempalte that has been parsed.

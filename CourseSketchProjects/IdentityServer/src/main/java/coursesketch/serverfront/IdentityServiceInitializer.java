@@ -10,7 +10,7 @@ import coursesketch.server.rpc.CourseSketchRpcService;
 import coursesketch.server.rpc.ServerWebSocketHandler;
 import coursesketch.server.rpc.ServerWebSocketInitializer;
 import coursesketch.services.IdentityService;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.utils.Util;
@@ -70,7 +70,7 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
         try {
             manager.startDatabase();
         } catch (DatabaseAccessException e) {
-            LOG.error("Error starting database", e);
+            LOG.error("Error starting coursesketch.util.util", e);
         }
         // Does nothing by default
     }

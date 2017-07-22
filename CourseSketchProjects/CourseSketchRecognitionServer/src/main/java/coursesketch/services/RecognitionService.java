@@ -85,9 +85,9 @@ public final class RecognitionService extends RecognitionServer.RecognitionServi
     }
 
     /**
-     * Adds a template to the database.
+     * Adds a template to the coursesketch.util.util.
      *
-     * @param template The template that is being added to the database.
+     * @param template The template that is being added to the coursesketch.util.util.
      * @throws TemplateException Thrown if there is a problem adding the template.
      */
     private void addTemplate(final Sketch.RecognitionTemplate template) throws TemplateException {

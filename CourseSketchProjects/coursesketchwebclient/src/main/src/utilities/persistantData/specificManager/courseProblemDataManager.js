@@ -1,16 +1,16 @@
 /**
  * A manager for assignments that talks with the remote server.
  *
- * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
- * @param {ProtoDatabase} parentDatabase -  The local database
+ * @param {SchoolDataManager} parent - The coursesketch.util.util that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener for the coursesketch.util.util.
+ * @param {ProtoDatabase} parentDatabase -  The local coursesketch.util.util
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
 function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, ByteBuffer) {
 
     /**
-     * Sets a courseProblem in local database.
+     * Sets a courseProblem in local util.
      *
      * @param {SrlCourseProblem} courseProblem - courseproblem object to set
      * @param {Function} courseProblemCallback - function to be called after the courseProblem setting is done
@@ -26,7 +26,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
     parent.setCourseProblem = setCourseProblem;
 
     /**
-     * Deletes a courseProblem from local database.
+     * Deletes a courseProblem from local util.
      * This does not delete the id pointing to this item in the respective course.
      *
      * @param {String} courseProblemId
@@ -45,7 +45,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
     parent.deleteCourseProblem = deleteCourseProblem;
 
     /**
-     * Gets a courseProblem from the local database.
+     * Gets a courseProblem from the local util.
      *
      * @param {String} courseProblemId - ID of the courseProblem to get
      * @param {Function} courseProblemCallback - Function to be called after getting is complete, parameter
@@ -59,7 +59,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
             if (isUndefined(result) || isUndefined(result.data)) {
                 courseProblemCallback(new DatabaseException('The result is undefined', 'getting CourseProblem: ' + courseProblemId));
             } else {
-                // gets the data from the database and calls the callback
+                // gets the data from the util and calls the callback
                 var bytes = ByteBuffer.fromBase64(result.data);
                 courseProblemCallback(CourseSketch.prutil.getSrlProblemClass().decode(bytes));
             }
@@ -69,7 +69,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
     parent.getCourseProblemLocal = getCourseProblemLocal;
 
     /**
-     * Sets a courseProblem in server database.
+     * Sets a courseProblem in server util.
      *
      * @param {SrlCourseProblem} courseProblem
      *                CourseProblem object to set.
@@ -86,7 +86,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
             var resultArray = item.getReturnText().split(':');
             var oldId = resultArray[1].trim();
             var newId = resultArray[0].trim();
-            // we want to get the current course in the local database in case
+            // we want to get the current course in the local util in case
             // it has changed while the server was processing.
             getCourseProblemLocal(oldId, function(courseProblem2) {
                 deleteCourseProblem(oldId);
@@ -107,7 +107,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
 
     /**
      * Updates a course problem in both local and server databases.
-     * Updates an existing course problem into the database. This courseProblem must already
+     * Updates an existing course problem into the util. This courseProblem must already
      * exist.
      *
      * @param {SrlCourseProblem} courseProblem - CourseProblem object to set
@@ -193,7 +193,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
     parent.insertCourseProblem = insertCourseProblem;
 
     /**
-     * Returns a list of all of the course problems from the local and server database for the given list
+     * Returns a list of all of the course problems from the local and server coursesketch.util.util for the given list
      * of Ids.
      *
      * This does attempt to pull course problems from the server!
@@ -201,7 +201,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
      * @param {List<String>} courseProblemIdList
      *            list of IDs of the courseproblems to get
      * @param {Function} courseProblemCallbackPartial - called when course problems are grabbed from the local
-     *            database only. This list may not be complete. This may also
+     *            coursesketch.util.util only. This list may not be complete. This may also
      *            not get called if there are no local course problems.
      * @param {Function} courseProblemCallbackComplete - called when the complete list of course problems are
      *            grabbed.
@@ -289,7 +289,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
                         if (courseProblemList.length > 0) {
                             courseProblemCallbackPartial(courseProblemList);
                         } else {
-                            courseProblemCallbackPartial(new DatabaseException('Nothing is in the the local database!',
+                            courseProblemCallbackPartial(new DatabaseException('Nothing is in the the local util!',
                                 'Grabbing courseProblem from server: ' + leftOverId));
                         }
                     } // end of if(barrier === 0)
@@ -308,7 +308,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
      *
      * @param {String} courseProblemId - The id of the courseProblem we want to find.
      * @param {Function} courseProblemLocalCallback - called when course problems are grabbed from the local
-     *            database only. This list may not be complete. This may also
+     *            util only. This list may not be complete. This may also
      *            not get called if there are no local course problems.
      * @param {Function} courseProblemServerCallback - called when the complete list of course problems are grabbed.
      */

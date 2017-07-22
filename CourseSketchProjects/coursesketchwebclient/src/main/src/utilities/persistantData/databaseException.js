@@ -1,5 +1,5 @@
 /**
- * An exception that is used to represent problems with the database.
+ * An exception that is used to represent problems with the util.
  *
  * @constructor DatabaseException
  * @extends BaseException

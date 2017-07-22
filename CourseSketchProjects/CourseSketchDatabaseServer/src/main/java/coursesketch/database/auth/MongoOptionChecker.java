@@ -3,16 +3,16 @@ package coursesketch.database.auth;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import coursesketch.server.interfaces.ServerInfo;
-import database.DatabaseAccessException;
-import database.DatabaseStringConstants;
-import database.DbSchoolUtility;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.DatabaseStringConstants;
+import coursesketch.database.util.DbSchoolUtility;
 import org.bson.Document;
 import protobuf.srl.utils.Util;
 
-import static database.utilities.MongoUtilities.convertStringToObjectId;
+import static coursesketch.database.util.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
- * Checks the database for auxiliary permission data.
+ * Checks the coursesketch.util.util for auxiliary permission data.
  *
  * For example this will be used for checking the dates or if the item requires registration but does not check if there is a user or an admin.
  * Created by gigemjt on 9/4/15.
@@ -26,7 +26,7 @@ public final class MongoOptionChecker implements AuthenticationOptionChecker {
     private static final String MISSING_OBJECT_MESSAGE = "Document does not contain value for key ";
 
     /**
-     * The database that needs to look for the option checker.
+     * The coursesketch.util.util that needs to look for the option checker.
      */
     private final MongoDatabase database;
 
@@ -34,7 +34,7 @@ public final class MongoOptionChecker implements AuthenticationOptionChecker {
      * Creates a {@link MongoOptionChecker} with {@link ServerInfo}.
      *
      * @param info
-     *         The location at where to find the database.
+     *         The location at where to find the coursesketch.util.util.
      */
     public MongoOptionChecker(final ServerInfo info) {
         final MongoClient mongoClient = new MongoClient(info.getDatabaseUrl());
@@ -45,7 +45,7 @@ public final class MongoOptionChecker implements AuthenticationOptionChecker {
      * Creates a {@link MongoOptionChecker} with {@link MongoDatabase}.
      *
      * @param database
-     *         The database that contains information that needs to be checked for the mongo option checker.
+     *         The coursesketch.util.util that contains information that needs to be checked for the mongo option checker.
      */
     public MongoOptionChecker(final MongoDatabase database) {
         this.database = database;
@@ -97,7 +97,7 @@ public final class MongoOptionChecker implements AuthenticationOptionChecker {
         }
         return new AuthenticationDataCreator() {
             /**
-             * @return {@link Document} The value that the database found for authentication.
+             * @return {@link Document} The value that the coursesketch.util.util found for authentication.
              */
             @Override public Object getDatabaseResult() {
                 return result;

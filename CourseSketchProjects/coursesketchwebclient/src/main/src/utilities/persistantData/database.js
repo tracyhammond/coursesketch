@@ -1,14 +1,14 @@
 /**
- * Creates a database with a specific name, and has a callback after being
+ * Creates a coursesketch.util.util with a specific name, and has a callback after being
  * opened.
  *
- * It will also create all the functions needed for the specific database.
+ * It will also create all the functions needed for the specific coursesketch.util.util.
  *
  * @constructor ProtoDatabase
  *
- * @param {String} databaseName - The name of the database.
- * @param {String} version - The version of the database.  (Must always be increasing)
- * @param {Function} openCallback - called when the database is ready.
+ * @param {String} databaseName - The name of the coursesketch.util.util.
+ * @param {String} version - The version of the coursesketch.util.util.  (Must always be increasing)
+ * @param {Function} openCallback - called when the coursesketch.util.util is ready.
  */
 function ProtoDatabase(databaseName, version, openCallback) {
     CourseSketch = CourseSketch || {};
@@ -35,7 +35,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
     /**
      * Sets the upgrade table to the input table.
      *
-     * @param {Table} tables - A list of tables that are being stored in the database.
+     * @param {Table} tables - A list of tables that are being stored in the util.
      */
     this.setTables = function(tables) {
         upgradeTables = tables;
@@ -69,7 +69,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
     };
 
     /**
-     * Called to open the database.
+     * Called to open the util.
      */
     this.open = function() {
         var tableCreationCalled = false;
@@ -101,7 +101,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 }
             };
             /**
-             * Called when the database is succesfuly upgraded.
+             * Called when the util is succesfuly upgraded.
              *
              * @param {Event} e - A success event.
              */
@@ -114,7 +114,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 }
             };
             /**
-             * Called if there is an error in opening the database.
+             * Called if there is an error in opening the util.
              *
              * @param {Event} e - An error event.
              */
@@ -140,7 +140,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
     };
 
     /**
-     * Creates a bunch of functions for the table which are created upon successful database creation.
+     * Creates a bunch of functions for the table which are created upon successful util creation.
      */
     function createTableFunctions() {
         if (upgradeTables === null) {
@@ -154,11 +154,11 @@ function ProtoDatabase(databaseName, version, openCallback) {
             (function(localTable) {
                 var dataMap = {};
                 /**
-                 * Creates a function for adding items to the database.
+                 * Creates a function for adding items to the coursesketch.util.util.
                  *
-                 * @param {String} objectId - the Key of the object when added to the database.
-                 * @param {String} objectToAdd - A string representing the object in the database.
-                 * @param {Function} callback - Called when the object is successfully added to the database.
+                 * @param {String} objectId - the Key of the object when added to the coursesketch.util.util.
+                 * @param {String} objectToAdd - A string representing the object in the coursesketch.util.util.
+                 * @param {Function} callback - Called when the object is successfully added to the coursesketch.util.util.
                  */
                 localScope[ 'putIn' + localTable.name ] = function(objectId, objectToAdd, callback) {
                     if (!databaseSupported || !dbNameSpace.indexedDB || !dbNameSpace.indexedDB.db || CourseSketch.noCache) {
@@ -195,9 +195,9 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 };
 
                 /**
-                 * Creates a function for deleting items from the database.
+                 * Creates a function for deleting items from the coursesketch.util.util.
                  *
-                 * @param {String} objectId - The id of the object we are trying to delete from the database.
+                 * @param {String} objectId - The id of the object we are trying to delete from the coursesketch.util.util.
                  * @param {Function} callback - The function that is called after deleting the item.
                  */
                 localScope[ 'deleteFrom' + localTable.name ] = function(objectId, callback) {
@@ -233,9 +233,9 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 };
 
                 /**
-                 * Creates a function for deleting items from the database.
+                 * Creates a function for deleting items from the coursesketch.util.util.
                  *
-                 * @param {String} objectId - The id of the object we are trying to get from the database.
+                 * @param {String} objectId - The id of the object we are trying to get from the coursesketch.util.util.
                  * @param {Function} callback - The function that is called after retrieving the item.
                  */
                 localScope[ 'getFrom' + localTable.name ] = function(objectId, callback) {
@@ -282,7 +282,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
     }
 
     /**
-     * This is supposed to empty out the database.
+     * This is supposed to empty out the util.
      *
      * Currently does not work.
      */
@@ -291,11 +291,11 @@ function ProtoDatabase(databaseName, version, openCallback) {
     };
 
     /**
-     * This is supposed to empty out the database.
+     * This is supposed to empty out the coursesketch.util.util.
      *
      * Currently does not work.
      *
-     * @param {String} newDatabaseName - The name of the database.
+     * @param {String} newDatabaseName - The name of the coursesketch.util.util.
      */
     function emptyDB(newDatabaseName) {
         try {
@@ -311,7 +311,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     output_trace('indexedDB: ' + newDatabaseName + ' deleted');
                 };
                 /**
-                 * Called if there is an error emptying the database.
+                 * Called if there is an error emptying the util.
                  *
                  * @param {Event} event - An error event.
                  */

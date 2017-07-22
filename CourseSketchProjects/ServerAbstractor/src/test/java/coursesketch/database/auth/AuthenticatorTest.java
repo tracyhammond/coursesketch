@@ -1,7 +1,7 @@
 package coursesketch.database.auth;
 
-import database.DatabaseAccessException;
-import database.RequestConverter;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.RequestConverter;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Assert;

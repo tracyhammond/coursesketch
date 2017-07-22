@@ -96,6 +96,9 @@ message SrlBankProblem {
     // used for containing special visual information. This is not required for submitting the problem.
     optional LectureSlide specialVisualData = 8;
 
+    // Used for recognition and solution grading
+    optional protobuf.srl.utils.DomainId problemDomain = 9;
+
     // meta data 25 - 34
     optional string courseTopic = 25;
     optional string subTopic = 26;

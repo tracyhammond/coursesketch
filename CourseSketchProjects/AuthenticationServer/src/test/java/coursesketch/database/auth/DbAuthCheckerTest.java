@@ -6,8 +6,8 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import coursesketch.server.authentication.HashManager;
-import database.DatabaseAccessException;
-import database.DatabaseStringConstants;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.DatabaseStringConstants;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.coursesketch.test.utilities.DatabaseHelper.createNonExistentObjectId;
-import static database.DbSchoolUtility.getCollectionFromType;
+import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
 
 /**
  * Created by dtracers on 9/17/2015.

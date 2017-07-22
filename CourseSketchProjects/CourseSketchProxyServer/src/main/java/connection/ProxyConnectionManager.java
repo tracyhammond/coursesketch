@@ -24,7 +24,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
     private static final String LOGIN_ADDRESS = "LOGIN_IP_PROP";
 
     /**
-     * IP address for database server.
+     * IP address for util server.
      */
     private static final String DATABASE_ADDRESS = "DATABASE_IP_PROP";
 

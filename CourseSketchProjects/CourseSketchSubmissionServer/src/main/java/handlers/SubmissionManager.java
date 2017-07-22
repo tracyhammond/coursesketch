@@ -4,8 +4,8 @@ import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.submission.SubmissionManagerInterface;
-import database.DatabaseAccessException;
-import database.SubmissionDatabaseClient;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.SubmissionDatabaseClient;
 import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.submission.Submission;
@@ -20,13 +20,13 @@ import java.util.List;
 public final class SubmissionManager implements SubmissionManagerInterface {
 
     /**
-     * The interface for the mongo database.
+     * The interface for the mongo coursesketch.util.util.
      */
     private final SubmissionDatabaseClient submissionDatabaseClient;
 
     /**
      * A constructor that takes in a {@link SubmissionDatabaseClient}.
-     * @param submissionDatabaseClient The interface for the mongo database.
+     * @param submissionDatabaseClient The interface for the mongo coursesketch.util.util.
      */
     public SubmissionManager(final SubmissionDatabaseClient submissionDatabaseClient) {
         this.submissionDatabaseClient = submissionDatabaseClient;

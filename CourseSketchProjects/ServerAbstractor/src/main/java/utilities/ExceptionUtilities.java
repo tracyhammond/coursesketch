@@ -1,7 +1,7 @@
 package utilities;
 
 import coursesketch.database.auth.AuthenticationException;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;

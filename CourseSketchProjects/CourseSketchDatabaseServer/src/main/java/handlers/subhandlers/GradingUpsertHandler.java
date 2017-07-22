@@ -2,8 +2,8 @@ package handlers.subhandlers;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.database.auth.AuthenticationException;
-import database.DatabaseAccessException;
-import database.institution.Institution;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.institution.Institution;
 import protobuf.srl.grading.Grading;
 import protobuf.srl.query.Data;
 import protobuf.srl.utils.Util;
@@ -25,12 +25,12 @@ public final class GradingUpsertHandler {
     /**
      * Handles grading upsert requests to the server.
      *
-     * @param institution The database interface.
+     * @param institution The coursesketch.util.util interface.
      * @param itemSet The upsert object being sent.
      * @param authId The id of the user upserting the grade.
      * @param gradedTime The time of the grade submission.
      * @throws AuthenticationException Thrown if user does not have correct permission to upsert grade.
-     * @throws DatabaseAccessException Thrown if there is something not found in the database.
+     * @throws DatabaseAccessException Thrown if there is something not found in the coursesketch.util.util.
      * @throws InvalidProtocolBufferException Thrown if a protobuf object is not correctly formatted.
      */
     public static void gradingUpsertHandler(final Institution institution, final Data.ItemSend itemSet, final String authId, final long gradedTime)

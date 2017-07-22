@@ -7,7 +7,7 @@ import coursesketch.database.auth.Authenticator;
 import coursesketch.database.submission.SubmissionManagerInterface;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.rpc.CourseSketchRpcService;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.services.submission.SubmissionServer;
@@ -32,14 +32,14 @@ public final class SubmissionService extends SubmissionServer.SubmissionService 
     private final Authenticator authenticator;
 
     /**
-     * Connects to the database to store and retrieve submissions.
+     * Connects to the coursesketch.util.util to store and retrieve submissions.
      */
     private final SubmissionManagerInterface submissionDatabaseInterface;
 
     /**
      * A constructor for the submission service that takes in an authenticator and a submission manager interface.
      * @param authenticator Authenticates users.
-     * @param submissionDatabaseInterface Connects to the database to store submissions.
+     * @param submissionDatabaseInterface Connects to the coursesketch.util.util to store submissions.
      */
     public SubmissionService(final Authenticator authenticator, final SubmissionManagerInterface submissionDatabaseInterface) {
         this.authenticator = authenticator;

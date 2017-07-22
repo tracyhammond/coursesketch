@@ -3,7 +3,7 @@ package connection;
 import coursesketch.server.base.GeneralConnectionRunner;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.ServerInfo;
-import database.DatabaseStringConstants;
+import coursesketch.database.util.DatabaseStringConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,11 +45,11 @@ public final class LoginRunner extends GeneralConnectionRunner {
     }
 
     /**
-     * Makes the login database run locally.
+     * Makes the login coursesketch.util.util run locally.
      */
     @Override
     public void executeLocalEnvironment() {
-        LOG.info("Setting the login database to connect locally");
+        LOG.info("Setting the login coursesketch.util.util to connect locally");
     }
 
     /**

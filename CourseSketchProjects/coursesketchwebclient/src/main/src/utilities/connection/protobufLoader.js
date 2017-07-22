@@ -400,7 +400,7 @@ function ProtobufSetup() {
      * Creates an itemRequest from the given data.
      *
      * @param {ItemQuery} queryType - The query type of the object.
-     * @param {String | List<String>} [idList] - A list of ids used for retrieving data from the database.
+     * @param {String | List<String>} [idList] - A list of ids used for retrieving data from the util.
      * @param {ByteArray} [advanceQuery] - A protobuf object used to represent more complex queries.
      * @returns {ItemRequest} An item request from the data.
      */

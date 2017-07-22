@@ -3,23 +3,23 @@ package connection;
 import coursesketch.server.base.GeneralConnectionRunner;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.ServerInfo;
-import database.DatabaseStringConstants;
-import database.user.UserClient;
+import coursesketch.database.util.DatabaseStringConstants;
+import coursesketch.database.util.user.UserClient;
 
 /**
- * Starts the database server.
+ * Starts the coursesketch.util.util server.
  *
  * @author gigemjt
  */
 public final class DatabaseRunner extends GeneralConnectionRunner {
 
     /**
-     * The port on which the database server lies.
+     * The port on which the coursesketch.util.util server lies.
      */
     private static final int DATABASE_PORT = 8885;
 
     /**
-     * The actual main method that starts the database server.
+     * The actual main method that starts the coursesketch.util.util server.
      *
      * @param args Arguments passed from the command line.
      */
@@ -45,11 +45,11 @@ public final class DatabaseRunner extends GeneralConnectionRunner {
     }
 
     /**
-     * Initializes a local instance of the database.
+     * Initializes a local instance of the coursesketch.util.util.
      */
     @Override
     public void executeLocalEnvironment() {
-        new UserClient(false, null); // makes the database point locally
+        new UserClient(false, null); // makes the coursesketch.util.util point locally
     }
 
     /**

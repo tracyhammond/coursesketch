@@ -1,12 +1,12 @@
 package coursesketch.database.interfaces;
 
 import coursesketch.server.interfaces.ServerInfo;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An abstract class used when creating software that reads from the database.
+ * An abstract class used when creating software that reads from the coursesketch.util.util.
  *
  * Created by dtracers on 10/19/2015.
  */
@@ -22,12 +22,12 @@ public abstract class AbstractCourseSketchDatabaseReader {
     private final ServerInfo serverInfo;
 
     /**
-     * Is set to true when the database has started.
+     * Is set to true when the coursesketch.util.util has started.
      */
     private boolean databaseStarted = false;
 
     /**
-     * Takes in a list of addressess where the database can be found and a name of the database.
+     * Takes in a list of addressess where the coursesketch.util.util can be found and a name of the coursesketch.util.util.
      * @param serverInfo Information about the server.
      */
     public AbstractCourseSketchDatabaseReader(final ServerInfo serverInfo) {
@@ -35,17 +35,17 @@ public abstract class AbstractCourseSketchDatabaseReader {
     }
 
     /**
-     * Called to start the database.
+     * Called to start the coursesketch.util.util.
      *
-     * This uses double check locking on the object when initialing the database.
+     * This uses double check locking on the object when initialing the coursesketch.util.util.
      *
-     * @throws DatabaseAccessException thrown if the database can not be started correctly.
+     * @throws DatabaseAccessException thrown if the coursesketch.util.util can not be started correctly.
      */
     public final void startDatabase() throws DatabaseAccessException {
         if (!databaseStarted) {
             synchronized (this) {
                 if (!databaseStarted) {
-                    LOG.debug("Starting a connection to the database.");
+                    LOG.debug("Starting a connection to the coursesketch.util.util.");
                     onStartDatabase();
                 }
             }
@@ -58,21 +58,21 @@ public abstract class AbstractCourseSketchDatabaseReader {
     protected abstract void setUpIndexes();
 
     /**
-     * Called when startDatabase is called if the database has not already been started.
+     * Called when startDatabase is called if the coursesketch.util.util has not already been started.
      *
      * This method should be synchronous.
      *
-     * @throws DatabaseAccessException thrown if a subclass throws an exception while starting the database.
+     * @throws DatabaseAccessException thrown if a subclass throws an exception while starting the coursesketch.util.util.
      */
     protected abstract void onStartDatabase() throws DatabaseAccessException;
 
     /**
-     * Called when the database has started.
+     * Called when the coursesketch.util.util has started.
      */
     protected final void setDatabaseStarted() {
-        LOG.debug("Setting up indexes for the database");
+        LOG.debug("Setting up indexes for the coursesketch.util.util");
         setUpIndexes();
-        LOG.debug("The database was successfully started.");
+        LOG.debug("The coursesketch.util.util was successfully started.");
         databaseStarted = true;
     }
 

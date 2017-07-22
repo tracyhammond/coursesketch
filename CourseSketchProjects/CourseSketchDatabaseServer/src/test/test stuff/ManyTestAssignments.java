@@ -5,10 +5,10 @@ import java.util.Date;
 import protobuf.srl.school.Assignment.SrlAssignment;
 import protobuf.srl.school.Assignment.SrlAssignment.LatePolicy;
 import protobuf.srl.utils.Util.SrlPermission;
-import database.DatabaseAccessException;
-import database.RequestConverter;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.RequestConverter;
 import coursesketch.database.auth.AuthenticationException;
-import database.institution.Institution;
+import coursesketch.database.util.institution.Institution;
 
 public class ManyTestAssignments {
 	public static void testAssignments(String courseId, String mastId) {

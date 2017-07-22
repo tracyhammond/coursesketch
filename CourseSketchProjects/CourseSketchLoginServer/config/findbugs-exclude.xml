@@ -7,14 +7,14 @@
 	</Match>
 	<Match>
 		<Bug pattern="LI_LAZY_INIT_UPDATE_STATIC" />
-		<Class name="database.institution.mongo.MongoInstitution" />
+		<Class name="coursesketch.database.util.institution.mongo.MongoInstitution" />
 	</Match>
 
 	<Match>
 		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
 		<Or>
-			<Class name="database.institution.mongo.MongoInstitution" />
-			<Class name="database.user.UserClient" />
+			<Class name="coursesketch.database.util.institution.mongo.MongoInstitution" />
+			<Class name="coursesketch.database.util.user.UserClient" />
 		</Or>
 	</Match>
 
@@ -71,13 +71,13 @@
     <!--PROJECT SPECIFIC BUGS -->
 
     <Match>
-        <Class name="coursesketch.database.DatabaseClient" />
+        <Class name="coursesketch.coursesketch.database.util.DatabaseClient" />
         <!-- problems with the double checked locking pattern -->
         <Bug pattern="NP_LOAD_OF_KNOWN_NULL_VALUE" />
     </Match>
 
     <Match>
-        <Class name="coursesketch.database.DatabaseClient" />
+        <Class name="coursesketch.coursesketch.database.util.DatabaseClient" />
         <!-- problems with the double checked locking pattern -->
         <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
     </Match>

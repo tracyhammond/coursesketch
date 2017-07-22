@@ -74,7 +74,7 @@
             assert.equal(CourseSketch.courseManagement.waitingIcon.isRunning(), false, "The waiting list should not be running");
         });
 
-        test("initialize called with updates calls show courses correctly after waiting for database", function(assert) {
+        test("initialize called with updates calls show courses correctly after waiting for coursesketch.database.database", function(assert) {
             var clock = sinon.useFakeTimers();
 
             CourseSketch.dataManager.isDatabaseReady.returns(false);

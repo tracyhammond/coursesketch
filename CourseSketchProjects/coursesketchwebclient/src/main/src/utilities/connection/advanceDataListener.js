@@ -90,7 +90,7 @@ function AdvanceDataListener(Request, defListener) {
     }
 
     /**
-     * Sets the listener to listen for database code.
+     * Sets the listener to listen for util code.
      *
      * And it also unwraps the DataResult type.
      *
@@ -155,7 +155,7 @@ function AdvanceDataListener(Request, defListener) {
             var result = undefined;
             if (msg.otherData === TIMEOUT_CONST) {
                 removeListener(msg.requestType, msg.requestId);
-                func(evt, new AdvanceListenerException('Connection to the database Timed Out'));
+                func(evt, new AdvanceListenerException('Connection to the util Timed Out'));
                 return;
             }
             if (returnType === getRequestType()) {
@@ -327,7 +327,7 @@ function AdvanceDataListener(Request, defListener) {
     };
 
     /**
-     * Inserts data into the server database.
+     * Inserts data into the server util.
      *
      * Only inserts a single one right now.
      *

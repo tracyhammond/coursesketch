@@ -46,7 +46,7 @@ function VoicePlayback() {
     };
 
     /**
-     * Save the file to the database
+     * Save the file to the util
      * NOTE: CURRENTLY SAVES LOCALLY
      */
     this.saveFile = function() {

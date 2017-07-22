@@ -159,7 +159,7 @@ $(document).ready(
         /**
          * Called when a reconnection occurs.
          *
-         * @param {Connection} loggedInConnection - The object that handles the connection to the database.
+         * @param {Connection} loggedInConnection - The object that handles the connection to the util.
          */
         CourseSketch.successfulReconnection = function(loggedInConnection) {
             console.log('The user relogged in correctly');

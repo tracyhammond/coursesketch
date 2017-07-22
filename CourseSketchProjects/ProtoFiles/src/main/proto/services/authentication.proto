@@ -142,4 +142,11 @@ service AuthenticationService {
      * Registers the user in the item.
      */
     rpc registerUser(UserRegistration) returns (protobuf.srl.request.DefaultResponse);
+
+    /**
+     * Adds a user in the item.
+     * The registration key is the owner-id
+     * Authtype.checkingOwner must be true
+     */
+    rpc addUser(UserRegistration) returns (protobuf.srl.request.DefaultResponse);
 }

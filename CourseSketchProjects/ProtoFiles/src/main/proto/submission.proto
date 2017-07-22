@@ -5,6 +5,7 @@ import "school.proto";
 import "util.proto";
 import "questionData.proto";
 
+
 package protobuf.srl.submission;
 
 /**
@@ -22,6 +23,7 @@ message SrlSolution {
     optional bool isPracticeProblem = 2;
     optional SrlSubmission submission = 3;
     optional string problemBankId = 4;
+    optional protobuf.srl.utils.DomainId problemDomain = 5;
 }
 
 // Students submit experiments!
@@ -34,4 +36,7 @@ message SrlExperiment {
     optional string userId = 5; // student Id  (this can sometimes be the username for displaying purposes
     optional SrlSubmission submission = 6;
     optional protobuf.srl.utils.SrlPermission accessPermission = 7;
+    // Used for finding the solution for automatic grading
+    optional string problemBankId = 8;
+    optional string solutionId = 9;
 }

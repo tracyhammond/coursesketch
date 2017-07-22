@@ -9,8 +9,8 @@ import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.rpc.CourseSketchRpcService;
 import coursesketch.server.rpc.ServerWebSocketHandler;
 import coursesketch.server.rpc.ServerWebSocketInitializer;
-import database.DatabaseAccessException;
-import database.SubmissionDatabaseClient;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.SubmissionDatabaseClient;
 import handlers.SubmissionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +78,7 @@ public final class SubmissionServiceInitializer extends ServerWebSocketInitializ
         try {
             databaseClient.startDatabase();
         } catch (DatabaseAccessException e) {
-            LOG.error("Error starting database", e);
+            LOG.error("Error starting coursesketch.util.util", e);
         }
         // Does nothing by default
     }

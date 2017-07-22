@@ -30,7 +30,7 @@ public final class DataClientWebSocket extends ClientWebSocket {
      * Creates a new connection for the Answer checker server.
      *
      * @param destination
-     *            The location of the database server.
+     *            The location of the util server.
      * @param parent
      *            The proxy server instance.
      */

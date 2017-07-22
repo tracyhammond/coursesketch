@@ -9,8 +9,8 @@ import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.authentication.HashManager;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
-import database.DatabaseAccessException;
-import database.DatabaseStringConstants;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.DatabaseStringConstants;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,19 +21,19 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
-import static database.DatabaseStringConstants.EMAIL;
-import static database.DatabaseStringConstants.INSTRUCTOR_CLIENT_ID;
-import static database.DatabaseStringConstants.INSTRUCTOR_ID;
-import static database.DatabaseStringConstants.IS_DEFAULT_INSTRUCTOR;
-import static database.DatabaseStringConstants.LOGIN_COLLECTION;
-import static database.DatabaseStringConstants.LOGIN_DATABASE;
-import static database.DatabaseStringConstants.PASSWORD;
-import static database.DatabaseStringConstants.STUDENT_CLIENT_ID;
-import static database.DatabaseStringConstants.STUDENT_ID;
-import static database.DatabaseStringConstants.USER_NAME;
+import static coursesketch.database.util.DatabaseStringConstants.EMAIL;
+import static coursesketch.database.util.DatabaseStringConstants.INSTRUCTOR_CLIENT_ID;
+import static coursesketch.database.util.DatabaseStringConstants.INSTRUCTOR_ID;
+import static coursesketch.database.util.DatabaseStringConstants.IS_DEFAULT_INSTRUCTOR;
+import static coursesketch.database.util.DatabaseStringConstants.LOGIN_COLLECTION;
+import static coursesketch.database.util.DatabaseStringConstants.LOGIN_DATABASE;
+import static coursesketch.database.util.DatabaseStringConstants.PASSWORD;
+import static coursesketch.database.util.DatabaseStringConstants.STUDENT_CLIENT_ID;
+import static coursesketch.database.util.DatabaseStringConstants.STUDENT_ID;
+import static coursesketch.database.util.DatabaseStringConstants.USER_NAME;
 
 /**
- * A client for the login database.
+ * A client for the login coursesketch.util.util.
  */
 public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
 
@@ -68,13 +68,13 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
     private final IdentityManagerInterface identityManager;
 
     /**
-     * A private database.
+     * A private coursesketch.util.util.
      */
     @SuppressWarnings("PMD.UnusedPrivateField")
     private MongoDatabase database = null;
 
     /**
-     * Constructor for the database client.
+     * Constructor for the coursesketch.util.util client.
      *
      * @param info Server information
      * @param identityWebSocketClient The interface for getting user identity information.
@@ -85,10 +85,10 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
     }
 
     /**
-     * Used only for the purpose of testing overwrite the instance with a test instance that can only access a test database.
+     * Used only for the purpose of testing overwrite the instance with a test instance that can only access a test coursesketch.util.util.
      *
      * @param testOnly
-     *         If true it uses the test database. Otherwise it uses the real name of the database.
+     *         If true it uses the test coursesketch.util.util. Otherwise it uses the real name of the coursesketch.util.util.
      * @param fakeDB
      *         Uses a fake MongoDatabase for its unit tests. This is typically used for unit testing.
      * @param identityWebSocketClient The interface for getting user identity information.
@@ -118,7 +118,7 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
     /**
      * {@inheritDoc}
      *
-     * Creates a database if one does not already exist.
+     * Creates a coursesketch.util.util if one does not already exist.
      */
     @Override protected void onStartDatabase() {
         final MongoClient mongoClient = new MongoClient(super.getServerInfo().getDatabaseUrl());
@@ -208,7 +208,7 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      * Gets the user information. This assumes that the user was able to log in correctly.
      *
      * @param cursor
-     *         A pointer to the database object.
+     *         A pointer to the coursesketch.util.util object.
      * @param loginAsDefault
      *         True if the system will log in as the default account.
      * @param loginAsInstructor
@@ -267,7 +267,7 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
     }
 
     /**
-     * Adds a new user to the database.
+     * Adds a new user to the coursesketch.util.util.
      *
      * @param user
      *         The user name to be added.

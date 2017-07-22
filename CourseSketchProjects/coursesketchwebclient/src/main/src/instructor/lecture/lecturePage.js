@@ -147,7 +147,7 @@ validateFirstRun(document.currentScript);
             };
 
             /**
-             * Called when the slide is successfully inserted into the database.
+             * Called when the slide is successfully inserted into the util.
              *
              * @param {Slide} lectureSlide - A slide which points at a separate lecture.
              * @memberof "lecturePage/instructor"

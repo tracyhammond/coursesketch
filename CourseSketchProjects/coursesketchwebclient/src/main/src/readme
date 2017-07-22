@@ -10,7 +10,7 @@ utilities:  this is where you put code that is not really specific to a single p
             Inside Utilites:
                 connection:     Where the code that connects to the server (and protobuf code) goes
                 functions:      Just some snippets of potentially useful functions
-                persistantData: Database code for our local database
+                persistantData: Database code for our local coursesketch.database.database
                 templates:      Html5 custom elements that can be used on any page it is needed
                 libraries:      Libraries that we use in course sketch (text to speech, jquery, interact, ...)
 

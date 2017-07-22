@@ -1,12 +1,11 @@
 package local.data;
 
-import database.DatabaseAccessException;
-import database.RequestConverter;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.RequestConverter;
 import coursesketch.database.auth.AuthenticationException;
-import database.institution.mongo.MongoInstitution;
-import database.user.UserClient;
+import coursesketch.database.util.institution.mongo.MongoInstitution;
+import coursesketch.database.util.user.UserClient;
 import protobuf.srl.school.Assignment.SrlAssignment;
-import protobuf.srl.utils.Util.SrlPermission;
 
 import java.util.Date;
 
@@ -48,8 +47,8 @@ public class LocalAddAssignments {
 	}
 
 	public static void main(String args[]) {
-		new MongoInstitution(null, null, null, null); // makes the database point locally
-		new UserClient(false, null); // makes the database point locally
+		new MongoInstitution(null, null, null, null); // makes the coursesketch.util.util point locally
+		new UserClient(false, null); // makes the coursesketch.util.util point locally
 		testAssignments(""/*course id */,""/*instructor id*/);
 	}
 }

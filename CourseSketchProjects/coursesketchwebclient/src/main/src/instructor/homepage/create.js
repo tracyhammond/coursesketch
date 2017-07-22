@@ -44,7 +44,7 @@ validateFirstRun(document.currentScript);
     /**
      * Creates a new course with default values.
      *
-     * Adds it to the database.
+     * Adds it to the util.
      */
     courseManagement.addNewCourse = function addNewCourse() {
         var waitingIcon = CourseSketch.courseManagement.waitingIcon;
@@ -105,7 +105,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Creates a new assignment with default values.
-     * And adds it to the database.
+     * And adds it to the util.
      */
     courseManagement.addNewAssignment = function addNewAssignment() {
         var courseId = document.querySelector('#class_list_column .selectedBox').id;
@@ -196,7 +196,7 @@ validateFirstRun(document.currentScript);
     };
 
     /**
-     * Creates a new bank problem and course problem with default values and adds it to the database.
+     * Creates a new bank problem and course problem with default values and adds it to the util.
      *
      * Displays the problem after it is added.
      *
@@ -237,7 +237,7 @@ validateFirstRun(document.currentScript);
 
 
     /**
-     * Creates a new bank problem and course problem with default values and adds it to the database.
+     * Creates a new bank problem and course problem with default values and adds it to the util.
      *
      * Displays the problem after it is added.
      *

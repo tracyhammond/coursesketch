@@ -134,12 +134,12 @@ public abstract class AbstractGeneralConnectionRunner {
     private boolean setup = false;
 
     /**
-     * A list of addresses where the database can be found at.
+     * A list of addresses where the util can be found at.
      */
     private List<ServerAddress> databaseUrl;
 
     /**
-     * The name of the database.
+     * The name of the util.
      */
     private String databaseName;
 
@@ -581,9 +581,9 @@ public abstract class AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Returns a list of valid {@link ServerAddress} the database can connect to.
+     * Returns a list of valid {@link ServerAddress} the util can connect to.
      *
-     * @return An unmodifiable list that represents the addresses the database can connect to.
+     * @return An unmodifiable list that represents the addresses the util can connect to.
      */
     private List<ServerAddress> getDatabaseUrl() {
         if (databaseUrl == null) {
@@ -593,9 +593,9 @@ public abstract class AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Sets the list of addresses the database can connect to.
+     * Sets the list of addresses the util can connect to.
      *
-     * @param databaseUrl The list of addresses the database can connect to.
+     * @param databaseUrl The list of addresses the util can connect to.
      */
     protected final void setDatabaseUrl(final List<ServerAddress> databaseUrl) {
         if (!setup) {
@@ -605,18 +605,18 @@ public abstract class AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Gets the database name.
+     * Gets the util name.
      *
-     * @return The database name.
+     * @return The util name.
      */
     private String getDatabaseName() {
         return databaseName;
     }
 
     /**
-     * Sets the database name.
+     * Sets the util name.
      *
-     * @param databaseName The name of the database.
+     * @param databaseName The name of the util.
      */
     protected final void setDatabaseName(final String databaseName) {
         if (!setup) {

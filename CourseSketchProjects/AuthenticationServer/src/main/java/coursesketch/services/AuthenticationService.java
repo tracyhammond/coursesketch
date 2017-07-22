@@ -4,7 +4,7 @@ import com.google.protobuf.RpcCallback;
 import com.google.protobuf.RpcController;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.rpc.CourseSketchRpcService;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.DbAuthChecker;
 import coursesketch.database.auth.DbAuthManager;

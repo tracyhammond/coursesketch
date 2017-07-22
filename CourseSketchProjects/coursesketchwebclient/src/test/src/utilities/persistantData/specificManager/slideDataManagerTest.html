@@ -16,7 +16,7 @@
 
         <script>
             QUnit.module("lecture creation");
-            test("create new database", function(assert) {
+            test("create new coursesketch.database.database", function(assert) {
                 expect(1);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
                 if (!isUndefined(dataManager)) {
@@ -86,7 +86,7 @@
                                     slideList.push(newLecture.idList[i].id);
                                 }
                                 dataManager.getLectureSlides(slideList,  function(slideList) {
-                                    assert.ok(true, "Slide lists can be fetched from the database.");
+                                    assert.ok(true, "Slide lists can be fetched from the coursesketch.database.database.");
                                     assert.equal(slideList.length, 1, "Two lectures were inserted and two lectures were returned.");
                                     QUnit.start();
                                     }); // getslidelecture loop

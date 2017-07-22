@@ -1,8 +1,8 @@
 package handlers.subhandlers;
 
 import coursesketch.database.auth.AuthenticationException;
-import database.DatabaseAccessException;
-import database.institution.Institution;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.institution.Institution;
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
 import protobuf.srl.query.Data.ItemRequest;
 
@@ -21,12 +21,12 @@ public final class GradingPolicyRequestHandler {
     /**
      * Handles grading policy requests to the server.
      *
-     * @param institution The database interface.
+     * @param institution The coursesketch.util.util interface.
      * @param request The request being sent. Should have an ItemId with courseId as the 0th index.
      * @param userId The Id of the user who sent the request.
      * @return ProtoObject of the grading policy.
      * @throws AuthenticationException Thrown if user does not have correct permission to retrieve policy.
-     * @throws DatabaseAccessException Thrown if the policy is not found in the database.
+     * @throws DatabaseAccessException Thrown if the policy is not found in the coursesketch.util.util.
      */
     public static ProtoGradingPolicy gradingPolicyRequestHandler(final Institution institution, final ItemRequest request, final String userId)
             throws AuthenticationException, DatabaseAccessException {

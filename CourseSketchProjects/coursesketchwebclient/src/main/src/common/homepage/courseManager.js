@@ -32,7 +32,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     /**
      * Polls for all updates to the user and then shows the courses.
      *
-     * This will wait till the database is ready before it polls for updates and
+     * This will wait till the util is ready before it polls for updates and
      * shows the courses.
      *
      * @name initializeCourseManagement
@@ -46,7 +46,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         CourseSketch.courseManagement.waitingIcon.startWaiting();
 
         /**
-         * Helper function to stop the waiting icon and show the courses once that database is ready.
+         * Helper function to stop the waiting icon and show the courses once that util is ready.
          *
          * @param {Array<SrlCourse>} courseList - a list of courses.
          * @memberof courseManagement
@@ -110,7 +110,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     /**
      * Called when a user clicks on a course school item.
      *
-     * This loads the assignments from the database then calls 'showAssignments' to display them.
+     * This loads the assignments from the util then calls 'showAssignments' to display them.
      *
      * @param {SrlCourse} course - the course that was clicked.
      * @memberof courseManagement

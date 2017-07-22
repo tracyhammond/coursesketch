@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.protobuf.GeneratedMessage;
 import coursesketch.database.auth.AuthenticationException;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import protobuf.srl.query.Data;
 import protobuf.srl.request.Message;
 import utilities.ProtobufUtilities;

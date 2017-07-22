@@ -1,7 +1,7 @@
 package coursesketch.database;
 
 /**
- * Contains a list of useful constants used by the recognition database.
+ * Contains a list of useful constants used by the recognition coursesketch.util.util.
  *
  * Created by Rauank on 4/16/16.
  */

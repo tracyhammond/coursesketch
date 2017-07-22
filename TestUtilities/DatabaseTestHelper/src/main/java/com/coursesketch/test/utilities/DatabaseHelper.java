@@ -14,7 +14,7 @@ public final class DatabaseHelper {
      * This can take a real object id and make it into one that probabilistically should not exist.
      *
      * @param objectId The object id that we want to make invalid.
-     * @return A string that should be a valid Id but should not point to anything in the database.
+     * @return A string that should be a valid Id but should not point to anything in the coursesketch.util.util.
      */
     public static String createNonExistentObjectId(final String objectId) {
         return objectId.replaceAll("4", "7")

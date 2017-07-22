@@ -3,7 +3,7 @@
  *
  * Created by gigemjt on 5/12/15.
  *
- * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
+ * @param {SchoolDataManager} parent - The util that will hold the methods of this instance.
  * @param {AdvanceDataListener} advanceDataListener - An object that makes sending data much easier.
  * @param {ProtoDatabase} parentDatabase - (Not used in this manager)
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
@@ -12,7 +12,7 @@
 function GradeDataManager(parent, advanceDataListener, parentDatabase, ByteBuffer) {
 
     /**
-     * Adds a new grade change to the database.
+     * Adds a new grade change to the util.
      *
      * The protograde specifies how you are inserting a grade.
      * The userId says who the grade is affecting.
@@ -30,7 +30,7 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, ByteBuffe
     };
 
     /**
-     * Returns a grade from the database.
+     * Returns a grade from the util.
      *
      * @param {ProtoGrade} protoGrade - The grade in a similar format to what you want back.
      * @param {Function} callback - Called after the grade has been retrieved.

@@ -3,10 +3,10 @@ package utilities;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationException;
-import database.DatabaseAccessException;
-import database.RequestConverter;
-import database.institution.mongo.MongoInstitution;
-import database.user.UserClient;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.RequestConverter;
+import coursesketch.database.util.institution.mongo.MongoInstitution;
+import coursesketch.database.util.user.UserClient;
 import local.data.LocalAddAssignments;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -17,8 +17,8 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static database.DatabaseStringConstants.*;
-import static database.DbSchoolUtility.getCollectionFromType;
+import static coursesketch.database.util.DatabaseStringConstants.*;
+import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
 
 /**
  * Lets break DATABASES!!!!!!!!

@@ -2,7 +2,7 @@ package coursesketch.database.submission;
 
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.Authenticator;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import protobuf.srl.submission.Submission;
 
 import java.util.List;

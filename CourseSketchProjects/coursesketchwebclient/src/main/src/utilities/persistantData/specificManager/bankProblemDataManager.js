@@ -1,16 +1,16 @@
 /**
  * A manager for assignments that talks with the remote server.
  *
- * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
- * @param {ProtoDatabase} parentDatabase -  The local database
+ * @param {SchoolDataManager} parent - The coursesketch.util.util that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener for the coursesketch.util.util.
+ * @param {ProtoDatabase} parentDatabase -  The local coursesketch.util.util
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
 function BankProblemDataManager(parent, advanceDataListener, parentDatabase, ByteBuffer) {
 
     /**
-     * Sets a bankProblem in local database.
+     * Sets a bankProblem in local util.
      *
      * @param {SrlBankProblem} bankProblem - bankProblem object to set
      * @param {Function} bankProblemCallback - function to be called after the bankProblem setting is done
@@ -26,7 +26,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
     parent.setBankProblem = setBankProblem;
 
     /**
-     * Deletes a bankProblem from local database.
+     * Deletes a bankProblem from local util.
      * This does not delete the id pointing to this item in the respective course.
      *
      * @param {String} bankProblemId
@@ -45,7 +45,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
     parent.deleteBankProblem = deleteBankProblem;
 
     /**
-     * Gets a bankProblem from the local database.
+     * Gets a bankProblem from the local util.
      *
      * @param {String} bankProblemId - ID of the bankProblem to get
      * @param {Function} bankProblemCallback - Function to be called after getting is complete, parameter
@@ -59,7 +59,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
             if (isUndefined(result) || isUndefined(result.data)) {
                 bankProblemCallback(new DatabaseException('The result is undefined', 'getting BankProblem: ' + bankProblemId));
             } else {
-                // gets the data from the database and calls the callback
+                // gets the data from the util and calls the callback
                 var bytes = ByteBuffer.fromBase64(result.data);
                 bankProblemCallback(CourseSketch.prutil.getSrlBankProblemClass().decode(bytes));
             }
@@ -91,7 +91,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
             var resultArray = item.getReturnText().split(':');
             var oldId = resultArray[1].trim();
             var newId = resultArray[0].trim();
-            // we want to get the current course in the local database in case
+            // we want to get the current course in the local util in case
             // it has changed while the server was processing.
             getBankProblemLocal(oldId, function(bankProblem2) {
                 deleteBankProblem(oldId);
@@ -157,7 +157,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
 
     /**
      * Updates a bankProblem in both local and server databases.
-     * Updates an existing bankProblem into the database. This bankProblem must already
+     * Updates an existing bankProblem into the util. This bankProblem must already
      * exist.
      *
      * @param {SrlBankProblem} bankProblem - BankProblem object to set
@@ -207,7 +207,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
     }
 
     /**
-     * Returns a list of all of the bank problems from the local and server database for the given list
+     * Returns a list of all of the bank problems from the local and server util for the given list
      * of Ids.
      *
      * This does attempt to pull bank problems from the server!
@@ -246,7 +246,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
     parent.getAllBankProblems = getAllBankProblems;
 
     /**
-     * Returns a list of all of the bank problems from the local and server database for the given list
+     * Returns a list of all of the bank problems from the local and server coursesketch.util.util for the given list
      * of Ids.
      *
      * This does attempt to pull bank problems from the server!
@@ -254,7 +254,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
      * @param {List<String>} bankProblemIdList
      *            list of IDs of the bankProblems to get
      * @param {Function} bankProblemCallbackPartial - called when bank problems are grabbed from the local
-     *            database only. This list may not be complete. This may also
+     *            coursesketch.util.util only. This list may not be complete. This may also
      *            not get called if there are no local bank problems.
      * @param {Function} bankProblemCallbackComplete - called when the complete list of bank problems are
      *            grabbed.
@@ -338,7 +338,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
                         if (bankProblemList.length > 0) {
                             bankProblemCallbackPartial(bankProblemList);
                         } else {
-                            bankProblemCallbackPartial(new DatabaseException('Nothing is in the the local database!',
+                            bankProblemCallbackPartial(new DatabaseException('Nothing is in the the local util!',
                                 'Grabbing bankProblem from server: ' + leftOverId));
                         }
                     } // end of if(barrier === 0)
@@ -357,7 +357,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
      *
      * @param {String} bankProblemId - The id of the bankProblem we want to find.
      * @param {Function} bankProblemLocalCallback - called when bank problems are grabbed from the local
-     *            database only. This list may not be complete. This may also
+     *            util only. This list may not be complete. This may also
      *            not get called if there are no local bank problems.
      * @param {Function} bankProblemServerCallback - called when the complete list of bank problems are grabbed.
      */

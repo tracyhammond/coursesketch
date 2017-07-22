@@ -1,9 +1,9 @@
 package local.data;
 
-import database.DatabaseAccessException;
-import database.RequestConverter;
-import database.institution.mongo.MongoInstitution;
-import database.user.UserClient;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.RequestConverter;
+import coursesketch.database.util.institution.mongo.MongoInstitution;
+import coursesketch.database.util.user.UserClient;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.utils.Util;
 import protobuf.srl.utils.Util.SrlPermission;
@@ -37,8 +37,8 @@ public class LocalAddCourses {
 	}
 
 	public static void main(String[] args) throws DatabaseAccessException {
-		new MongoInstitution(null, null, null, null); // makes the database point locally
-		new UserClient(false, null); // makes the database point locally
+		new MongoInstitution(null, null, null, null); // makes the coursesketch.util.util point locally
+		new UserClient(false, null); // makes the coursesketch.util.util point locally
 		String id = JOptionPane.showInputDialog("Insert the Id of the person inserting the class");
 		//0b7ac244-b785-6961-9347-7621abeada88-277aa353914b7c5f
 		testCourses(id);

@@ -141,22 +141,12 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
             authService = Authentication.AuthenticationService.newBlockingStub(getRpcChannel());
         }
 
-        final Authentication.AuthRequest request = Authentication.AuthRequest.newBuilder()
-                .setAuthId(authId)
-                .setItemId(itemId)
-                .setItemType(collectionType)
-                .build();
-
-        final Authentication.UserRegistration.Builder creationRequest = Authentication.UserRegistration.newBuilder()
-                .setItemRequest(request);
-
-        if (registrationKey != null) {
-            creationRequest.setRegistrationKey(registrationKey);
-        }
+        Authentication.UserRegistration registrationRequest =
+                createRegistrationRequest(registrationKey, authId, itemId, collectionType, Authentication.AuthType.getDefaultInstance());
 
         Message.DefaultResponse response = null;
         try {
-            response = authService.registerUser(getNewRpcController(), creationRequest.build());
+            response = authService.registerUser(getNewRpcController(), registrationRequest);
             if (response.hasException()) {
                 final AuthenticationException authExcep =
                         new AuthenticationException("Exception with authentication server", AuthenticationException.OTHER);
@@ -166,5 +156,47 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
         } catch (ServiceException e) {
             throw new AuthenticationException(e);
         }
+    }
+
+    @Override
+    public void addUser(String ownerId, String authId, String itemId, Util.ItemType collectionType) throws AuthenticationException {
+        if (authService == null) {
+            authService = Authentication.AuthenticationService.newBlockingStub(getRpcChannel());
+        }
+
+        Authentication.UserRegistration registrationRequest = createRegistrationRequest(ownerId, authId, itemId, collectionType,
+                Authentication.AuthType.newBuilder().setCheckingOwner(true).build());
+
+        Message.DefaultResponse response = null;
+        try {
+            response = authService.addUser(getNewRpcController(), registrationRequest);
+            if (response.hasException()) {
+                final AuthenticationException authExcep =
+                        new AuthenticationException("Exception with authentication server", AuthenticationException.OTHER);
+                authExcep.setProtoException(response.getException());
+                throw authExcep;
+            }
+        } catch (ServiceException e) {
+            throw new AuthenticationException(e);
+        }
+    }
+
+    private Authentication.UserRegistration createRegistrationRequest(String registrationKey, String authId, String itemId, Util.ItemType collectionType,
+            Authentication.AuthType authParams) {
+
+        final Authentication.AuthRequest request = Authentication.AuthRequest.newBuilder()
+                .setAuthId(authId)
+                .setItemId(itemId)
+                .setItemType(collectionType)
+                .setAuthParams(authParams)
+                .build();
+
+        final Authentication.UserRegistration.Builder creationRequest = Authentication.UserRegistration.newBuilder()
+                .setItemRequest(request);
+
+        if (registrationKey != null) {
+            creationRequest.setRegistrationKey(registrationKey);
+        }
+        return creationRequest.build();
     }
 }

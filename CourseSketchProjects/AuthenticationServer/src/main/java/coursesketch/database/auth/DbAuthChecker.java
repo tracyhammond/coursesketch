@@ -4,8 +4,8 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import coursesketch.server.authentication.HashManager;
-import database.DatabaseAccessException;
-import database.DatabaseStringConstants;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.DatabaseStringConstants;
 import org.bson.types.ObjectId;
 import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
@@ -16,24 +16,24 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static database.DbSchoolUtility.getCollectionFromType;
+import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
 import static protobuf.srl.services.authentication.Authentication.AuthResponse.PermissionLevel.STUDENT;
 
 /**
- * Checks the local database for access to certain items.
+ * Checks the local coursesketch.util.util for access to certain items.
  *
  * Created by dtracers
  */
 public final class DbAuthChecker implements AuthenticationChecker {
 
     /**
-     * The database that the auth checker grabs data from.
+     * The coursesketch.util.util that the auth checker grabs data from.
      */
     private final DB database;
 
     /**
-     * Creates a DbAuthChecker that takes in the database.
-     * @param database The database.
+     * Creates a DbAuthChecker that takes in the coursesketch.util.util.
+     * @param database The coursesketch.util.util.
      */
     public DbAuthChecker(final DB database) {
         this.database = database;
@@ -52,7 +52,7 @@ public final class DbAuthChecker implements AuthenticationChecker {
      *         The rules that we check against to determine if the user is authenticated or not.
      * @return True if all checked values are valid.
      * @throws DatabaseAccessException
-     *         Thrown if there are issues grabbing data for the database.
+     *         Thrown if there are issues grabbing data for the coursesketch.util.util.
      * @throws AuthenticationException
      *         Thrown if there are problems creating the auth response.
      */
@@ -72,7 +72,7 @@ public final class DbAuthChecker implements AuthenticationChecker {
         final DBCollection collection = this.database.getCollection(getCollectionFromType(collectionType));
         final DBObject result = collection.findOne(new ObjectId(itemId));
         if (result == null) {
-            throw new DatabaseAccessException("The item with the id " + itemId + " was not found in the database.");
+            throw new DatabaseAccessException("The item with the id " + itemId + " was not found in the coursesketch.util.util.");
         }
 
         final List<String> groupList = (List<String>) result.get(DatabaseStringConstants.USER_LIST);

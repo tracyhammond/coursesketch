@@ -6,9 +6,9 @@ import coursesketch.database.auth.AuthenticationException;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.SocketSession;
 import coursesketch.services.submission.SubmissionWebSocketClient;
-import database.DatabaseAccessException;
-import database.institution.Institution;
-import database.user.UserClient;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.institution.Institution;
+import coursesketch.database.util.user.UserClient;
 import handlers.subhandlers.GradingPolicyRequestHandler;
 import handlers.subhandlers.GradingRequestHandler;
 import org.slf4j.Logger;
@@ -79,7 +79,7 @@ public final class DataRequestHandler {
      * @param conn
      *         The connection where the result is sent to.
      * @param instance
-     *         The object that interfaces with the database and handles specific requests.
+     *         The object that interfaces with the coursesketch.util.util and handles specific requests.
      * @param sessionId
      *         The id of this particular session which is used if another server is talked to.
      * @param internalConnections

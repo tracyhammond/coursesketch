@@ -5,10 +5,10 @@ import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.school.Problem.SrlBankProblem.QuestionType;
 import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.Problem.SrlBankProblem;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
-import database.institution.Institution;
-import database.user.UserClient;
+import coursesketch.database.util.institution.Institution;
+import coursesketch.database.util.user.UserClient;
 
 public class ManyTestProblems {
 	public static void testProblems(String courseId, String assignmentId, String mastId) {
@@ -714,7 +714,7 @@ public class ManyTestProblems {
 	}
 
 	public static void main(String args[]) {
-		new Institution(false); // makes the database point locally
-		new UserClient(false); // makes the database point locally
+		new Institution(false); // makes the coursesketch.util.util point locally
+		new UserClient(false); // makes the coursesketch.util.util point locally
 	}
  }

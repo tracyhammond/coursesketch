@@ -3,9 +3,9 @@ package handlers;
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.server.interfaces.SocketSession;
-import database.DatabaseAccessException;
-import database.institution.Institution;
-import database.user.UserClient;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.institution.Institution;
+import coursesketch.database.util.user.UserClient;
 import handlers.subhandlers.GradingPolicyUpsertHandler;
 import handlers.subhandlers.GradingUpsertHandler;
 import org.slf4j.Logger;
@@ -68,7 +68,7 @@ public final class DataInsertHandler {
      * @param conn
      *         The connection where the result is sent to.
      * @param instance
-     *         The object that interfaces with the database and handles specific requests.
+     *         The object that interfaces with the coursesketch.util.util and handles specific requests.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
             "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl", "checkstyle:avoidnestedblocks" })
@@ -183,7 +183,7 @@ public final class DataInsertHandler {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx,
-                    "user was not authenticated or had a database error " + protoEx.getMssg()));
+                    "user was not authenticated or had a coursesketch.util.util error " + protoEx.getMssg()));
         } catch (InvalidProtocolBufferException | RuntimeException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);

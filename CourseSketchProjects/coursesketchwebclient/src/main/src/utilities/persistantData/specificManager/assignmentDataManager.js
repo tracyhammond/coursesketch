@@ -1,9 +1,9 @@
 /**
  * A manager for assignments that talks with the remote server.
  *
- * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
- * @param {ProtoDatabase} parentDatabase - The local database
+ * @param {SchoolDataManager} parent - The coursesketch.util.util that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener for the coursesketch.util.util.
+ * @param {ProtoDatabase} parentDatabase - The local coursesketch.util.util
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
@@ -81,7 +81,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
     }
 
     /**
-     * Sets the assignment locally into the local database.
+     * Sets the assignment locally into the local util.
      *
      * @param {SrlAssignment} assignment - Assignment object to set.
      * @param {Function} assignmentCallback - function to be called after assignment setting is done
@@ -96,7 +96,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
     parent.setAssignment = setAssignment;
 
     /**
-     * Deletes a assignment from local database.
+     * Deletes a assignment from local util.
      * This does not delete the id pointing to this item in the respective course.
      *
      * @param {UUID} assignmentId - ID of the assignment to delete
@@ -112,7 +112,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
     parent.deleteAssignment = deleteAssignment;
 
     /**
-     * Sets a assignment in server database.
+     * Sets a assignment in server util.
      *
      * @param {SrlAssignment} assignment - Assignment object to set.
      * @param {Function} assignmentCallback - function to be called after assignment setting is done
@@ -130,7 +130,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
            // if (oldId === newId) {
            //     assignmentCallback(assignment);
            // }
-            // we want to get the current course in the local database in case
+            // we want to get the current course in the local util in case
             // it has changed while the server was processing.
             getAssignmentLocal(oldId, function(assignment2) {
                 deleteAssignment(oldId);
@@ -204,7 +204,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
 
     /**
      * Sets a assignment in both local and server databases.
-     * Updates an existing assignment into the database. This assignment must already
+     * Updates an existing assignment into the util. This assignment must already
      * exist.
      *
      * @param {SrlAssignment} assignment - assignment object to set
@@ -237,7 +237,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
     parent.updateAssignment = updateAssignment;
 
     /**
-     * Gets an Assignment from the local database.
+     * Gets an Assignment from the local util.
      *
      * @param {UUID} assignmentId - ID of the assignment to get
      * @param {Function} assignmentCallback - function to be called after getting is complete, parameter
@@ -251,7 +251,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
             if (isUndefined(result) || isUndefined(result.data)) {
                 assignmentCallback(new DatabaseException('The result is undefined', 'getting Assignment: ' + assignmentId));
             } else {
-                // gets the data from the database and calls the callback
+                // gets the data from the util and calls the callback
                 try {
                     var bytes = ByteBuffer.fromBase64(result.data);
                     stateCallback(CourseSketch.prutil.getSrlAssignmentClass().decode(bytes), assignmentCallback);
@@ -265,14 +265,14 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
     parent.getAssignmentLocal = getAssignmentLocal;
 
     /**
-     * Returns a list of all of the assignments from the local and server database for the given list
+     * Returns a list of all of the assignments from the local and server coursesketch.util.util for the given list
      * of Ids.
      *
      * This does attempt to pull assignments from the server!
      *
      * @param {UUID[]} assignmentIdList - list of IDs of the assignments to get
      * @param {Function} assignmentCallbackPartial - called when assignments are grabbed from the local
-     *            database only. This list may not be complete. This may also
+     *            coursesketch.util.util only. This list may not be complete. This may also
      *            not get called if there are no local assignments.
      * @param {Function} assignmentCallbackComplete - called when the complete list of assignments are grabbed.
      */

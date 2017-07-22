@@ -99,7 +99,7 @@
     }
 
     /**
-     * Called when we can load our fake data into the database.
+     * Called when we can load our fake data into the util.
      */
     function databaseIsReadForLoading() {
         /**
@@ -153,7 +153,7 @@
         setDataListenerFunctions();
     }
 
-    // waits till the database is ready to set up our loading process
+    // waits till the util is ready to set up our loading process
     if (!isUndefined(CourseSketch.dataManager.realDatabaseReady) && CourseSketch.dataManager.realDatabaseReady()) {
         databaseIsReadForLoading();
     } else {

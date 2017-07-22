@@ -10,7 +10,7 @@ import com.mongodb.MongoClient;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.recognition.framework.TemplateDatabaseInterface;
 import coursesketch.server.interfaces.ServerInfo;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.sketch.Sketch;
@@ -45,14 +45,14 @@ public final class RecognitionDatabaseClient extends AbstractCourseSketchDatabas
     private final ShapeConverter shapeConverter = new ShapeConverter();
 
     /**
-     * The local database where everything is stored.
+     * The local coursesketch.util.util where everything is stored.
      */
     private DB database;
 
     /**
-     * Creates a database interface with the local server information.
+     * Creates a coursesketch.util.util interface with the local server information.
      *
-     * @param serverInfo Information about how to create the database.
+     * @param serverInfo Information about how to create the coursesketch.util.util.
      */
     public RecognitionDatabaseClient(final ServerInfo serverInfo) {
         super(serverInfo);

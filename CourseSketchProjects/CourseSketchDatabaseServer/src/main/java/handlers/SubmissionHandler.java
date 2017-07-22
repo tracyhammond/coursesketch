@@ -5,9 +5,9 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.submission.SubmissionManagerInterface;
 import coursesketch.server.interfaces.SocketSession;
-import database.DatabaseAccessException;
-import database.institution.Institution;
-import database.institution.mongo.MongoInstitution;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.institution.Institution;
+import coursesketch.database.util.institution.mongo.MongoInstitution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data;
@@ -48,7 +48,7 @@ public final class SubmissionHandler {
      *         The connection where the result is sent to.
      * @param submissionManager
      *         The manager for submission data on other servers.
-     * @param instance The database backer.
+     * @param instance The coursesketch.util.util backer.
      */
     public static void handleData(final Message.Request req, final SocketSession conn, final SubmissionManagerInterface submissionManager,
             final Institution instance) {
@@ -84,7 +84,7 @@ public final class SubmissionHandler {
      *         The connection where the result is sent to.
      * @param submissionManager
      *         The manager for submission data on other servers.
-     * @param instance The database backer.
+     * @param instance The coursesketch.util.util backer.
      */
     private static void saveExperiment(final Message.Request req, final SocketSession conn, final SubmissionManagerInterface submissionManager,
             final Institution instance) {
@@ -111,7 +111,7 @@ public final class SubmissionHandler {
         }
 
         if (Strings.isNullOrEmpty(submissionId)) {
-            final Exception exception = new DatabaseAccessException("Unable to store submission in the database!");
+            final Exception exception = new DatabaseAccessException("Unable to store submission in the coursesketch.util.util!");
             createAndSendException(conn, req, exception);
             // bail early
             return;
@@ -146,7 +146,7 @@ public final class SubmissionHandler {
      *         The connection where the result is sent to.
      * @param submissionManager
      *         The manager for submission data on other servers.
-     * @param instance The database backer.
+     * @param instance The coursesketch.util.util backer.
      */
     private static void saveSolution(final Message.Request req, final SocketSession conn, final SubmissionManagerInterface submissionManager,
             final Institution instance) {
@@ -181,7 +181,7 @@ public final class SubmissionHandler {
         }
 
         if (Strings.isNullOrEmpty(submissionId)) {
-            final Exception exception = new DatabaseAccessException("Unable to store submission in the database!");
+            final Exception exception = new DatabaseAccessException("Unable to store submission in the coursesketch.util.util!");
             createAndSendException(conn, req, exception);
             // bail early
             return;

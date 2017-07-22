@@ -2,9 +2,9 @@
 /**
  * A manager for lectires that talks with the remote server.
  *
- * @param {CourseSketchDatabase} parent - The database that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
- * @param {IndexedDB} parentDatabase -  The local database
+ * @param {CourseSketchDatabase} parent - The coursesketch.util.util that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener for the coursesketch.util.util.
+ * @param {IndexedDB} parentDatabase -  The local coursesketch.util.util
  * @param {Function} sendData - A function that makes sending data much easier
  * @param {SrlRequest} Request - A shortcut to a request
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
@@ -15,7 +15,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
     var parentScope = parent;
 
     /**
-     * Sets a lecture in local database.
+     * Sets a lecture in local util.
      *
      * @param {SrlLecture} lecture
      *                lecture object to set
@@ -40,7 +40,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
     parent.setLecture = setLecture;
 
     /**
-     * Sets a lecture in server database.
+     * Sets a lecture in server util.
      *
      * @param {SrlLecture} lecture
      *                lecture object to set
@@ -53,7 +53,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
             var resultArray = item.getReturnText().split(':');
             var oldId = resultArray[1].trim();
             var newId = resultArray[0].trim();
-            // we want to get the current course in the local database in case
+            // we want to get the current course in the local util in case
             // it has changed while the server was processing.
             getLectureLocal(oldId, function(lecture2) {
                 deleteLecture(oldId);
@@ -147,7 +147,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
     parent.insertLecture = insertLecture;
 
     /**
-     * Deletes a lecture from local database.
+     * Deletes a lecture from local util.
      * This does not delete the id pointing to this item in the respective course.
      *
      * @param {String} lectureId
@@ -165,7 +165,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
     parent.deleteLecture = deleteLecture;
 
     /**
-     * Gets a lecture from the local database.
+     * Gets a lecture from the local util.
      *
      * @param {String} lectureId
      *                ID of the lecture to get
@@ -213,7 +213,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
     parent.getCourseLecture = getCourseLecture;
 
     /**
-     * Returns a list of all of the lectures from the local and server database for the given list
+     * Returns a list of all of the lectures from the local and server coursesketch.util.util for the given list
      * of Ids.
      *
      * This does attempt to pull lectures from the server!
@@ -222,7 +222,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
      *            list of IDs of the lectures to get
      * @param {Function} localCallback
      *            {Function} called when lectures are grabbed from the local
-     *            database only. This list may not be complete. This may also
+     *            coursesketch.util.util only. This list may not be complete. This may also
      *            not get called if there are no local lectures.
      * @param {Function} serverCallback
      *            {Function} called when the complete list of lectures are
@@ -233,7 +233,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
             if (!isUndefined(localCallback)) {
                 localCallback(new DatabaseException('Result is undefined!', 'Grabbing lecture from server: ' + lectureIds));
             } else {
-                serverCallback(new DatabaseException('Nothing is in the server database!', 'Grabbing lecture from server: ' + lectureIds));
+                serverCallback(new DatabaseException('Nothing is in the server util!', 'Grabbing lecture from server: ' + lectureIds));
             }
         }
         var barrier = lectureIds.length;
@@ -264,7 +264,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
                                         if (isUndefined(lecture) || lecture instanceof DatabaseException) {
                                             var result = lecture;
                                             if (isUndefined(result)) {
-                                                result = new DatabaseException('Nothing is in the server database!',
+                                                result = new DatabaseException('Nothing is in the server util!',
                                             'Grabbing lecture from server: ' + lectureIds);
                                             }
                                             if (!isUndefined(serverCallback)) {

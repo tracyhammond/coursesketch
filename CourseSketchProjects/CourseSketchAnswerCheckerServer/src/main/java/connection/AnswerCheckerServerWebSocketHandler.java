@@ -1,27 +1,35 @@
 package connection;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.auth.AuthenticationWebSocketClient;
+import coursesketch.database.auth.AuthenticationChecker;
+import coursesketch.database.auth.AuthenticationDataCreator;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationOptionChecker;
+import coursesketch.database.auth.Authenticator;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.database.submission.SubmissionManagerInterface;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionState;
+import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
 import coursesketch.services.submission.SubmissionWebSocketClient;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.AnswerCheckerDatabase;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.query.Data.ItemQuery;
-import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
-import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission;
 import protobuf.srl.submission.Submission.SrlExperiment;
-import utilities.ConnectionException;
+import protobuf.srl.utils.Util;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
-import utilities.ProtobufUtilities;
 import utilities.TimeManager;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * A simple WebSocketServer implementation.
@@ -58,17 +66,23 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
             }
             return;
         }
-        if (req.getRequestType() == Request.MessageType.SUBMISSION) {
-            // then we submit!
-            if (req.getResponseText().equals("student")) {
-                handleStudentSubmission(conn, req);
-            } else if(req.getResponseText().equals("instructor")) {
-                handleInstructorSubmission(conn, req);
+        try {
+            if (req.getRequestType() == Request.MessageType.SUBMISSION) {
+                // then we submit!
+                if (req.getResponseText().equals("student")) {
+
+                    handleStudentSubmission(conn, req);
+
+                } else if (req.getResponseText().equals("instructor")) {
+                    handleInstructorSubmission(conn, req);
+                }
             }
+        } catch (AuthenticationException | DatabaseAccessException e) {
+            createAndSendException(conn, req, e);
         }
     }
 
-    private void handleStudentSubmission(final SocketSession conn, final Request req) {
+    private void handleStudentSubmission(final SocketSession conn, final Request req) throws AuthenticationException, DatabaseAccessException {
         final SubmissionManagerInterface submissionInterface = getConnectionManager().getBestConnection(SubmissionWebSocketClient.class);
         SrlExperiment studentExperiment;
         try {
@@ -80,11 +94,24 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
             return; // sorry but we are bailing if anything does not look right.
         }
 
+        if (!studentExperiment.hasSolutionId() || isEmpty(studentExperiment.getSolutionId())) {
+            // No need to try and automatically grade something that does not exist.
+            return;
+        }
+
+        AuthenticationChecker authChecker = getConnectionManager().getBestConnection(AuthenticationWebSocketClient.class);
+
+        String authId = ((AnswerCheckerDatabase) getDatabaseReader()).getKey(req.getServersideId(), studentExperiment);
+
+        Submission.SrlSolution solution =
+                submissionInterface.getSolution(authId, null, studentExperiment.getProblemBankId(), studentExperiment.getSolutionId());
+
+
+
         // submissionInterface.getSolutionForSubmission()
     }
 
-    private void handleInstructorSubmission(final SocketSession conn, final Request req) {
-        final SubmissionManagerInterface submissionInterface = getConnectionManager().getBestConnection(SubmissionWebSocketClient.class);
+    private void handleInstructorSubmission(final SocketSession conn, final Request req) throws DatabaseAccessException, AuthenticationException {
         Submission.SrlSolution solution;
         try {
             solution = Submission.SrlSolution.parseFrom(req.getOtherData());
@@ -94,20 +121,14 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             return; // sorry but we are bailing if anything does not look right.
         }
-        generateUniqueKey();
-        // If a solution is being submitted then we store a key for the answer checker server to grab later
-        // This key is unique to the solution and is used as an auth id to authenticate the solution.
-        // This key is mapped to the problemId+partId
+
+        AuthenticationWebSocketClient authentication = getConnectionManager().getBestConnection(AuthenticationWebSocketClient.class);
+
+        String userId = ((AnswerCheckerDatabase) getDatabaseReader()).generateKey(req.getServersideId(), solution);
+        if (userId != null) {
+            authentication.addUser(req.getServersideId(), userId, solution.getProblemBankId(), Util.ItemType.BANK_PROBLEM);
+        }
     }
-
-    private void generateUniqueKey() {
-        //
-    }
-    // do submission stuff
-
-
-
-
 
     /**
      * @return {@link AnswerConnectionState} that can be used for holding experiments for checking.
@@ -116,4 +137,59 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
     public final MultiConnectionState getUniqueState() {
         return new AnswerConnectionState(Encoder.nextID().toString());
     }
+
+    /**
+     * Creates and sends an exception.
+     *
+     * @param req
+     *         The request that has data being inserted.
+     * @param conn
+     *         The connection where the result is sent to.
+     * @param exception
+     *         The exception that occurred.
+     */
+    private static void createAndSendException(final SocketSession conn, final Message.Request req, final Exception exception) {
+        final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(exception);
+        conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
+        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, exception);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@link AnswerCheckerDatabase}.
+     */
+    @Override
+    protected final AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
+        final AuthenticationWebSocketClient authChecker = getConnectionManager()
+                .getBestConnection(AuthenticationWebSocketClient.class);
+        final Authenticator auth = new Authenticator(authChecker, createAuthChecker());
+
+        return new AnswerCheckerDatabase(info, auth);
+    }
+
+    private AuthenticationOptionChecker createAuthChecker() {
+        return new AuthenticationOptionChecker() {
+            @Override
+            public boolean authenticateDate(AuthenticationDataCreator dataCreator, long checkTime) throws DatabaseAccessException {
+                return true;
+            }
+
+            @Override
+            public boolean isItemRegistrationRequired(AuthenticationDataCreator dataCreator) throws DatabaseAccessException {
+                return false;
+            }
+
+            @Override
+            public boolean isItemPublished(AuthenticationDataCreator dataCreator) throws DatabaseAccessException {
+                return true;
+            }
+
+            @Override
+            public AuthenticationDataCreator createDataGrabber(Util.ItemType collectionType, String itemId) throws DatabaseAccessException {
+                return null;
+            }
+        };
+    }
+
 }

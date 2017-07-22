@@ -3,8 +3,8 @@ package handlers;
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.SocketSession;
 import coursesketch.database.auth.AuthenticationException;
-import database.DatabaseAccessException;
-import database.institution.Institution;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.institution.Institution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.school.Problem.LectureSlide;
@@ -55,14 +55,14 @@ public final class DataUpdateHandler {
     /**
      * Takes in a request that has to deal with inserting data.
      *
-     * decode request and pull correct information from {@link database.institution.Institution}
+     * decode request and pull correct information from {@link coursesketch.database.util.institution.Institution}
      * (courses, assignments, ...) then repackage everything and send it out.
      * @param req
      *         The request that has data being inserted.
      * @param conn
      *         The connection where the result is sent to.
      * @param instance
-     *         The object that interfaces with the database and handles specific requests.
+     *         The object that interfaces with the coursesketch.util.util and handles specific requests.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
             "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "checkstyle:avoidnestedblocks" })

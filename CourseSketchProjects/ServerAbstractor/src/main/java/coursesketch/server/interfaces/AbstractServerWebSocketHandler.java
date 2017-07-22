@@ -2,7 +2,7 @@ package coursesketch.server.interfaces;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
@@ -89,7 +89,7 @@ public abstract class AbstractServerWebSocketHandler {
     private final ServerInfo serverInfo;
 
     /**
-     * An object that reads from the database.
+     * An object that reads from the coursesketch.util.util.
      */
     private AbstractCourseSketchDatabaseReader databaseReader;
 
@@ -337,7 +337,7 @@ public abstract class AbstractServerWebSocketHandler {
         try {
             startDatabase();
         } catch (DatabaseAccessException e) {
-            LOG.error("An error was created starting the database for the server", e);
+            LOG.error("An error was created starting the coursesketch.util.util for the server", e);
         }
         onInitialize();
     }
@@ -351,9 +351,9 @@ public abstract class AbstractServerWebSocketHandler {
     protected abstract void onInitialize();
 
     /**
-     * Starts the database if it exists.
+     * Starts the coursesketch.util.util if it exists.
      *
-     * @throws DatabaseAccessException thrown if the database is unable to start.
+     * @throws DatabaseAccessException thrown if the coursesketch.util.util is unable to start.
      */
     protected final void startDatabase() throws DatabaseAccessException {
         final AbstractCourseSketchDatabaseReader reader = getDatabaseReader();

@@ -92,6 +92,9 @@ validateFirstRun(document.currentScript);
             navigator.setSubmissionInformation(studentExperiment, true);
             console.log('student experiment data set', studentExperiment);
             studentExperiment.submission = submission;
+            if (!isUndefined(currentProblem.solutionId) && currentProblem.solutionId !== null) {
+                studentExperiment.solutionId = currentProblem.solutionId;
+            }
             return studentExperiment;
         });
     }

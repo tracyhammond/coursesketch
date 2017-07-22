@@ -132,10 +132,14 @@ validateFirstRun(document.currentScript);
     }
 
     /**
-     * Saves the data to the database.
+     * Saves the data to the util.
      */
     function saveData() {
         originalMap = advancedEdit.getInput(currentProblem, editPanel, originalMap);
+        if (isUndefined(currentProblem.problemDomain) || currentProblem.currentProblem  === null) {
+            currentProblem.problemDomain = CourseSketch.prutil.DomainId();
+        }
+        currentProblem.problemDomain.questionType = currentProblem.questionType;
         problemRenderer.saveData(currentProblem, function() {
             CourseSketch.dataManager.updateBankProblem(currentProblem, function(argument) {
                 console.log(argument);
@@ -218,6 +222,8 @@ validateFirstRun(document.currentScript);
             assignmentNavigator.setSubmissionInformation(solution, false);
             console.log('student experiment data set', solution);
             solution.submission = submission;
+            solution.questionType = currentProblem.questionType;
+            solution.problemDomain = currentProblem.problemDomain;
             return solution;
         });
     }

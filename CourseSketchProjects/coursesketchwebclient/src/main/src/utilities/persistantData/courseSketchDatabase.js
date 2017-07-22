@@ -1,11 +1,11 @@
 /**
- * Attempts to use data as a database, pulls data from the server if it does not
+ * Attempts to use data as a coursesketch.util.util, pulls data from the server if it does not
  * exist
  *
  * @constructor SchoolDataManager
- * @param {String} userId - The user that this database is associated with.
+ * @param {String} userId - The user that this coursesketch.util.util is associated with.
  * @param {AdvanceDataListener} advanceDataListener - An instance of {@link AdvanceDataListener} this is used for
- *            responses to queries made by the database server
+ *            responses to queries made by the coursesketch.util.util server
  * @param {Connection} connection - The connection to the server which will handle all connections
  *            relating to certain queries.
  * @param {Request} Request - The class representing the Request protobuf used to get the
@@ -38,25 +38,25 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      */
 
     /**
-     * Returns true if the database is ready false otherwise.
+     * Returns true if the coursesketch.util.util is ready false otherwise.
      *
      * It is placed this far up so that it can be called even before most of the
-     * database is set up.
+     * coursesketch.util.util is set up.
      *
-     * @returns {Boolean} True if the database is ready false otherwise.
+     * @returns {Boolean} True if the coursesketch.util.util is ready false otherwise.
      */
     this.isDatabaseReady = function() {
         return databaseFinishedLoading;
     };
 
     /**
-     * After the lower level database has been completely setup the higher level specific databases can be called.
+     * After the lower level util has been completely setup the higher level specific databases can be called.
      */
     var initalizedFunction = function() {
         if (!localScope.start) {
             var intervalVar = setInterval(function() {
                 if (localScope.start) {
-                    console.log('Checking if higher database is truly ready!');
+                    console.log('Checking if higher util is truly ready!');
                     clearInterval(intervalVar);
                     localScope.start();
                 }
@@ -70,12 +70,12 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
     (function() {
         /**
-         * Add function for adding elements to the database.
+         * Add function for adding elements to the coursesketch.util.util.
          *
          * @param {DataStore} store - The specific table to add the data to
          * @param {UUID} objectId - The id of the object being added.
          * @param {String} objectToAdd - The data of the object being added.
-         * @returns {Transaction} The transaction from storing the data in the database.
+         * @returns {Transaction} The transaction from storing the data in the coursesketch.util.util.
          */
         var addFunction = function(store, objectId, objectToAdd) {
             return store.put({
@@ -100,7 +100,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     })();
 
     /**
-     * This is supposed to clean out the database.
+     * This is supposed to clean out the util.
      *
      * Currently does not work.
      */
@@ -248,7 +248,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     /**
-     * @returns {String} The current id that is being used with the database.
+     * @returns {String} The current id that is being used with the util.
      */
     this.getCurrentId = function() {
         return localUserId;
@@ -259,9 +259,9 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     CourseSketch.DatabaseException = DatabaseException;
 
     /**
-     * A helper function for testing that waits for the database to be loaded before calling a callback.
+     * A helper function for testing that waits for the coursesketch.util.util to be loaded before calling a callback.
      *
-     * @param {Function} callback - Called when the database is ready.
+     * @param {Function} callback - Called when the coursesketch.util.util is ready.
      */
     this.waitForDatabase = function waitForDatabase(callback) {
         var interval = setInterval(function() {

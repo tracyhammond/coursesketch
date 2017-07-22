@@ -5,9 +5,9 @@ import java.net.UnknownHostException;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
-import database.institution.UpdateManager;
+import coursesketch.database.util.institution.UpdateManager;
 
 public class UpdateTester {
 

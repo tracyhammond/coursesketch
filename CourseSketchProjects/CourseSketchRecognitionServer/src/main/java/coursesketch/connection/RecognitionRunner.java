@@ -3,7 +3,7 @@ package coursesketch.connection;
 import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.rpc.GeneralConnectionRunner;
 import coursesketch.server.rpc.ServerWebSocketInitializer;
-import database.DatabaseStringConstants;
+import coursesketch.database.util.DatabaseStringConstants;
 
 /**
  * A subclass of the runner and sets up some special information for running the
@@ -31,7 +31,7 @@ public final class RecognitionRunner extends GeneralConnectionRunner {
      */
     @Override
     protected void loadConfigurations() {
-        super.setDatabaseName(DatabaseStringConstants.RECOGNITION_DATABASE);
+        super.setDatabaseName(DatabaseStringConstants.ANSWER_CHECKER_DATABASE);
     }
 
     /**

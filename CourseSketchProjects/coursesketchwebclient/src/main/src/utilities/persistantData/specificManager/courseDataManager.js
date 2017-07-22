@@ -1,9 +1,9 @@
 /**
  * A manager for courses that talks with the remote server.
  *
- * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener - A listener and sender for the database
- * @param {ProtoDatabase} database - The local database
+ * @param {SchoolDataManager} parent - The coursesketch.util.util that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener and sender for the coursesketch.util.util
+ * @param {ProtoDatabase} database - The local coursesketch.util.util
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
@@ -64,7 +64,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     }
 
     /**
-     * Gets an Course from the local database.
+     * Gets an Course from the local util.
      *
      * @param {String} courseId - ID of the course to get
      * @param {Function} courseCallback - function to be called after getting is complete, parameter
@@ -80,7 +80,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
                 courseCallback(new DatabaseException('The result is undefined', 'getting Course: ' + courseId));
             } else {
                 var course;
-                // gets the data from the database and calls the callback
+                // gets the data from the util and calls the callback
                 try {
                     var bytes = ByteBuffer.fromBase64(result.data);
                     course = CourseSketch.prutil.getSrlCourseClass().decode(bytes);
@@ -128,7 +128,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
                     }
                     var course = CourseSketch.prutil.decodeProtobuf(item.data[0], CourseSketch.prutil.getSrlCourseClass());
                     if (isUndefined(course)) {
-                        courseCallback(new DatabaseException('Course does not exist in the remote database.'));
+                        courseCallback(new DatabaseException('Course does not exist in the remote util.'));
                         return;
                     }
                     setCourse(course, function() {
@@ -145,7 +145,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     parent.getCourse = getCourse;
 
     /**
-     * Sets a course in local database.
+     * Sets a course in local util.
      *
      * @param {SrlCourse} course
      *                course object to set
@@ -168,7 +168,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
 
     /**
      * Sets a course in both local and server databases.
-     * Updates an existing course into the database. This course must already
+     * Updates an existing course into the util. This course must already
      * exist.
      *
      * @param {SrlCourse} course - course object to set
@@ -205,7 +205,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     parent.updateCourse = updateCourse;
 
     /**
-     * Deletes a course from local database.
+     * Deletes a course from local util.
      * This does not delete the id pointing to this item in the respective course.
      *
      * @param {String} courseId - ID of the course to delete
@@ -228,7 +228,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     parent.deleteCourse = deleteCourse;
 
     /**
-     * Stores the course ids locally in the database.
+     * Stores the course ids locally in the util.
      *
      * @param {List<String>} idList - the list of ids the user currently have in their courses.
      */
@@ -237,7 +237,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     }
 
     /**
-     * Returns a list of all of the courses in database.
+     * Returns a list of all of the courses in util.
      *
      * This does attempt to pull courses from the server!
      *
@@ -321,13 +321,13 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     parent.getAllCourses = getAllCourses;
 
     /**
-     * Inserts a course into the database. This course must not exist.
+     * Inserts a course into the coursesketch.util.util. This course must not exist.
      *
      * If there is a problem courseCallback is called with an exception.
      *
      * @param {SrlCourse} course - The course that is being inserted.
      * @param {Function} courseCallback - is called after the insertion of course into the local
-     *            database. (this can be used for instant refresh)
+     *            coursesketch.util.util. (this can be used for instant refresh)
      * @param {Function} serverCallback - serverCallback is called after the insertion of course into
      *            the server and the return of the server with the correct
      *            courseId
@@ -337,7 +337,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
             var courseId = generateUUID();
             course.id = courseId;
         }
-        // sets the course into the local database;
+        // sets the course into the local util;
         setCourse(course, function() {
             if (courseCallback) {
                 courseCallback(course);
@@ -352,7 +352,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
                 var resultArray = item.getReturnText().split(':');
                 var oldId = resultArray[1].trim();
                 var newId = resultArray[0].trim();
-                // we want to get the current course in the local database in case
+                // we want to get the current course in the local util in case
                 // it has changed while the server was processing.
                 getCourseLocal(oldId, function(course2) {
                     deleteCourse(oldId);
@@ -430,14 +430,14 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     });
 
     /**
-     * @returns {Array} A list that represents all of the ids of courses in the database.
+     * @returns {Array} A list that represents all of the ids of courses in the util.
      */
     parent.getAllCourseIds = function() {
         return JSON.parse(JSON.stringify(userCourseId));
     };
 
     /**
-     * Attempts to clear the database of courses.
+     * Attempts to clear the util of courses.
      *
      * @param {Function} clearCallback - called after all of the courses were cleared.
      */

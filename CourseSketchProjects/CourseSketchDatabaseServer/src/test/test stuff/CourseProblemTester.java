@@ -3,10 +3,10 @@ package test;
 import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.Problem.SrlBankProblem;
 
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
-import database.institution.CourseProblemManager;
-import database.institution.Institution;
+import coursesketch.database.util.institution.CourseProblemManager;
+import coursesketch.database.util.institution.Institution;
 
 public class CourseProblemTester {
 

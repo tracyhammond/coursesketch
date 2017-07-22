@@ -109,7 +109,7 @@ validateFirstRun(document.currentScript);
             lecture.description = 'N/A';
 
             /**
-             * Called after inserting a lecture into the database.
+             * Called after inserting a lecture into the util.
              *
              * @memberof lectureSelection
              */
@@ -144,7 +144,7 @@ validateFirstRun(document.currentScript);
         };
 
         /**
-         * Loads the courses from the database.
+         * Loads the courses from the util.
          *
          * @param {List<SrlCourse>} courseList - List of courses to display.
          * @memberof lectureSelection

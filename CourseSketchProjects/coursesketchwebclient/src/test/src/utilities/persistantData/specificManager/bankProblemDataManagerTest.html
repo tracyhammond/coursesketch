@@ -16,7 +16,7 @@
 
 <script>
     QUnit.module("bankProblem creation");
-    test("create new database", function (assert) {
+    test("create new coursesketch.database.database", function (assert) {
         expect(1);
         var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
             CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
@@ -110,7 +110,7 @@
             CourseSketch.connection.sendSelf(req);
         }; //send request
         waitForDatabase(dataManager, function () {
-            console.log('database started!');
+            console.log('coursesketch.database.database started!');
             dataManager.setAssignment(assignment, function () {
                 console.log('assignment set');
                 dataManager.insertBankProblem(bankProblem, undefined, function (bankProblem2) {
@@ -201,7 +201,7 @@
                     setTimeout(function () {
                         dataManager.getBankProblemLocal(bankProblem.id, function (bankProblem) {
                             assert.ok(bankProblem instanceof CourseSketch.DatabaseException,
-                                "BankProblems can be fetched from the database.");
+                                "BankProblems can be fetched from the coursesketch.database.database.");
                             done();
                         }); // getBankProblem
                     }, 100);
@@ -210,7 +210,7 @@
             });
             // end set BankProblem
         });
-        // end wait for database
+        // end wait for util
     });
     // end test
 
@@ -256,7 +256,7 @@
             });
             // setBankProblem
         });
-        // waitfor database
+        // waitfor util
     });
     // end test
 
@@ -289,7 +289,7 @@
             });
             // set BankProblem
         });
-        // wait for database
+        // wait for util
     });
     // end test
 </script>

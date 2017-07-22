@@ -3,6 +3,7 @@ package connection;
 import coursesketch.server.base.GeneralConnectionRunner;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.ServerInfo;
+import coursesketch.database.util.DatabaseStringConstants;
 
 /**
  * Runs and sets up the server.
@@ -45,6 +46,14 @@ public class AnswerCheckerRunner extends GeneralConnectionRunner {
     @Override
     public void executeLocalEnvironment() {
         // Currently this server does not have any specific changes for executing a local environment.
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void loadConfigurations() {
+        super.setDatabaseName(DatabaseStringConstants.ANSWER_CHECKER_DATABASE);
     }
 
     /**

@@ -11,6 +11,7 @@
         <module>CourseSketchProjects/ProtoFiles</module>
         <module>CourseSketchProjects/coursesketchwebclient</module>
         <module>TestUtilities</module>
+        <module>CourseSketchProjects/MongoDatabaseHelper</module>
         <module>CourseSketchProjects/ServerAbstractor</module>
         <module>CourseSketchProjects/jettyBlank</module>
         <module>CourseSketchProjects/nettyBlank</module>
@@ -667,7 +668,7 @@
         <jettyVersion>9.2.3.v20140905</jettyVersion>
         <!-- 9.2.2.v20140723 -->
         <protobufVersion>3.3.1</protobufVersion>
-        <protoFileVersion>1.0.3</protoFileVersion>
+        <protoFileVersion>1.0.5</protoFileVersion>
         <recognitionFrameworkVersion>4.0.1</recognitionFrameworkVersion>
         <jodaVersion>[2.1,)</jodaVersion>
         <sitepluginVersion>2.3.3</sitepluginVersion>

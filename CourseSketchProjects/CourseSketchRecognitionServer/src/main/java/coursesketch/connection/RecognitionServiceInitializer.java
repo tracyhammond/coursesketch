@@ -8,7 +8,7 @@ import coursesketch.server.rpc.CourseSketchRpcService;
 import coursesketch.server.rpc.ServerWebSocketHandler;
 import coursesketch.server.rpc.ServerWebSocketInitializer;
 import coursesketch.services.RecognitionService;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +58,7 @@ public final class RecognitionServiceInitializer extends ServerWebSocketInitiali
         try {
             databaseClient.startDatabase();
         } catch (DatabaseAccessException e) {
-            LOG.error("Error starting database", e);
+            LOG.error("Error starting coursesketch.util.util", e);
         }
         services.add(new RecognitionService(new BasicRecognition(databaseClient)));
         return services;
@@ -72,7 +72,7 @@ public final class RecognitionServiceInitializer extends ServerWebSocketInitiali
         try {
             databaseClient.startDatabase();
         } catch (DatabaseAccessException e) {
-            LOG.error("Error starting database", e);
+            LOG.error("Error starting coursesketch.util.util", e);
         }
         // Does nothing by default
     }
