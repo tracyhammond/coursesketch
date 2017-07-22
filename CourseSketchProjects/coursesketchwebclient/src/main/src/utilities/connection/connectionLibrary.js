@@ -283,10 +283,12 @@ function Connection(uri, encrypted, attemptReconnect) {
 
     /**
      * Adds the message length to the beginning of the socket message.
+     *
      * @param {ArrayBuffer} arrayBuffer - The buffer where we are getting the message length from.
-     * @returns {Uint8Array}
+     * @returns {Uint8Array} A modified array that has 8bytes of length for the rest of the message.
      */
     function addMessageLength(arrayBuffer) {
+        /*jslint bitwise: true */
         var long = arrayBuffer.byteLength;
         // we want to represent the input as a 8-bytes array
         var byteArray = new Uint8Array(8);

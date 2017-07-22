@@ -371,7 +371,7 @@ function AdvanceDataListener(Request, defListener) {
     };
 
     /**
-     * @returns {ProtoBufMessage}
+     * @returns {ProtoBufMessage} for the cases where you want the entire request returned instead of part of a request.
      */
     function getRequestType() {
         return REQUEST_TYPE;

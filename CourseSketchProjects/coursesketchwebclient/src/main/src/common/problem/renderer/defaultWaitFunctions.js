@@ -1,7 +1,17 @@
+/**
+ * Creates a default set of wait functions.
+ * @param {WaitScreenManager} waitScreenManager Manages the wait screen.
+ * @param {Element} percentBarElement Manages a percent bar.
+ * @constructor
+ */
 function DefaultWaiter(waitScreenManager, percentBarElement) {
     var waitingElement = undefined;
     var overlayElement;
 
+    /**
+     * @param {Element} element - An element being checked
+     * @returns {Boolean} True if the element is valid.
+     */
     function isValidElement(element) {
         return !isUndefined(element) && element !== null;
     }

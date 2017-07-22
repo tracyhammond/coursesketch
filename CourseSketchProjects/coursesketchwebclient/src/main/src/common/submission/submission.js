@@ -366,7 +366,7 @@ SubmissionPanel.prototype.setProblemType = function(problemType) {
  * This function takes in a submission and wraps it as either the experiment or solution.
  * This wrapped value is returned from the function and then it is sent to the server internally.
  *
- * @param  {Function} wrapperFunction - used to wrap the submission in its required data.
+ * @param  {Function | undefined} wrapperFunction - used to wrap the submission in its required data.
  * @instance
  * @memberof SubmissionPanel
  */
@@ -377,8 +377,8 @@ SubmissionPanel.prototype.setWrapperFunction = function(wrapperFunction) {
 /**
  * Sets a listener that is called when a submission is sent to the server.
  *
- * @param {Function} [onSaveListener] - Called for a successful submission
- * @param {Function} [onSaveListener] - Called for any error during submission
+ * @param {Function} onSaveListener - Called for a successful submission
+ * @param {Function} [onErrorListener] - Called for any error during submission
  */
 SubmissionPanel.prototype.setOnSavedListener = function(onSaveListener, onErrorListener) {
     this.saveListener = onSaveListener;

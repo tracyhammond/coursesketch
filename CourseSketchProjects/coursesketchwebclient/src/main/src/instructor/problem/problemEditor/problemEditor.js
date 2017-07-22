@@ -14,6 +14,10 @@ validateFirstRun(document.currentScript);
     var currentSubmission = undefined;
     var waiter = undefined;
     var editProblemButton = undefined;
+
+    var mutators = {};
+    var actions = {};
+
     $(document).ready(function() {
         waiter = new DefaultWaiter(CourseSketch.problemEditor.waitScreenManager,
             document.getElementById('percentBar'));
@@ -60,9 +64,6 @@ validateFirstRun(document.currentScript);
         });
     });
 
-    var mutators = {};
-    var actions = {};
-
     mutators.questionText = function(element) {
         element.oninput = function(e) {
             questionTextPanel.setRapidProblemText(element.value);
@@ -98,17 +99,17 @@ validateFirstRun(document.currentScript);
     /**
      * Loads the problem, called every time a user navigates to a different problem.
      *
-     * @param {AssignmentNavigator} navigator - The assignment navigator.
+     * @param {AssignmentNavigator} assignmentNavigator - The assignment navigator.
      */
-    function loadProblem(navigator) {
+    function loadProblem(assignmentNavigator) {
         solutionMode = false;
         currentSubmission = undefined;
-        var bankProblem = navigator.getCurrentInfo();
+        var bankProblem = assignmentNavigator.getCurrentInfo();
         problemRenderer.reset();
         problemRenderer.setStartWaitingFunction(waiter.startWaiting);
         problemRenderer.setFinishWaitingFunction(waiter.finishWaiting);
         currentProblem = bankProblem;
-        resetSubmissionPanel(submissionPanel, navigator, bankProblem.questionType);
+        resetSubmissionPanel(submissionPanel, assignmentNavigator, bankProblem.questionType);
         problemRenderer.startWaiting();
         setTimeout(function() {
             loadBankProblem(bankProblem);
@@ -158,6 +159,7 @@ validateFirstRun(document.currentScript);
         solutionMode = true;
         setupSolutionSubmissionPanel(submissionPanel, navigator, currentProblem.questionType);
 
+        // eslint-disable-next-line
         function loadSubmission() {
             setTimeout(function() {
                 problemRenderer.renderSubmission(currentProblem, currentSubmission, function() {
@@ -169,7 +171,7 @@ validateFirstRun(document.currentScript);
 
         if (isUndefined(currentSubmission) && !isUndefined(currentProblem.solutionId) &&
             currentProblem.solutionId !== null) {
-            CourseSketch.dataManager.getSolution([currentProblem.id, currentProblem.solutionId], function(solution) {
+            CourseSketch.dataManager.getSolution([ currentProblem.id, currentProblem.solutionId ], function(solution) {
                 currentSubmission = solution.submission;
                 loadSubmission();
             });
@@ -183,16 +185,16 @@ validateFirstRun(document.currentScript);
     /**
      * Sets data in the submission panel.
      *
-     * @param {SubmissionPanel} submissionPanel - The element that has submission data.
-     * @param {AssignmentNavigator} navigator - The navigator that is performing navigation.
+     * @param {SubmissionPanel} subPanel - The element that has submission data.
+     * @param {AssignmentNavigator} assignmentNavigator - The navigator that is performing navigation.
      * @param {QuestionType} questionType - The type of question on this panel.
      */
-    function resetSubmissionPanel(submissionPanel, navigator, questionType) {
-        submissionPanel.problemIndex = navigator.getCurrentNumber();
-        submissionPanel.setProblemType(questionType);
-        submissionPanel.setWrapperFunction(undefined);
-        submissionPanel.isStudent = false;
-        $(submissionPanel).removeClass('studentMode');
+    function resetSubmissionPanel(subPanel, assignmentNavigator, questionType) {
+        subPanel.problemIndex = assignmentNavigator.getCurrentNumber();
+        subPanel.setProblemType(questionType);
+        subPanel.setWrapperFunction(undefined);
+        subPanel.isStudent = false;
+        $(subPanel).removeClass('studentMode');
         $(editPanel).removeClass('studentMode');
         $(editProblemButton).removeClass('studentMode');
     }
@@ -200,20 +202,20 @@ validateFirstRun(document.currentScript);
     /**
      * Sets data in the submission panel.
      *
-     * @param {SubmissionPanel} submissionPanel - The element that has submission data.
-     * @param {AssignmentNavigator} navigator - The navigator that is performing navigation.
+     * @param {SubmissionPanel} subPanel - The element that has submission data.
+     * @param {AssignmentNavigator} assignmentNavigator - The navigator that is performing navigation.
      * @param {QuestionType} questionType - The type of question on this panel.
      */
-    function setupSolutionSubmissionPanel(submissionPanel, navigator, questionType) {
-        resetSubmissionPanel(submissionPanel, navigator, questionType);
+    function setupSolutionSubmissionPanel(subPanel, assignmentNavigator, questionType) {
+        resetSubmissionPanel(subPanel, assignmentNavigator, questionType);
 
-        submissionPanel.isGrader = false;
-        $(submissionPanel).addClass('studentMode');
+        subPanel.isGrader = false;
+        $(subPanel).addClass('studentMode');
         $(editPanel).addClass('studentMode');
         $(editProblemButton).addClass('studentMode');
-        submissionPanel.setWrapperFunction(function(submission) {
+        subPanel.setWrapperFunction(function(submission) {
             var solution = CourseSketch.prutil.SrlSolution();
-            navigator.setSubmissionInformation(solution, false);
+            assignmentNavigator.setSubmissionInformation(solution, false);
             console.log('student experiment data set', solution);
             solution.submission = submission;
             return solution;
