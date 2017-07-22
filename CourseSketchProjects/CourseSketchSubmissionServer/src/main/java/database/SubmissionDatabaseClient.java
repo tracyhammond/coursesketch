@@ -29,6 +29,7 @@ import protobuf.srl.submission.Submission.SrlSubmission;
 import util.MergeException;
 import util.SubmissionMerger;
 import utilities.LoggingConstants;
+import utilities.TimeManager;
 
 import static database.DatabaseStringConstants.ALLOWED_IN_PROBLEMBANK;
 import static database.DatabaseStringConstants.ANSWER_CHOICE;
@@ -118,28 +119,38 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
 
         final Document findQuery = new Document(PROBLEM_BANK_ID, solution.getProblemBankId());
         final MongoCursor<Document> multipleObjectCursor = solutions.find(findQuery).iterator();
-        Document resultCursor = null;
+        Document existingSolution = null;
         if (multipleObjectCursor.hasNext()) {
-            resultCursor = multipleObjectCursor.next();
+            existingSolution = multipleObjectCursor.next();
             multipleObjectCursor.close();
-            final Document updateObj =
-                    new Document(UPDATELIST, new Binary(solution.getSubmission()
-                            .getSubmissionData().getSketchArea().getRecordedSketch().toByteArray()));
-            solutions.updateOne(resultCursor, new Document("$set", updateObj));
+            final Document updateObj;
+            try {
+                updateObj = createSubmission(solution.getSubmission(), existingSolution, false, TimeManager.getSystemTime());
+            } catch (SubmissionException e) {
+                throw new DatabaseAccessException("Exception while creating submission", e);
+            }
+            solutions.updateOne(existingSolution, new Document("$set", updateObj));
         } else {
             LOG.info("No existing submissions found");
 
+            final Document submissionObject;
+            try {
+                submissionObject = createSubmission(solution.getSubmission(), existingSolution, false, TimeManager.getSystemTime());
+            } catch (SubmissionException e) {
+                throw new DatabaseAccessException("Exception while creating submission", e);
+            }
+
             final Document query = new Document(ALLOWED_IN_PROBLEMBANK, solution.getAllowedInProblemBank())
                     .append(IS_PRACTICE_PROBLEM, solution.getIsPracticeProblem())
-                    .append(UPDATELIST, new Binary(solution.getSubmission()
-                            .getSubmissionData().getSketchArea().getRecordedSketch().toByteArray()))
                     .append(PROBLEM_BANK_ID, solution.getProblemBankId());
 
+            query.putAll(submissionObject);
+
             solutions.insertOne(query);
-            resultCursor = solutions.find(query).first();
+            existingSolution = solutions.find(query).first();
             multipleObjectCursor.close();
         }
-        return resultCursor.get(SELF_ID).toString();
+        return existingSolution.get(SELF_ID).toString();
     }
 
     /**
@@ -291,6 +302,62 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         build.setProblemId(cursor.get(COURSE_PROBLEM_ID).toString());
         build.setCourseId(cursor.get(COURSE_ID).toString());
         build.setPartId(cursor.get(ITEM_ID).toString());
+        SrlSubmission sub = null;
+        try {
+            sub = getSubmission(cursor, submissionId);
+        } catch (SubmissionException e) {
+            throw new DatabaseAccessException("Error getting submission data", e);
+        }
+
+        build.setSubmission(sub);
+        LOG.info("Experiment successfully fetched");
+        return build.build();
+    }
+
+    /**
+     * Gets the experiment by its id and sends all of the important information associated with it.
+     *
+     * @param itemId
+     *         The id of the experiment we are trying to retrieve.
+     * @param bankProblemId
+     *         This much match the problemId of the submission stored here otherwise it is considered an invalid retrieval.
+     * @param permissions
+     *          The permissions of the person attempting to get the experiment.
+     * @return the experiment found in the database.
+     * @throws DatabaseAccessException
+     *         thrown if there are problems getting the item.
+     * @throws AuthenticationException
+     *         thrown if the problemId given does not match the problemId in the database.
+     */
+    public SrlSolution getSolution(final String itemId, final String bankProblemId, AuthenticationResponder permissions)
+            throws DatabaseAccessException, AuthenticationException {
+        if (Strings.isNullOrEmpty(bankProblemId) || Strings.isNullOrEmpty(itemId)) {
+            throw new DatabaseAccessException("Invalid arguments while getting solution",
+                    new IllegalArgumentException("itemId and bankProblemId can not be null"));
+        }
+
+        LOG.info("Fetching solution");
+        final Document cursor = database.getCollection(SOLUTION_COLLECTION).find(convertStringToObjectId(itemId)).first();
+        if (cursor == null) {
+            throw new DatabaseAccessException("There is no experiment with id: " + itemId);
+        }
+
+        if (!bankProblemId.equals(cursor.get(PROBLEM_BANK_ID).toString())) {
+            throw new AuthenticationException("Bank Problem Id of the submission must match the submission being requested.",
+                    AuthenticationException.INVALID_PERMISSION);
+        }
+
+        final SrlSolution.Builder build = SrlSolution.newBuilder();
+
+        String submissionId = null;
+
+        // only moderators and above are allowed to see the user id.
+        if (permissions.hasModeratorPermission()) {
+            submissionId = cursor.get(SELF_ID).toString();
+        }
+        build.setProblemBankId(cursor.get(PROBLEM_BANK_ID).toString());
+        build.setIsPracticeProblem((Boolean) cursor.get(IS_PRACTICE_PROBLEM));
+        build.setAllowedInProblemBank((Boolean) cursor.get(ALLOWED_IN_PROBLEMBANK));
         SrlSubmission sub = null;
         try {
             sub = getSubmission(cursor, submissionId);

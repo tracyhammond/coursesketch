@@ -101,6 +101,8 @@ validateFirstRun(document.currentScript);
      * @param {AssignmentNavigator} navigator - The assignment navigator.
      */
     function loadProblem(navigator) {
+        solutionMode = false;
+        currentSubmission = undefined;
         var bankProblem = navigator.getCurrentInfo();
         problemRenderer.reset();
         problemRenderer.setStartWaitingFunction(waiter.startWaiting);
@@ -155,12 +157,26 @@ validateFirstRun(document.currentScript);
 
         solutionMode = true;
         setupSolutionSubmissionPanel(submissionPanel, navigator, currentProblem.questionType);
-        setTimeout(function() {
-            problemRenderer.renderSubmission(currentProblem, currentSubmission, function() {
-                submissionPanel.refreshPanel();
-                console.log('submission');
-            }, true);
-        }, 2100);
+
+        function loadSubmission() {
+            setTimeout(function() {
+                problemRenderer.renderSubmission(currentProblem, currentSubmission, function() {
+                    submissionPanel.refreshPanel();
+                    console.log('submission');
+                }, true);
+            }, 2100);
+        }
+
+        if (isUndefined(currentSubmission) && !isUndefined(currentProblem.solutionId) &&
+            currentProblem.solutionId !== null) {
+            CourseSketch.dataManager.getSolution([currentProblem.id, currentProblem.solutionId], function(solution) {
+                currentSubmission = solution.submission;
+                loadSubmission();
+            });
+        } else {
+            loadSubmission();
+        }
+
         // take the question and render it also set up the button and rename it
     };
 
@@ -196,11 +212,11 @@ validateFirstRun(document.currentScript);
         $(editPanel).addClass('studentMode');
         $(editProblemButton).addClass('studentMode');
         submissionPanel.setWrapperFunction(function(submission) {
-            var studentExperiment = CourseSketch.prutil.SrlSolution();
-            navigator.setSubmissionInformation(studentExperiment, true);
-            console.log('student experiment data set', studentExperiment);
-            studentExperiment.submission = submission;
-            return studentExperiment;
+            var solution = CourseSketch.prutil.SrlSolution();
+            navigator.setSubmissionInformation(solution, false);
+            console.log('student experiment data set', solution);
+            solution.submission = submission;
+            return solution;
         });
     }
 })();

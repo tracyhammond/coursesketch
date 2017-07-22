@@ -171,6 +171,25 @@ public final class SubmissionManager {
     }
 
     /**
+     * Sends a request to the submission server to request an experiment as a user.
+     *
+     * @param authenticator The object being used to authenticate the user.
+     * @param dbs The database that contains data about the experiment.
+     * @param authId The id used to authenticate the users permissions to the submission.
+     * @param bankProblemId The id of the course the problem belongs to.
+     * @param solutionId The list of ids that identify a set of submissions.
+     * @param submissionManager The connections of the submission server
+     * @return {@link protobuf.srl.submission.Submission.SrlExperiment} that had the specific submission id.
+     * @throws DatabaseAccessException Thrown is there is data missing in the database.
+     * @throws AuthenticationException Thrown if the user does not have the authentication
+     */
+    public static Submission.SrlSolution mongoGetSolution(final Authenticator authenticator, final MongoDatabase dbs,
+            final String authId, final String bankProblemId, final String solutionId,
+            final SubmissionManagerInterface submissionManager) throws DatabaseAccessException, AuthenticationException {
+        return submissionManager.getSolution(authId, authenticator, bankProblemId, solutionId);
+    }
+
+    /**
      * Builds a request to the server for all of the sketches in a single problem.
      *
      * @param authenticator The object being used to authenticate the user.

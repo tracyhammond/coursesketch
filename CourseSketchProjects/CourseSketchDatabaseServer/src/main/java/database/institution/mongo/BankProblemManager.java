@@ -151,6 +151,7 @@ public final class BankProblemManager {
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckAccess(true)
                 .setCheckingAdmin(true)
+                .setCheckingOwner(true)
                 .build();
         final AuthenticationResponder responder = authenticator
                 .checkAuthentication(Util.ItemType.BANK_PROBLEM, problemBankId, authId, 0, authType);
@@ -178,9 +179,8 @@ public final class BankProblemManager {
 
         exactProblem.setId(problemBankId);
         exactProblem.setQuestionText((String) mongoBankProblem.get(QUESTION_TEXT));
-        if (isAdmin) {
-            exactProblem.setSolutionId((String) mongoBankProblem.get(SOLUTION_ID));
-        }
+        // TODO: add teacher check back && figure out how to make it work if the person is a teacher.
+        exactProblem.setSolutionId((String) mongoBankProblem.get(SOLUTION_ID));
         exactProblem.setCourseTopic((String) mongoBankProblem.get(COURSE_TOPIC));
         exactProblem.setSubTopic((String) mongoBankProblem.get(SUB_TOPIC));
         exactProblem.setSource((String) mongoBankProblem.get(SOURCE));

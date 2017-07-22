@@ -88,6 +88,36 @@ public final class SubmissionService extends SubmissionServer.SubmissionService 
 
     /**
      * {@inheritDoc}
+     * <code>rpc getSubmission(.protobuf.srl.services.submission.SubmissionRequest) returns
+     * (.protobuf.srl.services.submission.SolutionResponse);</code>
+     *
+     * <pre>
+     * Gets the solution. given the id.
+     * </pre>
+     *
+     */
+    @Override
+    public void getSolution(RpcController controller, SubmissionServer.SubmissionRequest request,
+            RpcCallback<SubmissionServer.SolutionResponse> done) {
+        final String solutionId = request.getSubmissionIds(0);
+        Submission.SrlSolution srlSolution;
+        try {
+            srlSolution = submissionDatabaseInterface
+                    .getSolution(request.getAuthId(), authenticator, request.getProblemId(), solutionId);
+        } catch (DatabaseAccessException e) {
+            LOG.error("Database exception occurred while trying to get experiments", e);
+            done.run(SubmissionServer.SolutionResponse.newBuilder().setDefaultResponse(ExceptionUtilities.createExceptionResponse(e)).build());
+            return;
+        } catch (AuthenticationException e) {
+            LOG.error("Authentication exception occurred while trying to get experiments", e);
+            done.run(SubmissionServer.SolutionResponse.newBuilder().setDefaultResponse(ExceptionUtilities.createExceptionResponse(e)).build());
+            return;
+        }
+        done.run(SubmissionServer.SolutionResponse.newBuilder().setSolution(srlSolution).build());
+    }
+
+    /**
+     * {@inheritDoc}
      * <code>rpc insertExperiment(.protobuf.srl.services.submission.ExperimentInsert) returns
      * (.protobuf.srl.services.submission.SubmissionResponse);</code>
      *

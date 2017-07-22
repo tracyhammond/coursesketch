@@ -56,6 +56,11 @@ message AuthType {
      */
     optional bool checkIsRegistrationRequired = 8;
 
+    /**
+     * If true then it checks against the owner data.
+     */
+    optional bool checkingOwner = 9;
+
 }
 
 /**

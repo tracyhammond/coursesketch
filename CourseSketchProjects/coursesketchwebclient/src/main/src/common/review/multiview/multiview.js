@@ -32,7 +32,7 @@ function MvSketch() {
     /**
      * @returns {QuestionData} The submission data stored in this multiview panel.
      */
-    this.getSubmission = function() {
+    this.getExperiment = function() {
         return this.studentSubmission;
     };
 

@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data;
 import protobuf.srl.request.Message;
+import protobuf.srl.school.Problem;
 import protobuf.srl.submission.Submission;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
@@ -54,10 +55,7 @@ public final class SubmissionHandler {
         if (req.getResponseText().equals("student")) {
             saveExperiment(req, conn, submissionManager, instance);
         } else {
-            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(
-                    new DatabaseAccessException("INSTRUCTORS CAN NOT SUBMIT SOLUTIONS"));
-            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-            LOG.warn("INSTRUCTORS CAN NOT SUBMIT ANYTHING RIGHT NOW");
+            saveSolution(req, conn, submissionManager, instance);
         }
     }
 
@@ -125,6 +123,65 @@ public final class SubmissionHandler {
             instance.insertSubmission(hashedUserId, req.getServersideId(), experiment.getProblemId(), experiment.getPartId(), submissionId,
                     true);
         } catch (AuthenticationException | DatabaseAccessException exception) {
+            createAndSendException(conn, req, exception);
+            // bail early
+            return;
+        }
+
+        final Message.Request result = ResultBuilder.buildRequest(
+                Collections.singletonList(ResultBuilder.buildResult(Data.ItemQuery.NO_OP, "SUCCESSFULLY STORED SUBMISSION")),
+                "SUCCESSFULLY STORED SUBMISSION",
+                req
+                                                                 );
+        conn.send(result);
+    }
+
+
+    /**
+     * Takes in a request that has to deal with inserting an experiment.
+     *
+     * @param req
+     *         The request that has data being inserted.
+     * @param conn
+     *         The connection where the result is sent to.
+     * @param submissionManager
+     *         The manager for submission data on other servers.
+     * @param instance The database backer.
+     */
+    private static void saveSolution(final Message.Request req, final SocketSession conn, final SubmissionManagerInterface submissionManager,
+            final Institution instance) {
+        LOG.info("Parsing as an experiment");
+        Submission.SrlSolution solution;
+        try {
+            solution = Submission.SrlSolution.parseFrom(req.getOtherData());
+        } catch (InvalidProtocolBufferException exception) {
+            createAndSendException(conn, req, exception);
+            return; // sorry but we are bailing if anything does not look right.
+        }
+
+
+        String submissionId;
+        try {
+            submissionId = submissionManager.insertSolution(req.getServersideId(), null, solution);
+        } catch (AuthenticationException | DatabaseAccessException exception) {
+            createAndSendException(conn, req, exception);
+            // bail early
+            return;
+        }
+
+        if (!solution.getSubmission().getId().equals(submissionId)) {
+            // Update the submission id for the bank problem
+            Problem.SrlBankProblem bankProblem =
+                    Problem.SrlBankProblem.newBuilder().setSolutionId(submissionId).setId(solution.getProblemBankId()).build();
+            try {
+                instance.updateBankProblem(req.getServersideId(), bankProblem);
+            } catch (AuthenticationException | DatabaseAccessException exception) {
+                createAndSendException(conn, req, exception);
+            }
+        }
+
+        if (Strings.isNullOrEmpty(submissionId)) {
+            final Exception exception = new DatabaseAccessException("Unable to store submission in the database!");
             createAndSendException(conn, req, exception);
             // bail early
             return;

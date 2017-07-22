@@ -544,6 +544,15 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
+    public Submission.SrlSolution getSolution(final String userId, final String authId, final List<String> identifierList,
+            final SubmissionManagerInterface submissionManager) throws DatabaseAccessException, AuthenticationException {
+        LOG.debug("Getting solution for user: {}", userId);
+        LOG.info("BankProblem: {}", identifierList.get(0));
+
+        return SubmissionManager.mongoGetSolution(auth, database, authId, identifierList.get(0), identifierList.get(1), submissionManager);
+    }
+
+    @Override
     public List<Submission.SrlExperiment> getExperimentAsInstructor(final String authId, final List<String> identifier,
             final Message.Request  sessionInfo, final MultiConnectionManager internalConnections, final ByteString review)
             throws DatabaseAccessException, AuthenticationException {

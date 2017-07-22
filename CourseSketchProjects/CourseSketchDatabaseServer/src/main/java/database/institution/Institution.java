@@ -464,6 +464,20 @@ public interface Institution {
             throws DatabaseAccessException, AuthenticationException;
 
     /**
+     * Calls the submission server for a specific experiment from a specific user.
+     *
+     * @param userId User requesting the experiment.
+     * @param authId The authentication of the user requesting the experiment.
+     * @param identifierList The list of ids that identify a set of submissions.
+     * @param submissionManager The connection manager to other servers.
+     * @throws DatabaseAccessException Thrown if there is an issue accessing data.
+     * @throws AuthenticationException Thrown if the user does not have authentication to the experiment.
+     * @return An {@link protobuf.srl.submission.Submission.SrlExperiment} for the experiment given by the info and the problemId.
+     */
+    Submission.SrlSolution getSolution(String userId, String authId, List<String> identifierList,
+            SubmissionManagerInterface submissionManager) throws DatabaseAccessException, AuthenticationException;
+
+    /**
      * Calls the submission server for a list of experiments based on user ids.
      *
      * @param authId Permissions of the user requesting the experiment.

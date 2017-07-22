@@ -43,7 +43,7 @@ function DefaultWaiter(waitScreenManager, percentBarElement) {
                 waitingElement.finishWaiting();
                 removeWaitOverlay();
             }
-        } catch(exception) {
+        } catch (exception) {
             console.log(exception);
         }
     };
@@ -62,8 +62,15 @@ function DefaultWaiter(waitScreenManager, percentBarElement) {
      * Removes the wait overlay from the DOM if it exists.
      */
     function removeWaitOverlay() {
-        if (isValidElement(overlayElement)) {
-            overlayElement.parentNode.removeChild(overlayElement);
+        try {
+            if (isValidElement(overlayElement)) {
+                overlayElement.parentNode.removeChild(overlayElement);
+            }
+        } catch (exception) {
+            var newOverlay = document.getElementById(overlayElement.id);
+            if (isValidElement(newOverlay)) {
+                newOverlay.parentNode.removeChild(newOverlay);
+            }
         }
     }
 }

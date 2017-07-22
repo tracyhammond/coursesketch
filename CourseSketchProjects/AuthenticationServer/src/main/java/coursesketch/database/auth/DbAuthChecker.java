@@ -78,14 +78,23 @@ public final class DbAuthChecker implements AuthenticationChecker {
         final List<String> groupList = (List<String>) result.get(DatabaseStringConstants.USER_LIST);
         Authentication.AuthResponse.PermissionLevel permissionLevel = null;
 
-        final DBCollection groupCollection = this.database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
+        if (preFixedCheckType.getCheckingOwner()) {
+            if (result.get(DatabaseStringConstants.OWNER_ID).equals(userId)) {
+                // This may need to be larger permission if needed.
+                permissionLevel = Authentication.AuthResponse.PermissionLevel.TEACHER;
+            }
+        }
 
-        // Checks the permission level for each group that is used by the item+
-        for (String groupId : groupList) {
-            final Authentication.AuthResponse.PermissionLevel permLevel = getUserPermissionLevel(groupCollection, groupId, userId);
-            if (permLevel != null) {
-                permissionLevel = permLevel;
-                break;
+        if (permissionLevel == null) {
+            final DBCollection groupCollection = this.database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
+
+            // Checks the permission level for each group that is used by the item+
+            for (String groupId : groupList) {
+                final Authentication.AuthResponse.PermissionLevel permLevel = getUserPermissionLevel(groupCollection, groupId, userId);
+                if (permLevel != null) {
+                    permissionLevel = permLevel;
+                    break;
+                }
             }
         }
 

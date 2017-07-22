@@ -53,6 +53,21 @@ public final class SubmissionManager implements SubmissionManagerInterface {
         return experiments;
     }
 
+    @Override
+    public Submission.SrlSolution getSolution(String authId, Authenticator authenticator, String bankProblemId,
+            String submissionId) throws DatabaseAccessException, AuthenticationException {
+        final Authentication.AuthType.Builder authType = Authentication.AuthType.newBuilder();
+        authType.setCheckingAdmin(true);
+        final AuthenticationResponder authenticationResponder = authenticator
+                .checkAuthentication(Util.ItemType.BANK_PROBLEM, bankProblemId, authId, TimeManager.getSystemTime(),
+                        authType.build());
+        if (!authenticationResponder.hasStudentPermission()) {
+            throw new AuthenticationException("User does not have permission to for this solution:", AuthenticationException.INVALID_PERMISSION);
+        }
+
+        return submissionDatabaseClient.getSolution(submissionId, bankProblemId, authenticationResponder);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -81,7 +96,7 @@ public final class SubmissionManager implements SubmissionManagerInterface {
         final Authentication.AuthType.Builder authType = Authentication.AuthType.newBuilder();
         authType.setCheckingAdmin(true);
         final AuthenticationResponder authenticationResponder = authenticator
-                .checkAuthentication(Util.ItemType.COURSE_PROBLEM, problemBankId, authId, TimeManager.getSystemTime(),
+                .checkAuthentication(Util.ItemType.BANK_PROBLEM, problemBankId, authId, TimeManager.getSystemTime(),
                         authType.build());
         if (!authenticationResponder.hasModeratorPermission()) {
             throw new AuthenticationException("User does not have permission to for this submission", AuthenticationException.INVALID_PERMISSION);

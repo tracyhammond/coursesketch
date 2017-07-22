@@ -165,11 +165,21 @@ public final class DataRequestHandler {
 
                                 final List<Submission.SrlExperiment> experimentList =
                                         instance.getExperimentAsInstructor(authId, itemIdList, baseRequest, internalConnections,
-                                                itemRequest .getAdvanceQuery());
+                                                itemRequest.getAdvanceQuery());
                                 for (Submission.SrlExperiment experiment : experimentList) {
                                     results.add(ResultBuilder.buildResult(ItemQuery.EXPERIMENT, experiment));
                                 }
                             }
+                        }
+                        break;
+                        case SOLUTION: {
+                            final ProtocolStringList itemIdList = itemRequest.getItemIdList();
+                            LOG.info("Trying to retrieve a solution from a user!");
+                            final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
+                            build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
+                            final Submission.SrlSolution experiment = instance.getSolution(userId, authId, itemIdList,
+                                    internalConnections.getBestConnection(SubmissionWebSocketClient.class));
+                            results.add(ResultBuilder.buildResult(ItemQuery.SOLUTION, experiment));
                         }
                         break;
                         case UPDATE: {

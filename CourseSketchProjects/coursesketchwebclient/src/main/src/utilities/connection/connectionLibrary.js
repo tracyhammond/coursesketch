@@ -291,7 +291,7 @@ function Connection(uri, encrypted, attemptReconnect) {
         // we want to represent the input as a 8-bytes array
         var byteArray = new Uint8Array(8);
 
-        for ( var index = 0; index < byteArray.byteLength; index ++ ) {
+        for (var index = 0; index < byteArray.byteLength; index++) {
             var byte = long & 0xff;
             byteArray [ byteArray.byteLength - 1 - index ] = byte;
             long = (long - byte) / 256 ;

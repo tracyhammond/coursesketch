@@ -94,7 +94,7 @@ validateFirstRun(document.currentScript);
         typingSurface.contentEditable = true;
         CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById('problemPanel').appendChild(typingSurface);
-        CourseSketch.dataManager.getSubmission(navigator.getSubmissionIdentifier(), function(submission) {
+        CourseSketch.dataManager.getExperiment(navigator.getSubmissionIdentifier(), function(submission) {
             if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException || isUndefined(submission.getTextAnswer())) {
                 CourseSketch.studentExperiment.removeWaitOverlay();
                 return;
@@ -177,7 +177,7 @@ validateFirstRun(document.currentScript);
         document.getElementById('problemPanel').appendChild(sketchSurface);
         var problem = navigator.getCurrentInfo();
 
-        CourseSketch.dataManager.getSubmission(navigator.getGroupId(), function(submission) {
+        CourseSketch.dataManager.getExperiment(navigator.getGroupId(), function(submission) {
             var problemScript = problem.getScript();
             if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException || isUndefined(submission.getUpdateList())) {
                 executeScript(problemScript, document.getElementById('problemPanel'), function() {
@@ -209,6 +209,6 @@ validateFirstRun(document.currentScript);
                 //console.log(submission);
             });
         });
-        //end of getSubmission
+        //end of getExperiment
     }
 })();

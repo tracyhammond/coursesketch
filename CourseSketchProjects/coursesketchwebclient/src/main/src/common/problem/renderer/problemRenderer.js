@@ -273,8 +273,6 @@ function ProblemRenderer(problemPanel) {
         sketchSurface.loadUpdateList(sketchArea.recordedSketch.getList(), undefined, function() {
             callback();
         });
-
-        sketchSurface.resizeViewPort();
     }
 
     /**

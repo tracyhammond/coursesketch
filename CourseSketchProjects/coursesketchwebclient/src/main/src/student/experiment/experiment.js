@@ -63,7 +63,7 @@ validateFirstRun(document.currentScript);
         questionTextPanel.setRapidProblemText(bankProblem.getQuestionText());
 
         problemRenderer.startWaiting();
-        CourseSketch.dataManager.getSubmission(navigator.getSubmissionIdentifier(), function(submission) {
+        CourseSketch.dataManager.getExperiment(navigator.getSubmissionIdentifier(), function(submission) {
             if (CourseSketch.isException(submission)) {
                 CourseSketch.clientException(submission);
             }

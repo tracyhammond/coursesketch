@@ -27,6 +27,11 @@ message ExperimentResponse {
     optional protobuf.srl.request.DefaultResponse defaultResponse = 2;
 }
 
+message SolutionResponse {
+    optional protobuf.srl.submission.SrlSolution solution = 1;
+    optional protobuf.srl.request.DefaultResponse defaultResponse = 2;
+}
+
 message SubmissionResponse {
     optional string submissionId = 1;
     optional protobuf.srl.request.DefaultResponse defaultResponse = 2;
@@ -41,6 +46,11 @@ service SubmissionService {
      * Gets the submissions. given the ids.
      */
     rpc getSubmission(SubmissionRequest) returns (ExperimentResponse);
+
+    /**
+     * Gets the submission. given the ids.
+     */
+    rpc getSolution(SubmissionRequest) returns (SolutionResponse);
 
     /**
      * Inserts the experiment into the submission server.
