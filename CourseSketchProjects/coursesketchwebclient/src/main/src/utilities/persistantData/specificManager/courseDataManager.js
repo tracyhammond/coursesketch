@@ -228,7 +228,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     parent.deleteCourse = deleteCourse;
 
     /**
-     * Stores the course ids locally in the util.
+     * Stores the course ids locally in the database.
      *
      * @param {List<String>} idList - the list of ids the user currently have in their courses.
      */
@@ -237,7 +237,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     }
 
     /**
-     * Returns a list of all of the courses in util.
+     * Returns a list of all of the courses in database.
      *
      * This does attempt to pull courses from the server!
      *
@@ -430,7 +430,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     });
 
     /**
-     * @returns {Array} A list that represents all of the ids of courses in the util.
+     * @returns {Array} A list that represents all of the ids of courses in the database.
      */
     parent.getAllCourseIds = function() {
         return JSON.parse(JSON.stringify(userCourseId));

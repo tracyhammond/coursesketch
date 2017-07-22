@@ -43,7 +43,7 @@ public interface AuthenticationUpdater {
      * @param itemType
      *         The type of item it is: course, assignment.
      * @param registrationKey
-     *         This field is required and must contain the same value as the registration key in the util.
+     *         This field is required and must contain the same value as the registration key in the database.
      * @throws AuthenticationException
      *         Thrown if the user does not have permission to register for this item.  (Typically that means the key is wrong)
      */

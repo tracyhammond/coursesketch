@@ -35,7 +35,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
     /**
      * Sets the upgrade table to the input table.
      *
-     * @param {Table} tables - A list of tables that are being stored in the util.
+     * @param {Table} tables - A list of tables that are being stored in the database.
      */
     this.setTables = function(tables) {
         upgradeTables = tables;
