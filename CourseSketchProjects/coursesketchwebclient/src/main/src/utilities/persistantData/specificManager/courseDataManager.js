@@ -80,7 +80,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
                 courseCallback(new DatabaseException('The result is undefined', 'getting Course: ' + courseId));
             } else {
                 var course;
-                // gets the data from the util and calls the callback
+                // gets the data from the database and calls the callback
                 try {
                     var bytes = ByteBuffer.fromBase64(result.data);
                     course = CourseSketch.prutil.getSrlCourseClass().decode(bytes);
@@ -168,7 +168,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
 
     /**
      * Sets a course in both local and server databases.
-     * Updates an existing course into the util. This course must already
+     * Updates an existing course into the database. This course must already
      * exist.
      *
      * @param {SrlCourse} course - course object to set
@@ -437,7 +437,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     };
 
     /**
-     * Attempts to clear the util of courses.
+     * Attempts to clear the database of courses.
      *
      * @param {Function} clearCallback - called after all of the courses were cleared.
      */

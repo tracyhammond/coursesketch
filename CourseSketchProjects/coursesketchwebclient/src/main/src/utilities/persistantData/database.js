@@ -69,7 +69,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
     };
 
     /**
-     * Called to open the util.
+     * Called to open the database.
      */
     this.open = function() {
         var tableCreationCalled = false;
@@ -101,7 +101,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 }
             };
             /**
-             * Called when the util is succesfuly upgraded.
+             * Called when the database is succesfuly upgraded.
              *
              * @param {Event} e - A success event.
              */
@@ -114,7 +114,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 }
             };
             /**
-             * Called if there is an error in opening the util.
+             * Called if there is an error in opening the database.
              *
              * @param {Event} e - An error event.
              */
@@ -282,7 +282,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
     }
 
     /**
-     * This is supposed to empty out the util.
+     * This is supposed to empty out the database.
      *
      * Currently does not work.
      */
@@ -311,7 +311,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     output_trace('indexedDB: ' + newDatabaseName + ' deleted');
                 };
                 /**
-                 * Called if there is an error emptying the util.
+                 * Called if there is an error emptying the database.
                  *
                  * @param {Event} event - An error event.
                  */

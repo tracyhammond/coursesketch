@@ -59,7 +59,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
             if (isUndefined(result) || isUndefined(result.data)) {
                 courseProblemCallback(new DatabaseException('The result is undefined', 'getting CourseProblem: ' + courseProblemId));
             } else {
-                // gets the data from the util and calls the callback
+                // gets the data from the database and calls the callback
                 var bytes = ByteBuffer.fromBase64(result.data);
                 courseProblemCallback(CourseSketch.prutil.getSrlProblemClass().decode(bytes));
             }
@@ -107,7 +107,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
 
     /**
      * Updates a course problem in both local and server databases.
-     * Updates an existing course problem into the util. This courseProblem must already
+     * Updates an existing course problem into the database. This courseProblem must already
      * exist.
      *
      * @param {SrlCourseProblem} courseProblem - CourseProblem object to set

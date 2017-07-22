@@ -204,7 +204,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
 
     /**
      * Sets a assignment in both local and server databases.
-     * Updates an existing assignment into the util. This assignment must already
+     * Updates an existing assignment into the database. This assignment must already
      * exist.
      *
      * @param {SrlAssignment} assignment - assignment object to set
@@ -251,7 +251,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
             if (isUndefined(result) || isUndefined(result.data)) {
                 assignmentCallback(new DatabaseException('The result is undefined', 'getting Assignment: ' + assignmentId));
             } else {
-                // gets the data from the util and calls the callback
+                // gets the data from the database and calls the callback
                 try {
                     var bytes = ByteBuffer.fromBase64(result.data);
                     stateCallback(CourseSketch.prutil.getSrlAssignmentClass().decode(bytes), assignmentCallback);

@@ -155,7 +155,7 @@ function AdvanceDataListener(Request, defListener) {
             var result = undefined;
             if (msg.otherData === TIMEOUT_CONST) {
                 removeListener(msg.requestType, msg.requestId);
-                func(evt, new AdvanceListenerException('Connection to the util Timed Out'));
+                func(evt, new AdvanceListenerException('Connection to the database Timed Out'));
                 return;
             }
             if (returnType === getRequestType()) {

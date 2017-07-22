@@ -67,7 +67,7 @@ function VoiceRecording() {
         }.bind(this);
 
         /**
-         * Save the file to the util
+         * Save the file to the database
          * NOTE: CURRENTLY SAVES LOCALLY
          */
         this.saveFile = function() {

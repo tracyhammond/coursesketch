@@ -74,7 +74,7 @@ validateFirstRun(document.currentScript);
 
         idLists[i].subgroups = [problemHolder1, problemHolder2];
 
-		// add them as valid problems as seen by the util
+		// add them as valid problems as seen by the database
 		CourseSketch.fakeProblems.push(idLists[i]);
 	}
 

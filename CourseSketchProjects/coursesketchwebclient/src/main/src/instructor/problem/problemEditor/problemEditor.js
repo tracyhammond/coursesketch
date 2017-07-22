@@ -132,7 +132,7 @@ validateFirstRun(document.currentScript);
     }
 
     /**
-     * Saves the data to the util.
+     * Saves the data to the database.
      */
     function saveData() {
         originalMap = advancedEdit.getInput(currentProblem, editPanel, originalMap);

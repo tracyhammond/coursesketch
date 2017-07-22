@@ -27,7 +27,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, Byte
         var decodingClass = isSolution ? CourseSketch.prutil.getSrlSolutionClass() :
             CourseSketch.prutil.getSrlExperimentClass();
         database.getFromSubmissions(problemId, function(e, request, result) {
-            // TODO: change it so the util can pull locally as well.
+            // TODO: change it so the database can pull locally as well.
             if (isUndefined(result) || isUndefined(result.data) || true) {
                 var queryType = isSolution ? CourseSketch.prutil.ItemQuery.SOLUTION : CourseSketch.prutil.ItemQuery.EXPERIMENT;
                 var itemRequest = CourseSketch.prutil.createItemRequest(queryType, submissionIdentifier);
@@ -49,7 +49,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, Byte
                     submissionWrapper = undefined;
                 });
             } else {
-                // gets the data from the util and calls the callback
+                // gets the data from the database and calls the callback
                 var bytes = ByteBuffer.fromBase64(result.data);
                 submissionCallback(decodingClass.decode(bytes));
                 bytes = null;

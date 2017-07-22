@@ -17,7 +17,7 @@ function SubmissionException(message, cause) {
 SubmissionException.prototype = new BaseException();
 
 /**
- * A class that handles submitting a problem to the util and listening for the result.
+ * A class that handles submitting a problem to the database and listening for the result.
  *
  * This class does not retrieve submissions.
  *

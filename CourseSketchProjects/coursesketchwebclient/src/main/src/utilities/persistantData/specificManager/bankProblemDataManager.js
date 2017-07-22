@@ -59,7 +59,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
             if (isUndefined(result) || isUndefined(result.data)) {
                 bankProblemCallback(new DatabaseException('The result is undefined', 'getting BankProblem: ' + bankProblemId));
             } else {
-                // gets the data from the util and calls the callback
+                // gets the data from the database and calls the callback
                 var bytes = ByteBuffer.fromBase64(result.data);
                 bankProblemCallback(CourseSketch.prutil.getSrlBankProblemClass().decode(bytes));
             }
@@ -157,7 +157,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
 
     /**
      * Updates a bankProblem in both local and server databases.
-     * Updates an existing bankProblem into the util. This bankProblem must already
+     * Updates an existing bankProblem into the database. This bankProblem must already
      * exist.
      *
      * @param {SrlBankProblem} bankProblem - BankProblem object to set

@@ -1,4 +1,4 @@
-package coursesketch.database.util.utilities;
+package coursesketch.database.util;
 
 import coursesketch.database.util.DatabaseAccessException;
 import org.bson.Document;

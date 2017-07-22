@@ -5,7 +5,7 @@ validateFirstRun(document.currentScript);
     courseManagement.gradebookMode = true;
 
     /**
-     * This loads the assignments from the util then calls 'showCourses' to display them.
+     * This loads the assignments from the database then calls 'showCourses' to display them.
      *
      * Called when a user clicks on a course school item.
      *

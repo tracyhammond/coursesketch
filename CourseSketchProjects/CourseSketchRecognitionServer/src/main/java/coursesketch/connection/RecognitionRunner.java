@@ -31,7 +31,7 @@ public final class RecognitionRunner extends GeneralConnectionRunner {
      */
     @Override
     protected void loadConfigurations() {
-        super.setDatabaseName(DatabaseStringConstants.ANSWER_CHECKER_DATABASE);
+        super.setDatabaseName(DatabaseStringConstants.RECOGNITION_DATABASE);
     }
 
     /**

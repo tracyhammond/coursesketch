@@ -58,13 +58,13 @@
     <!--PROJECT SPECIFIC BUGS -->
 
     <Match>
-        <Class name="coursesketch.database.util.SubmissionDatabaseClient" />
+        <Class name="coursesketch.database.SubmissionDatabaseClient" />
         <!-- problems with the double checked locking pattern -->
         <Bug pattern="NP_LOAD_OF_KNOWN_NULL_VALUE" />
     </Match>
 
     <Match>
-        <Class name="coursesketch.database.util.SubmissionDatabaseClient" />
+        <Class name="coursesketch.database.SubmissionDatabaseClient" />
         <!-- problems with the double checked locking pattern -->
         <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
     </Match>

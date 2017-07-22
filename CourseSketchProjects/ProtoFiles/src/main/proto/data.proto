@@ -25,7 +25,7 @@ message ItemSend {
 }
 
 /**
- * Returned upon any request/send from the util.
+ * Returned upon any request/send from the database.
  */
 message DataResult {
     repeated ItemResult results = 1;
@@ -57,7 +57,7 @@ enum ItemQuery {
     BANK_SEARCH = 11;
     REGISTER = 12; // userId = 0 courseId = 1
     COURSE_ROSTER = 13; // returns a list of user Ids
-    UPDATE = 14; // polls the util for any updates/changes that have happened.
+    UPDATE = 14; // polls the database for any updates/changes that have happened.
     LECTURE = 15; // used to get the lectures for a course
     LECTURESLIDE = 16; // used to get the lecture slides for a course
     GRADE = 17; // used to handle grades for a course

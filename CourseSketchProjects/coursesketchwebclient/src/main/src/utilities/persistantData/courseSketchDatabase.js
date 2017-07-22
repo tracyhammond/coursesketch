@@ -100,7 +100,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     })();
 
     /**
-     * This is supposed to clean out the util.
+     * This is supposed to clean out the database.
      *
      * Currently does not work.
      */
@@ -248,7 +248,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     /**
-     * @returns {String} The current id that is being used with the util.
+     * @returns {String} The current id that is being used with the database.
      */
     this.getCurrentId = function() {
         return localUserId;

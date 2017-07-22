@@ -1,4 +1,4 @@
-package coursesketch.database.util;
+package coursesketch.database;
 
 import com.google.common.base.Strings;
 import com.google.protobuf.ByteString;
@@ -10,6 +10,8 @@ import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.SubmissionException;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
 import org.bson.Document;
@@ -50,7 +52,7 @@ import static coursesketch.database.util.DatabaseStringConstants.SUBMISSION_TIME
 import static coursesketch.database.util.DatabaseStringConstants.TEXT_ANSWER;
 import static coursesketch.database.util.DatabaseStringConstants.UPDATELIST;
 import static coursesketch.database.util.DatabaseStringConstants.USER_ID;
-import static coursesketch.database.util.utilities.MongoUtilities.convertStringToObjectId;
+import static coursesketch.database.util.MongoUtilities.convertStringToObjectId;
 
 /**
  * Manages the submissions in the database.
