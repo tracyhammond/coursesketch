@@ -1,9 +1,9 @@
 /**
  * A manager for assignments that talks with the remote server.
  *
- * @param {SchoolDataManager} parent - The coursesketch.util.util that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener - A listener for the coursesketch.util.util.
- * @param {ProtoDatabase} parentDatabase -  The local coursesketch.util.util
+ * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
+ * @param {ProtoDatabase} parentDatabase -  The local database
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
@@ -193,7 +193,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
     parent.insertCourseProblem = insertCourseProblem;
 
     /**
-     * Returns a list of all of the course problems from the local and server coursesketch.util.util for the given list
+     * Returns a list of all of the course problems from the local and server database for the given list
      * of Ids.
      *
      * This does attempt to pull course problems from the server!
@@ -201,7 +201,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
      * @param {List<String>} courseProblemIdList
      *            list of IDs of the courseproblems to get
      * @param {Function} courseProblemCallbackPartial - called when course problems are grabbed from the local
-     *            coursesketch.util.util only. This list may not be complete. This may also
+     *            database only. This list may not be complete. This may also
      *            not get called if there are no local course problems.
      * @param {Function} courseProblemCallbackComplete - called when the complete list of course problems are
      *            grabbed.

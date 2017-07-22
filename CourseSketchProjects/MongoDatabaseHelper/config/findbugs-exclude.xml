@@ -1,12 +1,5 @@
 <FindBugsFilter>
-	<Match>
-		<Package name="protobuf.*" />
-	</Match>
-	<Match>
-		<Bug pattern="SE_NO_SERIALVERSIONID" />
-	</Match>
-
-	<!-- General bug excludes -->
+    <!-- General bug excludes -->
 	<Match>
 		<Bug pattern="SE_BAD_FIELD" />
 	</Match>
@@ -40,7 +33,7 @@
 	</Match>
 
 	<Match>
-		<Or>
+	    <Or>
 			<Field name="e" />
 			<Local name="e" />
 		</Or>
@@ -54,18 +47,4 @@
 			<Bug code="IJU" />
 		</Not>
 	</Match>
-
-    <!--PROJECT SPECIFIC BUGS -->
-
-    <Match>
-        <Class name="coursesketch.database.util.DatabaseClient" />
-        <!-- problems with the double checked locking pattern -->
-        <Bug pattern="NP_LOAD_OF_KNOWN_NULL_VALUE" />
-    </Match>
-
-    <Match>
-        <Class name="coursesketch.database.util.DatabaseClient" />
-        <!-- problems with the double checked locking pattern -->
-        <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
-    </Match>
 </FindBugsFilter>

@@ -29,7 +29,7 @@ public final class SqlStateManager {
      * Right now only the completed/started state is applied
      *
      * @param conn
-     *         the sql connection. Must point to proper coursesketch.util.util.
+     *         the sql connection. Must point to proper database.
      * @param userId
      *         the id of the user asking for the state.
      * @param classification
@@ -38,7 +38,7 @@ public final class SqlStateManager {
      *         the id of the related state (assignmentId, courseId, ...)
      * @return the sate of the assignment.
      * @throws DatabaseAccessException
-     *         thrown if connecting to sql coursesketch.util.util cause an error.
+     *         thrown if connecting to sql database cause an error.
      */
     @SuppressWarnings("checkstyle:magicnumber")
     public static State getState(final Connection conn, final String userId, final String classification, final String itemId)
@@ -67,7 +67,7 @@ public final class SqlStateManager {
      * Creates the state if it does not exist otherwise it updates the old state.
      *
      * @param conn
-     *         the coursesketch.util.util that contains the state. Must point to proper coursesketch.util.util.
+     *         the database that contains the state. Must point to proper database.
      * @param userId
      *         the id of the user asking for the state.
      * @param classification
@@ -78,7 +78,7 @@ public final class SqlStateManager {
      *         what the state is being set to.
      * @return result of set: "SET", "INSERT", "ERROR"
      * @throws DatabaseAccessException
-     *         thrown if connecting to sql coursesketch.util.util cause an error.
+     *         thrown if connecting to sql database cause an error.
      */
     @SuppressWarnings("checkstyle:magicnumber")
     public static String setState(final Connection conn, final String userId, final String classification, final String itemId, final State state)

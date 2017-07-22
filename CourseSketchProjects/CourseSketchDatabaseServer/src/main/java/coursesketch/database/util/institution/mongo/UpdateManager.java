@@ -32,9 +32,9 @@ public final class UpdateManager {
     }
 
     /**
-     * Inserts a new update into the coursesketch.util.util for a specific user.
+     * Inserts a new update into the database for a specific user.
      *
-     * @param dbs the coursesketch.util.util where the update is being stored.
+     * @param dbs the database where the update is being stored.
      * @param userId The user that the update is being added to.
      * @param updateId the id of the new update
      * @param time the time that the update was created.
@@ -65,7 +65,7 @@ public final class UpdateManager {
      * if the given time is <= 0 than the entire list is returned. If there are
      * no updates an empty list is returned.
      *
-     * @param dbs the coursesketch.util.util where the update is stored.
+     * @param dbs the database where the update is stored.
      * @param userId the id of the user getting the update.
      * @param time The time of the last point when updates were grabbed.
      * @return A list of updates.
@@ -97,7 +97,7 @@ public final class UpdateManager {
     /**
      * Deletes an update.
      *
-     * @param dbs The coursesketch.util.util where the update is getting deleted.
+     * @param dbs The database where the update is getting deleted.
      * @param userId The id of the user that is deleting the update.
      * @param updateId The id of the udpate that is being deleted.
      * @param classification The type of update (course, assignment, ...)
@@ -118,9 +118,9 @@ public final class UpdateManager {
      * Either returns a new update or creates a new update then attempts to
      * return that update.
      *
-     * @param dbs the coursesketch.util.util where the update is stored.
+     * @param dbs the database where the update is stored.
      * @param userId The user that holds the update list.
-     * @return A coursesketch.util.util object representing the update.
+     * @return A database object representing the update.
      * @throws DatabaseAccessException thrown if an update fails to be created.
      */
     private static Document retrieveUpdate(final MongoDatabase dbs, final String userId) throws DatabaseAccessException {

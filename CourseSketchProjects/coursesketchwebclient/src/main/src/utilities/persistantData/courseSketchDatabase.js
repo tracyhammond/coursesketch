@@ -1,11 +1,11 @@
 /**
- * Attempts to use data as a coursesketch.util.util, pulls data from the server if it does not
+ * Attempts to use data as a database, pulls data from the server if it does not
  * exist
  *
  * @constructor SchoolDataManager
- * @param {String} userId - The user that this coursesketch.util.util is associated with.
+ * @param {String} userId - The user that this database is associated with.
  * @param {AdvanceDataListener} advanceDataListener - An instance of {@link AdvanceDataListener} this is used for
- *            responses to queries made by the coursesketch.util.util server
+ *            responses to queries made by the database server
  * @param {Connection} connection - The connection to the server which will handle all connections
  *            relating to certain queries.
  * @param {Request} Request - The class representing the Request protobuf used to get the
@@ -38,12 +38,12 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      */
 
     /**
-     * Returns true if the coursesketch.util.util is ready false otherwise.
+     * Returns true if the database is ready false otherwise.
      *
      * It is placed this far up so that it can be called even before most of the
-     * coursesketch.util.util is set up.
+     * database is set up.
      *
-     * @returns {Boolean} True if the coursesketch.util.util is ready false otherwise.
+     * @returns {Boolean} True if the database is ready false otherwise.
      */
     this.isDatabaseReady = function() {
         return databaseFinishedLoading;
@@ -70,12 +70,12 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
     (function() {
         /**
-         * Add function for adding elements to the coursesketch.util.util.
+         * Add function for adding elements to the database.
          *
          * @param {DataStore} store - The specific table to add the data to
          * @param {UUID} objectId - The id of the object being added.
          * @param {String} objectToAdd - The data of the object being added.
-         * @returns {Transaction} The transaction from storing the data in the coursesketch.util.util.
+         * @returns {Transaction} The transaction from storing the data in the database.
          */
         var addFunction = function(store, objectId, objectToAdd) {
             return store.put({
@@ -259,9 +259,9 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     CourseSketch.DatabaseException = DatabaseException;
 
     /**
-     * A helper function for testing that waits for the coursesketch.util.util to be loaded before calling a callback.
+     * A helper function for testing that waits for the database to be loaded before calling a callback.
      *
-     * @param {Function} callback - Called when the coursesketch.util.util is ready.
+     * @param {Function} callback - Called when the database is ready.
      */
     this.waitForDatabase = function waitForDatabase(callback) {
         var interval = setInterval(function() {

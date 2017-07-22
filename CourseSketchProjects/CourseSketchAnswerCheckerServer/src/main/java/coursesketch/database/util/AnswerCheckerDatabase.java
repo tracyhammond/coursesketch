@@ -23,7 +23,7 @@ public class AnswerCheckerDatabase extends AbstractCourseSketchDatabaseReader {
     private Authenticator auth;
 
     /**
-     * Takes in a list of addressess where the coursesketch.util.util can be found and a name of the coursesketch.util.util.
+     * Takes in a list of addressess where the database can be found and a name of the database.
 
      * @param serverInfo Information about the server.
      */

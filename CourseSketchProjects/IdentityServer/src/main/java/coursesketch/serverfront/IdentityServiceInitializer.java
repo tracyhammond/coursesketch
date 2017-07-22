@@ -70,7 +70,7 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
         try {
             manager.startDatabase();
         } catch (DatabaseAccessException e) {
-            LOG.error("Error starting coursesketch.util.util", e);
+            LOG.error("Error starting database", e);
         }
         // Does nothing by default
     }

@@ -47,8 +47,8 @@ public class LocalAddAssignments {
 	}
 
 	public static void main(String args[]) {
-		new MongoInstitution(null, null, null, null); // makes the coursesketch.util.util point locally
-		new UserClient(false, null); // makes the coursesketch.util.util point locally
+		new MongoInstitution(null, null, null, null); // makes the database point locally
+		new UserClient(false, null); // makes the database point locally
 		testAssignments(""/*course id */,""/*instructor id*/);
 	}
 }

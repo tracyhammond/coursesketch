@@ -1,9 +1,9 @@
 /**
  * A manager for assignments that talks with the remote server.
  *
- * @param {SchoolDataManager} parent - The coursesketch.util.util that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener - A listener for the coursesketch.util.util.
- * @param {ProtoDatabase} parentDatabase -  The local coursesketch.util.util
+ * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
+ * @param {ProtoDatabase} parentDatabase -  The local database
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
@@ -246,7 +246,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
     parent.getAllBankProblems = getAllBankProblems;
 
     /**
-     * Returns a list of all of the bank problems from the local and server coursesketch.util.util for the given list
+     * Returns a list of all of the bank problems from the local and server database for the given list
      * of Ids.
      *
      * This does attempt to pull bank problems from the server!
@@ -254,7 +254,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
      * @param {List<String>} bankProblemIdList
      *            list of IDs of the bankProblems to get
      * @param {Function} bankProblemCallbackPartial - called when bank problems are grabbed from the local
-     *            coursesketch.util.util only. This list may not be complete. This may also
+     *            database only. This list may not be complete. This may also
      *            not get called if there are no local bank problems.
      * @param {Function} bankProblemCallbackComplete - called when the complete list of bank problems are
      *            grabbed.

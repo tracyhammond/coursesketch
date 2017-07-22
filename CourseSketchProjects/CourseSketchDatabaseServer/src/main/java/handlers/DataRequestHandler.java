@@ -79,7 +79,7 @@ public final class DataRequestHandler {
      * @param conn
      *         The connection where the result is sent to.
      * @param instance
-     *         The object that interfaces with the coursesketch.util.util and handles specific requests.
+     *         The object that interfaces with the database and handles specific requests.
      * @param sessionId
      *         The id of this particular session which is used if another server is talked to.
      * @param internalConnections

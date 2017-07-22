@@ -61,9 +61,9 @@ public final class UserManager {
     }
 
     /**
-     * Creates a new user in the coursesketch.util.util.
+     * Creates a new user in the database.
      *
-     * @param dbs The coursesketch.util.util where the user is being created.
+     * @param dbs The database where the user is being created.
      * @param user Information about the user.
      * @param userId The user id that is associated with the user.
      */
@@ -79,7 +79,7 @@ public final class UserManager {
      * On first insert we also take in email as credentials. All other ones we
      * take in a password!
      *
-     * @param dbs the coursesketch.util.util where the user exist.
+     * @param dbs the database where the user exist.
      * @param userName the name that the user gave itself.
      * @param userId The id of the user.
      * @param userData extra user data.
@@ -95,7 +95,7 @@ public final class UserManager {
     /**
      * After this method is called a user now has a course added to their account.
      *
-     * @param database The coursesketch.util.util where the user exist.
+     * @param database The database where the user exist.
      * @param userId The id of the user.
      * @param courseId The id of the course that is being added.
      */

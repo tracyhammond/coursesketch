@@ -14,7 +14,7 @@ import java.util.List;
 import static coursesketch.database.util.DatabaseStringConstants.DATABASE;
 
 /**
- * A client for all user data.  This has its own coursesketch.util.util and instance.
+ * A client for all user data.  This has its own database and instance.
  *
  * @author gigemjt
  */
@@ -27,7 +27,7 @@ public final class UserClient {
     private static UserClient instance;
 
     /**
-     * A coursesketch.util.util specific to each instance.
+     * A database specific to each instance.
      */
     private MongoDatabase database;
 
@@ -69,7 +69,7 @@ public final class UserClient {
 
     /**
      * Used only for the purpose of testing overwrite the instance with a test.
-     * instance that can only access a test coursesketch.util.util.
+     * instance that can only access a test database.
      *
      * @param testOnly denotes that his is only being used for testing.
      * @param fakeDB uses a fake DB for its unit tests. This is typically used for
@@ -90,7 +90,7 @@ public final class UserClient {
     }
 
     /**
-     * Inserts a new user into the coursesketch.util.util.
+     * Inserts a new user into the database.
      *
      * @param user {@link SrlUser} data for the new user to be inserted.
      * @param userId The userId associated with the user.

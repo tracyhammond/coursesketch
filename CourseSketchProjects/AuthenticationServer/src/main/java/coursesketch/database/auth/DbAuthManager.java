@@ -33,20 +33,20 @@ public final class DbAuthManager {
     private static final Logger LOG = LoggerFactory.getLogger(DbAuthManager.class);
 
     /**
-     * The coursesketch.util.util that the auth checker grabs data from.
+     * The database that the auth checker grabs data from.
      */
     private final DB database;
 
     /**
-     * Creates A DbAuthManager with a coursesketch.util.util.
-     * @param database The coursesketch.util.util where all of the data is stored.
+     * Creates A DbAuthManager with a database.
+     * @param database The database where all of the data is stored.
      */
     public DbAuthManager(final DB database) {
         this.database = database;
     }
 
     /**
-     * Inserts a new item into the coursesketch.util.util.
+     * Inserts a new item into the database.
      *
      * @param authId The AuthId of the user that is inserting the new item.
      * @param itemId The id of the item being inserted.
@@ -57,7 +57,7 @@ public final class DbAuthManager {
      * @param registrationKey This key is needed for a user to grant themself access permission to a course.
      * @param authChecker Used to check if the user has permission to insert the item.
      * @throws DatabaseAccessException Thrown if the user does not have the correct permissions to insert the item.
-     * @throws AuthenticationException Thrown if there is data that can not be found in the coursesketch.util.util.
+     * @throws AuthenticationException Thrown if there is data that can not be found in the database.
      */
     public void insertNewItem(final String authId, final String itemId, final Util.ItemType itemType,
             final String parentId, final String registrationKey, final DbAuthChecker authChecker)
@@ -105,7 +105,7 @@ public final class DbAuthManager {
     }
 
     /**
-     * Creates a basic query for inserting items into the coursesketch.util.util.
+     * Creates a basic query for inserting items into the database.
      *
      * @param authId The AuthId of the user that is inserting the new item.
      * @param itemId The id of the item being inserted.
@@ -133,7 +133,7 @@ public final class DbAuthManager {
     /**
      * Copies the details of the parent item (mainly groups and CourseId) into the current item.
      *
-     * @param insertQuery An existing query for an item that is going to be inserted into the coursesketch.util.util.
+     * @param insertQuery An existing query for an item that is going to be inserted into the database.
      * @param itemId The id of the item being inserted.
      * @param itemType The type of item that is being inserted. EX: {@link Util.ItemType#COURSE}
      * @param parentId The id of the parent object. EX: parent points to course if item is an Assignment.
@@ -150,7 +150,7 @@ public final class DbAuthManager {
                         .append(DatabaseStringConstants.COURSE_ID, true)
                         .append(DatabaseStringConstants.OWNER_ID, true));
         if (result == null) {
-            throw new DatabaseAccessException("The item with the id " + itemId + " was not found in the coursesketch.util.util.");
+            throw new DatabaseAccessException("The item with the id " + itemId + " was not found in the database.");
         }
 
         // This prevents the existing insertQuery ObjectId from being overwritten by the result ObjectId.
@@ -159,7 +159,7 @@ public final class DbAuthManager {
     }
 
     /**
-     * Creates a new group in the coursesketch.util.util.
+     * Creates a new group in the database.
      *
      * @param authId The id of the owner of the new group.
      * @param courseId The course that the group belongs to.
@@ -234,7 +234,7 @@ public final class DbAuthManager {
      * @param itemType The type of item the user is registering for (Only {@link Util.ItemType#COURSE}
      *                 and (Only {@link Util.ItemType#BANK_PROBLEM} are valid types.
      * @param registrationKey The key that is used to register for the course.
-     * @param authChecker Used to check permissions in the coursesketch.util.util.
+     * @param authChecker Used to check permissions in the database.
      * @throws AuthenticationException If the user does not have access or an invalid {@code registrationKey}.
      * @throws DatabaseAccessException Thrown if the item can not be found.
      */
@@ -250,7 +250,7 @@ public final class DbAuthManager {
                         .append(DatabaseStringConstants.REGISTRATION_KEY, true));
 
         if (result == null) {
-            throw new DatabaseAccessException("The item with the id: " + itemId + " was not found in the coursesketch.util.util.");
+            throw new DatabaseAccessException("The item with the id: " + itemId + " was not found in the database.");
         }
         if (Strings.isNullOrEmpty(registrationKey)) {
             throw new AuthenticationException("Registration key is required but none is given", AuthenticationException.INVALID_PERMISSION);

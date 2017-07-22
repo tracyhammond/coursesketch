@@ -6,7 +6,7 @@ import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
 
 /**
- * A coursesketch.util.util specific servlet that creates a new Database server and Database
+ * A database specific servlet that creates a new Database server and Database
  * Connection Managers.
  *
  * @author gigemjt

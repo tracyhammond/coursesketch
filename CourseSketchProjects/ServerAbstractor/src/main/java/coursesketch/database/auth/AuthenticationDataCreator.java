@@ -8,7 +8,7 @@ package coursesketch.database.auth;
 public interface AuthenticationDataCreator {
 
     /**
-     * @return The value that the coursesketch.util.util found for authentication.
+     * @return The value that the database found for authentication.
      */
     Object getDatabaseResult();
 }

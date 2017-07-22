@@ -50,7 +50,7 @@ import static coursesketch.database.util.utilities.MongoUtilities.convertStringT
 /**
  * Manages assignments for mongo.
  *
- * In the mongo coursesketch.util.util, an assignment has the following structure.
+ * In the mongo database, an assignment has the following structure.
  * <pre>
  * Assignment
  * {
@@ -114,13 +114,13 @@ public final class AssignmentManager {
     }
 
     /**
-     * Inserts an assignment into the mongo coursesketch.util.util.
+     * Inserts an assignment into the mongo database.
      *
      * @param authenticator The object that is performing authenticaton.
-     * @param dbs The coursesketch.util.util where the assignment is being stored.
+     * @param dbs The database where the assignment is being stored.
      * @param authId The id of the user that asking to insert the assignment.
      * @param assignment The assignment that is being inserted.
-     * @return The mongo coursesketch.util.util id of the assignment.
+     * @return The mongo database id of the assignment.
      * @throws AuthenticationException Thrown if the user did not have the authentication to perform the authentication.
      * @throws DatabaseAccessException Thrown if there are problems inserting the assignment.
      */
@@ -162,7 +162,7 @@ public final class AssignmentManager {
     }
 
     /**
-     * Sets the date information for inserting an assignment into the coursesketch.util.util.
+     * Sets the date information for inserting an assignment into the database.
      *
      * Specifically sets accessDate, dueDate, closeDate and reviewOpenDate.  Sets defaults if the information does not already exist.
      *
@@ -203,7 +203,7 @@ public final class AssignmentManager {
     }
 
     /**
-     * Sets the grade information for inserting an assignment into the coursesketch.util.util.
+     * Sets the grade information for inserting an assignment into the database.
      *
      * Does not set an information if it is already set.
      *
@@ -232,7 +232,7 @@ public final class AssignmentManager {
     }
 
     /**
-     * Sets the grade information for inserting an assignment into the coursesketch.util.util.
+     * Sets the grade information for inserting an assignment into the database.
      *
      * Does not set an information if it is already set.
      *
@@ -269,12 +269,12 @@ public final class AssignmentManager {
      * Grabs the assignment from mongo and performs checks making sure the user is valid before returning the assignment.
      *
      * @param authenticator The object that is performing authentication.
-     * @param dbs The coursesketch.util.util where the assignment is being stored.
+     * @param dbs The database where the assignment is being stored.
      * @param authId The id of the user that asking to insert the assignment.
      * @param assignmentId The id of the assignment that is being grabbed.
      * @param checkTime The time that the assignment was asked to be grabbed. (used to
      * check if the assignment is valid)
-     * @return The assignment from the coursesketch.util.util.
+     * @return The assignment from the database.
      * @throws AuthenticationException Thrown if the user did not have the authentication to get the
      * assignment.
      * @throws DatabaseAccessException Thrown if there are problems retrieving the assignment.
@@ -362,7 +362,7 @@ public final class AssignmentManager {
      * Sets data of the assignment from the given cursor.
      *
      * @param exactAssignment The assignment that the data is being set to.
-     * @param cursor The coursesketch.util.util cursor pointing to a specific assignment.
+     * @param cursor The database cursor pointing to a specific assignment.
      */
     private static void setAssignmentData(final SrlAssignment.Builder exactAssignment, final Document cursor) {
         exactAssignment.setCourseId((String) cursor.get(COURSE_ID));
@@ -389,7 +389,7 @@ public final class AssignmentManager {
      *
      * @param exactAssignment A protobuf assignment builder.
      * @param stateBuilder A protobuf state builder.
-     * @param cursor The current coursesketch.util.util pointer for the assignment.
+     * @param cursor The current database pointer for the assignment.
      * @param isAdmin True if the user is acting as an admin.
      * @param isMod True if the user is acting as a moderator.
      * @param checkTime The time that the check was performed.
@@ -455,7 +455,7 @@ public final class AssignmentManager {
      * Updates data from an assignment.
      *
      * @param authenticator The object that is performing authentication.
-     * @param dbs The coursesketch.util.util where the assignment is being stored.
+     * @param dbs The database where the assignment is being stored.
      * @param authId The id of the user that asking to insert the assignment.
      * @param assignmentId The id of the assignment that is being updated.
      * @param assignment The assignment that is being inserted.
@@ -539,7 +539,7 @@ public final class AssignmentManager {
      * With that being said this allows an assignment to be updated adding the
      * problemId to its list of items.
      *
-     * @param dbs The coursesketch.util.util where the assignment is stored.
+     * @param dbs The database where the assignment is stored.
      * @param assignmentId The assignment that the problem is being added to.
      * @param problemId The id of the course problem that is being added to the assignment.
      * @return True if it is successful.

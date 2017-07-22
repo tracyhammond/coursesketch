@@ -1,7 +1,7 @@
 package coursesketch.database.util;
 
 /**
- * Contains a list of useful constants used by the coursesketch.util.util.
+ * Contains a list of useful constants used by the database.
  *
  * @author gigemjt
  */

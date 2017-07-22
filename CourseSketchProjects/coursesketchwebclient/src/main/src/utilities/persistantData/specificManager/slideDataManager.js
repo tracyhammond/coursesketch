@@ -2,9 +2,9 @@
 /**
  * A manager for slides that talks with the remote server.
  *
- * @param {SchoolDataManager} parent - The coursesketch.util.util that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener - A listener for the coursesketch.util.util.
- * @param {ProtoDatabase} database - The local coursesketch.util.util
+ * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
+ * @param {ProtoDatabase} database - The local database
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */

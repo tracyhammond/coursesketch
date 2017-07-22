@@ -595,7 +595,7 @@ public class IdentityManagerTest {
         String userId = "New User!";
         identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
-        // Remove group from the coursesketch.util.util
+        // Remove group from the database
         final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).find();
         final DBObject dbObject = cursor.next();
         System.out.println(dbObject);

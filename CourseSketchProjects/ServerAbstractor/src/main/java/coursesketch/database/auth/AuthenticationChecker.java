@@ -15,7 +15,7 @@ public interface AuthenticationChecker {
      * Checks to make sure that the user is authenticated for all values that are true.
      *
      * @param collectionType The table / collection where this data is stored.
-     *            If the coursesketch.util.util has different tables for different school items (assignment, course) then is how they are selected.
+     *            If the database has different tables for different school items (assignment, course) then is how they are selected.
      * @param itemId
      *            The Id of the object we are checking against.
      * @param userId

@@ -35,7 +35,7 @@ import static coursesketch.database.util.DatabaseStringConstants.SOLUTION_ID;
 import static coursesketch.database.util.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
- * Manages data that has to deal with submissions in the coursesketch.util.util server.
+ * Manages data that has to deal with submissions in the database server.
  *
  * This specifically is a link that links all of the institution data back to the submission data.
  * This does not actually store the submissions themselves.
@@ -61,12 +61,12 @@ public final class SubmissionManager {
     }
 
     /**
-     * Inserts a submission into the coursesketch.util.util.
+     * Inserts a submission into the database.
      *
      * if {@code experiment} is true then {@code userId} is a userId otherwise
      * it is the bankProblem if {@code experiment} is true then {@code problem}
      * is a courseProblem otherwise it is the bankProblem.
-     * @param dbs The coursesketch.util.util that contains the information about the submission.
+     * @param dbs The database that contains the information about the submission.
      * @param userId Generally the userId.  But it is used to uniquely identify each submission.
      * @param identifierList The list of ids that identify a set of submissions.
      * @param submissionId The id associated with the submission on the submission server.
@@ -117,14 +117,14 @@ public final class SubmissionManager {
      * Sends a request to the submission server to request an experiment as a user.
      *
      * @param authenticator The object being used to authenticate the user.
-     * @param dbs The coursesketch.util.util that contains data about the experiment.
+     * @param dbs The database that contains data about the experiment.
      * @param userId The user who has access to the experiment.
      * @param authId The id used to authenticate the users permissions to the submission.
      * @param courseId The id of the course the problem belongs to.
      * @param identifierList The list of ids that identify a set of submissions.
      * @param submissionManager The connections of the submission server
      * @return {@link protobuf.srl.submission.Submission.SrlExperiment} that had the specific submission id.
-     * @throws DatabaseAccessException Thrown is there is data missing in the coursesketch.util.util.
+     * @throws DatabaseAccessException Thrown is there is data missing in the database.
      * @throws AuthenticationException Thrown if the user does not have the authentication
      */
     public static Submission.SrlExperiment mongoGetExperiment(final Authenticator authenticator, final MongoDatabase dbs, final String userId,
@@ -174,13 +174,13 @@ public final class SubmissionManager {
      * Sends a request to the submission server to request an experiment as a user.
      *
      * @param authenticator The object being used to authenticate the user.
-     * @param dbs The coursesketch.util.util that contains data about the experiment.
+     * @param dbs The database that contains data about the experiment.
      * @param authId The id used to authenticate the users permissions to the submission.
      * @param bankProblemId The id of the course the problem belongs to.
      * @param solutionId The list of ids that identify a set of submissions.
      * @param submissionManager The connections of the submission server
      * @return {@link protobuf.srl.submission.Submission.SrlExperiment} that had the specific submission id.
-     * @throws DatabaseAccessException Thrown is there is data missing in the coursesketch.util.util.
+     * @throws DatabaseAccessException Thrown is there is data missing in the database.
      * @throws AuthenticationException Thrown if the user does not have the authentication
      */
     public static Submission.SrlSolution mongoGetSolution(final Authenticator authenticator, final MongoDatabase dbs,
@@ -193,7 +193,7 @@ public final class SubmissionManager {
      * Builds a request to the server for all of the sketches in a single problem.
      *
      * @param authenticator The object being used to authenticate the user.
-     * @param dbs The coursesketch.util.util where the data is stored.
+     * @param dbs The database where the data is stored.
      * @param authId The user that was requesting this information.
      * @param identifierList The list of ids that identify a set of submissions.
      * @param submissionManager The connections of the submission server
@@ -285,7 +285,7 @@ public final class SubmissionManager {
     /**
      * Creates a submission request for the submission server.
      *
-     * @param experiments A {@link Document} that represents the experiments in the coursesketch.util.util.
+     * @param experiments A {@link Document} that represents the experiments in the database.
      * @param itemRoster The list of users that are able to be viewed by the user wanting to view sketches.
      * @return {@link List<String>} of submission ids that is used to query the submission server.
      */
@@ -302,7 +302,7 @@ public final class SubmissionManager {
     /**
      * Creates a submission request for the submission server.
      *
-     * @param experiments A {@link Document} that represents the experiments in the coursesketch.util.util.
+     * @param experiments A {@link Document} that represents the experiments in the database.
      * @return {@link List<String>} of submission ids that is used to query the submission server.
      */
     private static Map<String, String> createSubmissionIdToUserIdMap(final Document experiments) {

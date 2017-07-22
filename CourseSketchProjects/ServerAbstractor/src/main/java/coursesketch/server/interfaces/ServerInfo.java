@@ -45,12 +45,12 @@ public class ServerInfo {
     private final boolean isLocalVar;
 
     /**
-     * A list of addresses where the coursesketch.util.util can be found at.
+     * A list of addresses where the database can be found at.
      */
     private List<ServerAddress> databaseUrl;
 
     /**
-     * The name of the coursesketch.util.util.
+     * The name of the database.
      */
     private String databaseName;
 
@@ -123,16 +123,16 @@ public class ServerInfo {
     }
 
     /**
-     * List of {@link ServerAddress} to connect to coursesketch.util.util.
+     * List of {@link ServerAddress} to connect to database.
      *
-     * @return List of {@link ServerAddress} ot connect to coursesketch.util.util.
+     * @return List of {@link ServerAddress} ot connect to database.
      */
     public final List<ServerAddress> getDatabaseUrl() {
         return databaseUrl;
     }
 
     /**
-     * Adds a url that can be used to reach the coursesketch.util.util.
+     * Adds a url that can be used to reach the database.
      *
      * @param address An address that is used to connect to the mongoclient.
      */
@@ -141,27 +141,27 @@ public class ServerInfo {
     }
 
     /**
-     * Sets the list of addresses that the coursesketch.util.util can be at to.
+     * Sets the list of addresses that the database can be at to.
      *
-     * @param databaseUrl A list of addresses the coursesketch.util.util could be at.
+     * @param databaseUrl A list of addresses the database could be at.
      */
     /* package-private */ final void setDatabaseUrl(final List<ServerAddress> databaseUrl) {
         this.databaseUrl = databaseUrl;
     }
 
     /**
-     * Gets the coursesketch.util.util name.
+     * Gets the database name.
      *
-     * @return The name of the coursesketch.util.util.
+     * @return The name of the database.
      */
     public final String getDatabaseName() {
         return databaseName;
     }
 
     /**
-     * Sets the name of the coursesketch.util.util.
+     * Sets the name of the database.
      *
-     * @param databaseName The name of the coursesketch.util.util.
+     * @param databaseName The name of the database.
      */
     public final void setDatabaseName(final String databaseName) {
         this.databaseName = databaseName;

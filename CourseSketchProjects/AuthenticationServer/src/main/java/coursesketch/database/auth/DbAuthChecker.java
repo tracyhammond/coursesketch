@@ -20,20 +20,20 @@ import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
 import static protobuf.srl.services.authentication.Authentication.AuthResponse.PermissionLevel.STUDENT;
 
 /**
- * Checks the local coursesketch.util.util for access to certain items.
+ * Checks the local database for access to certain items.
  *
  * Created by dtracers
  */
 public final class DbAuthChecker implements AuthenticationChecker {
 
     /**
-     * The coursesketch.util.util that the auth checker grabs data from.
+     * The database that the auth checker grabs data from.
      */
     private final DB database;
 
     /**
-     * Creates a DbAuthChecker that takes in the coursesketch.util.util.
-     * @param database The coursesketch.util.util.
+     * Creates a DbAuthChecker that takes in the database.
+     * @param database The database.
      */
     public DbAuthChecker(final DB database) {
         this.database = database;
@@ -52,7 +52,7 @@ public final class DbAuthChecker implements AuthenticationChecker {
      *         The rules that we check against to determine if the user is authenticated or not.
      * @return True if all checked values are valid.
      * @throws DatabaseAccessException
-     *         Thrown if there are issues grabbing data for the coursesketch.util.util.
+     *         Thrown if there are issues grabbing data for the database.
      * @throws AuthenticationException
      *         Thrown if there are problems creating the auth response.
      */
@@ -72,7 +72,7 @@ public final class DbAuthChecker implements AuthenticationChecker {
         final DBCollection collection = this.database.getCollection(getCollectionFromType(collectionType));
         final DBObject result = collection.findOne(new ObjectId(itemId));
         if (result == null) {
-            throw new DatabaseAccessException("The item with the id " + itemId + " was not found in the coursesketch.util.util.");
+            throw new DatabaseAccessException("The item with the id " + itemId + " was not found in the database.");
         }
 
         final List<String> groupList = (List<String>) result.get(DatabaseStringConstants.USER_LIST);

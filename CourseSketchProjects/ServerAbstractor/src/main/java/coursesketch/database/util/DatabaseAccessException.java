@@ -3,7 +3,7 @@ package coursesketch.database.util;
 import utilities.CourseSketchException;
 
 /**
- * An exception that occurs if data from the coursesketch.util.util is not accessible or has errors in it.
+ * An exception that occurs if data from the database is not accessible or has errors in it.
  * @author gigemjt
  *
  */

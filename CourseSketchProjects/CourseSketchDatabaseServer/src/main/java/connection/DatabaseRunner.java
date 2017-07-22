@@ -7,19 +7,19 @@ import coursesketch.database.util.DatabaseStringConstants;
 import coursesketch.database.util.user.UserClient;
 
 /**
- * Starts the coursesketch.util.util server.
+ * Starts the database server.
  *
  * @author gigemjt
  */
 public final class DatabaseRunner extends GeneralConnectionRunner {
 
     /**
-     * The port on which the coursesketch.util.util server lies.
+     * The port on which the database server lies.
      */
     private static final int DATABASE_PORT = 8885;
 
     /**
-     * The actual main method that starts the coursesketch.util.util server.
+     * The actual main method that starts the database server.
      *
      * @param args Arguments passed from the command line.
      */
@@ -45,11 +45,11 @@ public final class DatabaseRunner extends GeneralConnectionRunner {
     }
 
     /**
-     * Initializes a local instance of the coursesketch.util.util.
+     * Initializes a local instance of the database.
      */
     @Override
     public void executeLocalEnvironment() {
-        new UserClient(false, null); // makes the coursesketch.util.util point locally
+        new UserClient(false, null); // makes the database point locally
     }
 
     /**

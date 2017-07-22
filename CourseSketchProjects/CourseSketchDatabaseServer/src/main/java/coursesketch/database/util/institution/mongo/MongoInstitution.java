@@ -107,7 +107,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     /**
-     * This is only used for testing and references the test coursesketch.util.util not the real coursesketch.util.util.
+     * This is only used for testing and references the test database not the real database.
      *
      * @param authenticator What is used to authenticate access to the different resources.
      * @return An instance of the mongo client. Creates it if it does not exist.
@@ -130,7 +130,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     /**
-     * Called when startDatabase is called if the coursesketch.util.util has not already been started.
+     * Called when startDatabase is called if the database has not already been started.
      *
      * This method should be synchronous.
      */
@@ -142,14 +142,14 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     /**
-     * Used only for the purpose of testing. Overwrites the instance with a test instance that has access to a test coursesketch.util.util.
+     * Used only for the purpose of testing. Overwrites the instance with a test instance that has access to a test database.
      *
-     * Because we only want the coursesketch.util.util set once it has to be set in the constructor.
+     * Because we only want the database set once it has to be set in the constructor.
      * We also want the class to be final so the test code has to be here.
      *
-     * @param testOnly if true it uses the test coursesketch.util.util. Otherwise it uses the real
-     * name of the coursesketch.util.util.
-     * @param fakeDB The fake coursesketch.util.util.
+     * @param testOnly if true it uses the test database. Otherwise it uses the real
+     * name of the database.
+     * @param fakeDB The fake database.
      * @param authenticator What is used to authenticate access to the different resources.
      * @param authUpdater Used to change authentication data.
      * @param identityManagerInterface @see {@link #identityManager}
@@ -188,7 +188,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         for (String courseId : courseIds) {
             allCourses.add(CourseManager.mongoGetCourse(auth, database, authId, courseId, currentTime));
         }
-        LOG.debug("{} Courses were loaded from the coursesketch.util.util for user {}", allCourses.size(), authId);
+        LOG.debug("{} Courses were loaded from the database for user {}", allCourses.size(), authId);
         return allCourses;
     }
 
@@ -307,20 +307,20 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         final String registrationId = AbstractServerWebSocketHandler.Encoder.nextID().toString();
 
         LOG.debug("Course is being inserted with registration key {}", registrationId);
-        // we first add the registration key before we add it to the coursesketch.util.util.
+        // we first add the registration key before we add it to the database.
         final String resultId = CourseManager.mongoInsertCourse(database, SrlCourse.newBuilder(course).setRegistrationKey(registrationId).build());
 
         try {
             authUpdater.createNewItem(authId, resultId, Util.ItemType.COURSE, null, registrationId);
         } catch (AuthenticationException e) {
-            // Revert the adding of the course to the coursesketch.util.util!
+            // Revert the adding of the course to the database!
             throw new DatabaseAccessException("Problem creating authentication data", e);
         }
 
         try {
             identityManager.createNewItem(userId, authId, resultId, Util.ItemType.COURSE, null, auth);
         } catch (AuthenticationException | DatabaseAccessException e) {
-            // Revert the adding of the course to the coursesketch.util.util!
+            // Revert the adding of the course to the database!
             throw new DatabaseAccessException("Problem creating userData", e);
         }
 
@@ -340,14 +340,14 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         try {
             authUpdater.createNewItem(authId, resultId, Util.ItemType.ASSIGNMENT, assignment.getCourseId(), null);
         } catch (AuthenticationException e) {
-            // Revert the adding of the course to the coursesketch.util.util!
+            // Revert the adding of the course to the database!
             throw new AuthenticationException("Failed to create auth data while inserting assignment", e);
         }
 
         try {
             identityManager.createNewItem(userId, authId, resultId, Util.ItemType.ASSIGNMENT, assignment.getCourseId(), auth);
         } catch (AuthenticationException | DatabaseAccessException e) {
-            // Revert the adding of the course to the coursesketch.util.util!
+            // Revert the adding of the course to the database!
             throw new DatabaseAccessException("Problem creating identity data while inserting assignment", e);
         }
 
@@ -386,14 +386,14 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         try {
             authUpdater.createNewItem(authId, resultId, Util.ItemType.COURSE_PROBLEM, problem.getAssignmentId(), null);
         } catch (AuthenticationException e) {
-            // Revert the adding of the course to the coursesketch.util.util!
+            // Revert the adding of the course to the database!
             throw new AuthenticationException("Failed to create auth data while inserting course problem", e);
         }
 
         try {
             identityManager.createNewItem(userId, authId, resultId, Util.ItemType.COURSE_PROBLEM, problem.getAssignmentId(), auth);
         } catch (AuthenticationException | DatabaseAccessException e) {
-            // Revert the adding of the course to the coursesketch.util.util!
+            // Revert the adding of the course to the database!
             throw new DatabaseAccessException("Problem creating identity data while inserting course problem", e);
         }
 
@@ -407,7 +407,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         final String registrationId = AbstractServerWebSocketHandler.Encoder.nextID().toString();
 
         LOG.debug("Bank problem is being inserted with registration key {}", registrationId);
-        // we first add the registration key before we add it to the coursesketch.util.util.
+        // we first add the registration key before we add it to the database.
         final String resultId = BankProblemManager.mongoInsertBankProblem(database, SrlBankProblem.newBuilder(problem)
                 .setRegistrationKey(registrationId).build());
 
@@ -416,7 +416,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         try {
             identityManager.createNewItem(userId, authId, resultId, Util.ItemType.BANK_PROBLEM, null, auth);
         } catch (AuthenticationException | DatabaseAccessException e) {
-            // Revert the adding of the course to the coursesketch.util.util!
+            // Revert the adding of the course to the database!
             throw new DatabaseAccessException("Problem creating identity data while inserting bank problem", e);
         }
 
@@ -426,7 +426,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     @Override
     public void updateLecture(final String authId, final SrlAssignment lecture) throws AuthenticationException, DatabaseAccessException {
         throw new DatabaseAccessException("lecture update not supported");
-        // LectureManager.mongoUpdateLecture(auth, coursesketch.util.util, lecture.getId(), authId, lecture);
+        // LectureManager.mongoUpdateLecture(auth, database, lecture.getId(), authId, lecture);
     }
 
     @Override
@@ -460,7 +460,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     @Override
     public void updateLectureSlide(final String authId, final LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException {
         throw new DatabaseAccessException("slide update not supported");
-        // SlideManager.mongoUpdateLectureSlide(auth, coursesketch.util.util, lectureSlide.getId(), authId, lectureSlide);
+        // SlideManager.mongoUpdateLectureSlide(auth, database, lectureSlide.getId(), authId, lectureSlide);
     }
 
     @Override
@@ -476,7 +476,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
             LOG.debug("Registration user with registration key {} into course {}", registrationKey, courseId);
             authUpdater.registerUser(authId, courseId, Util.ItemType.COURSE, registrationKey);
         } catch (AuthenticationException e) {
-            // Revert the adding of the course to the coursesketch.util.util!
+            // Revert the adding of the course to the database!
             throw new AuthenticationException("Failed to register the user in the course", e);
         }
 
@@ -484,7 +484,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
             LOG.debug("Registration user with userId key {} into course {}", userId, courseId);
             identityManager.registerUserInItem(userId, authId, courseId, Util.ItemType.COURSE, auth);
         } catch (AuthenticationException | DatabaseAccessException e) {
-            // Revert the adding of the course to the coursesketch.util.util!
+            // Revert the adding of the course to the database!
             throw new DatabaseAccessException("Failed to register the user in the course", e);
         }
 
@@ -507,7 +507,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
             LOG.debug("Registration user with registration key {} into bank problem {}", registrationKey, bankProblemId);
             authUpdater.registerUser(courseId, bankProblemId, Util.ItemType.BANK_PROBLEM, registrationKey);
         } catch (AuthenticationException e) {
-            // Revert the adding of the course to the coursesketch.util.util!
+            // Revert the adding of the course to the database!
             throw new AuthenticationException("Failed to register the user in the bank problem", e);
         }
 
@@ -515,7 +515,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
             LOG.debug("Registration user with userId key {} into bank problem  {}", courseId, bankProblemId);
             identityManager.registerUserInItem(courseId, authId, bankProblemId, Util.ItemType.BANK_PROBLEM, auth);
         } catch (AuthenticationException | DatabaseAccessException e) {
-            // Revert the adding of the course to the coursesketch.util.util!
+            // Revert the adding of the course to the database!
             throw new DatabaseAccessException("Failed to register the user in the bank problem", e);
         }
         return true;
@@ -580,7 +580,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     /**
      * Hashes a userId based on the courseId.
      *
-     * Only hashed user Ids are stored in the coursesketch.util.util.
+     * Only hashed user Ids are stored in the database.
      *
      * @param userId The userId that is being hashed.
      * @param courseId The courseId that is being used as a salt.

@@ -45,14 +45,14 @@ public final class RecognitionDatabaseClient extends AbstractCourseSketchDatabas
     private final ShapeConverter shapeConverter = new ShapeConverter();
 
     /**
-     * The local coursesketch.util.util where everything is stored.
+     * The local database where everything is stored.
      */
     private DB database;
 
     /**
-     * Creates a coursesketch.util.util interface with the local server information.
+     * Creates a database interface with the local server information.
      *
-     * @param serverInfo Information about how to create the coursesketch.util.util.
+     * @param serverInfo Information about how to create the database.
      */
     public RecognitionDatabaseClient(final ServerInfo serverInfo) {
         super(serverInfo);

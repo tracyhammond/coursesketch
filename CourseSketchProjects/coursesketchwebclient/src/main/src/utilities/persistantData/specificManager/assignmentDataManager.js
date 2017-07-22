@@ -1,9 +1,9 @@
 /**
  * A manager for assignments that talks with the remote server.
  *
- * @param {SchoolDataManager} parent - The coursesketch.util.util that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener - A listener for the coursesketch.util.util.
- * @param {ProtoDatabase} parentDatabase - The local coursesketch.util.util
+ * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
+ * @param {ProtoDatabase} parentDatabase - The local database
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
@@ -265,14 +265,14 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
     parent.getAssignmentLocal = getAssignmentLocal;
 
     /**
-     * Returns a list of all of the assignments from the local and server coursesketch.util.util for the given list
+     * Returns a list of all of the assignments from the local and server database for the given list
      * of Ids.
      *
      * This does attempt to pull assignments from the server!
      *
      * @param {UUID[]} assignmentIdList - list of IDs of the assignments to get
      * @param {Function} assignmentCallbackPartial - called when assignments are grabbed from the local
-     *            coursesketch.util.util only. This list may not be complete. This may also
+     *            database only. This list may not be complete. This may also
      *            not get called if there are no local assignments.
      * @param {Function} assignmentCallbackComplete - called when the complete list of assignments are grabbed.
      */

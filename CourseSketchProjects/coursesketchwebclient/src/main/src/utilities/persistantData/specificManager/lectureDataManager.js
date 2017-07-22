@@ -2,9 +2,9 @@
 /**
  * A manager for lectires that talks with the remote server.
  *
- * @param {CourseSketchDatabase} parent - The coursesketch.util.util that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener - A listener for the coursesketch.util.util.
- * @param {IndexedDB} parentDatabase -  The local coursesketch.util.util
+ * @param {CourseSketchDatabase} parent - The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
+ * @param {IndexedDB} parentDatabase -  The local database
  * @param {Function} sendData - A function that makes sending data much easier
  * @param {SrlRequest} Request - A shortcut to a request
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
@@ -213,7 +213,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
     parent.getCourseLecture = getCourseLecture;
 
     /**
-     * Returns a list of all of the lectures from the local and server coursesketch.util.util for the given list
+     * Returns a list of all of the lectures from the local and server database for the given list
      * of Ids.
      *
      * This does attempt to pull lectures from the server!
@@ -222,7 +222,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
      *            list of IDs of the lectures to get
      * @param {Function} localCallback
      *            {Function} called when lectures are grabbed from the local
-     *            coursesketch.util.util only. This list may not be complete. This may also
+     *            database only. This list may not be complete. This may also
      *            not get called if there are no local lectures.
      * @param {Function} serverCallback
      *            {Function} called when the complete list of lectures are

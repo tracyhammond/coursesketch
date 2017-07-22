@@ -714,7 +714,7 @@ public class ManyTestProblems {
 	}
 
 	public static void main(String args[]) {
-		new Institution(false); // makes the coursesketch.util.util point locally
-		new UserClient(false); // makes the coursesketch.util.util point locally
+		new Institution(false); // makes the database point locally
+		new UserClient(false); // makes the database point locally
 	}
  }

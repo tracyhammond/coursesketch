@@ -124,7 +124,7 @@ public class MongoInstitutionTest {
     public void before() {
         db = fongo.getDatabase();
 
-        // used to make the user client use the mock coursesketch.util.util
+        // used to make the user client use the mock database
         new UserClient(true, db);
 
         genericDatabaseMock(authChecker, optionChecker);

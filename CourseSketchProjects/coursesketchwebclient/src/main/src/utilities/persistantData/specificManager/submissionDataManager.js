@@ -1,9 +1,9 @@
 /**
  * A manager for assignments that talks with the remote server.
  *
- * @param {SchoolDataManager} parent - The coursesketch.util.util that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener - A listener for the coursesketch.util.util.
- * @param {ProtoDatabase} parentDatabase - The local coursesketch.util.util
+ * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
+ * @param {ProtoDatabase} parentDatabase - The local database
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
@@ -18,8 +18,8 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, Byte
      * This does attempt to pull experiment from the server!
      *
      * @param {List<String>} submissionIdentifier - The identifier for the submission
-     * @param {Function} submissionCallback - called when experiment is grabbed from the coursesketch.util.util.
-     *              This is only called once.  Either it exists in the local coursesketch.util.util or it is grabbed from the server coursesketch.util.util.
+     * @param {Function} submissionCallback - called when experiment is grabbed from the database.
+     *              This is only called once.  Either it exists in the local database or it is grabbed from the server database.
      * @param {Boolean} [isSolution] - True if it is a solution otherwise it is a problem
      */
     function getSubmission(submissionIdentifier, submissionCallback, isSolution) {
@@ -63,8 +63,8 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, Byte
      * This does attempt to pull experiment from the server!
      *
      * @param {List<String>} submissionIdentifier - The identifier for the submission
-     * @param {Function} submissionCallback - called when experiment is grabbed from the coursesketch.util.util.
-     *              This is only called once.  Either it exists in the local coursesketch.util.util or it is grabbed from the server coursesketch.util.util.
+     * @param {Function} submissionCallback - called when experiment is grabbed from the database.
+     *              This is only called once.  Either it exists in the local database or it is grabbed from the server database.
      */
     function getExperiment(submissionIdentifier, submissionCallback) {
         getSubmission(submissionIdentifier, function(experiment) {
@@ -84,8 +84,8 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, Byte
      * This does attempt to pull experiment from the server!
      *
      * @param {List<String>} submissionIdentifier - The identifier for the submission
-     * @param {Function} submissionCallback - called when experiment is grabbed from the coursesketch.util.util.
-     *              This is only called once.  Either it exists in the local coursesketch.util.util or it is grabbed from the server coursesketch.util.util.
+     * @param {Function} submissionCallback - called when experiment is grabbed from the database.
+     *              This is only called once.  Either it exists in the local database or it is grabbed from the server database.
      */
     function getSolution(submissionIdentifier, submissionCallback) {
         getSubmission(submissionIdentifier, submissionCallback, true);

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by gigemjt on 12/27/14.
  *
- * Merges two submissions with one coming from the coursesketch.util.util and the other coming from the client
+ * Merges two submissions with one coming from the database and the other coming from the client
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.NPathComplexity" })
 public final class SubmissionMerger {
@@ -63,20 +63,20 @@ public final class SubmissionMerger {
     }
 
     /**
-     * This merge ensures that the coursesketch.util.util list has no data lost.
+     * This merge ensures that the database list has no data lost.
      *
      * There are three cases:
      * <ul>
      * <li>An undo has happened after a save has happened.  This will insert a marker into an older part of the list.</li>
      * <li>A switch sketch occurs in the middle of another system. (which in case you must be the moderator or admin).</li>
-     * <li>The client list is just longer than the coursesketch.util.util list.</li>
+     * <li>The client list is just longer than the database list.</li>
      * </ul>
      *
      * @return {@link protobuf.srl.commands.Commands.SrlUpdateList} The result will be a merged list.
      * If the merge fails then an exception is thrown instead of returning a value.
      * @throws MergeException
      *         Thrown if there is an issue while merging.
-     *         The user should assume that the merge was aborted and instead use the coursesketch.util.util list
+     *         The user should assume that the merge was aborted and instead use the database list
      */
     public Commands.SrlUpdateList merge() throws MergeException {
         final List<Commands.SrlUpdate> result = merge(databaseList.getListList(), clientList.getListList());
@@ -88,7 +88,7 @@ public final class SubmissionMerger {
      * Merges the two lists together recursively.
      *
      * @param database
-     *         The coursesketch.util.util list
+     *         The database list
      * @param client
      *         The new list that is being merged in.
      * @return A merged form of the list.
@@ -98,7 +98,7 @@ public final class SubmissionMerger {
     private List<Commands.SrlUpdate> merge(final List<Commands.SrlUpdate> database, final List<Commands.SrlUpdate> client) throws MergeException {
         final int differentIndex = Checksum.indexOfDifference(database, client);
         if (differentIndex == -1) {
-            // we return coursesketch.util.util in-case the change is actually a cheater induced conflict of hashing.
+            // we return database in-case the change is actually a cheater induced conflict of hashing.
             return database;
         }
 
@@ -117,7 +117,7 @@ public final class SubmissionMerger {
 
         // something weird happened so we quit and don't modify.
         if (differentIndex == Checksum.WRONG_LIST_SIZE_ERROR) {
-            throw new MergeException("Client list can not be shorter than the coursesketch.util.util list! (someone is trying to change history)");
+            throw new MergeException("Client list can not be shorter than the database list! (someone is trying to change history)");
         }
 
         if (differentIndex == 0) {
@@ -144,7 +144,7 @@ public final class SubmissionMerger {
      * Merges in the list that occurs when the difference is a marker.
      *
      * @param database
-     *         The coursesketch.util.util list.
+     *         The database list.
      * @param client
      *         The new list that is being merged in.
      * @param differentUpdate
@@ -178,7 +178,7 @@ public final class SubmissionMerger {
      * Merges in the list that occurs when the difference is a possible time change in the marker.
      *
      * @param database
-     *         The coursesketch.util.util list.
+     *         The database list.
      * @param client
      *         The new list that is being merged in.
      * @param clientUpdate
@@ -214,7 +214,7 @@ public final class SubmissionMerger {
      * Merges in the list that occurs when a switch sketch is added in the middle.
      *
      * @param database
-     *         The coursesketch.util.util list.
+     *         The database list.
      * @param client
      *         The new list that is being merged in.
      * @param differentIndex
@@ -251,7 +251,7 @@ public final class SubmissionMerger {
      * Merges in the list that occurs when a switch sketch is added in the middle.
      *
      * @param database
-     *         The coursesketch.util.util list.
+     *         The database list.
      * @param client
      *         The new list that is being merged in.
      * @param differentIndex
@@ -269,7 +269,7 @@ public final class SubmissionMerger {
         }
 
         if (endingIndex + differentIndex + 1 <= database.size()) {
-            throw new MergeException("Split marker added at invalid position coursesketch.util.util list extends after marker");
+            throw new MergeException("Split marker added at invalid position database list extends after marker");
         }
 
         if (isModerator) {

@@ -506,7 +506,7 @@ public class DbAuthManagerTest {
         String userId = "New User!";
         dbAuthManager.insertNewItem(TEACHER_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, VALID_REGISTRATION_KEY, null);
 
-        // Remove group from the coursesketch.util.util
+        // Remove group from the database
         final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).find();
         final DBObject dbObject = cursor.next();
         System.out.println(dbObject);

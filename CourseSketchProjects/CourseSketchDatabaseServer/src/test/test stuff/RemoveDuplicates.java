@@ -171,7 +171,7 @@ public class RemoveDuplicates {
 			Document obj = new Document(util.StringConstants.SELF_ID, new ObjectId(id)).append("result", build.toByteArray());
 			trash.insertOne(obj);
 		}
-		//Document removeObj = new Document(coursesketch.util.util.StringConstants.SELF_ID, new ObjectId(id));
+		//Document removeObj = new Document(database.StringConstants.SELF_ID, new ObjectId(id));
 		//experiments.remove(removeObj);
 	}
 

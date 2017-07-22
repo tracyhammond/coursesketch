@@ -54,13 +54,13 @@ public final class GradingRequestHandler {
     /**
      * Handles grading requests to the server.
      *
-     * @param institution The coursesketch.util.util interface.
+     * @param institution The database interface.
      * @param request The request being sent.
      * @param authId The id used to authenticate the user.
      * @param userId The id of the user who sent the request used for identification purposes.
      * @return List of the grades. The list is length 1 if it is only a single grade.
      * @throws AuthenticationException Thrown if user does not have correct permission to retrieve grade.
-     * @throws DatabaseAccessException Thrown if there is something not found in the coursesketch.util.util.
+     * @throws DatabaseAccessException Thrown if there is something not found in the database.
      * @throws InvalidProtocolBufferException Thrown if a protobuf object is not correctly formatted.
      */
     public static List<ProtoGrade> gradingRequestHandler(final Institution institution, final ItemRequest request, final String authId,

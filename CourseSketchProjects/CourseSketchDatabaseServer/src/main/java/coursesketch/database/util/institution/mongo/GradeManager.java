@@ -40,9 +40,9 @@ import static coursesketch.database.util.DatabaseStringConstants.USER_ID;
 import static coursesketch.database.util.DatabaseStringConstants.WHO_CHANGED;
 
 /**
- * Interfaces with mongo coursesketch.util.util to manage grades. Used for gradebook functionality mostly.
+ * Interfaces with mongo database to manage grades. Used for gradebook functionality mostly.
  *
- * In the mongo coursesketch.util.util, a grade has the following structure.
+ * In the mongo database, a grade has the following structure.
  * <pre>
  * Grade
  *  {
@@ -82,7 +82,7 @@ public final class GradeManager {
     }
 
     /**
-     * Adds the specified grade if it does not exist. If it does exist, updates the grade value in the coursesketch.util.util.
+     * Adds the specified grade if it does not exist. If it does exist, updates the grade value in the database.
      * The code block is an example of what happens when a new problem grade is added.
      * <pre><code>
      * coll.update(
@@ -96,13 +96,13 @@ public final class GradeManager {
      * </code></pre>
      *
      * @param authenticator The object that is performing authentication.
-     * @param dbs The coursesketch.util.util that the grade is being added to.
+     * @param dbs The database that the grade is being added to.
      * @param authId The id used to authenticate the user adding the grade to ensure the user has valid permission.
      * @param grade The ProtoObject representing the grade to be added.
      * Assumptions:
      * The userId is hashed
      * @throws AuthenticationException Thrown if the user did not have the authentication to add the grade.
-     * @throws DatabaseAccessException Thrown if grades are not found in the coursesketch.util.util.
+     * @throws DatabaseAccessException Thrown if grades are not found in the database.
      * Package-private
      */
     static void addGrade(final Authenticator authenticator, final MongoDatabase dbs, final String authId, final ProtoGrade grade)
@@ -245,14 +245,14 @@ public final class GradeManager {
      * If looking for a specific problem grade, you must pass in the assignmentId as well as the problemId.
      *
      * @param authenticator The object that is performing authentication.
-     * @param dbs The coursesketch.util.util that the grades are being retrieved from.
+     * @param dbs The database that the grades are being retrieved from.
      * @param authId The id used to authenticate the user getting the grade to ensure the user has valid permission.
      * @param userId The id of the user requesting the grade.
      * This is a check so that users can get their own grade but other users can not get other's grade.
      * @param grade A grade object that contains the data needed to get a grade for similar parameters.
      * @return ProtoGrade object representing the grade requested.
      * @throws AuthenticationException Thrown if the user did not have the authentication to get the grades.
-     * @throws DatabaseAccessException Thrown if a grade is not found in the coursesketch.util.util matching the requested parameters.
+     * @throws DatabaseAccessException Thrown if a grade is not found in the database matching the requested parameters.
      * Package-private
      */
     static ProtoGrade getGrade(final Authenticator authenticator, final MongoDatabase dbs, final String authId, final String userId,
@@ -321,13 +321,13 @@ public final class GradeManager {
      * </code></pre>
      *
      * @param authenticator The object that is performing authentication.
-     * @param dbs The coursesketch.util.util that the grades are being retrieved from.
+     * @param dbs The database that the grades are being retrieved from.
      * @param courseId The course that the grades are being retrieved for.
      * @param authId The id used to authenticate the user getting the grade to ensure the user has valid permission.  Only admin can get all grades.
      * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
      * More sorting should be done by whoever implements this method.
      * @throws AuthenticationException Thrown if the user did not have the authentication to get the grades.
-     * @throws DatabaseAccessException Thrown if grades are not found in the coursesketch.util.util.
+     * @throws DatabaseAccessException Thrown if grades are not found in the database.
      */
     public static List<ProtoGrade> getAllAssignmentGradesInstructor(final Authenticator authenticator, final MongoDatabase dbs, final String courseId,
             final String authId) throws AuthenticationException, DatabaseAccessException {
@@ -374,14 +374,14 @@ public final class GradeManager {
      * </code></pre>
      *
      * @param authenticator The object that is performing authentication.
-     * @param dbs The coursesketch.util.util that the grades are being retrieved from.
+     * @param dbs The database that the grades are being retrieved from.
      * @param courseId The course that the grades are being retrieved for.
      * @param authId The id used to authenticate the user getting the all of the grades
      * @param userId The user that is requesting the grades.
      * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
      * More sorting should be done by whoever implements this method.
      * @throws AuthenticationException Thrown if the user did not have the authentication to get the grades.
-     * @throws DatabaseAccessException Thrown if grades are not found in the coursesketch.util.util.
+     * @throws DatabaseAccessException Thrown if grades are not found in the database.
      */
     public static List<ProtoGrade> getAllAssignmentGradesStudent(final Authenticator authenticator, final MongoDatabase dbs, final String courseId,
             final String authId, final String userId) throws AuthenticationException, DatabaseAccessException {

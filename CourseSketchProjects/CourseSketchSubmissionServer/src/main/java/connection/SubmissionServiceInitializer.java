@@ -78,7 +78,7 @@ public final class SubmissionServiceInitializer extends ServerWebSocketInitializ
         try {
             databaseClient.startDatabase();
         } catch (DatabaseAccessException e) {
-            LOG.error("Error starting coursesketch.util.util", e);
+            LOG.error("Error starting database", e);
         }
         // Does nothing by default
     }

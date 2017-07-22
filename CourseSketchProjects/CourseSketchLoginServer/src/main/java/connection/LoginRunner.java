@@ -45,11 +45,11 @@ public final class LoginRunner extends GeneralConnectionRunner {
     }
 
     /**
-     * Makes the login coursesketch.util.util run locally.
+     * Makes the login database run locally.
      */
     @Override
     public void executeLocalEnvironment() {
-        LOG.info("Setting the login coursesketch.util.util to connect locally");
+        LOG.info("Setting the login database to connect locally");
     }
 
     /**

@@ -44,7 +44,7 @@ public class AnswerCheckerServlet extends ServerWebSocketInitializer {
         try {
             databaseReader.startDatabase();
         } catch (DatabaseAccessException e) {
-            LOG.error("Error starting coursesketch.util.util", e);
+            LOG.error("Error starting database", e);
         }
         // Does nothing by default
     }

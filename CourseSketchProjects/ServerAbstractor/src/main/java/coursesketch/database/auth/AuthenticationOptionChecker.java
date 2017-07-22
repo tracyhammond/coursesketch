@@ -44,9 +44,9 @@ public interface AuthenticationOptionChecker {
      * Creates a data grabber based on the {@link Util.ItemType} using the itemId to find the data.
      *
      * @param collectionType The type of item it is ex: Course, Assignment, Problem.
-     * @param itemId The id of the item used for looking it up in the coursesketch.util.util.
+     * @param itemId The id of the item used for looking it up in the database.
      * @return A {@link AuthenticationDataCreator} that grabs the data for any other uses by the option checker.
-     * @throws DatabaseAccessException Thrown if there is a problem creating the data from the coursesketch.util.util.
+     * @throws DatabaseAccessException Thrown if there is a problem creating the data from the database.
      */
     AuthenticationDataCreator createDataGrabber(final Util.ItemType collectionType, final String itemId) throws DatabaseAccessException;
 }

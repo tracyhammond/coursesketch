@@ -40,7 +40,7 @@ public final class StateManager {
      *
      * Right now only the completed/started state is applied
      *
-     * @param dbs the coursesketch.util.util that contains the state.
+     * @param dbs the database that contains the state.
      * @param userId the id of the user asking for the state.
      * @param classification if it is a course, assignment, ...
      * @param itemId the id of the related state (assignmentId, courseId, ...)
@@ -65,7 +65,7 @@ public final class StateManager {
     /**
      * Creates the state if it does not exist otherwise it updates the old state.
      *
-     * @param dbs the coursesketch.util.util that contains the state.
+     * @param dbs the database that contains the state.
      * @param userId the id of the user asking for the state.
      * @param classification if it is a course, assignment, ...
      * @param itemId the id of the related state (assignmentId, courseId, ...)

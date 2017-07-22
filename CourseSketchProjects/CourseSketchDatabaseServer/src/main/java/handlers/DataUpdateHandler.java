@@ -62,7 +62,7 @@ public final class DataUpdateHandler {
      * @param conn
      *         The connection where the result is sent to.
      * @param instance
-     *         The object that interfaces with the coursesketch.util.util and handles specific requests.
+     *         The object that interfaces with the database and handles specific requests.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
             "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "checkstyle:avoidnestedblocks" })

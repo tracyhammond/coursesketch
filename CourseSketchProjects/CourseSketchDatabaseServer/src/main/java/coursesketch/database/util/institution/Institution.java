@@ -19,7 +19,7 @@ import protobuf.srl.submission.Submission;
 import java.util.List;
 
 /**
- * A wrapper around the coursesketch.util.util that contains institution data.
+ * A wrapper around the database that contains institution data.
  *
  * @author gigemjt
  */
@@ -104,7 +104,7 @@ public interface Institution {
     List<SrlCourse> getAllPublicCourses();
 
     /**
-     * Inserts a {@link SrlCourse} into the the coursesketch.util.util.
+     * Inserts a {@link SrlCourse} into the the database.
      *
      * Upon insertion 3 steps happen:
      * <ol>
@@ -128,7 +128,7 @@ public interface Institution {
     String insertCourse(final String userId, String authId, SrlCourse course) throws DatabaseAccessException;
 
     /**
-     * Inserts the assignment into the the coursesketch.util.util.
+     * Inserts the assignment into the the database.
      *
      * Upon insertion 3 steps happen:
      * <ol>
@@ -153,7 +153,7 @@ public interface Institution {
     String insertAssignment(final String userId, String authId, SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException;
 
     /**
-     * Inserts the lecture into the the coursesketch.util.util.
+     * Inserts the lecture into the the database.
      *
      * Upon insertion 3 steps happen:
      * <ol>
@@ -178,7 +178,7 @@ public interface Institution {
     String insertLecture(final String userId, String authId, SrlAssignment lecture) throws AuthenticationException, DatabaseAccessException;
 
     /**
-     * Inserts the lecture slide into the the coursesketch.util.util.
+     * Inserts the lecture slide into the the database.
      *
      * Upon insertion 3 steps happen:
      * <ol>
@@ -200,7 +200,7 @@ public interface Institution {
     String insertLectureSlide(String authId, LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException;
 
     /**
-     * Inserts the assignment into the the coursesketch.util.util.
+     * Inserts the assignment into the the database.
      *
      * Upon insertion 3 steps happen:
      * <ol>
@@ -226,7 +226,7 @@ public interface Institution {
     String insertCourseProblem(final String userId, String authId, SrlProblem problem) throws AuthenticationException, DatabaseAccessException;
 
     /**
-     * Inserts the {@link SrlBankProblem} into the the coursesketch.util.util.
+     * Inserts the {@link SrlBankProblem} into the the database.
      *
      * Upon insertion a bank problem is created within the problem bank.
      *
@@ -245,7 +245,7 @@ public interface Institution {
     String insertBankProblem(final String userId, String authId, SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException;
 
     /**
-     * Updates an existing lecture in the coursesketch.util.util.
+     * Updates an existing lecture in the database.
      *
      * Upon updating 1 step happen:
      * <ol>
@@ -265,7 +265,7 @@ public interface Institution {
     void updateLecture(String authId, SrlAssignment lecture) throws AuthenticationException, DatabaseAccessException;
 
     /**
-     * Updates an existing course in the coursesketch.util.util.
+     * Updates an existing course in the database.
      *
      * Upon updating 1 step happen:
      * <ol>
@@ -286,7 +286,7 @@ public interface Institution {
     void updateCourse(final String authId, final SrlCourse course) throws AuthenticationException, DatabaseAccessException;
 
     /**
-     * Updates an existing assignment in the coursesketch.util.util.
+     * Updates an existing assignment in the database.
      *
      * Upon updating 1 step happen:
      * <ol>
@@ -307,7 +307,7 @@ public interface Institution {
     void updateAssignment(final String authId, final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException;
 
     /**
-     * Updates an existing courseProblem in the coursesketch.util.util.
+     * Updates an existing courseProblem in the database.
      *
      * Upon updating 1 step happen:
      * <ol>
@@ -328,7 +328,7 @@ public interface Institution {
     void updateCourseProblem(final String authId, final SrlProblem problem) throws AuthenticationException, DatabaseAccessException;
 
     /**
-     * Updates an existing bankProblem in the coursesketch.util.util.
+     * Updates an existing bankProblem in the database.
      *
      * Upon updating 1 step happen:
      * <ol>
@@ -349,7 +349,7 @@ public interface Institution {
     void updateBankProblem(final String authId, final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException;
 
     /**
-     * Inserts the lecture into the the coursesketch.util.util.
+     * Inserts the lecture into the the database.
      *
      * Upon insertion 1 step happen:
      * <ol>
@@ -434,7 +434,7 @@ public interface Institution {
     List<SrlCourse> getUserCourses(String authId) throws AuthenticationException, DatabaseAccessException;
 
     /**
-     * A message sent from the submission server that submits the submission information into the coursesketch.util.util.
+     * A message sent from the submission server that submits the submission information into the database.
      *
      * @param userId The user that the submission is associated.
      * @param authId The id that signifies the permissions of the user the submission is associated with.
@@ -501,7 +501,7 @@ public interface Institution {
      * @param policy
      *         Proto object containing the gradingPolicy to be set or updated.
      * @throws DatabaseAccessException
-     *         Thrown if connecting to coursesketch.util.util causes an error.
+     *         Thrown if connecting to database causes an error.
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      */
@@ -518,12 +518,12 @@ public interface Institution {
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      * @throws DatabaseAccessException
-     *         Thrown if connecting to coursesketch.util.util causes an error.
+     *         Thrown if connecting to database causes an error.
      */
     ProtoGradingPolicy getGradingPolicy(final String authId, final String courseId) throws AuthenticationException, DatabaseAccessException;
 
     /**
-     * Gets all bank problems in the coursesketch.util.util by a page.
+     * Gets all bank problems in the database by a page.
      *
      * @param authId The user who is requesting all bank problems
      * @param courseId Must be admin of the course.
@@ -547,7 +547,7 @@ public interface Institution {
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the grades.
      * @throws DatabaseAccessException
-     *         Thrown if grades are not found in the coursesketch.util.util.
+     *         Thrown if grades are not found in the database.
      */
     List<ProtoGrade> getAllAssignmentGradesInstructor(final String authId, final String courseId)
             throws AuthenticationException, DatabaseAccessException;
@@ -567,13 +567,13 @@ public interface Institution {
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the grades.
      * @throws DatabaseAccessException
-     *         Thrown if grades are not found in the coursesketch.util.util.
+     *         Thrown if grades are not found in the database.
      */
     List<ProtoGrade> getAllAssignmentGradesStudent(final String userId, final String authId, final String courseId)
             throws AuthenticationException, DatabaseAccessException;
 
     /**
-     * Adds the specified grade if it does not exist. If it does exist, updates the grade value in the coursesketch.util.util.
+     * Adds the specified grade if it does not exist. If it does exist, updates the grade value in the database.
      * The code block is an example of what happens when a new problem grade is added.
      * <pre><code>
      * coll.update(
@@ -592,7 +592,7 @@ public interface Institution {
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to add the grade.
      * @throws DatabaseAccessException
-     *         Thrown if grades are not found in the coursesketch.util.util.
+     *         Thrown if grades are not found in the database.
      */
     void addGrade(final String authId, final ProtoGrade grade) throws AuthenticationException, DatabaseAccessException;
 
@@ -612,7 +612,7 @@ public interface Institution {
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the grades.
      * @throws DatabaseAccessException
-     *         Thrown if a grade is not found in the coursesketch.util.util matching the requested parameters.
+     *         Thrown if a grade is not found in the database matching the requested parameters.
      */
     ProtoGrade getGrade(final String userId, final String authId, final ProtoGrade gradeData)
             throws AuthenticationException, DatabaseAccessException;
@@ -624,7 +624,7 @@ public interface Institution {
      *         The id of what courseRoster is being grabbed
      * @return a list of users in the course
      * @throws DatabaseAccessException
-     *         Thrown if there are problems accessing the coursesketch.util.util.
+     *         Thrown if there are problems accessing the database.
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      */

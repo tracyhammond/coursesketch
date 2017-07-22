@@ -175,7 +175,7 @@ public final class Authenticator {
                         }
                     } catch (DatabaseAccessException e) {
                         threadData.exceptionHolder.exception = e;
-                        LOG.error("Exception was thrown while accessing coursesketch.util.util", e);
+                        LOG.error("Exception was thrown while accessing database", e);
                     } catch (AuthenticationException e) {
                         threadData.exceptionHolder.exception = e;
                         LOG.error("Exception was thrown while authenticating person", e);
@@ -215,7 +215,7 @@ public final class Authenticator {
                         // set auth data.
                     } catch (DatabaseAccessException | AuthenticationException e) {
                         threadData.exceptionHolder.exception = e;
-                        LOG.error("Exception was thrown while accessing coursesketch.util.util", e);
+                        LOG.error("Exception was thrown while accessing database", e);
                     }
                     threadData.mainLatch.countDown();
                 }
@@ -236,7 +236,7 @@ public final class Authenticator {
      * @param checkTime The time that the user wants access to the item.
      * @param authBuilder Contains the response.
      * @param checkType Contains what is being checked.
-     * @throws DatabaseAccessException Thrown if there are problems reading the data from the coursesketch.util.util.
+     * @throws DatabaseAccessException Thrown if there are problems reading the data from the database.
      */
     private void setOptionAuthData(final Util.ItemType collectionType, final String itemId, final long checkTime,
             final Authentication.AuthResponse.Builder authBuilder, final Authentication.AuthType checkType) throws DatabaseAccessException {

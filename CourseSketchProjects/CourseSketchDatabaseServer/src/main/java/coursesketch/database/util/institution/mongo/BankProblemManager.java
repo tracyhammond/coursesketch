@@ -41,7 +41,7 @@ import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
 import static coursesketch.database.util.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
- * Interfaces with the mongo coursesketch.util.util to manage bank problems.
+ * Interfaces with the mongo database to manage bank problems.
  *
  * @author gigemjt
  */
@@ -65,9 +65,9 @@ public final class BankProblemManager {
     }
 
     /**
-     * Inserts a problem bank into the mongo coursesketch.util.util.
+     * Inserts a problem bank into the mongo database.
      *
-     * @param dbs the coursesketch.util.util into which the bank is being inserted.
+     * @param dbs the database into which the bank is being inserted.
      * @param problem the problem data that is being inserted.
      * @return The mongo id of the problem bank.
      * @throws AuthenticationException Not currently thrown but may be thrown in the future.
@@ -134,12 +134,12 @@ public final class BankProblemManager {
      * Gets a mongo bank problem (this is usually grabbed through a course id instead of a specific user unless the user is the admin).
      *
      * @param authenticator The object that is authenticating the user.
-     * @param dbs the coursesketch.util.util where the problem is stored.
+     * @param dbs the database where the problem is stored.
      * @param authId the id of the user (typically a course unless they are an admin)
      * @param problemBankId the id of the problem that is being grabbed.
      * @return the SrlBank problem data if it past all tests.
      * @throws AuthenticationException thrown if the user does not have access to the permissions.
-     * @throws DatabaseAccessException thrown if there is a problem finding the bank problem in the coursesketch.util.util.
+     * @throws DatabaseAccessException thrown if there is a problem finding the bank problem in the database.
      */
     public static SrlBankProblem mongoGetBankProblem(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
             final String problemBankId)
@@ -168,9 +168,9 @@ public final class BankProblemManager {
     }
 
     /**
-     * Creates an SrlBankProblem out of the coursesketch.util.util object.
+     * Creates an SrlBankProblem out of the database object.
      *
-     * @param mongoBankProblem a pointer to an object in the mongo coursesketch.util.util.
+     * @param mongoBankProblem a pointer to an object in the mongo database.
      * @param problemBankId The id of problem bank
      * @param isAdmin true if the user is an admin
      * @return {@link protobuf.srl.school.Problem.SrlBankProblem}.
@@ -206,7 +206,7 @@ public final class BankProblemManager {
     /**
      * NOTE: This function is only used internally and should not be made public.
      *
-     * @param query a Document from the mongo coursesketch.util.util that is a slide
+     * @param query a Document from the mongo database that is a slide
      * @return a Problem.ProblemElement of the Document that was passed in
      * @throws coursesketch.database.util.DatabaseAccessException a DatabaseAccessException if something goes wrong parsing a blob of a LectureElement
      */
@@ -249,7 +249,7 @@ public final class BankProblemManager {
      * Updates a bank problem.
      *
      * @param authenticator the object that is performing authentication.
-     * @param dbs The coursesketch.util.util where the assignment is being stored.
+     * @param dbs The database where the assignment is being stored.
      * @param authId the user updating the bank problem.
      * @param problemBankId the id of the problem getting updated.
      * @param problem the bank problem data that is being updated.
@@ -332,10 +332,10 @@ public final class BankProblemManager {
      * Returns all bank problems.  The user must be an instructor of a course.
      *
      * @param authenticator the object that is performing authentication.
-     * @param database The coursesketch.util.util where the assignment is being stored.
+     * @param database The database where the assignment is being stored.
      * @param authId the user asking for the bank problems.
      * @param courseId The course the user is wanting to possibly be associated with the bank problem.
-     * @param page the bank problems are limited to ensure that the coursesketch.util.util is not overwhelmed.
+     * @param page the bank problems are limited to ensure that the database is not overwhelmed.
      * @return a list of {@link protobuf.srl.school.Problem.SrlBankProblem}.
      * @throws AuthenticationException Thrown if the user does not have permission to retrieve any bank problems.
      * @throws DatabaseAccessException Thrown if there are fields missing that make the problem inaccessible.
@@ -367,7 +367,7 @@ public final class BankProblemManager {
      * Returns the registration key of the given bank problem if the constraints are met, null is returned in all other cases.
      *
      * @param authenticator Used to ensure the user has access to the registration key.
-     * @param database The coursesketch.util.util that contains the registration key.
+     * @param database The database that contains the registration key.
      * @param authId The user wanting to view the registration key.
      * @param bankProblemId The id of the bank problem that contains the registration key.
      * @return The registration key of the given course if the constraints are met, null is returned in all other cases.

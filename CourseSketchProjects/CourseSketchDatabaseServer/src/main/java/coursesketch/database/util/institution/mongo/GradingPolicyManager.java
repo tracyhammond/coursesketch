@@ -49,9 +49,9 @@ import static coursesketch.database.util.DatabaseStringConstants.UPSERT_COMMAND;
 import static coursesketch.database.util.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
- * Interfaces with mongo coursesketch.util.util to manage grading policies.
+ * Interfaces with mongo database to manage grading policies.
  *
- * In the mongo coursesketch.util.util, a grading policy has the following structure.
+ * In the mongo database, a grading policy has the following structure.
  * <pre>
  * GradingPolicy
  * {
@@ -103,10 +103,10 @@ final class GradingPolicyManager {
      * As of now, it is up to the implementation to check if gradingPolicies are valid (ex: add to 100%) before calling this method.
      *
      * @param authenticator The object that is performing authentication.
-     * @param dbs The coursesketch.util.util that the gradingPolicy is being added to.
+     * @param dbs The database that the gradingPolicy is being added to.
      * @param userId The id of the user asking for the state.
      * @param policy Proto object containing the gradingPolicy to be set or updated.
-     * @throws DatabaseAccessException Thrown if connecting to the coursesketch.util.util causes an error.
+     * @throws DatabaseAccessException Thrown if connecting to the database causes an error.
      * @throws AuthenticationException Thrown if the user did not have the authentication to get the course.
      */
     static void upsertGradingPolicy(final Authenticator authenticator, final MongoDatabase dbs, final String userId, final ProtoGradingPolicy policy)
@@ -170,7 +170,7 @@ final class GradingPolicyManager {
      * </code></pre>
      *
      * @param authenticator The object that is performing authentication.
-     * @param dbs The coursesketch.util.util that the gradingPolicy is being added to.
+     * @param dbs The database that the gradingPolicy is being added to.
      * @param courseId The gradingPolicy we will get is from this course.
      * @param userId The id of the user asking for the state.
      * @return The protoObject representing the gradingPolicy.

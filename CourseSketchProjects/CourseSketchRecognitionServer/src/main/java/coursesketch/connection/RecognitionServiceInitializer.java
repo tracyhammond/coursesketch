@@ -58,7 +58,7 @@ public final class RecognitionServiceInitializer extends ServerWebSocketInitiali
         try {
             databaseClient.startDatabase();
         } catch (DatabaseAccessException e) {
-            LOG.error("Error starting coursesketch.util.util", e);
+            LOG.error("Error starting database", e);
         }
         services.add(new RecognitionService(new BasicRecognition(databaseClient)));
         return services;
@@ -72,7 +72,7 @@ public final class RecognitionServiceInitializer extends ServerWebSocketInitiali
         try {
             databaseClient.startDatabase();
         } catch (DatabaseAccessException e) {
-            LOG.error("Error starting coursesketch.util.util", e);
+            LOG.error("Error starting database", e);
         }
         // Does nothing by default
     }

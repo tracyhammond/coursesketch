@@ -20,13 +20,13 @@ import java.util.List;
 public final class SubmissionManager implements SubmissionManagerInterface {
 
     /**
-     * The interface for the mongo coursesketch.util.util.
+     * The interface for the mongo database.
      */
     private final SubmissionDatabaseClient submissionDatabaseClient;
 
     /**
      * A constructor that takes in a {@link SubmissionDatabaseClient}.
-     * @param submissionDatabaseClient The interface for the mongo coursesketch.util.util.
+     * @param submissionDatabaseClient The interface for the mongo database.
      */
     public SubmissionManager(final SubmissionDatabaseClient submissionDatabaseClient) {
         this.submissionDatabaseClient = submissionDatabaseClient;

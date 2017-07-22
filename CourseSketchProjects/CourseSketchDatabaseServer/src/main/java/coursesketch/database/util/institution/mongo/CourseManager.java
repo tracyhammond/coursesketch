@@ -43,7 +43,7 @@ import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
 import static coursesketch.database.util.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
- * Interfaces with the coursesketch.util.util to manage course data.
+ * Interfaces with the database to manage course data.
  *
  * @author gigemjt
  */
@@ -63,7 +63,7 @@ public final class CourseManager {
     }
 
     /**
-     * @param dbs The coursesketch.util.util where the assignment is being stored.
+     * @param dbs The database where the assignment is being stored.
      * @param course The data of the course that is being inserted.
      * @return The id of the course that was inserted.
      */
@@ -93,7 +93,7 @@ public final class CourseManager {
 
     /**
      * @param authenticator the object that is performing authentication.
-     * @param dbs The coursesketch.util.util where the assignment is being stored.
+     * @param dbs The database where the assignment is being stored.
      * @param authId the user requesting the course.
      * @param courseId the id of what course is being grabbed.
      * @param checkTime the time at which the course was requested.
@@ -187,7 +187,7 @@ public final class CourseManager {
 
     /**
      * @param authenticator the object that is performing authentication.
-     * @param dbs The coursesketch.util.util where the assignment is being stored.
+     * @param dbs The database where the assignment is being stored.
      * @param authId The id of the user that is updating the course.  Used to check permissions.
      * @param courseId The id of the course being updated.
      * @param course the course data that is being updated.
@@ -282,7 +282,7 @@ public final class CourseManager {
      * With that being said this allows a course to be updated adding the
      * assignmentId to its list of items.
      *
-     * @param dbs The coursesketch.util.util where the assignment is being stored.
+     * @param dbs The database where the assignment is being stored.
      * @param courseId the course into which the assignment is being inserted into
      * @param assignmentId the assignment that is being inserted into the course.
      * @return true if the assignment was inserted correctly.
@@ -303,11 +303,11 @@ public final class CourseManager {
     }
 
     /**
-     * @param dbs The coursesketch.util.util where the course is being stored.
+     * @param dbs The database where the course is being stored.
      * @return a list of all public courses.
      * <p/>
      * FUTURE: this should probably be paginated so it does not crush
-     * the coursesketch.util.util.
+     * the database.
      */
     public static List<SrlCourse> mongoGetAllPublicCourses(final MongoDatabase dbs) {
         final MongoCollection<Document> courseTable = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE));
@@ -327,7 +327,7 @@ public final class CourseManager {
     }
 
     /**
-     * @param cursor The pointer to the coursesketch.util.util object
+     * @param cursor The pointer to the database object
      * @param resultList The list that the results are added to.  This list is modified by this method.
      */
     private static void buildCourseForSearching(final MongoCursor<Document> cursor, final List<SrlCourse> resultList) {
@@ -348,7 +348,7 @@ public final class CourseManager {
      * Returns the registration key of the given course if the constraints are met, null is returned in all other cases.
      *
      * @param authenticator Used to ensure the user has access to the registration key.
-     * @param database The coursesketch.util.util that contains the registration key.
+     * @param database The database that contains the registration key.
      * @param authId The id of the user that is updating the course.  Used to check permissions.
      * @param courseId The id of the course that contains the registration key.
      * @param checkTeacher True if the fact that the user is an admin needs to be checked.  Otherwise it is not checked.

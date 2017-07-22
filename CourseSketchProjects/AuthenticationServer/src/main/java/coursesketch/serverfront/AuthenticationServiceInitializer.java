@@ -20,7 +20,7 @@ import java.util.List;
 public final class AuthenticationServiceInitializer extends ServerWebSocketInitializer {
 
     /**
-     * A client that connects to the mongo coursesketch.util.util.
+     * A client that connects to the mongo database.
      */
     private final MongoClient mongoClient;
 

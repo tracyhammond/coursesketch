@@ -53,7 +53,7 @@ import static coursesketch.database.util.DatabaseStringConstants.USER_ID;
 import static coursesketch.database.util.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
- * Manages the submissions in the coursesketch.util.util.
+ * Manages the submissions in the database.
  */
 @SuppressWarnings("PMD.CyclomaticComplexity")
 public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabaseReader {
@@ -69,7 +69,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     private MongoDatabase database;
 
     /**
-     * A private SubmissionDatabaseClient that accepts data for the coursesketch.util.util location.
+     * A private SubmissionDatabaseClient that accepts data for the database location.
      *
      * @param info Server information.
      *         The location that the server is taking place.
@@ -79,12 +79,12 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     }
 
     /**
-     * Used only for the purpose of testing overwrite the instance with a test instance that can only access a test coursesketch.util.util.
+     * Used only for the purpose of testing overwrite the instance with a test instance that can only access a test database.
      *
      * @param testOnly
-     *         if true it uses the test coursesketch.util.util. Otherwise it uses the real
-     *         name of the coursesketch.util.util.
-     * @param fakeDB The fake coursesketch.util.util.
+     *         if true it uses the test database. Otherwise it uses the real
+     *         name of the database.
+     * @param fakeDB The fake database.
      */
     public SubmissionDatabaseClient(final boolean testOnly, final MongoDatabase fakeDB) {
         this(null);
@@ -232,7 +232,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * Verifies that the input is valid.
      *
      * @param experiment
-     *         The experiment that is trying to be stored in the coursesketch.util.util.
+     *         The experiment that is trying to be stored in the database.
      * @throws DatabaseAccessException
      *         Thrown if a part of the experiment is invalid.
      */
@@ -266,11 +266,11 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      *         This much match the problemId of the submission stored here otherwise it is considered an invalid retrieval.
      * @param permissions
      *          The permissions of the person attempting to get the experiment.
-     * @return the experiment found in the coursesketch.util.util.
+     * @return the experiment found in the database.
      * @throws DatabaseAccessException
      *         thrown if there are problems getting the item.
      * @throws AuthenticationException
-     *         thrown if the problemId given does not match the problemId in the coursesketch.util.util.
+     *         thrown if the problemId given does not match the problemId in the database.
      */
     public SrlExperiment getExperiment(final String itemId, final String problemId, final AuthenticationResponder permissions)
             throws DatabaseAccessException, AuthenticationException {
@@ -323,11 +323,11 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      *         This much match the problemId of the submission stored here otherwise it is considered an invalid retrieval.
      * @param permissions
      *          The permissions of the person attempting to get the experiment.
-     * @return the experiment found in the coursesketch.util.util.
+     * @return the experiment found in the database.
      * @throws DatabaseAccessException
      *         thrown if there are problems getting the item.
      * @throws AuthenticationException
-     *         thrown if the problemId given does not match the problemId in the coursesketch.util.util.
+     *         thrown if the problemId given does not match the problemId in the database.
      */
     public SrlSolution getSolution(final String itemId, final String bankProblemId, AuthenticationResponder permissions)
             throws DatabaseAccessException, AuthenticationException {
@@ -374,7 +374,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * Retrieves the submission portion of the solution or experiment.
      *
      * @param submissionObject
-     *         The coursesketch.util.util pointer to the data.
+     *         The database pointer to the data.
      * @param submissionId
      *         An optional id to add to the submission.
      * @return {@link protobuf.srl.submission.Submission.SrlSubmission} the resulting submission.
@@ -424,7 +424,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     }
 
     /**
-     * Creates a coursesketch.util.util object for the submission object.  Handles certain values in certain ways if they exist.
+     * Creates a database object for the submission object.  Handles certain values in certain ways if they exist.
      *
      * @param submission
      *         The submission that is being inserted.
@@ -434,9 +434,9 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      *         True if the user is acting as a moderator.
      * @param submissionTime
      *         The time that the server received the submission.
-     * @return An object that represents how it would be stored in the coursesketch.util.util.
+     * @return An object that represents how it would be stored in the database.
      * @throws SubmissionException
-     *         thrown if there is a problem creating the coursesketch.util.util object.
+     *         thrown if there is a problem creating the database object.
      */
     private static Document createSubmission(final SrlSubmission submission, final Document cursor,
             final boolean isMod, final long submissionTime) throws SubmissionException {
@@ -463,15 +463,15 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     }
 
     /**
-     * Creates a coursesketch.util.util object for the text submission.
+     * Creates a database object for the text submission.
      *
      * @param submission
      *         The submission that is being inserted.
      * @param cursor
      *         The existing submission,  This should be null if an existing list does not exist.
-     * @return An object that represents how it would be stored in the coursesketch.util.util.
+     * @return An object that represents how it would be stored in the database.
      * @throws SubmissionException
-     *         thrown if there is a problem creating the coursesketch.util.util object.
+     *         thrown if there is a problem creating the database object.
      */
     private static Document createTextSubmission(final FreeResponse submission, final Document cursor) throws SubmissionException {
         if (cursor != null && getExpectedType(cursor) != QuestionData.ElementTypeCase.FREERESPONSE) {
@@ -482,15 +482,15 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     }
 
     /**
-     * Creates a coursesketch.util.util object for the multiple choice submission.
+     * Creates a database object for the multiple choice submission.
      *
      * @param submission
      *         The submission that is being inserted.
      * @param cursor
      *         The existing submission,  This should be null if an existing list does not exist.
-     * @return An object that represents how it would be stored in the coursesketch.util.util.
+     * @return An object that represents how it would be stored in the database.
      * @throws SubmissionException
-     *         thrown if there is a problem creating the coursesketch.util.util object.
+     *         thrown if there is a problem creating the database object.
      */
     private static Document createMultipleChoiceSolution(final MultipleChoice submission, final Document cursor) throws SubmissionException {
         if (cursor != null && getExpectedType(cursor) != QuestionData.ElementTypeCase.MULTIPLECHOICE) {
@@ -547,7 +547,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     }
 
     /**
-     * Creates a coursesketch.util.util object for the update list, merges the list if there is already a list in the coursesketch.util.util.
+     * Creates a database object for the update list, merges the list if there is already a list in the database.
      *
      * @param submission
      *         The submission that is being inserted.
@@ -557,9 +557,9 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      *         True if the user is acting as a moderator.
      * @param submissionTime
      *         The time that the server received the submission.
-     * @return An object that represents how it would be stored in the coursesketch.util.util.
+     * @return An object that represents how it would be stored in the database.
      * @throws SubmissionException
-     *         thrown if there is a problem creating the coursesketch.util.util object.
+     *         thrown if there is a problem creating the database object.
      */
     static Document createUpdateList(final SketchArea submission, final Document cursor,
             final boolean isMod, final long submissionTime)
@@ -681,7 +681,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     }
 
     /**
-     * Called when startDatabase is called if the coursesketch.util.util has not already been started.
+     * Called when startDatabase is called if the database has not already been started.
      *
      * This method should be synchronous.
      */

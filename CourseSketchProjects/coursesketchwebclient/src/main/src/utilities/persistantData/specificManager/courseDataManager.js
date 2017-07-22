@@ -1,9 +1,9 @@
 /**
  * A manager for courses that talks with the remote server.
  *
- * @param {SchoolDataManager} parent - The coursesketch.util.util that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener - A listener and sender for the coursesketch.util.util
- * @param {ProtoDatabase} database - The local coursesketch.util.util
+ * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener and sender for the database
+ * @param {ProtoDatabase} database - The local database
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
@@ -321,13 +321,13 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     parent.getAllCourses = getAllCourses;
 
     /**
-     * Inserts a course into the coursesketch.util.util. This course must not exist.
+     * Inserts a course into the database. This course must not exist.
      *
      * If there is a problem courseCallback is called with an exception.
      *
      * @param {SrlCourse} course - The course that is being inserted.
      * @param {Function} courseCallback - is called after the insertion of course into the local
-     *            coursesketch.util.util. (this can be used for instant refresh)
+     *            database. (this can be used for instant refresh)
      * @param {Function} serverCallback - serverCallback is called after the insertion of course into
      *            the server and the return of the server with the correct
      *            courseId

@@ -21,12 +21,12 @@ public final class GradingPolicyRequestHandler {
     /**
      * Handles grading policy requests to the server.
      *
-     * @param institution The coursesketch.util.util interface.
+     * @param institution The database interface.
      * @param request The request being sent. Should have an ItemId with courseId as the 0th index.
      * @param userId The Id of the user who sent the request.
      * @return ProtoObject of the grading policy.
      * @throws AuthenticationException Thrown if user does not have correct permission to retrieve policy.
-     * @throws DatabaseAccessException Thrown if the policy is not found in the coursesketch.util.util.
+     * @throws DatabaseAccessException Thrown if the policy is not found in the database.
      */
     public static ProtoGradingPolicy gradingPolicyRequestHandler(final Institution institution, final ItemRequest request, final String userId)
             throws AuthenticationException, DatabaseAccessException {

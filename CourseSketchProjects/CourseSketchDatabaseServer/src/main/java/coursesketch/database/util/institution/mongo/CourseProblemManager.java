@@ -35,10 +35,10 @@ import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
 import static coursesketch.database.util.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
- * Manages course problems for the mongo coursesketch.util.util.
+ * Manages course problems for the mongo database.
  *
  * These are problem parts (a,b,c,d) in a normal assignment and the lecture groups in a lecture.
- * In the mongo coursesketch.util.util, a course problem has the following structure.
+ * In the mongo database, a course problem has the following structure.
  * <pre><code>
  * CourseProblem
  * {
@@ -99,10 +99,10 @@ public final class CourseProblemManager {
 
     /**
      * @param authenticator The object that is performing authentication.
-     * @param dbs The coursesketch.util.util where the course problem is being stored.
+     * @param dbs The database where the course problem is being stored.
      * @param authId The user that is asking to insert a course problem.
      * @param problem The data of the course problem being inserted.
-     * @return The mongo coursesketch.util.util Id of the course problem.
+     * @return The mongo database Id of the course problem.
      * @throws AuthenticationException Thrown if the user does not have permission to insert the course problem.
      * @throws DatabaseAccessException Thrown if there is data that is missing.
      */
@@ -149,7 +149,7 @@ public final class CourseProblemManager {
      * If a problem is not within a valid date an exception is thrown.
      *
      * @param authenticator The object that is performing authentication.
-     * @param dbs The coursesketch.util.util where the assignment is being stored.
+     * @param dbs The database where the assignment is being stored.
      * @param authId The user requesting the problem.
      * @param problemId The problem being requested.
      * @param checkTime The time at which the problem was requested.
@@ -220,7 +220,7 @@ public final class CourseProblemManager {
 
     /**
      * @param authenticator The object that is performing authentication.
-     * @param dbs The coursesketch.util.util where the assignment is being stored.
+     * @param dbs The database where the assignment is being stored.
      * @param authId The user requesting the problem.
      * @param problemId The problem being updated.
      * @param problem The data of the problem itself.
@@ -280,7 +280,7 @@ public final class CourseProblemManager {
     /**
      * Creates a mongo object query for the list of {@link protobuf.srl.school.Problem.ProblemSlideHolder}.
      *
-     * @param holder The list of problems that are being inserted into the coursesketch.util.util.
+     * @param holder The list of problems that are being inserted into the database.
      * @return A mongo object that represents the list passed in.
      * @throws DatabaseAccessException Thrown if there are problems creating the list.
      */
@@ -300,7 +300,7 @@ public final class CourseProblemManager {
     /**
      * Extracts the problem data from the {@link Document} into the {@link SrlProblem}.
      *
-     * @param dbProblem Contains the data from the coursesketch.util.util.
+     * @param dbProblem Contains the data from the database.
      * @return An {@link SrlProblem} problem that is being filled with the data.
      */
     private static SrlProblem.Builder extractProblemData(final Document dbProblem) {
@@ -322,10 +322,10 @@ public final class CourseProblemManager {
     }
 
     /**
-     * Creates a list of problem holder data from the coursesketch.util.util versions.
+     * Creates a list of problem holder data from the database versions.
      *
      * @param authenticator The object that is performing authentication.
-     * @param database The coursesketch.util.util where the assignment is being stored.
+     * @param database The database where the assignment is being stored.
      * @param authId The user requesting the problem.
      * @param courseId Used to authenticate the course for the bank problem.
      * @param checkTime The time that the assignment was asked to be grabbed. (used to
@@ -348,12 +348,12 @@ public final class CourseProblemManager {
 
     /**
      * @param authenticator The object that is performing authentication.
-     * @param database The coursesketch.util.util where the assignment is being stored.
+     * @param database The database where the assignment is being stored.
      * @param authId The user requesting the problem.
      * @param courseId Used to authenticate the course for the bank problem.
      * @param checkTime The time that the assignment was asked to be grabbed. (used to
      * check if the assignment is valid)
-     * @param data The data from the coursesketch.util.util about a specific problem or slide.
+     * @param data The data from the database about a specific problem or slide.
      * @param index The location of the slide or problem in the list.
      * @return A protobuf representation of a problem slide holder.
      * @throws AuthenticationException Thrown if the user does not have permission to update the course problem.
@@ -397,7 +397,7 @@ public final class CourseProblemManager {
 
     /**
      * @param authenticator The object that is performing authentication.
-     * @param dbs The coursesketch.util.util where the assignment is being stored.
+     * @param dbs The database where the assignment is being stored.
      * @param authId The user requesting the problem.
      * @param problemId The id of the problem that the data is being inserted into.
      * @param bankProblemId The id of the bank problem being inserted
@@ -433,7 +433,7 @@ public final class CourseProblemManager {
 
     /**
      * @param authenticator The object that is performing authentication.
-     * @param dbs The coursesketch.util.util where the assignment is being stored.
+     * @param dbs The database where the assignment is being stored.
      * @param authId The user requesting the problem.
      * @param assignmentId The assignment into which the slide is being inserted into.
      * @param problemGroupId The courseProblem the slide is being inserted into.
@@ -475,7 +475,7 @@ public final class CourseProblemManager {
      * With that being said this allows a course to be updated adding the
      * bankProblemId to its list of items.
      *
-     * @param dbs The coursesketch.util.util where the assignment is being stored.
+     * @param dbs The database where the assignment is being stored.
      * @param assignmentId The assignment into which the slide is being inserted into.
      * @param problemGroupId The courseProblem the slide is being inserted into.
      * @param bankProblemId The assignment that is being inserted into the course.

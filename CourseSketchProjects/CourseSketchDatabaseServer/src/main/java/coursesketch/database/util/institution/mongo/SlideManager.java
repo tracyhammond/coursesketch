@@ -48,13 +48,13 @@ public final class SlideManager {
     private SlideManager() { }
 
     /**
-     * Inserts a lecture into the mongo coursesketch.util.util.
+     * Inserts a lecture into the mongo database.
      *
      * @param authenticator the object that is performing authenticaton.
-     * @param dbs The coursesketch.util.util where the slide is being stored.
+     * @param dbs The database where the slide is being stored.
      * @param authId The id of the user that asking to insert the slide.
      * @param slide The slide that is being inserted.
-     * @return The mongo coursesketch.util.util id of the assignment.
+     * @return The mongo database id of the assignment.
      * @throws AuthenticationException Thrown if the user did not have the authentication to perform the authentication.
      * @throws DatabaseAccessException Thrown if there are problems inserting the assignment.
      */
@@ -124,12 +124,12 @@ public final class SlideManager {
      * Grabs the slide from mongo and performs checks making sure the user is valid before returning the slide.
      *
      * @param authenticator the object that is performing authentication.
-     * @param dbs The coursesketch.util.util where the assignment is being stored.
+     * @param dbs The database where the assignment is being stored.
      * @param userId The id of the user that asking to insert the lecture.
      * @param slideId the id of the lecture that is being grabbed.
      * @param checkTime The time that the assignment was asked to be grabbed. (used to
      * check if the slide is valid)
-     * @return The slide from the coursesketch.util.util.
+     * @return The slide from the database.
      * @throws AuthenticationException Thrown if the user did not have the authentication to get the
      * slide.
      * @throws DatabaseAccessException Thrown if there are problems retrieving the slide.
@@ -187,7 +187,7 @@ public final class SlideManager {
      * Updates data from an assignment.
      *
      * @param authenticator the object that is performing authentication.
-     * @param dbs The coursesketch.util.util where the lecture slide is being stored.
+     * @param dbs The database where the lecture slide is being stored.
      * @param assignmentId the id of the lecture slide that is being updated.
      * @param userId The id of the user that asking to update the lecture slide.
      * @param lectureSlide The lecture slide that is being updated.
@@ -228,7 +228,7 @@ public final class SlideManager {
      * sets data of the slide from the given cursor.
      *
      * @param exactSlide The lecture that the data is being set to.
-     * @param cursor The coursesketch.util.util cursor pointing to a specific slide.
+     * @param cursor The database cursor pointing to a specific slide.
      * @throws coursesketch.database.util.DatabaseAccessException passes exception through to createElementFromQuery
      */
     public static void setSlideData(final Problem.LectureSlide.Builder exactSlide, final Document cursor) throws DatabaseAccessException {
@@ -246,7 +246,7 @@ public final class SlideManager {
     /**
      * NOTE: This function is only used internally and should not be made public.
      *
-     * @param query a Document from the mongo coursesketch.util.util that is a slide
+     * @param query a Document from the mongo database that is a slide
      * @return a Problem.ProblemElement of the Document that was passed in
      * @throws coursesketch.database.util.DatabaseAccessException a DatabaseAccessException if something goes wrong parsing a blob of a LectureElement
      */

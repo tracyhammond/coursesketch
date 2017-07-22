@@ -78,10 +78,10 @@ public final class UserUpdateHandler {
     /**
      * Removes updates for the user where the userId is older than 30 days.
      *
-     * @param database the coursesketch.util.util where the updates are stored.
+     * @param database the database where the updates are stored.
      * @param userId the user who is affected by these updates.
      * @throws AuthenticationException Thrown if the user does not have access to the update.
-     * @throws DatabaseAccessException Thrown if the coursesketch.util.util does not contain the specified update.
+     * @throws DatabaseAccessException Thrown if the database does not contain the specified update.
      */
     public static void removeOldUpdates(final MongoDatabase database, final String userId) throws AuthenticationException, DatabaseAccessException {
         // ges all of the updates.
@@ -99,7 +99,7 @@ public final class UserUpdateHandler {
     /**
      * Inserts updates for a group of uses.
      *
-     * @param database the coursesketch.util.util where the update is being inserted
+     * @param database the database where the update is being inserted
      * @param users the list of users affected by this update.
      * @param objectAffectedId the id of the object that was updated.
      * @param classification the type of update (course, assignment, ...)
@@ -124,7 +124,7 @@ public final class UserUpdateHandler {
      * This method will recursively search for all users to insert into the
      * update list
      *
-     * @param database the coursesketch.util.util where the updates are being inserted.
+     * @param database the database where the updates are being inserted.
      * @param users the list of people who are holding this new update.
      * @param objectAffectedId the id of the object that was updated.
      * @param classification if it is a course, assignment, ...
@@ -152,8 +152,8 @@ public final class UserUpdateHandler {
     }
 
     /**
-     * Insert a new update into the coursesketch.util.util.
-     * @param database the coursesketch.util.util where the update is being inserted into.
+     * Insert a new update into the database.
+     * @param database the database where the update is being inserted into.
      * @param userId who the update is applying to.
      * @param objectAffectedId the id of the object that was updated.
      * @param classification the update classification.
@@ -173,7 +173,7 @@ public final class UserUpdateHandler {
      * does not exist.
      *
      * @param dbs
-     *            The coursesketch.util.util to get the information from.
+     *            The database to get the information from.
      * @param userId
      *            The userId that we are currently looking at.
      * @param time
