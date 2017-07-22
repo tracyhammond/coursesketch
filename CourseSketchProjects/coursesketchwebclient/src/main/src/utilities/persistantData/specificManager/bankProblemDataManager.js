@@ -10,7 +10,7 @@
 function BankProblemDataManager(parent, advanceDataListener, parentDatabase, ByteBuffer) {
 
     /**
-     * Sets a bankProblem in local util.
+     * Sets a bankProblem in local database.
      *
      * @param {SrlBankProblem} bankProblem - bankProblem object to set
      * @param {Function} bankProblemCallback - function to be called after the bankProblem setting is done
@@ -26,7 +26,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
     parent.setBankProblem = setBankProblem;
 
     /**
-     * Deletes a bankProblem from local util.
+     * Deletes a bankProblem from local database.
      * This does not delete the id pointing to this item in the respective course.
      *
      * @param {String} bankProblemId
@@ -45,7 +45,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
     parent.deleteBankProblem = deleteBankProblem;
 
     /**
-     * Gets a bankProblem from the local util.
+     * Gets a bankProblem from the local database.
      *
      * @param {String} bankProblemId - ID of the bankProblem to get
      * @param {Function} bankProblemCallback - Function to be called after getting is complete, parameter
@@ -91,7 +91,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
             var resultArray = item.getReturnText().split(':');
             var oldId = resultArray[1].trim();
             var newId = resultArray[0].trim();
-            // we want to get the current course in the local util in case
+            // we want to get the current course in the local database in case
             // it has changed while the server was processing.
             getBankProblemLocal(oldId, function(bankProblem2) {
                 deleteBankProblem(oldId);
@@ -207,7 +207,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
     }
 
     /**
-     * Returns a list of all of the bank problems from the local and server util for the given list
+     * Returns a list of all of the bank problems from the local and server database for the given list
      * of Ids.
      *
      * This does attempt to pull bank problems from the server!
@@ -338,7 +338,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
                         if (bankProblemList.length > 0) {
                             bankProblemCallbackPartial(bankProblemList);
                         } else {
-                            bankProblemCallbackPartial(new DatabaseException('Nothing is in the the local util!',
+                            bankProblemCallbackPartial(new DatabaseException('Nothing is in the the local database!',
                                 'Grabbing bankProblem from server: ' + leftOverId));
                         }
                     } // end of if(barrier === 0)

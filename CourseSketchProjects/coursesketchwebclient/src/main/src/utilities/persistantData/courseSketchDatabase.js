@@ -50,13 +50,13 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     /**
-     * After the lower level util has been completely setup the higher level specific databases can be called.
+     * After the lower level database has been completely setup the higher level specific databases can be called.
      */
     var initalizedFunction = function() {
         if (!localScope.start) {
             var intervalVar = setInterval(function() {
                 if (localScope.start) {
-                    console.log('Checking if higher util is truly ready!');
+                    console.log('Checking if higher database is truly ready!');
                     clearInterval(intervalVar);
                     localScope.start();
                 }

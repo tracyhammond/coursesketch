@@ -90,7 +90,7 @@ function AdvanceDataListener(Request, defListener) {
     }
 
     /**
-     * Sets the listener to listen for util code.
+     * Sets the listener to listen for database code.
      *
      * And it also unwraps the DataResult type.
      *
@@ -327,7 +327,7 @@ function AdvanceDataListener(Request, defListener) {
     };
 
     /**
-     * Inserts data into the server util.
+     * Inserts data into the server database.
      *
      * Only inserts a single one right now.
      *

@@ -153,7 +153,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, Byte
     parent.setSubmission = setSubmission;
 
     /**
-     * Deletes a submissions from local util.
+     * Deletes a submissions from local database.
      * This does not delete the id pointing to this item in the respective course.
      *
      * @param {String} problemId

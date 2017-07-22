@@ -140,7 +140,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
     };
 
     /**
-     * Creates a bunch of functions for the table which are created upon successful util creation.
+     * Creates a bunch of functions for the table which are created upon successful database creation.
      */
     function createTableFunctions() {
         if (upgradeTables === null) {

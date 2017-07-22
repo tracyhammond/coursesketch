@@ -12,7 +12,7 @@ function SlideDataManager(parent, advanceDataListener, database, ByteBuffer) {
     var parentScope = parent;
 
     /**
-     * Sets a slide in the local util
+     * Sets a slide in the local database
      *
      * @param {SrlSlide} slide - is a slide object
      *
@@ -29,7 +29,7 @@ function SlideDataManager(parent, advanceDataListener, database, ByteBuffer) {
     parent.setSlide = setSlide;
 
     /**
-     * Sets a slide in the server util
+     * Sets a slide in the server database
      *
      * @param {SrlSlide} slide - is a slide object
      * @param {Function} slideCallback - function to be called after the slide setting is done
@@ -122,7 +122,7 @@ function SlideDataManager(parent, advanceDataListener, database, ByteBuffer) {
     parent.insertSlide = insertSlide;
 
     /**
-     * Deletes a slide from local util.
+     * Deletes a slide from local database.
      *
      * @param {String} slideId - ID of the lecture to delete
      * @param {Function} slideCallback - function to be called after the deletion is done
@@ -138,7 +138,7 @@ function SlideDataManager(parent, advanceDataListener, database, ByteBuffer) {
     parent.deleteSlide = deleteSlide;
 
     /**
-     * Gets a slide from the local util.
+     * Gets a slide from the local database.
      *
      * @param {String} slideId - ID of the slide to get
      *
@@ -191,7 +191,7 @@ function SlideDataManager(parent, advanceDataListener, database, ByteBuffer) {
             if (!isUndefined(localCallback)) {
                 localCallback(new DatabaseException('Result is undefined!', 'Grabbing slide from server: ' + slideIds));
             } else {
-                serverCallback(new DatabaseException('Nothing is in the server util!', 'Grabbing slide from server: ' + slideIds));
+                serverCallback(new DatabaseException('Nothing is in the server database!', 'Grabbing slide from server: ' + slideIds));
             }
         }
         var barrier = slideIds.length;

@@ -64,7 +64,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     }
 
     /**
-     * Gets an Course from the local util.
+     * Gets an Course from the local database.
      *
      * @param {String} courseId - ID of the course to get
      * @param {Function} courseCallback - function to be called after getting is complete, parameter
@@ -128,7 +128,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
                     }
                     var course = CourseSketch.prutil.decodeProtobuf(item.data[0], CourseSketch.prutil.getSrlCourseClass());
                     if (isUndefined(course)) {
-                        courseCallback(new DatabaseException('Course does not exist in the remote util.'));
+                        courseCallback(new DatabaseException('Course does not exist in the remote database.'));
                         return;
                     }
                     setCourse(course, function() {
@@ -145,7 +145,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     parent.getCourse = getCourse;
 
     /**
-     * Sets a course in local util.
+     * Sets a course in local database.
      *
      * @param {SrlCourse} course
      *                course object to set
@@ -205,7 +205,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     parent.updateCourse = updateCourse;
 
     /**
-     * Deletes a course from local util.
+     * Deletes a course from local database.
      * This does not delete the id pointing to this item in the respective course.
      *
      * @param {String} courseId - ID of the course to delete
@@ -337,7 +337,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
             var courseId = generateUUID();
             course.id = courseId;
         }
-        // sets the course into the local util;
+        // sets the course into the local database;
         setCourse(course, function() {
             if (courseCallback) {
                 courseCallback(course);
@@ -352,7 +352,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
                 var resultArray = item.getReturnText().split(':');
                 var oldId = resultArray[1].trim();
                 var newId = resultArray[0].trim();
-                // we want to get the current course in the local util in case
+                // we want to get the current course in the local database in case
                 // it has changed while the server was processing.
                 getCourseLocal(oldId, function(course2) {
                     deleteCourse(oldId);

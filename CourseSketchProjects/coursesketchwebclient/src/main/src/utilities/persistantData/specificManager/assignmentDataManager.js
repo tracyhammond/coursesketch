@@ -81,7 +81,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
     }
 
     /**
-     * Sets the assignment locally into the local util.
+     * Sets the assignment locally into the local database.
      *
      * @param {SrlAssignment} assignment - Assignment object to set.
      * @param {Function} assignmentCallback - function to be called after assignment setting is done
@@ -96,7 +96,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
     parent.setAssignment = setAssignment;
 
     /**
-     * Deletes a assignment from local util.
+     * Deletes a assignment from local database.
      * This does not delete the id pointing to this item in the respective course.
      *
      * @param {UUID} assignmentId - ID of the assignment to delete
@@ -112,7 +112,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
     parent.deleteAssignment = deleteAssignment;
 
     /**
-     * Sets a assignment in server util.
+     * Sets a assignment in server database.
      *
      * @param {SrlAssignment} assignment - Assignment object to set.
      * @param {Function} assignmentCallback - function to be called after assignment setting is done
@@ -130,7 +130,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
            // if (oldId === newId) {
            //     assignmentCallback(assignment);
            // }
-            // we want to get the current course in the local util in case
+            // we want to get the current course in the local database in case
             // it has changed while the server was processing.
             getAssignmentLocal(oldId, function(assignment2) {
                 deleteAssignment(oldId);
@@ -237,7 +237,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
     parent.updateAssignment = updateAssignment;
 
     /**
-     * Gets an Assignment from the local util.
+     * Gets an Assignment from the local database.
      *
      * @param {UUID} assignmentId - ID of the assignment to get
      * @param {Function} assignmentCallback - function to be called after getting is complete, parameter

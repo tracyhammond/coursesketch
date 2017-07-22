@@ -10,7 +10,7 @@
 function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, ByteBuffer) {
 
     /**
-     * Sets a courseProblem in local util.
+     * Sets a courseProblem in local database.
      *
      * @param {SrlCourseProblem} courseProblem - courseproblem object to set
      * @param {Function} courseProblemCallback - function to be called after the courseProblem setting is done
@@ -26,7 +26,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
     parent.setCourseProblem = setCourseProblem;
 
     /**
-     * Deletes a courseProblem from local util.
+     * Deletes a courseProblem from local database.
      * This does not delete the id pointing to this item in the respective course.
      *
      * @param {String} courseProblemId
@@ -45,7 +45,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
     parent.deleteCourseProblem = deleteCourseProblem;
 
     /**
-     * Gets a courseProblem from the local util.
+     * Gets a courseProblem from the local database.
      *
      * @param {String} courseProblemId - ID of the courseProblem to get
      * @param {Function} courseProblemCallback - Function to be called after getting is complete, parameter
@@ -69,7 +69,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
     parent.getCourseProblemLocal = getCourseProblemLocal;
 
     /**
-     * Sets a courseProblem in server util.
+     * Sets a courseProblem in server database.
      *
      * @param {SrlCourseProblem} courseProblem
      *                CourseProblem object to set.
@@ -86,7 +86,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
             var resultArray = item.getReturnText().split(':');
             var oldId = resultArray[1].trim();
             var newId = resultArray[0].trim();
-            // we want to get the current course in the local util in case
+            // we want to get the current course in the local database in case
             // it has changed while the server was processing.
             getCourseProblemLocal(oldId, function(courseProblem2) {
                 deleteCourseProblem(oldId);
@@ -289,7 +289,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
                         if (courseProblemList.length > 0) {
                             courseProblemCallbackPartial(courseProblemList);
                         } else {
-                            courseProblemCallbackPartial(new DatabaseException('Nothing is in the the local util!',
+                            courseProblemCallbackPartial(new DatabaseException('Nothing is in the the local database!',
                                 'Grabbing courseProblem from server: ' + leftOverId));
                         }
                     } // end of if(barrier === 0)
