@@ -9,3 +9,34 @@
 textarea {
     border-color: #757575;
 }
+
+submit-panel#problemPanel:not(.studentMode) {
+    transition: all 1s ease;
+    background-color: #fce4ec !important;
+}
+
+submit-panel#problemPanel.studentMode {
+    width: 100%;
+}
+
+.studentMode {
+    transition: all 2s ease;
+}
+
+#editPanel:not(.studentMode) {
+    transition: all 1s ease;
+}
+
+#editPanel {
+    padding: 5px;
+}
+
+#editPanel.studentMode {
+    width: 0;
+    padding:0;
+    overflow: hidden;
+}
+
+#editProblem:not(.studentMode) {
+    opacity: 0;
+}

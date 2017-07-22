@@ -13,6 +13,7 @@ validateFirstRun(document.currentScript);
     var submissionPanel = undefined;
     var currentSubmission = undefined;
     var waiter = undefined;
+    var editProblemButton = undefined;
     $(document).ready(function() {
         waiter = new DefaultWaiter(CourseSketch.problemEditor.waitScreenManager,
             document.getElementById('percentBar'));
@@ -54,6 +55,8 @@ validateFirstRun(document.currentScript);
             }
 
             document.querySelectorAll('#saveButton')[0].onclick = saveData;
+            editProblemButton = document.querySelectorAll('#editProblem')[0];
+            editProblemButton.onclick = actions.createSolution;
         });
     });
 
@@ -104,7 +107,10 @@ validateFirstRun(document.currentScript);
         problemRenderer.setFinishWaitingFunction(waiter.finishWaiting);
         currentProblem = bankProblem;
         resetSubmissionPanel(submissionPanel, navigator, bankProblem.questionType);
-        loadBankProblem(bankProblem);
+        problemRenderer.startWaiting();
+        setTimeout(function() {
+            loadBankProblem(bankProblem);
+        }, 1100);
     }
 
     /**
@@ -119,7 +125,7 @@ validateFirstRun(document.currentScript);
         problemRenderer.renderBankProblem(bankProblem, function() {
             submissionPanel.refreshPanel();
             console.log(' rendering is finished');
-        });
+        }, true);
     }
 
     /**
@@ -136,16 +142,25 @@ validateFirstRun(document.currentScript);
         });
     }
 
-    actions.createSolution = function(question, buttonElement, optionalParams) {
+    actions.createSolution = function() {
         if (solutionMode) {
+            solutionMode = false;
             loadProblem(navigator);
             return;
         }
+        problemRenderer.startWaiting();
+
+        // save our data first
+        saveData();
+
+        solutionMode = true;
         setupSolutionSubmissionPanel(submissionPanel, navigator, currentProblem.questionType);
-        problemRenderer.renderSubmission(currentProblem, currentSubmission, function() {
-            submissionPanel.refreshPanel();
-            console.log('submission');
-        });
+        setTimeout(function() {
+            problemRenderer.renderSubmission(currentProblem, currentSubmission, function() {
+                submissionPanel.refreshPanel();
+                console.log('submission');
+            }, true);
+        }, 2100);
         // take the question and render it also set up the button and rename it
     };
 
@@ -161,6 +176,9 @@ validateFirstRun(document.currentScript);
         submissionPanel.setProblemType(questionType);
         submissionPanel.setWrapperFunction(undefined);
         submissionPanel.isStudent = false;
+        $(submissionPanel).removeClass('studentMode');
+        $(editPanel).removeClass('studentMode');
+        $(editProblemButton).removeClass('studentMode');
     }
 
     /**
@@ -174,6 +192,9 @@ validateFirstRun(document.currentScript);
         resetSubmissionPanel(submissionPanel, navigator, questionType);
 
         submissionPanel.isGrader = false;
+        $(submissionPanel).addClass('studentMode');
+        $(editPanel).addClass('studentMode');
+        $(editProblemButton).addClass('studentMode');
         submissionPanel.setWrapperFunction(function(submission) {
             var studentExperiment = CourseSketch.prutil.SrlSolution();
             navigator.setSubmissionInformation(studentExperiment, true);

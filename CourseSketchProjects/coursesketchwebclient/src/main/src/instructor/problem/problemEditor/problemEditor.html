@@ -45,6 +45,9 @@
         <div class="col s12 row" style="position: absolute; z-index: 3;">
             <navigation-panel class="col s2"></navigation-panel>
             <problem-text-panel class="col s6 offset-s1"></problem-text-panel>
+            <div class="col s2 offset-s1">
+            <button id="editProblem" class="btn waves-effect waves-light" style="margin-top:10px;">Edit Problem</button>
+            </div>
         </div>
         <div id="percentBar" style="display:none;"></div>
         <nav class="col s12 z-depth-1 teal darken-3" style='z-index: 1; position: relative'>
@@ -54,12 +57,12 @@
             </div>
         </nav>
     </header>
-    <main style="position:relative; height:100vh; margin-bottom: 0;" class="row">
+    <main style="position:relative; height:100vh; margin-bottom: 0;" class="row purple lighten-3">
         <submit-panel id="problemPanel" class="col s9 cyan lighten-5" style="height:calc(100% - 66px);">
             <problem-tool-bar></problem-tool-bar>
         </submit-panel>
         <div id="editPanel" class="editPanel col s3 purple lighten-3"
-             style="z-index: 3; height:calc(100% - 66px); bottom:initial; padding: 5px;">
+             style="z-index: 3; height:calc(100% - 66px); bottom:initial;">
             <button id="saveButton" class="waves-effect waves-light btn">save question</button>
             <div data-prop="questionText" class="need-loading need-saving">
                 <span>Edit Question Text</span>

@@ -206,6 +206,10 @@ function ProblemRenderer(problemPanel) {
         startWaiting();
     };
 
+    this.finishWaiting = function() {
+        finishWaiting();
+    };
+
     this.setStartWaitingFunction = function(startWaitingFunction) {
         startWaiting = function() {
             isRunning = true;
@@ -269,6 +273,8 @@ function ProblemRenderer(problemPanel) {
         sketchSurface.loadUpdateList(sketchArea.recordedSketch.getList(), undefined, function() {
             callback();
         });
+
+        sketchSurface.resizeViewPort();
     }
 
     /**
