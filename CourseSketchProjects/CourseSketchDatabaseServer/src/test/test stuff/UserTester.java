@@ -2,8 +2,8 @@ package test;
 
 import protobuf.srl.school.School.SrlUser;
 import coursesketch.database.util.DatabaseAccessException;
-import coursesketch.database.util.institution.Institution;
-import coursesketch.database.util.user.UserClient;
+import coursesketch.database.institution.Institution;
+import coursesketch.database.user.UserClient;
 
 public class UserTester {
 	public static void testUsers(String courseId) throws DatabaseAccessException {

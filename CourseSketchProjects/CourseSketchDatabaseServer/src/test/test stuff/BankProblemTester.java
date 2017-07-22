@@ -7,8 +7,8 @@ import protobuf.srl.school.Problem.SrlBankProblem.QuestionType;
 import protobuf.srl.utils.Util.SrlPermission;
 
 import coursesketch.database.auth.AuthenticationException;
-import coursesketch.database.util.institution.BankProblemManager;
-import coursesketch.database.util.institution.Institution;
+import coursesketch.database.institution.BankProblemManager;
+import coursesketch.database.institution.Institution;
 
 public class BankProblemTester {
 

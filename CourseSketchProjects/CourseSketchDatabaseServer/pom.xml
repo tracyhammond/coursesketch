@@ -104,6 +104,12 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>MongoDatabaseHelper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
             <version>${mongodbJavaDriverVersion}</version>

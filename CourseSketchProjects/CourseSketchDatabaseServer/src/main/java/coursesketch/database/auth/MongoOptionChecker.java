@@ -9,7 +9,7 @@ import coursesketch.database.util.DbSchoolUtility;
 import org.bson.Document;
 import protobuf.srl.utils.Util;
 
-import static coursesketch.database.util.utilities.MongoUtilities.convertStringToObjectId;
+import static coursesketch.database.util.MongoUtilities.convertStringToObjectId;
 
 /**
  * Checks the database for auxiliary permission data.

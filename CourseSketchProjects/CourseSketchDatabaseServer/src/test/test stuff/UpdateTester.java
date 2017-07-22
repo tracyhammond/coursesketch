@@ -7,7 +7,7 @@ import com.mongodb.MongoClient;
 
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
-import coursesketch.database.util.institution.UpdateManager;
+import coursesketch.database.institution.UpdateManager;
 
 public class UpdateTester {
 

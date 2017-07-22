@@ -10,7 +10,7 @@ import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.Authenticator;
-import coursesketch.database.util.institution.mongo.MongoInstitution;
+import coursesketch.database.institution.mongo.MongoInstitution;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

@@ -7,8 +7,8 @@ import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.Problem.SrlBankProblem;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
-import coursesketch.database.util.institution.Institution;
-import coursesketch.database.util.user.UserClient;
+import coursesketch.database.institution.Institution;
+import coursesketch.database.user.UserClient;
 
 public class ManyTestProblems {
 	public static void testProblems(String courseId, String assignmentId, String mastId) {

@@ -3,7 +3,7 @@ package handlers.subhandlers;
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.util.DatabaseAccessException;
-import coursesketch.database.util.institution.Institution;
+import coursesketch.database.institution.Institution;
 import handlers.DataInsertHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

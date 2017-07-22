@@ -5,7 +5,7 @@ import protobuf.srl.utils.Util;
 
 public class DatabaseHelper {
 
-    Document createDomainId(Util.DomainId domainId) {
+    public static final Document createDomainId(Util.DomainId domainId) {
         return new Document();
     }
 }

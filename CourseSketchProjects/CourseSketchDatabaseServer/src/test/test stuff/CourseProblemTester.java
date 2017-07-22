@@ -5,8 +5,8 @@ import protobuf.srl.school.Problem.SrlBankProblem;
 
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
-import coursesketch.database.util.institution.CourseProblemManager;
-import coursesketch.database.util.institution.Institution;
+import coursesketch.database.institution.CourseProblemManager;
+import coursesketch.database.institution.Institution;
 
 public class CourseProblemTester {
 

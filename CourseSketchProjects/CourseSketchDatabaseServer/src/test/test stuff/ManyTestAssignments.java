@@ -8,7 +8,7 @@ import protobuf.srl.utils.Util.SrlPermission;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.RequestConverter;
 import coursesketch.database.auth.AuthenticationException;
-import coursesketch.database.util.institution.Institution;
+import coursesketch.database.institution.Institution;
 
 public class ManyTestAssignments {
 	public static void testAssignments(String courseId, String mastId) {

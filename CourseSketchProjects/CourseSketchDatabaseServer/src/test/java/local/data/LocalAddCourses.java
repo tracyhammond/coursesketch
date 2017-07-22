@@ -2,8 +2,8 @@ package local.data;
 
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.RequestConverter;
-import coursesketch.database.util.institution.mongo.MongoInstitution;
-import coursesketch.database.util.user.UserClient;
+import coursesketch.database.institution.mongo.MongoInstitution;
+import coursesketch.database.user.UserClient;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.utils.Util;
 import protobuf.srl.utils.Util.SrlPermission;

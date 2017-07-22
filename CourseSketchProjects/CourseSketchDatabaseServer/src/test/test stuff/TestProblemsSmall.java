@@ -2,7 +2,7 @@ package test;
 
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.util.DatabaseAccessException;
-import coursesketch.database.util.institution.Institution;
+import coursesketch.database.institution.Institution;
 import protobuf.srl.school.Assignment.SrlAssignment;
 import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.school.Problem.SrlBankProblem.QuestionType;

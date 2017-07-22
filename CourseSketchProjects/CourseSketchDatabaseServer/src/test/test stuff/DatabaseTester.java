@@ -8,8 +8,8 @@ import com.mongodb.MongoCollection<Document>;
 
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
-import coursesketch.database.util.institution.Institution;
-import coursesketch.database.util.user.UserClient;
+import coursesketch.database.institution.Institution;
+import coursesketch.database.user.UserClient;
 
 public class DatabaseTester {
 	public static void main(String args[]) throws AuthenticationException {

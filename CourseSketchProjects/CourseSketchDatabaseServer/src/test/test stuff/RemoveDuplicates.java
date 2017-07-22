@@ -30,7 +30,7 @@ import com.mongodb.MongoClient;
 
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
-import coursesketch.database.util.institution.Institution;
+import coursesketch.database.institution.Institution;
 
 public class RemoveDuplicates {
 	static MongoCollection<Document> trash;
