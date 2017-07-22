@@ -308,7 +308,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
      *
      * @param {String} courseProblemId - The id of the courseProblem we want to find.
      * @param {Function} courseProblemLocalCallback - called when course problems are grabbed from the local
-     *            util only. This list may not be complete. This may also
+     *            database only. This list may not be complete. This may also
      *            not get called if there are no local course problems.
      * @param {Function} courseProblemServerCallback - called when the complete list of course problems are grabbed.
      */

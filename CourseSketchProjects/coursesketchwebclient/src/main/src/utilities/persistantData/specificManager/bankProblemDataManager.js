@@ -357,7 +357,7 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
      *
      * @param {String} bankProblemId - The id of the bankProblem we want to find.
      * @param {Function} bankProblemLocalCallback - called when bank problems are grabbed from the local
-     *            util only. This list may not be complete. This may also
+     *            database only. This list may not be complete. This may also
      *            not get called if there are no local bank problems.
      * @param {Function} bankProblemServerCallback - called when the complete list of bank problems are grabbed.
      */
