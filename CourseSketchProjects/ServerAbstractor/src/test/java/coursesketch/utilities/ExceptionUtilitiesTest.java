@@ -1,4 +1,4 @@
-package utilities;
+package coursesketch.utilities;
 
 import org.junit.Assert;
 import org.junit.Test;

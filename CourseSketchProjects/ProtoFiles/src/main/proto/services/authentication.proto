@@ -117,6 +117,9 @@ message AuthResponse {
     // True if the item is published, false otherwise.
     optional bool isItemPublished = 5;
 
+    // True if the user is the owner of the auth data
+    optional bool isOwner = 6;
+
     // ASSUMPTION: LARGER PERMISSIONS HAVE LARGER NUMBERS
     enum PermissionLevel {
         NO_PERMISSION = 0;
@@ -124,6 +127,7 @@ message AuthResponse {
         PEER_TEACHER = 200;
         MODERATOR = 300;
         TEACHER = 400;
+        OWNER = 1000;
     }
 }
 

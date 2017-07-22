@@ -2,17 +2,17 @@ package coursesketch.services;
 
 import com.google.protobuf.RpcCallback;
 import com.google.protobuf.RpcController;
-import coursesketch.server.interfaces.ISocketInitializer;
-import coursesketch.server.rpc.CourseSketchRpcService;
-import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.DbAuthChecker;
 import coursesketch.database.auth.DbAuthManager;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.server.rpc.CourseSketchRpcService;
+import coursesketch.utilities.ExceptionUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
 import protobuf.srl.services.authentication.Authentication;
-import utilities.ExceptionUtilities;
 
 /**
  * Manages RPC messages for authentication purposes.
@@ -52,7 +52,8 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
      *
      * @param socketInitializer The object used to initialize the sockets.
      */
-    @Override public void setSocketInitializer(final ISocketInitializer socketInitializer) {
+    @Override
+    public void setSocketInitializer(final ISocketInitializer socketInitializer) {
         // Defined by other implementations.
     }
 
@@ -63,7 +64,8 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
      *
      * An item can be a course or an assignment or other parts of a course.
      */
-    @Override public void authorizeUser(final RpcController controller, final Authentication.AuthRequest request,
+    @Override
+    public void authorizeUser(final RpcController controller, final Authentication.AuthRequest request,
             final RpcCallback<Authentication.AuthResponse> done) {
         try {
             done.run(authChecker.isAuthenticated(request.getItemType(), request.getItemId(), request.getAuthId(), request.getAuthParams()));
@@ -79,7 +81,8 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
      * Used to create new items.
      * An item can be a course or an assignment or other parts of a course.
      */
-    @Override public void createNewItem(final RpcController controller, final Authentication.AuthCreationRequest request,
+    @Override
+    public void createNewItem(final RpcController controller, final Authentication.AuthCreationRequest request,
             final RpcCallback<Message.DefaultResponse> done) {
         final Authentication.AuthRequest authRequest = request.getItemRequest();
         try {
@@ -100,12 +103,30 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
      *
      * Registers user for a course or a bank problem.
      */
-    @Override public void registerUser(final RpcController controller, final Authentication.UserRegistration request,
+    @Override
+    public void registerUser(final RpcController controller, final Authentication.UserRegistration request,
             final RpcCallback<Message.DefaultResponse> done) {
         final Authentication.AuthRequest authRequest = request.getItemRequest();
         try {
             authManager.registerSelf(authRequest.getAuthId(), authRequest.getItemId(), authRequest.getItemType(),
                     request.getRegistrationKey(), authChecker);
+            done.run(Message.DefaultResponse.getDefaultInstance());
+        } catch (DatabaseAccessException e) {
+            done.run(Message.DefaultResponse.newBuilder().setException(ExceptionUtilities.createProtoException(e)).build());
+            LOG.error("Failed to access data while registering user.", e);
+        } catch (AuthenticationException e) {
+            done.run(Message.DefaultResponse.newBuilder().setException(ExceptionUtilities.createProtoException(e)).build());
+            LOG.error("User may not have permission to register for this class.", e);
+        }
+    }
+
+    @Override
+    public void addUser(final RpcController controller, final Authentication.UserRegistration request, final RpcCallback<Message.DefaultResponse>
+            done) {
+        final Authentication.AuthRequest authRequest = request.getItemRequest();
+        try {
+            authManager.addUser(request.getRegistrationKey(), authRequest.getAuthId(), authRequest.getItemId(),
+                    authRequest.getItemType(), authChecker, request.getItemRequest().getAuthParams());
             done.run(Message.DefaultResponse.getDefaultInstance());
         } catch (DatabaseAccessException e) {
             done.run(Message.DefaultResponse.newBuilder().setException(ExceptionUtilities.createProtoException(e)).build());

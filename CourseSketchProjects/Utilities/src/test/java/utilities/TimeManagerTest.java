@@ -1,4 +1,4 @@
-package connection;
+package utilities;
 
 import org.joda.time.DateTimeUtils;
 import org.junit.After;

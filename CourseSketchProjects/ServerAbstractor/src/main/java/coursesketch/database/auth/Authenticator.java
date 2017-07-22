@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 import protobuf.srl.utils.Util.DateTime;
-import utilities.ExceptionUtilities;
+import coursesketch.utilities.ExceptionUtilities;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -60,7 +60,7 @@ public final class Authenticator {
      * @param closeDate the input time has to be smaller or equal to this date.
      * @return True if the input time is between openDate and CloseDate.
      */
-    public static boolean isTimeValid(final long time, final DateTime openDate, final DateTime closeDate) {
+    static boolean isTimeValid(final long time, final DateTime openDate, final DateTime closeDate) {
         return time >= openDate.getMillisecond() && time <= closeDate.getMillisecond();
     }
 
@@ -70,7 +70,7 @@ public final class Authenticator {
      * @param closeDate the input time has to be smaller or equal to this date.
      * @return True if the input time is between openDate and CloseDate.
      */
-    public static boolean isTimeValid(final long time, final org.joda.time.DateTime openDate, final org.joda.time.DateTime closeDate) {
+    static boolean isTimeValid(final long time, final org.joda.time.DateTime openDate, final org.joda.time.DateTime closeDate) {
         return time >= openDate.getMillis() && time <= closeDate.getMillis();
     }
 
@@ -93,7 +93,7 @@ public final class Authenticator {
      * @return True if one of the values in AuthType is true.
      *          Excluded is anything that the {@link AuthenticationOptionChecker} looks at.
      */
-    public static boolean validUserAccessRequest(final Authentication.AuthType authType) {
+    static boolean validUserAccessRequest(final Authentication.AuthType authType) {
         return authType.getCheckingUser() || authType.getCheckingMod() || authType.getCheckingAdmin()
                 || authType.getCheckingPeerTeacher() || authType.getCheckAccess();
     }
@@ -314,7 +314,7 @@ public final class Authenticator {
          * @throws AuthenticationException
          *         Thrown if there could be potential synchronization problems.
          */
-        public final void awaitSecondaryLatch() throws AuthenticationException {
+        final void awaitSecondaryLatch() throws AuthenticationException {
             try {
                 secondaryLatch.await();
             } catch (InterruptedException e) {
@@ -329,7 +329,7 @@ public final class Authenticator {
          * @throws AuthenticationException
          *         Thrown if there could be potential synchronization problems.
          */
-        public final void awaitMainLatch() throws AuthenticationException {
+        final void awaitMainLatch() throws AuthenticationException {
             try {
                 mainLatch.await();
             } catch (InterruptedException e) {
@@ -345,7 +345,7 @@ public final class Authenticator {
          * If there is that exception is then thrown and passed up.
          * @throws AuthenticationException Thrown if an exception exist in the exception holder.
          */
-        public void checkException() throws AuthenticationException {
+        void checkException() throws AuthenticationException {
             if (exceptionHolder.exception != null) {
                 throw new AuthenticationException(exceptionHolder.exception);
             }

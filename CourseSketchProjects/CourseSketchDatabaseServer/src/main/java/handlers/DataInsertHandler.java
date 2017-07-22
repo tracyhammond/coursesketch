@@ -22,7 +22,7 @@ import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.Problem.SrlProblem;
 import protobuf.srl.school.School.SrlUser;
-import utilities.ExceptionUtilities;
+import coursesketch.utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
 import java.util.ArrayList;

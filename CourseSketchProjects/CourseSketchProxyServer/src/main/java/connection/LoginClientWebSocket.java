@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
 import utilities.ConnectionException;
-import utilities.ExceptionUtilities;
+import coursesketch.utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 import utilities.ProtobufUtilities;
 import utilities.TimeManager;
@@ -23,7 +23,7 @@ import protobuf.srl.school.School.SrlUser;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import static utilities.ExceptionUtilities.createExceptionRequest;
+import static coursesketch.utilities.ExceptionUtilities.createExceptionRequest;
 
 /**
  * This example demonstrates how to create a websocket connection to a server.

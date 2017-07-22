@@ -5,7 +5,7 @@ import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.submission.SubmissionManagerInterface;
 import coursesketch.database.util.DatabaseAccessException;
-import coursesketch.database.util.SubmissionDatabaseClient;
+import coursesketch.database.SubmissionDatabaseClient;
 import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.submission.Submission;

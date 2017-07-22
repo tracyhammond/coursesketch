@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
 import protobuf.srl.services.identity.Identity;
-import utilities.ExceptionUtilities;
+import coursesketch.utilities.ExceptionUtilities;
 
 import java.util.Map;
 

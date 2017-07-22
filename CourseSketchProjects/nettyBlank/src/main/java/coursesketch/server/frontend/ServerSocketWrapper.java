@@ -11,6 +11,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
@@ -21,15 +22,13 @@ import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import io.netty.util.CharsetUtil;
+import utilities.ConnectionException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-
-import io.netty.handler.codec.http.HttpHeaderNames;
-import utilities.ConnectionException;
 
 import static io.netty.handler.codec.http.HttpMethod.GET;
 import static io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST;
@@ -53,6 +52,11 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
     private static final String WEBSOCKET_PATH = "/websocket";
 
     /**
+     * The number of bytes in the value for the length of the server.
+     */
+    private static final int NUM_BYTES_IN_LENGTH = 8;
+
+    /**
      * True if the socket should be secured using SSL.
      */
     private final boolean isSecure;
@@ -66,7 +70,15 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
      * Handles the handshake upgrade request.
      */
     private WebSocketServerHandshaker handshaker;
+
+    /**
+     * List of messages that are current fragmented.
+     */
     private List<ByteBuffer> fragmentedList;
+
+    /**
+     * Set to true if the list should be flushed the next time the server receives a message.
+     */
     private boolean flushFragmentedList;
 
     /**
@@ -204,7 +216,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
         if (frame instanceof BinaryWebSocketFrame) {
             if (isFirstOfMany(frame.content())) {
-                addFrameToList(frame);
+                addFrameToFragmentedList(frame);
                 return;
             }
             onMessage(ctx, ((BinaryWebSocketFrame) frame));
@@ -212,7 +224,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
         }
 
         if (frame instanceof ContinuationWebSocketFrame) {
-            addFrameToList(frame);
+            addFrameToFragmentedList(frame);
             if (frame.isFinalFragment()) {
                 flushFragmentedList = true;
                 socketHandler.nettyOnMessage(ctx, mergeList(fragmentedList));
@@ -227,22 +239,27 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
         throw exp;
     }
 
-    private boolean isFirstOfMany(ByteBuf content) {
-        if (content.readableBytes() < 8) {
+    /**
+     * @param content An array of data from the client.
+     * @return {@code true} If it is decided that this message is the first of multiple messages.
+     */
+    private boolean isFirstOfMany(final ByteBuf content) {
+        if (content.readableBytes() < NUM_BYTES_IN_LENGTH) {
             return false;
         }
-        byte[] array = new byte[8];
+        final byte[] array = new byte[NUM_BYTES_IN_LENGTH];
         content.readBytes(array);
 
-        long messageLength = ByteBuffer.wrap(array).getLong();
-        if (messageLength > content.readableBytes()) {
-            return true;
-        }
-        return false;
+        final long messageLength = ByteBuffer.wrap(array).getLong();
+        return messageLength > content.readableBytes();
     }
 
-    private void addFrameToList(WebSocketFrame frame) {
-        byte[] buffer = new byte[frame.content().readableBytes()];
+    /**
+     * Adds a frame to a list of multiple frames to be merged together.
+     * @param frame The frame that is part of a fragmented message.
+     */
+    private void addFrameToFragmentedList(final WebSocketFrame frame) {
+        final byte[] buffer = new byte[frame.content().readableBytes()];
         frame.content().readBytes(buffer);
 
         if (fragmentedList == null) {
@@ -252,17 +269,22 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
         fragmentedList.add(ByteBuffer.wrap(buffer));
     }
 
-    private ByteBuffer mergeList(List<ByteBuffer> fragmentedList) {
+    /**
+     * Takes multiple frames and merge them into a single byte buffer.
+     *
+     * @param partialFrameData The list of fragmented frames converted into bytes.
+     * @return A merged byte buffer.
+     */
+    private ByteBuffer mergeList(final List<ByteBuffer> partialFrameData) {
         final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        for (ByteBuffer socketFrame : fragmentedList) {
+        for (ByteBuffer socketFrame : partialFrameData) {
             try {
                 stream.write(socketFrame.array());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        byte[] bytes = stream.toByteArray();
-        return ByteBuffer.wrap(bytes);
+        return ByteBuffer.wrap(stream.toByteArray());
     }
 
     /**
@@ -272,25 +294,27 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
      */
     @SuppressWarnings("PMD.UnusedPrivateMethod")
     private void close(final ChannelHandlerContext ctx, final CloseWebSocketFrame frame) {
-        handshaker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
+        handshaker.close(ctx.channel(), frame.retain());
         socketHandler.nettyOnClose(ctx, frame.statusCode(), frame.reasonText());
     }
 
     /**
      * Called on message for binary data.
+     *
      * @param ctx The socket.
      * @param frame The binary message.
      */
-    @SuppressWarnings("PMD.UnusedPrivateMethod")
+    @SuppressWarnings({ "PMD.UnusedPrivateMethod", "PMD.AvoidThrowingRawExceptionTypes" })
     private void onMessage(final ChannelHandlerContext ctx, final BinaryWebSocketFrame frame) {
         // This was the only way we were able to make the bytes able to be read.
         // There may be another way in the future to grab the bytes.
         final byte[] bytes = new byte[frame.content().readableBytes()];
-        if (bytes.length > 8) {
+        if (bytes.length > NUM_BYTES_IN_LENGTH) {
             frame.content().readBytes(bytes);
-            socketHandler.nettyOnMessage(ctx, ByteBuffer.wrap(bytes, 8, bytes.length - 8));
+            socketHandler.nettyOnMessage(ctx, ByteBuffer.wrap(bytes, NUM_BYTES_IN_LENGTH, bytes.length - NUM_BYTES_IN_LENGTH));
         } else {
-            final RuntimeException exp = new RuntimeException(new ConnectionException("Invalid message contains less than 8 bytes"));
+            final RuntimeException exp =
+                    new RuntimeException(new ConnectionException("Invalid message contains less than NUM_BYTES_IN_LENGTH bytes"));
             socketHandler.nettyOnError(ctx, exp);
             throw exp;
         }
@@ -298,8 +322,8 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
     /**
      * @param req
-     *         the http that is requesting the upgrade.
-     * @return the location of the socket.
+     *         The http that is requesting the upgrade.
+     * @return The location of the socket.
      */
     private String getWebSocketLocation(final FullHttpRequest req) {
         final String location = req.headers().get(HttpHeaderNames.HOST) + WEBSOCKET_PATH;

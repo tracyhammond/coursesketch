@@ -17,8 +17,8 @@
         <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>40</projectBranchLevel>
-        <projectLineLevel>36</projectLineLevel>
+        <projectBranchLevel>100</projectBranchLevel>
+        <projectLineLevel>52</projectLineLevel>
     </properties>
     <build>
         <plugins>
@@ -99,8 +99,9 @@
 
         <dependency>
             <groupId>CourseSketch</groupId>
-            <artifactId>ServerAbstractor</artifactId>
+            <artifactId>Utilities</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

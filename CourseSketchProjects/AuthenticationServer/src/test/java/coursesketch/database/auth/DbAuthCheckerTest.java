@@ -5,17 +5,17 @@ import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import coursesketch.server.authentication.HashManager;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.DatabaseStringConstants;
+import coursesketch.server.authentication.HashManager;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
+import protobuf.srl.utils.Util;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
@@ -33,25 +33,26 @@ public class DbAuthCheckerTest {
     @Rule
     public FongoRule fongo = new FongoRule();
 
-    public static final Util.ItemType INVALID_ITEM_TYPE = Util.ItemType.BANK_PROBLEM;
-    public static final Util.ItemType VALID_ITEM_TYPE = Util.ItemType.COURSE;
+    private static final Util.ItemType INVALID_ITEM_TYPE = Util.ItemType.BANK_PROBLEM;
+    private static final Util.ItemType VALID_ITEM_TYPE = Util.ItemType.COURSE;
 
-    public static final String INVALID_ITEM_ID = new ObjectId().toHexString();
-    public static final String VALID_ITEM_ID = new ObjectId().toHexString();
+    private static final String INVALID_ITEM_ID = new ObjectId().toHexString();
+    private static final String VALID_ITEM_ID = new ObjectId().toHexString();
 
-    public static final String VALID_GROUP_ID = new ObjectId().toHexString();
-    public static final String INVALID_GROUP_ID = new ObjectId().toHexString();
+    private static final String VALID_GROUP_ID = new ObjectId().toHexString();
+    private static final String INVALID_GROUP_ID = new ObjectId().toHexString();
 
-    public static final String TEACHER_ID = new ObjectId().toHexString();
-    public static final String STUDENT_ID = new ObjectId().toHexString();
-    public static final String MOD_ID = new ObjectId().toHexString();
+    private static final String TEACHER_ID = new ObjectId().toHexString();
+    private static final String VALID_OWNER_ID = new ObjectId().toHexString();
+    private static final String STUDENT_ID = new ObjectId().toHexString();
+    private static final String MOD_ID = new ObjectId().toHexString();
 
     // this user id is not in the db
-    public static final String NO_ACCESS_ID = new ObjectId().toHexString();
+    private static final String NO_ACCESS_ID = new ObjectId().toHexString();
 
-    public DB db;
+    private DB db;
 
-    public DbAuthChecker authChecker;
+    private DbAuthChecker authChecker;
 
     @Before
     public void before() throws Exception {
@@ -76,15 +77,16 @@ public class DbAuthCheckerTest {
         Collections.addAll(list, groupId);
         db.getCollection(getCollectionFromType(itemType)).insert(
                 new BasicDBObject(DatabaseStringConstants.SELF_ID, new ObjectId(itemId))
-                        .append(DatabaseStringConstants.USER_LIST, list));
+                        .append(DatabaseStringConstants.USER_LIST, list)
+                        .append(DatabaseStringConstants.OWNER_ID, VALID_OWNER_ID));
     }
 
     public void insertValidGroup(String groupId, String courseId, String salt, BasicDBObject... permissions) {
         List<Object> list = new BasicDBList();
-        BasicDBObject group = new BasicDBObject(DatabaseStringConstants.SELF_ID,  new ObjectId(groupId))
+        BasicDBObject group = new BasicDBObject(DatabaseStringConstants.SELF_ID, new ObjectId(groupId))
                 .append(DatabaseStringConstants.COURSE_ID, courseId)
                 .append(DatabaseStringConstants.SALT, salt);
-        for (BasicDBObject obj: permissions) {
+        for (BasicDBObject obj : permissions) {
             // grabs the first key and value in the object
             group.append(obj.keySet().iterator().next(), obj.values().iterator().next());
         }
@@ -93,8 +95,8 @@ public class DbAuthCheckerTest {
 
     public BasicDBObject createPermission(String salt, String authId, Authentication.AuthResponse.PermissionLevel level) throws Exception {
         String hash = null;
-            hash = HashManager.toHex(HashManager.createHash(authId, salt).getBytes());
-            System.out.println("HASH FOR ID: " + authId + "+ SALT: " + salt + " IS [" + hash + "]");
+        hash = HashManager.toHex(HashManager.createHash(authId, salt).getBytes());
+        System.out.println("HASH FOR ID: " + authId + "+ SALT: " + salt + " IS [" + hash + "]");
         return new BasicDBObject(hash, level.getNumber());
     }
 
@@ -205,6 +207,40 @@ public class DbAuthCheckerTest {
         new ProtobufComparisonBuilder().setIgnoreSetDefaultFields(false).build().equals(
                 Authentication.AuthResponse.newBuilder()
                         .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.STUDENT)
+                        .setHasAccess(true)
+                        .build(),
+                response);
+    }
+
+    @Test
+    public void permissionReturnsMaxLevelWhenBeingCheckedForOwner() throws Exception {
+        Authentication.AuthResponse response = authChecker.isAuthenticated(VALID_ITEM_TYPE, VALID_ITEM_ID, VALID_OWNER_ID,
+                Authentication.AuthType.newBuilder()
+                        .setCheckAccess(true)
+                        .setCheckingAdmin(true)
+                        .setCheckingOwner(true)
+                        .build());
+        new ProtobufComparisonBuilder().setIgnoreSetDefaultFields(false).build().equals(
+                Authentication.AuthResponse.newBuilder()
+                        .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.TEACHER)
+                        .setIsOwner(true)
+                        .setHasAccess(true)
+                        .build(),
+                response);
+    }
+
+    @Test
+    public void permissionReturnsMaxLevelWhenBeingCheckedForOwnerButNotOwner() throws Exception {
+        Authentication.AuthResponse response = authChecker.isAuthenticated(VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_ID,
+                Authentication.AuthType.newBuilder()
+                        .setCheckAccess(true)
+                        .setCheckingAdmin(true)
+                        .setCheckingOwner(true)
+                        .build());
+        new ProtobufComparisonBuilder().setIgnoreSetDefaultFields(false).build().equals(
+                Authentication.AuthResponse.newBuilder()
+                        .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.TEACHER)
+                        .setIsOwner(false)
                         .setHasAccess(true)
                         .build(),
                 response);

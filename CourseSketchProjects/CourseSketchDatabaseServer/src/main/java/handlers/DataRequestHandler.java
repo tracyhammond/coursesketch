@@ -29,7 +29,7 @@ import protobuf.srl.school.Problem.SrlProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.services.identity.Identity;
 import protobuf.srl.submission.Submission;
-import utilities.ExceptionUtilities;
+import coursesketch.utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 import utilities.ProtobufUtilities;
 

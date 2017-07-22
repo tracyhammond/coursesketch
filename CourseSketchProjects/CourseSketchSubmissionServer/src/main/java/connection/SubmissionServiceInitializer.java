@@ -10,7 +10,7 @@ import coursesketch.server.rpc.CourseSketchRpcService;
 import coursesketch.server.rpc.ServerWebSocketHandler;
 import coursesketch.server.rpc.ServerWebSocketInitializer;
 import coursesketch.database.util.DatabaseAccessException;
-import coursesketch.database.util.SubmissionDatabaseClient;
+import coursesketch.database.SubmissionDatabaseClient;
 import handlers.SubmissionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

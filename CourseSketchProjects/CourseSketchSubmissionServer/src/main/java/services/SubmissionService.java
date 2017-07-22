@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.services.submission.SubmissionServer;
 import protobuf.srl.submission.Submission;
-import utilities.ExceptionUtilities;
+import coursesketch.utilities.ExceptionUtilities;
 
 import java.util.List;
 

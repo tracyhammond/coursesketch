@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static utilities.ExceptionUtilities.handleProtoException;
+import static coursesketch.utilities.ExceptionUtilities.handleProtoException;
 
 /**
  * A Websocket that connects to the Identity server and abstracts the RPC method of sending request to the authentication server.

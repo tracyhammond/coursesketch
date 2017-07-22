@@ -1,8 +1,11 @@
 package coursesketch.database.util;
 
-import coursesketch.database.util.DatabaseAccessException;
+import com.mongodb.DBObject;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import protobuf.srl.utils.Util;
+
+import java.util.List;
 
 import static coursesketch.database.util.DatabaseStringConstants.SELF_ID;
 
@@ -35,5 +38,25 @@ public final class MongoUtilities {
         } catch (IllegalArgumentException e) {
             throw new DatabaseAccessException(e, false);
         }
+    }
+
+    /**
+     * Creates the document for a domain id.
+     *
+     * @param domainId The domain id to be converted into recognition data.
+     * @return {@link Document} containing a domainId
+     */
+    public static Document createDomainId(final Util.DomainId domainId) {
+        return new Document();
+    }
+
+    /**
+     * Gets the user group from the database.
+     *
+     * @param databaseResult The result from the database
+     * @return The list of users.
+     */
+    public static List<String> getUserGroup(final DBObject databaseResult) {
+        return (List<String>) databaseResult.get(DatabaseStringConstants.USER_LIST);
     }
 }

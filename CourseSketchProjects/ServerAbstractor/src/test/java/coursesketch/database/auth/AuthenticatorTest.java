@@ -457,4 +457,58 @@ public class AuthenticatorTest {
         assertFalse(responder.hasAccess());
         assertFalse(responder.isItemPublished());
     }
+
+    @Test
+    public void authenticatorIsOwnerWhenOwnerExplictlySet() throws Exception {
+        when(authChecker.isAuthenticated(any(Util.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
+                .thenReturn(Authentication.AuthResponse.newBuilder()
+                        .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.OWNER)
+                        .setIsOwner(true)
+                        .build());
+
+        final Authentication.AuthType type = Authentication.AuthType.newBuilder()
+                .setCheckIsRegistrationRequired(true)
+                .setCheckingOwner(true)
+                .setCheckingAdmin(true)
+                .build();
+        AuthenticationResponder responder = authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, type);
+
+        assertTrue(responder.isOwner());
+    }
+
+    @Test
+    public void authenticatorDoesNotReportOwnerEvenIfPermissionLevelIsOwner() throws Exception {
+        when(authChecker.isAuthenticated(any(Util.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
+                .thenReturn(Authentication.AuthResponse.newBuilder()
+                        .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.OWNER)
+                        .build());
+
+        final Authentication.AuthType type = Authentication.AuthType.newBuilder()
+                .setCheckIsRegistrationRequired(true)
+                .setCheckingOwner(true)
+                .setCheckingAdmin(true)
+                .build();
+        AuthenticationResponder responder = authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, type);
+
+        assertFalse(responder.isOwner());
+    }
+
+    @Test
+    public void authenticatorHasOwnerOnlyIfExactlyOwnerIsSet() throws Exception {
+        when(authChecker.isAuthenticated(any(Util.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
+                .thenReturn(Authentication.AuthResponse.newBuilder()
+                        .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.TEACHER)
+                        .setIsOwner(false)
+                        .build());
+
+        final Authentication.AuthType type = Authentication.AuthType.newBuilder()
+                .setCheckIsRegistrationRequired(true)
+                .setCheckingOwner(true)
+                .setCheckingAdmin(true)
+                .build();
+        AuthenticationResponder responder = authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, type);
+
+        assertTrue(responder.hasTeacherPermission());
+        assertFalse(responder.isOwner());
+    }
 }

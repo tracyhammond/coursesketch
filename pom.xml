@@ -11,6 +11,7 @@
         <module>CourseSketchProjects/ProtoFiles</module>
         <module>CourseSketchProjects/coursesketchwebclient</module>
         <module>TestUtilities</module>
+        <module>CourseSketchProjects/Utilities</module>
         <module>CourseSketchProjects/MongoDatabaseHelper</module>
         <module>CourseSketchProjects/ServerAbstractor</module>
         <module>CourseSketchProjects/jettyBlank</module>
@@ -424,6 +425,7 @@
                         </execution>
                     </executions>
                     <configuration>
+                        <targetJdk>1.8</targetJdk>
                         <verbose>true</verbose>
                     </configuration>
                 </plugin>
@@ -666,6 +668,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- versioning -->
         <jettyVersion>9.2.3.v20140905</jettyVersion>
+        <nettyVersion>4.1.13.Final</nettyVersion>
         <!-- 9.2.2.v20140723 -->
         <protobufVersion>3.3.1</protobufVersion>
         <protoFileVersion>1.0.5</protoFileVersion>
@@ -696,7 +699,7 @@
         <failSafeVersion>2.18.1</failSafeVersion>
         <surefireVersion>2.17</surefireVersion>
         <junitVersion>4.11</junitVersion>
-        <coberturaVersion>2.6</coberturaVersion>
+        <coberturaVersion>2.7</coberturaVersion>
         <mockitoVersion>1.9.5</mockitoVersion>
         <powermock.version>1.5.6</powermock.version>
         <easymock.version>3.3</easymock.version>

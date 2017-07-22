@@ -17,7 +17,7 @@ import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.Assignment;
 import protobuf.srl.school.Problem;
 import protobuf.srl.school.School;
-import utilities.ExceptionUtilities;
+import coursesketch.utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
 import java.util.ArrayList;

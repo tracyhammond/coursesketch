@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
+import utilities.Encoder;
 
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
@@ -308,7 +309,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
     @Override
     public Map<String, String> createNewUser(final String userName) throws AuthenticationException, DatabaseAccessException {
         final ObjectId userId = new ObjectId();
-        final String userPassword = AbstractServerWebSocketHandler.Encoder.nextID().toString();
+        final String userPassword = Encoder.nextID().toString();
         String hashPassword;
         try {
             hashPassword = HashManager.createHash(userPassword);

@@ -25,7 +25,7 @@ import protobuf.srl.request.Message.Request;
 import protobuf.srl.submission.Submission;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.utils.Util;
-import utilities.ExceptionUtilities;
+import coursesketch.utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 import utilities.TimeManager;
 

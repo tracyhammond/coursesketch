@@ -1,8 +1,8 @@
-package connection;
+package utilities;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
-import utilities.ConnectionException;
+
+import static org.junit.Assert.assertEquals;
 
 
 /**

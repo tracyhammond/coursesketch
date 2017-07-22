@@ -5,9 +5,9 @@ import com.google.protobuf.ServiceException;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.submission.SubmissionManagerInterface;
+import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.server.compat.ClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
-import coursesketch.database.util.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.services.submission.SubmissionServer;
@@ -26,6 +26,11 @@ public final class SubmissionWebSocketClient extends ClientWebSocket implements 
      * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(SubmissionWebSocketClient.class);
+
+    /**
+     * String for a general server exception.
+     */
+    private static final String SUBMISSION_SERVER_EXCEPTION = "Exception with submission server";
 
     /**
      * The default address for the Submission server.
@@ -62,7 +67,8 @@ public final class SubmissionWebSocketClient extends ClientWebSocket implements 
     /**
      * {@inheritDoc}
      */
-    @Override public List<Submission.SrlExperiment> getSubmission(final String authId, final Authenticator authenticator,
+    @Override
+    public List<Submission.SrlExperiment> getSubmission(final String authId, final Authenticator authenticator,
             final String problemId, final String... submissionIds) throws DatabaseAccessException {
         if (submissionService == null) {
             submissionService = SubmissionServer.SubmissionService.newBlockingStub(getRpcChannel());
@@ -81,7 +87,7 @@ public final class SubmissionWebSocketClient extends ClientWebSocket implements 
             LOG.debug("Submission response: {}", response);
             if (response.hasDefaultResponse() && response.getDefaultResponse().hasException()) {
                 final DatabaseAccessException authExcep =
-                        new DatabaseAccessException("Exception with submission server");
+                        new DatabaseAccessException(SUBMISSION_SERVER_EXCEPTION);
                 authExcep.setProtoException(response.getDefaultResponse().getException());
                 throw authExcep;
             }
@@ -92,8 +98,8 @@ public final class SubmissionWebSocketClient extends ClientWebSocket implements 
     }
 
     @Override
-    public Submission.SrlSolution getSolution(String authId, Authenticator authenticator, String bankProblemId,
-            String submissionId) throws DatabaseAccessException, AuthenticationException {
+    public Submission.SrlSolution getSolution(final String authId, final Authenticator authenticator,
+            final String bankProblemId, final String submissionId) throws DatabaseAccessException, AuthenticationException {
         if (submissionService == null) {
             submissionService = SubmissionServer.SubmissionService.newBlockingStub(getRpcChannel());
         }
@@ -111,7 +117,7 @@ public final class SubmissionWebSocketClient extends ClientWebSocket implements 
             LOG.debug("Solution response: {}", response);
             if (response.hasDefaultResponse() && response.getDefaultResponse().hasException()) {
                 final DatabaseAccessException authExcep =
-                        new DatabaseAccessException("Exception with submission server");
+                        new DatabaseAccessException(SUBMISSION_SERVER_EXCEPTION);
                 authExcep.setProtoException(response.getDefaultResponse().getException());
                 throw authExcep;
             }
@@ -124,7 +130,8 @@ public final class SubmissionWebSocketClient extends ClientWebSocket implements 
     /**
      * {@inheritDoc}
      */
-    @Override public String insertExperiment(final String authId, final Authenticator authenticator, final Submission.SrlExperiment submission,
+    @Override
+    public String insertExperiment(final String authId, final Authenticator authenticator, final Submission.SrlExperiment submission,
             final long submissionTime) throws AuthenticationException, DatabaseAccessException {
         if (submissionService == null) {
             submissionService = SubmissionServer.SubmissionService.newBlockingStub(getRpcChannel());
@@ -148,7 +155,7 @@ public final class SubmissionWebSocketClient extends ClientWebSocket implements 
             LOG.debug("Submission response {}", response);
             if (response.hasDefaultResponse() && response.getDefaultResponse().hasException()) {
                 final DatabaseAccessException databaseAccessException =
-                        new DatabaseAccessException("Exception with submission server");
+                        new DatabaseAccessException(SUBMISSION_SERVER_EXCEPTION);
                 databaseAccessException.setProtoException(response.getDefaultResponse().getException());
                 throw databaseAccessException;
             }
@@ -161,7 +168,8 @@ public final class SubmissionWebSocketClient extends ClientWebSocket implements 
     /**
      * {@inheritDoc}
      */
-    @Override public String insertSolution(final String authId, final Authenticator authenticator, final Submission.SrlSolution submission)
+    @Override
+    public String insertSolution(final String authId, final Authenticator authenticator, final Submission.SrlSolution submission)
             throws AuthenticationException, DatabaseAccessException {
         if (submissionService == null) {
             submissionService = SubmissionServer.SubmissionService.newBlockingStub(getRpcChannel());
@@ -184,7 +192,7 @@ public final class SubmissionWebSocketClient extends ClientWebSocket implements 
             LOG.debug("Submission response {}", response);
             if (response.hasDefaultResponse() && response.getDefaultResponse().hasException()) {
                 final DatabaseAccessException authExcep =
-                        new DatabaseAccessException("Exception with submission server");
+                        new DatabaseAccessException(SUBMISSION_SERVER_EXCEPTION);
                 authExcep.setProtoException(response.getDefaultResponse().getException());
                 throw authExcep;
             }

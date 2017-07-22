@@ -1,4 +1,4 @@
-package utilities;
+package coursesketch.utilities;
 
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import org.junit.Assert;

@@ -93,4 +93,11 @@ public class AuthenticationResponder {
         return response.hasPermissionLevel()
                 && response.getPermissionLevel().compareTo(TEACHER) >= 0;
     }
+
+    /**
+     * @return True if the permission level is exactly the level of {@link Authentication.AuthResponse.PermissionLevel#OWNER}.
+     */
+    public final boolean isOwner() {
+        return response.getIsOwner();
+    }
 }

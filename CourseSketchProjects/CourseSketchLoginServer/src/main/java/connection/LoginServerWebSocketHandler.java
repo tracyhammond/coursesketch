@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.LoginInformation;
 import protobuf.srl.request.Message.Request;
-import utilities.ExceptionUtilities;
+import coursesketch.utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 import utilities.ProtobufUtilities;
 import utilities.TimeManager;

@@ -1,10 +1,10 @@
-package coursesketch.database.util;
+package coursesketch.database;
 
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
-import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.database.util.DatabaseAccessException;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -19,12 +19,13 @@ import protobuf.srl.question.QuestionDataOuterClass.SketchArea;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.submission.Submission;
 import util.SubmissionMergerTest;
+import utilities.Encoder;
 
 import java.util.Random;
 
 import static coursesketch.database.util.DatabaseStringConstants.FIRST_STROKE_TIME;
 import static coursesketch.database.util.DatabaseStringConstants.FIRST_SUBMISSION_TIME;
-import static coursesketch.database.util.SubmissionDatabaseClient.createUpdateList;
+import static coursesketch.database.SubmissionDatabaseClient.createUpdateList;
 
 public class SubmissionDatabaseClientTest {
     @Rule
@@ -62,12 +63,12 @@ public class SubmissionDatabaseClientTest {
 
         // create a new marker with the save list item.
         final Commands.SrlUpdate.Builder saveUpdate = Commands.SrlUpdate.newBuilder();
-        saveUpdate.setUpdateId(AbstractServerWebSocketHandler.Encoder.nextID().toString());
+        saveUpdate.setUpdateId(Encoder.nextID().toString());
         saveUpdate.setTime(submissionTime);
 
         final Commands.Marker saveMarker = Commands.Marker.newBuilder().setType(Commands.Marker.MarkerType.SAVE).build();
         final Commands.SrlCommand saveCommand = Commands.SrlCommand.newBuilder().setCommandType(Commands.CommandType.MARKER).setCommandId(
-                AbstractServerWebSocketHandler.Encoder.nextID().toString()).setCommandData(saveMarker.toByteString())
+                Encoder.nextID().toString()).setCommandData(saveMarker.toByteString())
                 .setIsUserCreated(false).build();
 
         saveUpdate.addCommands(saveCommand);
@@ -84,12 +85,12 @@ public class SubmissionDatabaseClientTest {
 
         // create a new marker with the save list item.
         final Commands.SrlUpdate.Builder submitUpdate = Commands.SrlUpdate.newBuilder();
-        submitUpdate.setUpdateId(AbstractServerWebSocketHandler.Encoder.nextID().toString());
+        submitUpdate.setUpdateId(Encoder.nextID().toString());
         submitUpdate.setTime(submissionTime);
 
         final Commands.Marker submitMarker = Commands.Marker.newBuilder().setType(Commands.Marker.MarkerType.SUBMISSION).build();
         final Commands.SrlCommand submitCommand = Commands.SrlCommand.newBuilder().setCommandType(Commands.CommandType.MARKER).setCommandId(
-                AbstractServerWebSocketHandler.Encoder.nextID().toString()).setCommandData(submitMarker.toByteString())
+                Encoder.nextID().toString()).setCommandData(submitMarker.toByteString())
                 .setIsUserCreated(false).build();
 
         submitUpdate.addCommands(submitCommand);

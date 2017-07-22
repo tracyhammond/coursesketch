@@ -30,6 +30,7 @@ import protobuf.srl.submission.Submission.SrlSolution;
 import protobuf.srl.submission.Submission.SrlSubmission;
 import util.MergeException;
 import util.SubmissionMerger;
+import utilities.Encoder;
 import utilities.LoggingConstants;
 import utilities.TimeManager;
 
@@ -631,12 +632,12 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
 
         if (createNewMarker) {
             final Commands.SrlUpdate.Builder saveUpdate = Commands.SrlUpdate.newBuilder();
-            saveUpdate.setUpdateId(AbstractServerWebSocketHandler.Encoder.nextID().toString());
+            saveUpdate.setUpdateId(Encoder.nextID().toString());
             saveUpdate.setTime(submissionTime);
 
             final Commands.Marker saveMarker = Commands.Marker.newBuilder().setType(Commands.Marker.MarkerType.SAVE).build();
             final Commands.SrlCommand saveCommand = Commands.SrlCommand.newBuilder().setCommandType(Commands.CommandType.MARKER).setCommandId(
-                    AbstractServerWebSocketHandler.Encoder.nextID().toString()).setCommandData(saveMarker.toByteString())
+                    Encoder.nextID().toString()).setCommandData(saveMarker.toByteString())
                     .setIsUserCreated(false).build();
 
             saveUpdate.addCommands(saveCommand);
