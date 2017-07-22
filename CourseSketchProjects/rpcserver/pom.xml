@@ -122,5 +122,11 @@
             <artifactId>protobuf-rpc-pro</artifactId>
             <version>57efac2b9f25f5163409606161cef17ba86c3330</version>
         </dependency>
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>MongoDatabaseHelper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>
