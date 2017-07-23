@@ -1,16 +1,18 @@
-package utilities;
+package coursesketch.grading;
 
 import protobuf.srl.request.Message;
+import protobuf.srl.submission.Feedback;
+import utilities.CourseSketchException;
 
 /**
- * Created by dtracers on 10/21/2015.
+ * Thrown while Grading.
  */
-public class CourseSketchException extends Exception {
+public class GradingException extends CourseSketchException {
 
     /**
-     * An exception that may haven been sent from another server or passed up as a compiled proto object.
+     * Feedback that was created before the exception.
      */
-    private Message.ProtoException protoException;
+    private Feedback.FeedbackData feedbackData;
 
     /**
      * Constructs a new exception with {@code null} as its detail message.
@@ -18,8 +20,8 @@ public class CourseSketchException extends Exception {
      * call to {@link #initCause}.
      * @param protoException An existing chain of exceptions.  This could come from a different server even.
      */
-    public CourseSketchException(final Message.ProtoException protoException) {
-        this.protoException = protoException;
+    public GradingException(final Message.ProtoException protoException) {
+        super(protoException);
     }
 
     /**
@@ -31,7 +33,7 @@ public class CourseSketchException extends Exception {
      *         the detail message. The detail message is saved for
      *         later retrieval by the {@link #getMessage()} method.
      */
-    public CourseSketchException(final String message) {
+    GradingException(final String message) {
         super(message);
     }
 
@@ -47,9 +49,8 @@ public class CourseSketchException extends Exception {
      * @param protoException An existing chain of exceptions.  This could come from a different server even.
      * @since 1.4
      */
-    public CourseSketchException(final String message, final Message.ProtoException protoException) {
-        super(message);
-        this.protoException = protoException;
+    public GradingException(final String message, final Message.ProtoException protoException) {
+        super(message, protoException);
     }
 
     /**
@@ -68,7 +69,7 @@ public class CourseSketchException extends Exception {
      *         unknown.)
      * @since 1.4
      */
-    public CourseSketchException(final String message, final Throwable cause) {
+    public GradingException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -87,42 +88,36 @@ public class CourseSketchException extends Exception {
      *         unknown.)
      * @since 1.4
      */
-    public CourseSketchException(final Throwable cause) {
+    public GradingException(final Throwable cause) {
         super(cause);
     }
 
-    /**
-     * Sets a proto exception that occued.
-     * @param protoException The protobuf exception.
-     */
-    public final void setProtoException(final Message.ProtoException protoException) {
-        this.protoException = protoException;
-    }
-
-    /**
-     * @return A {@link utilities.ProtobufUtilities.ProtobufException} if it exist or null if it does not.
-     */
-    public final Message.ProtoException getProtoException() {
-        if (protoException == null) {
-            return createSpecialProtoException();
-        }
-        return protoException;
-    }
-
-    /**
-     * @return a special version of the proto exception for this specific exception.
-     */
-    @SuppressWarnings("checkstyle:designforextension")
-    protected Message.ProtoException createSpecialProtoException() {
+    @Override
+    protected final Message.ProtoException createSpecialProtoException() {
+        // Do some stuff but add in this feedback data too
         return null;
     }
 
-    @Override
-    public final String getMessage() {
-        final String result = super.getMessage();
-        if (getProtoException() != null) {
-            return result + "\n\tCaused by: " + protoException.toString().replace("\n", "\n\t\t") + "\rEnding StackTrace";
-        }
-        return result;
+    /**
+     * @return Feedback data set in this exception.  Can be null.
+     */
+    final Feedback.FeedbackData getFeedbackData() {
+        return feedbackData;
+    }
+
+    /**
+     * Sets feedback data.
+     *
+     * @param feedbackData The feedback up until the exception occurred.
+     */
+    public final void setFeedbackData(Feedback.FeedbackData feedbackData) {
+        this.feedbackData = feedbackData;
+    }
+
+    /**
+     * @return True if feedback data exists.
+     */
+    final boolean hasFeedbackData() {
+        return feedbackData != null;
     }
 }

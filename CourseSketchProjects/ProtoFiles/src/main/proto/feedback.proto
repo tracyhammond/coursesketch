@@ -1,16 +1,20 @@
 import "grading.proto";
 import "questionData.proto";
+import "message.proto";
 
 package protobuf.srl.submission;
 
 message SubmissionFeedback {
     optional FeedbackData feedbackData = 4;
+    optional protobuf.srl.request.ProtoException exception = 5;
+    optional FeedbackLimitations limitations = 6;
 }
 
 enum FeedbackState {
     UNKOWN = 0;
     CORRECT = 1;
     INCORRECT = 2;
+    EXCEPTION = 3;
 }
 
 message BasicFeedback {
@@ -51,4 +55,15 @@ message CheckBoxFeedback {
 
 message EmbeddedHtmlFeedback {
     optional protobuf.srl.question.EmbeddedHtml embeddedHtml = 1;
+}
+
+message FeedbackLimitations {
+    optional bool onlyState = 1;
+
+    // Do not give away the correct answer in the feedback
+    // Only that it is incorrect
+    optional bool noCorrectInfo = 2;
+
+    // State is unkown
+    optional bool showNothing = 3;
 }

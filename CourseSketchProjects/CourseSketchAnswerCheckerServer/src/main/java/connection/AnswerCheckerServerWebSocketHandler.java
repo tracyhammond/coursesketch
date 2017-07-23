@@ -1,6 +1,7 @@
 package connection;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.FeedbackFilterUtils;
 import coursesketch.auth.AuthenticationWebSocketClient;
 import coursesketch.database.AnswerCheckerDatabase;
 import coursesketch.database.auth.AuthenticationException;
@@ -18,6 +19,7 @@ import coursesketch.utilities.ExceptionUtilities;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.grading.Grading;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.services.authentication.Authentication;
@@ -27,6 +29,7 @@ import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.utils.Util;
 import utilities.Encoder;
 import utilities.LoggingConstants;
+import utilities.ProtobufUtilities;
 import utilities.TimeManager;
 
 import static coursesketch.utilities.ExceptionUtilities.createAndSendException;
@@ -121,7 +124,37 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
         final Feedback.SubmissionFeedback submissionFeedback =
                 new AutoGrader(((AnswerCheckerDatabase) getDatabaseReader())).gradeProblem(studentExperiment, solution);
 
+        if (submissionFeedback.hasException()) {
+            conn.send(createFeedbackMessage(submissionFeedback, req));
+            return;
+        }
+        sendGrade(submissionFeedback);
+        conn.send(createFeedbackMessage(submissionFeedback, req));
         LOG.info("Feedback is: {}", submissionFeedback);
+    }
+
+    /**
+     * Sends the graded submission to the gradebook.
+     *
+     * @param submissionFeedback The feedback of the problem.
+     */
+    private void sendGrade(final Feedback.SubmissionFeedback submissionFeedback) {
+        final Grading.ProtoGrade grade = submissionFeedback.getFeedbackData().getGrade();
+        LOG.info("User grade: {}", grade);
+    }
+
+    /**
+     * Creates a request to send back to the user.
+     * @param submissionFeedback The feedback
+     * @param initialRequest The request sent to the server.
+     * @return A modified request geared towards feedback.
+     */
+    private Request createFeedbackMessage(final Feedback.SubmissionFeedback submissionFeedback, final Request initialRequest) {
+        final Message.Request.Builder builder = ProtobufUtilities.createBaseResponse(initialRequest);
+        builder.setRequestType(Request.MessageType.FEEDBACK);
+        builder.setOtherData(FeedbackFilterUtils.createFeedbackForUser(submissionFeedback).toByteString());
+
+        return builder.build();
     }
 
     /**

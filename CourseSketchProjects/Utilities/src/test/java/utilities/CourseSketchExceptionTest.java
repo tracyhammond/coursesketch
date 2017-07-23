@@ -5,15 +5,11 @@ import protobuf.srl.request.Message;
 
 import static org.junit.Assert.assertEquals;
 
-
-/**
- * Created by gigemjt on 10/21/14.
- */
-public class ConnectionExceptionTest {
+public class CourseSketchExceptionTest {
     @Test
     public void testConstructor() {
         String message = "message";
-        ConnectionException con = new ConnectionException(message);
+        CourseSketchException con = new CourseSketchException(message);
         assertEquals(con.getMessage(), message);
     }
 
@@ -21,15 +17,16 @@ public class ConnectionExceptionTest {
     public void testConstructorWithCause() {
         String message = "message";
         Exception cause = new Exception();
-        ConnectionException con = new ConnectionException(message, cause);
+        CourseSketchException con = new CourseSketchException(message, cause);
         assertEquals(con.getMessage(), message);
         assertEquals(con.getCause(), cause);
+        assertEquals(con.getProtoException(), null);
     }
 
     @Test
     public void testProtobufExceptions() {
         String message = "message";
-        ConnectionException con = new ConnectionException(message);
+        CourseSketchException con = new CourseSketchException(message);
         final Message.ProtoException defaultInstance = Message.ProtoException.getDefaultInstance();
         con.setProtoException(defaultInstance);
         assertEquals(con.getProtoException(), defaultInstance);
