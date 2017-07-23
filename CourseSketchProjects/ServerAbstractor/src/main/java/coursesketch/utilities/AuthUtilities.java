@@ -70,6 +70,7 @@ public final class AuthUtilities {
      * @param permissionLevel an AuthType that may not be cumulative.
      * @return The largest level that is asked for by the given check type.
      */
+    @SuppressWarnings("PMD.MissingBreakInSwitch")
     public static Authentication.AuthType.Builder createAuthTypeCheckFromLevel(final Authentication.AuthResponse.PermissionLevel permissionLevel) {
         final Authentication.AuthType.Builder builder = Authentication.AuthType.newBuilder();
         switch (permissionLevel) {

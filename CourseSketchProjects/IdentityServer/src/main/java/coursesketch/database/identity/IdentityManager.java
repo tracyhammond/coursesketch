@@ -2,7 +2,6 @@ package coursesketch.database.identity;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -423,6 +422,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * @param groupId
      *         The id where the group is located
      * @return A {@code Map<String, String>} which is a {@code Map<UnhashedUserId, HashedUserId>}.
+     * @throws DatabaseAccessException Thrown if a valid id can not be created.
      */
     private Map<String, String> getGroupRoster(final MongoCollection<Document> collection, final String groupId)
             throws DatabaseAccessException {
@@ -491,8 +491,8 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
         }
 
         final Map<String, String> userNameMap = new HashMap<>();
-        for (MongoCursor<Document> it = cursor; it.hasNext(); ) {
-            Document userName = it.next();
+        while (cursor.hasNext()) {
+            final Document userName = cursor.next();
             userNameMap.put(userName.get(DatabaseStringConstants.SELF_ID).toString(),
                     userName.get(DatabaseStringConstants.USER_NAME).toString());
         }

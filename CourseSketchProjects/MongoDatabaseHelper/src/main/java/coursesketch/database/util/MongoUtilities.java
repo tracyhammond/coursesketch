@@ -1,6 +1,5 @@
 package coursesketch.database.util;
 
-import com.mongodb.DBObject;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import protobuf.srl.utils.Util;
@@ -18,7 +17,8 @@ public final class MongoUtilities {
     /**
      * Empty constructor.
      */
-    private MongoUtilities() { }
+    private MongoUtilities() {
+    }
 
     /**
      * Tries to convert a string into a mongo ObjectId.

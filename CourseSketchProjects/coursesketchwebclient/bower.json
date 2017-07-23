@@ -2,6 +2,7 @@
   "name": "coursesketchwebclient",
   "version": "0.0.1",
   "dependencies": {
+    "jquery": "3.2.1",
     "validate-first-run": "dtracers/validateFirstRun#0.0.4",
     "babel-polyfill" : "babel/babel#5.8.26",
     "webcomponentsjs": "webcomponents/webcomponentsjs#0.7.14",
@@ -16,8 +17,7 @@
     "d3": "3.5.5",
     "interactjs":"v1.2.9",
     "requirejs": "2.2.0",
-    "CallbackBarrier": "dtracers/CallbackBarrier#0.0.1",
-    "touchy": "HotStudio/touchy#37a29b6a18bc2ef72214b11ad776520a8600d45d"
+    "CallbackBarrier": "dtracers/CallbackBarrier#0.0.1"
   },
   "devDependencies": {
     "blanket": "1.1.7",

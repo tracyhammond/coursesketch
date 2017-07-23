@@ -1,6 +1,5 @@
 package coursesketch.serverfront;
 
-import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.DbAuthChecker;
@@ -30,7 +29,7 @@ public final class AuthenticationServiceInitializer extends ServerWebSocketIniti
      *
      * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public AuthenticationServiceInitializer(final ServerInfo serverInfo) {
+    AuthenticationServiceInitializer(final ServerInfo serverInfo) {
         super(serverInfo);
         mongoClient = new MongoClient(serverInfo.getDatabaseUrl());
     }
@@ -48,7 +47,7 @@ public final class AuthenticationServiceInitializer extends ServerWebSocketIniti
      */
     @Override
     protected List<CourseSketchRpcService> getRpcServices() {
-        final List<CourseSketchRpcService> services = new ArrayList<CourseSketchRpcService>();
+        final List<CourseSketchRpcService> services = new ArrayList<>();
         final MongoDatabase mongoClientDB = mongoClient.getDatabase(this.getServerInfo().getDatabaseName());
         services.add(new AuthenticationService(new DbAuthChecker(mongoClientDB), new DbAuthManager(mongoClientDB)));
         return services;

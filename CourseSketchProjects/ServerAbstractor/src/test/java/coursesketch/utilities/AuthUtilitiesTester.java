@@ -96,4 +96,14 @@ public class AuthUtilitiesTester {
 
         new ProtobufComparisonBuilder().build().equals(expected, fixedAuthType);
     }
+
+    @Test
+    public void testAuthTypeFromAuthLevel() {
+        final Authentication.AuthType.Builder authTypeCheckFromLevel =
+                AuthUtilities.createAuthTypeCheckFromLevel(Authentication.AuthResponse.PermissionLevel.TEACHER);
+        Assert.assertTrue(authTypeCheckFromLevel.getCheckingAdmin());
+        Assert.assertTrue(authTypeCheckFromLevel.getCheckingMod());
+        Assert.assertTrue(authTypeCheckFromLevel.getCheckingPeerTeacher());
+        Assert.assertTrue(authTypeCheckFromLevel.getCheckingUser());
+    }
 }

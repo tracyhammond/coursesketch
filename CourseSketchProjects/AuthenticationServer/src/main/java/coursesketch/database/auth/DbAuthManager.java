@@ -8,7 +8,6 @@ import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.DatabaseStringConstants;
 import coursesketch.database.util.MongoUtilities;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +17,8 @@ import protobuf.srl.utils.Util;
 import java.util.ArrayList;
 import java.util.List;
 
+import static coursesketch.database.util.DatabaseStringConstants.COURSE_ID;
+import static coursesketch.database.util.DatabaseStringConstants.OWNER_ID;
 import static coursesketch.database.util.DatabaseStringConstants.REGISTRATION_KEY;
 import static coursesketch.database.util.DatabaseStringConstants.SELF_ID;
 import static coursesketch.database.util.DatabaseStringConstants.USER_LIST;
@@ -126,12 +127,12 @@ public final class DbAuthManager {
             final String registrationKey) {
         final Document query = new Document(SELF_ID, new ObjectId(itemId));
         if (Util.ItemType.COURSE.equals(itemType)) {
-            query.append(DatabaseStringConstants.COURSE_ID, new ObjectId(itemId))
-                    .append(DatabaseStringConstants.OWNER_ID, authId);
+            query.append(COURSE_ID, new ObjectId(itemId))
+                    .append(OWNER_ID, authId);
         }
         if (Util.ItemType.BANK_PROBLEM.equals(itemType)) {
             query.append(DatabaseStringConstants.PROBLEM_BANK_ID, itemId)
-                    .append(DatabaseStringConstants.OWNER_ID, authId);
+                    .append(OWNER_ID, authId);
         }
         if (registrationKey != null) {
             query.append(DatabaseStringConstants.REGISTRATION_KEY, registrationKey);
@@ -154,8 +155,8 @@ public final class DbAuthManager {
             throws DatabaseAccessException {
         final Util.ItemType collectionType = getParentItemType(itemType);
         final MongoCollection<Document> collection = database.getCollection(getCollectionFromType(collectionType));
-        Bson include = Projections.include(DatabaseStringConstants.USER_LIST, DatabaseStringConstants.COURSE_ID, DatabaseStringConstants.OWNER_ID);
-        final Document result = collection.find(MongoUtilities.convertStringToObjectId(parentId)).projection(include).first();
+        final Document result = collection.find(MongoUtilities.convertStringToObjectId(parentId))
+                .projection(Projections.include(USER_LIST, COURSE_ID, OWNER_ID)).first();
         if (result == null) {
             throw new DatabaseAccessException("The item with the id " + itemId + " was not found in the database.");
         }
@@ -176,12 +177,11 @@ public final class DbAuthManager {
     String createNewGroup(final String authId, final String courseId) throws AuthenticationException {
         final String salt = generateAuthSalt();
         final String hash = generateHash(authId, salt);
-        final Document groupQuery = new Document(DatabaseStringConstants.COURSE_ID, new ObjectId(courseId))
+        final Document groupQuery = new Document(COURSE_ID, new ObjectId(courseId))
                 .append(DatabaseStringConstants.SALT, salt)
                 .append(hash, Authentication.AuthResponse.PermissionLevel.TEACHER.getNumber());
 
-        MongoCollection<Document> collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
-        collection.insertOne(groupQuery);
+        database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).insertOne(groupQuery);
         return groupQuery.get(SELF_ID).toString();
     }
 
@@ -228,7 +228,8 @@ public final class DbAuthManager {
      * @throws AuthenticationException If the user does not have access or an invalid {@code registrationKey}.
      * @throws DatabaseAccessException Thrown if the item can not be found.
      */
-    public void registerSelf(final String authId, final String itemId, final Util.ItemType itemType, final String registrationKey) throws AuthenticationException, DatabaseAccessException {
+    public void registerSelf(final String authId, final String itemId, final Util.ItemType itemType, final String registrationKey)
+            throws AuthenticationException, DatabaseAccessException {
         if (!Util.ItemType.COURSE.equals(itemType) && !Util.ItemType.BANK_PROBLEM.equals(itemType)) {
             throw new AuthenticationException("Can only register users in a course or a bank problem.", AuthenticationException.OTHER);
         }

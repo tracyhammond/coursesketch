@@ -5,7 +5,6 @@ import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationUpdater;
 import coursesketch.database.auth.Authenticator;
-import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.server.compat.ClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import protobuf.srl.request.Message;
