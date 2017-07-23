@@ -136,7 +136,7 @@ validateFirstRun(document.currentScript);
      */
     function saveData() {
         originalMap = advancedEdit.getInput(currentProblem, editPanel, originalMap);
-        if (isUndefined(currentProblem.problemDomain) || currentProblem.currentProblem  === null) {
+        if (isUndefined(currentProblem.problemDomain) || currentProblem.problemDomain  === null) {
             currentProblem.problemDomain = CourseSketch.prutil.DomainId();
         }
         currentProblem.problemDomain.questionType = currentProblem.questionType;

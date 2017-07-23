@@ -56,7 +56,7 @@ public final class MongoUtilities {
      * @param databaseResult The result from the database
      * @return The list of users.
      */
-    public static List<String> getUserGroup(final DBObject databaseResult) {
+    public static List<String> getUserGroup(final Document databaseResult) {
         return (List<String>) databaseResult.get(DatabaseStringConstants.USER_LIST);
     }
 }

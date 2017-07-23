@@ -70,6 +70,9 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
         try {
             done.run(authChecker.isAuthenticated(request.getItemType(), request.getItemId(), request.getAuthId(), request.getAuthParams()));
         } catch (DatabaseAccessException | AuthenticationException e) {
+            done.run(Authentication.AuthResponse.newBuilder().setPermissionLevel(Authentication.AuthResponse.PermissionLevel.NO_PERMISSION)
+                    .setIsRegistrationRequired(true)
+                    .setDefaultResponse(Message.DefaultResponse.newBuilder().setException(ExceptionUtilities.createProtoException(e))).build());
             controller.setFailed(e.toString());
             LOG.error("Failed to authenticate", e);
         }
@@ -109,7 +112,7 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
         final Authentication.AuthRequest authRequest = request.getItemRequest();
         try {
             authManager.registerSelf(authRequest.getAuthId(), authRequest.getItemId(), authRequest.getItemType(),
-                    request.getRegistrationKey(), authChecker);
+                    request.getRegistrationKey());
             done.run(Message.DefaultResponse.getDefaultInstance());
         } catch (DatabaseAccessException e) {
             done.run(Message.DefaultResponse.newBuilder().setException(ExceptionUtilities.createProtoException(e)).build());

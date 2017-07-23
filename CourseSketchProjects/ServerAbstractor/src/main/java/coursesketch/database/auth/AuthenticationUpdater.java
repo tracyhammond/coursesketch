@@ -1,5 +1,6 @@
 package coursesketch.database.auth;
 
+import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 
 /**
@@ -62,8 +63,11 @@ public interface AuthenticationUpdater {
      *         The id of the item that the user is requesting registration for.
      * @param itemType
      *         The type of item it is: course, assignment.
+     * @param permissionLevel
+     *         The permission level the user should be added at.
      * @throws AuthenticationException
      *         Thrown if the user does not have permission to register for this item.  (Typically that means the owner id is wrong)
      */
-    void addUser(String ownerId, String authId, String itemId, Util.ItemType itemType) throws AuthenticationException;
+    void addUser(String ownerId, String authId, String itemId, Util.ItemType itemType,
+            Authentication.AuthResponse.PermissionLevel permissionLevel) throws AuthenticationException;
 }

@@ -1,5 +1,6 @@
 package connection;
 
+import coursesketch.auth.AuthenticationWebSocketClient;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
@@ -39,6 +40,12 @@ public class AnswerConnectionManager extends MultiConnectionManager {
         try {
             createAndAddConnection(parent, this.isConnectionLocal(), SubmissionWebSocketClient.ADDRESS, SubmissionWebSocketClient.PORT,
                     this.isSecure(), SubmissionWebSocketClient.class);
+        } catch (ConnectionException e) {
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+        }
+        try {
+            createAndAddConnection(parent, this.isConnectionLocal(), AuthenticationWebSocketClient.ADDRESS, AuthenticationWebSocketClient.PORT,
+                    this.isSecure(), AuthenticationWebSocketClient.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }

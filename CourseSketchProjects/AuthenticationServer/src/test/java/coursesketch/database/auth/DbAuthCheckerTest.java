@@ -2,12 +2,11 @@ package coursesketch.database.auth;
 
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.DatabaseStringConstants;
 import coursesketch.server.authentication.HashManager;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,6 +17,7 @@ import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,14 +50,14 @@ public class DbAuthCheckerTest {
     // this user id is not in the db
     private static final String NO_ACCESS_ID = new ObjectId().toHexString();
 
-    private DB db;
+    private MongoDatabase db;
 
     private DbAuthChecker authChecker;
 
     @Before
     public void before() throws Exception {
 
-        db = fongo.getDB(); // Equivalent to new MongoClient("localhost").getDB("test");
+        db = fongo.getDatabase(); // Equivalent to new MongoClient("localhost").getDB("test");
         authChecker = new DbAuthChecker(db);
         insertValidObject(VALID_ITEM_TYPE, VALID_ITEM_ID, VALID_GROUP_ID);
         String salt = null;
@@ -73,31 +73,31 @@ public class DbAuthCheckerTest {
     }
 
     public void insertValidObject(Util.ItemType itemType, String itemId, String... groupId) {
-        List<Object> list = new BasicDBList();
+        List<Object> list = new ArrayList<>();
         Collections.addAll(list, groupId);
-        db.getCollection(getCollectionFromType(itemType)).insert(
-                new BasicDBObject(DatabaseStringConstants.SELF_ID, new ObjectId(itemId))
+        db.getCollection(getCollectionFromType(itemType)).insertOne(
+                new Document(DatabaseStringConstants.SELF_ID, new ObjectId(itemId))
                         .append(DatabaseStringConstants.USER_LIST, list)
                         .append(DatabaseStringConstants.OWNER_ID, VALID_OWNER_ID));
     }
 
-    public void insertValidGroup(String groupId, String courseId, String salt, BasicDBObject... permissions) {
-        List<Object> list = new BasicDBList();
-        BasicDBObject group = new BasicDBObject(DatabaseStringConstants.SELF_ID, new ObjectId(groupId))
+    public void insertValidGroup(String groupId, String courseId, String salt, Document... permissions) {
+        List<Object> list = new ArrayList<>();
+        Document group = new Document(DatabaseStringConstants.SELF_ID, new ObjectId(groupId))
                 .append(DatabaseStringConstants.COURSE_ID, courseId)
                 .append(DatabaseStringConstants.SALT, salt);
-        for (BasicDBObject obj : permissions) {
+        for (Document obj : permissions) {
             // grabs the first key and value in the object
             group.append(obj.keySet().iterator().next(), obj.values().iterator().next());
         }
-        db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).insert(group);
+        db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).insertOne(group);
     }
 
-    public BasicDBObject createPermission(String salt, String authId, Authentication.AuthResponse.PermissionLevel level) throws Exception {
+    public Document createPermission(String salt, String authId, Authentication.AuthResponse.PermissionLevel level) throws Exception {
         String hash = null;
         hash = HashManager.toHex(HashManager.createHash(authId, salt).getBytes());
         System.out.println("HASH FOR ID: " + authId + "+ SALT: " + salt + " IS [" + hash + "]");
-        return new BasicDBObject(hash, level.getNumber());
+        return new Document(hash, level.getNumber());
     }
 
     @Test(expected = AuthenticationException.class)

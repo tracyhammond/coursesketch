@@ -105,8 +105,9 @@ public class AuthenticationServiceTest {
     @Test
     public void failToCreateNewItemAuth() throws DatabaseAccessException, AuthenticationException {
         Mockito.doThrow(
-                authenticationException).when(authManager).insertNewItem(eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(PARENT_ITEM_ID), eq
-                (REGISTRATION_KEY), eq(authChecker));
+                authenticationException).when(authManager)
+                .insertNewItem(eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(PARENT_ITEM_ID), eq
+                        (REGISTRATION_KEY), eq(authChecker));
         service.createNewItem(controller, creationRequest, defaultResponseRpcCallback);
         Mockito.verify(authManager).insertNewItem(eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(PARENT_ITEM_ID), eq
                 (REGISTRATION_KEY), eq(authChecker));
@@ -117,8 +118,9 @@ public class AuthenticationServiceTest {
     @Test
     public void failToCreateNewItemDatabase() throws DatabaseAccessException, AuthenticationException {
         Mockito.doThrow(
-                databaseAccessException).when(authManager).insertNewItem(eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(PARENT_ITEM_ID), eq
-                (REGISTRATION_KEY), eq(authChecker));
+                databaseAccessException).when(authManager)
+                .insertNewItem(eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(PARENT_ITEM_ID), eq
+                        (REGISTRATION_KEY), eq(authChecker));
         service.createNewItem(controller, creationRequest, defaultResponseRpcCallback);
         Mockito.verify(authManager).insertNewItem(eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(PARENT_ITEM_ID), eq
                 (REGISTRATION_KEY), eq(authChecker));
@@ -129,18 +131,17 @@ public class AuthenticationServiceTest {
     @Test
     public void successfulRegisterUser() throws DatabaseAccessException, AuthenticationException {
         service.registerUser(controller, userRegistration, defaultResponseRpcCallback);
-        Mockito.verify(authManager).registerSelf(eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(REGISTRATION_KEY), eq(authChecker));
+        Mockito.verify(authManager).registerSelf(eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(REGISTRATION_KEY));
         Mockito.verify(defaultResponseRpcCallback).run(defaultResponse);
     }
 
     @Test
     public void failToRegisterUserAuth() throws DatabaseAccessException, AuthenticationException {
         Mockito.doThrow(
-                authenticationException).when(authManager).registerSelf(eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(REGISTRATION_KEY),
-                eq(authChecker));
+                authenticationException).when(authManager)
+                .registerSelf(eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(REGISTRATION_KEY));
         service.registerUser(controller, userRegistration, defaultResponseRpcCallback);
-        Mockito.verify(authManager).registerSelf(eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(REGISTRATION_KEY),
-                eq(authChecker));
+        Mockito.verify(authManager).registerSelf(eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(REGISTRATION_KEY));
         Mockito.verify(defaultResponseRpcCallback, never()).run(eq(defaultResponse));
         Mockito.verify(defaultResponseRpcCallback).run(any(defaultResponse.getClass()));
     }
@@ -148,11 +149,10 @@ public class AuthenticationServiceTest {
     @Test
     public void failToRegisterUserData() throws DatabaseAccessException, AuthenticationException {
         Mockito.doThrow(
-                databaseAccessException).when(authManager).registerSelf(eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(REGISTRATION_KEY),
-                eq(authChecker));
+                databaseAccessException).when(authManager)
+                .registerSelf(eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(REGISTRATION_KEY));
         service.registerUser(controller, userRegistration, defaultResponseRpcCallback);
-        Mockito.verify(authManager).registerSelf(eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(REGISTRATION_KEY),
-                eq(authChecker));
+        Mockito.verify(authManager).registerSelf(eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(REGISTRATION_KEY));
         Mockito.verify(defaultResponseRpcCallback, never()).run(eq(defaultResponse));
         Mockito.verify(defaultResponseRpcCallback).run(any(defaultResponse.getClass()));
     }
@@ -168,8 +168,9 @@ public class AuthenticationServiceTest {
     @Test
     public void failToAddUserAuth() throws DatabaseAccessException, AuthenticationException {
         Mockito.doThrow(
-                authenticationException).when(authManager).addUser(eq(REGISTRATION_KEY), eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(authChecker), eq
-                (emptyParams));
+                authenticationException).when(authManager)
+                .addUser(eq(REGISTRATION_KEY), eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(authChecker), eq
+                        (emptyParams));
         service.addUser(controller, userRegistration, defaultResponseRpcCallback);
         Mockito.verify(authManager).addUser(eq(REGISTRATION_KEY), eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(authChecker), eq
                 (emptyParams));
@@ -180,8 +181,9 @@ public class AuthenticationServiceTest {
     @Test
     public void failToAddUserDatabase() throws DatabaseAccessException, AuthenticationException {
         Mockito.doThrow(
-                databaseAccessException).when(authManager).addUser(eq(REGISTRATION_KEY), eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(authChecker), eq
-                (emptyParams));
+                databaseAccessException).when(authManager)
+                .addUser(eq(REGISTRATION_KEY), eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(authChecker), eq
+                        (emptyParams));
         service.addUser(controller, userRegistration, defaultResponseRpcCallback);
         Mockito.verify(authManager).addUser(eq(REGISTRATION_KEY), eq(VALID_OWNER_ID), eq(VALID_ITEM_ID), eq(VALID_ITEM_TYPE), eq(authChecker), eq
                 (emptyParams));

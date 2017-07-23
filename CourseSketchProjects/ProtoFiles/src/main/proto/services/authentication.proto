@@ -129,6 +129,8 @@ message AuthResponse {
         TEACHER = 400;
         OWNER = 1000;
     }
+
+    optional protobuf.srl.request.DefaultResponse defaultResponse = 50;
 }
 
 service AuthenticationService {
