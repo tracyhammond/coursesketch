@@ -4,7 +4,6 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.util.DatabaseAccessException;
-import coursesketch.database.util.UserUpdateHandler;
 import coursesketch.database.institution.mongo.MongoInstitution;
 import protobuf.srl.query.Data;
 import protobuf.srl.school.School.SrlUser;

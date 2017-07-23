@@ -21,7 +21,6 @@ import protobuf.srl.utils.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-import static coursesketch.database.util.DatabaseHelper.createDomainId;
 import static coursesketch.database.util.DatabaseStringConstants.COURSE_ACCESS;
 import static coursesketch.database.util.DatabaseStringConstants.COURSE_TOPIC;
 import static coursesketch.database.util.DatabaseStringConstants.DOMAIN_ID;
@@ -40,6 +39,7 @@ import static coursesketch.database.util.DatabaseStringConstants.STATE_PUBLISHED
 import static coursesketch.database.util.DatabaseStringConstants.SUB_TOPIC;
 import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
 import static coursesketch.database.util.MongoUtilities.convertStringToObjectId;
+import static coursesketch.database.util.MongoUtilities.createDomainId;
 
 /**
  * Interfaces with the mongo database to manage bank problems.
@@ -73,7 +73,7 @@ public final class BankProblemManager {
      * @return The mongo id of the problem bank.
      * @throws AuthenticationException Not currently thrown but may be thrown in the future.
      */
-    public static String mongoInsertBankProblem(final MongoDatabase dbs, final SrlBankProblem problem) throws AuthenticationException {
+    static String mongoInsertBankProblem(final MongoDatabase dbs, final SrlBankProblem problem) throws AuthenticationException {
         final MongoCollection<Document> problemBankCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
         final Document insertObject = new Document(QUESTION_TEXT, problem.getQuestionText())
                 .append(SOLUTION_ID, problem.getSolutionId())
@@ -142,7 +142,7 @@ public final class BankProblemManager {
      * @throws AuthenticationException thrown if the user does not have access to the permissions.
      * @throws DatabaseAccessException thrown if there is a problem finding the bank problem in the database.
      */
-    public static SrlBankProblem mongoGetBankProblem(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
+    static SrlBankProblem mongoGetBankProblem(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
             final String problemBankId)
             throws AuthenticationException, DatabaseAccessException {
         final MongoCollection<Document> bankProblemCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
@@ -164,7 +164,7 @@ public final class BankProblemManager {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
-        return extractBankProblem(mongoBankProblem, problemBankId, responder.hasTeacherPermission());
+        return extractBankProblem(mongoBankProblem, problemBankId);
 
     }
 
@@ -173,16 +173,15 @@ public final class BankProblemManager {
      *
      * @param mongoBankProblem a pointer to an object in the mongo database.
      * @param problemBankId The id of problem bank
-     * @param isAdmin true if the user is an admin
      * @return {@link protobuf.srl.school.Problem.SrlBankProblem}.
      */
-    private static SrlBankProblem extractBankProblem(final Document mongoBankProblem, final String problemBankId, final boolean isAdmin) {
+    private static SrlBankProblem extractBankProblem(final Document mongoBankProblem, final String problemBankId) {
 
         final SrlBankProblem.Builder exactProblem = SrlBankProblem.newBuilder();
 
         exactProblem.setId(problemBankId);
         exactProblem.setQuestionText((String) mongoBankProblem.get(QUESTION_TEXT));
-        // TODO: add teacher check back && figure out how to make it work if the person is a teacher.
+        // FUTURE: add teacher check back && figure out how to make it work if the person is a teacher.
         exactProblem.setSolutionId((String) mongoBankProblem.get(SOLUTION_ID));
         exactProblem.setCourseTopic((String) mongoBankProblem.get(COURSE_TOPIC));
         exactProblem.setSubTopic((String) mongoBankProblem.get(SUB_TOPIC));
@@ -196,7 +195,7 @@ public final class BankProblemManager {
         } catch (DatabaseAccessException e) {
             LOG.error("Error parsing lecture element", e);
         }
-        exactProblem.addAllOtherKeywords((ArrayList) mongoBankProblem.get(KEYWORDS)); // change
+        exactProblem.addAllOtherKeywords((List<String>) mongoBankProblem.get(KEYWORDS)); // change
         if (mongoBankProblem.get(SCRIPT) != null) {
             exactProblem.setScript((String) mongoBankProblem.get(SCRIPT));
         }
@@ -260,7 +259,7 @@ public final class BankProblemManager {
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",
             "PMD.NPathComplexity", "PMD.AvoidDeeplyNestedIfStmts" })
-    public static boolean mongoUpdateBankProblem(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
+    static boolean mongoUpdateBankProblem(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
             final String problemBankId,
             final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
@@ -341,7 +340,7 @@ public final class BankProblemManager {
      * @throws AuthenticationException Thrown if the user does not have permission to retrieve any bank problems.
      * @throws DatabaseAccessException Thrown if there are fields missing that make the problem inaccessible.
      */
-    public static List<SrlBankProblem> mongoGetAllBankProblems(final Authenticator authenticator, final MongoDatabase database, final String authId,
+    static List<SrlBankProblem> mongoGetAllBankProblems(final Authenticator authenticator, final MongoDatabase database, final String authId,
             final String courseId, final int page) throws AuthenticationException, DatabaseAccessException {
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
@@ -359,7 +358,7 @@ public final class BankProblemManager {
         while (dbCursor.hasNext()) {
             final Document bankProblem = dbCursor.next();
             // no one is an admin when getting problems in this way.
-            results.add(extractBankProblem(bankProblem, bankProblem.get(SELF_ID).toString(), false));
+            results.add(extractBankProblem(bankProblem, bankProblem.get(SELF_ID).toString()));
         }
         return results;
     }
@@ -376,7 +375,7 @@ public final class BankProblemManager {
      * @throws DatabaseAccessException Thrown if the bank problem does not exist.
      */
     @SuppressWarnings("PMD.UselessParentheses")
-    public static String mongoGetRegistrationKey(final Authenticator authenticator, final MongoDatabase database,
+    static String mongoGetRegistrationKey(final Authenticator authenticator, final MongoDatabase database,
             final String authId, final String bankProblemId)
             throws AuthenticationException, DatabaseAccessException {
         final MongoCollection<Document> bankProblemCollection = database.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));

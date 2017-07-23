@@ -26,6 +26,7 @@ import java.util.Random;
 import static coursesketch.database.util.DatabaseStringConstants.FIRST_STROKE_TIME;
 import static coursesketch.database.util.DatabaseStringConstants.FIRST_SUBMISSION_TIME;
 import static coursesketch.database.SubmissionDatabaseClient.createUpdateList;
+import static coursesketch.database.util.DatabaseStringConstants.PROBLEM_BANK_ID;
 
 public class SubmissionDatabaseClientTest {
     @Rule
@@ -111,6 +112,24 @@ public class SubmissionDatabaseClientTest {
         new ProtobufComparisonBuilder()
                 .ignoreField(Submission.SrlSubmission.getDescriptor(), Submission.SrlSubmission.ID_FIELD_NUMBER)
                 .ignoreField(Submission.SrlExperiment.getDescriptor(), Submission.SrlExperiment.USERID_FIELD_NUMBER)
+                .build()
+                .equals(expected, result);
+    }
+
+    @Test
+    public void testUpdateListSubmitsSolutionCorrectly() throws Exception {
+        Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
+        build.setSubmissionData(QuestionData.newBuilder().setSketchArea(
+                SketchArea.newBuilder().setRecordedSketch(createSimpleDatabaseListWithSaveMarker(200))));
+        Submission.SrlSolution expected = getFakeSolution(build.build());
+        String id = databaseClient.saveSolution(expected);
+
+        Submission.SrlSolution result = databaseClient.getSolution(id, PROBLEM_BANK_ID, responder);
+        new ProtobufComparisonBuilder()
+                .ignoreField(Commands.SrlUpdate.getDescriptor(), Commands.SrlUpdate.TIME_FIELD_NUMBER)
+                .ignoreField(Submission.SrlSubmission.getDescriptor(), Submission.SrlSubmission.ID_FIELD_NUMBER)
+                .ignoreField(Submission.SrlExperiment.getDescriptor(), Submission.SrlExperiment.USERID_FIELD_NUMBER)
+                .setIsDeepEquals(true)
                 .build()
                 .equals(expected, result);
     }
@@ -323,6 +342,24 @@ public class SubmissionDatabaseClientTest {
     }
 
     @Test
+    public void testTextSolutionSavesCorrectly() throws Exception {
+        final String textAnswer = "TEXT ANSWER";
+
+        // round 1
+        Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
+        build.setSubmissionData(QuestionData.newBuilder().setFreeResponse(
+                FreeResponse.newBuilder().setStartingText(textAnswer)));
+        Submission.SrlSolution expected = getFakeSolution(build.build());
+        String id = databaseClient.saveSolution(expected);
+
+        // get experiment
+        Submission.SrlSolution result = databaseClient.getSolution(id, PROBLEM_BANK_ID, responder);
+        String resultAnswer = result.getSubmission().getSubmissionData().getFreeResponse().getStartingText();
+
+        Assert.assertEquals(textAnswer, resultAnswer);
+    }
+
+    @Test
     public void testTextSubmissionUpdatesCorrectly() throws Exception {
         final String textAnswer = "TEXT ANSWER";
         final String textAnswer2 = "TEXT ANSWER2";
@@ -392,6 +429,13 @@ public class SubmissionDatabaseClientTest {
     private Submission.SrlExperiment getFakeExperiment(String userId, Submission.SrlSubmission sub) {
         Submission.SrlExperiment.Builder build = Submission.SrlExperiment.newBuilder();
         build.setUserId(userId).setCourseId(COURSE_ID).setAssignmentId(ASSIGNMENT_ID).setProblemId(PROBLEM_ID)
+                .setSubmission(sub);
+        return build.build();
+    }
+
+    private Submission.SrlSolution getFakeSolution(Submission.SrlSubmission sub) {
+        Submission.SrlSolution.Builder build = Submission.SrlSolution.newBuilder();
+        build.setProblemBankId(PROBLEM_BANK_ID)
                 .setSubmission(sub);
         return build.build();
     }

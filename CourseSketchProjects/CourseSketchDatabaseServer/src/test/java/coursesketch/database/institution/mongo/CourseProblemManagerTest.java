@@ -29,11 +29,10 @@ import protobuf.srl.utils.Util;
 
 import java.util.List;
 
+import static coursesketch.database.institution.mongo.MongoInstitutionTest.genericDatabaseMock;
 import static coursesketch.database.util.DatabaseStringConstants.IS_UNLOCKED;
 import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
-import static coursesketch.database.institution.mongo.MongoInstitutionTest.genericDatabaseMock;
 import static coursesketch.database.util.MongoUtilities.convertStringToObjectId;
-import static org.mockito.Matchers.any;
 
 /**
  * Created by gigemjt on 3/22/15.
@@ -43,19 +42,21 @@ public class CourseProblemManagerTest {
 
     @Rule
     public FongoRule fongo = new FongoRule();
-    @Mock AuthenticationChecker authChecker;
-    @Mock AuthenticationOptionChecker optionChecker;
+    private @Mock
+    AuthenticationChecker authChecker;
+    private @Mock
+    AuthenticationOptionChecker optionChecker;
 
-    public MongoDatabase db;
-    public Authenticator authenticator;
+    private MongoDatabase db;
+    private Authenticator authenticator;
 
-    public static final String VALID_NAME = "Valid course name!";
-    public static final long FAKE_VALID_DATE = 1000;
-    public static final long FAKE_INVALID_DATE = 1001;
-    public static final String FAKE_QUESTION_TEXT = "Question Texts";
-    public static final String ADMIN_USER = "adminUser";
-    public static final String USER_USER = "userUser";
-    public static final Util.QuestionType FAKE_QUESTION_TYPE = Util.QuestionType.FREE_RESP;
+    private static final String VALID_NAME = "Valid course name!";
+    private static final long FAKE_VALID_DATE = 1000;
+    private static final long FAKE_INVALID_DATE = 1001;
+    private static final String FAKE_QUESTION_TEXT = "Question Texts";
+    private static final String ADMIN_USER = "adminUser";
+    private static final String USER_USER = "userUser";
+    private static final Util.QuestionType FAKE_QUESTION_TYPE = Util.QuestionType.FREE_RESP;
 
     private String courseId;
     private String assignmentId;
@@ -190,7 +191,7 @@ public class CourseProblemManagerTest {
         Assert.assertEquals(1, DocumentList.size());
 
         Document expected = new Document(DatabaseStringConstants.ITEM_ID, bankProblem.getId())
-        .append(DatabaseStringConstants.SCHOOL_ITEM_TYPE, Util.ItemType.BANK_PROBLEM_VALUE)
+                .append(DatabaseStringConstants.SCHOOL_ITEM_TYPE, Util.ItemType.BANK_PROBLEM_VALUE)
                 .append(IS_UNLOCKED, true);
 
         Assert.assertEquals(expected, DocumentList.get(0));
@@ -412,7 +413,7 @@ public class CourseProblemManagerTest {
     }
 
     @Test
-         public void updateCourseProblemWithReplacedBankId() throws Exception {
+    public void updateCourseProblemWithReplacedBankId() throws Exception {
         insertCourseAndAssignment();
         AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);

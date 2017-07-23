@@ -4,6 +4,10 @@ import com.coursesketch.test.utilities.AuthenticationHelper;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.client.MongoDatabase;
+import coursesketch.database.auth.AuthenticationChecker;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationOptionChecker;
+import coursesketch.database.auth.Authenticator;
 import coursesketch.database.util.DatabaseAccessException;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -65,9 +69,9 @@ public class GradingPolicyManagerTest {
     @Rule
     public FongoRule fongo = new FongoRule();
     @Mock
-    AuthenticationChecker authChecker;
+    private AuthenticationChecker authChecker;
     @Mock
-    AuthenticationOptionChecker optionChecker;
+    private AuthenticationOptionChecker optionChecker;
 
     public MongoDatabase db;
     private Authenticator authenticator;
@@ -111,7 +115,7 @@ public class GradingPolicyManagerTest {
         genericDatabaseMock(authChecker, optionChecker);
         authenticator = new Authenticator(authChecker, optionChecker);
 
-        /**
+        /*
          * Fake proto objects setup.
          */
         fakeProtoLate.setFunctionType(LatePolicy.FunctionType.valueOf(FAKE_ENUM));
@@ -140,7 +144,7 @@ public class GradingPolicyManagerTest {
 
         courseBuilder.setId(FAKE_COURSE_ID);
 
-        /**
+        /*
          * Fake mongo Documents setup.
          */
         fakeMongoLate = new Document(LATE_POLICY_FUNCTION_TYPE, FAKE_ENUM)

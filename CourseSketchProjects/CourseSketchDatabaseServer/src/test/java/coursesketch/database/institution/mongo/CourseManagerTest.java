@@ -26,11 +26,10 @@ import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 
+import static coursesketch.database.institution.mongo.MongoInstitutionTest.genericDatabaseMock;
 import static coursesketch.database.util.DatabaseStringConstants.REGISTRATION_KEY;
 import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
-import static coursesketch.database.institution.mongo.MongoInstitutionTest.genericDatabaseMock;
 import static coursesketch.database.util.MongoUtilities.convertStringToObjectId;
-import static org.mockito.Matchers.any;
 
 /**
  * Created by gigemjt on 3/22/15.
@@ -40,22 +39,25 @@ public class CourseManagerTest {
 
     @Rule
     public FongoRule fongo = new FongoRule();
-    @Mock AuthenticationChecker authChecker;
-    @Mock AuthenticationOptionChecker optionChecker;
-    @Mock AuthenticationDataCreator dataCreator;
+    private @Mock
+    AuthenticationChecker authChecker;
+    private @Mock
+    AuthenticationOptionChecker optionChecker;
+    private @Mock
+    AuthenticationDataCreator dataCreator;
 
-    public MongoDatabase db;
-    public Authenticator authenticator;
+    private MongoDatabase db;
+    private Authenticator authenticator;
 
-    public static final String VALID_NAME = "Valid course name!";
-    public static final String FAKE_DESCRIPTION = "DESCRIPTIONS YAY";
-    public static final String FAKE_ID = "507f1f77bcf86cd799439011";
-    public static final String VALID_REGISTRATION_KEY = "VALID KEY!";
-    public static final long FAKE_VALID_DATE = 1000;
-    public static final Util.DateTime FAKE_VALID_DATE_OBJECT = Util.DateTime.newBuilder().setMillisecond(FAKE_VALID_DATE).build();
-    public static final long FAKE_INVALID_DATE = 1001;
-    public static final String ADMIN_USER = "adminUser";
-    public static final String USER_USER = "userUser";
+    private static final String VALID_NAME = "Valid course name!";
+    private static final String FAKE_DESCRIPTION = "DESCRIPTIONS YAY";
+    private static final String FAKE_ID = "507f1f77bcf86cd799439011";
+    private static final String VALID_REGISTRATION_KEY = "VALID KEY!";
+    private static final long FAKE_VALID_DATE = 1000;
+    private static final Util.DateTime FAKE_VALID_DATE_OBJECT = Util.DateTime.newBuilder().setMillisecond(FAKE_VALID_DATE).build();
+    private static final long FAKE_INVALID_DATE = 1001;
+    private static final String ADMIN_USER = "adminUser";
+    private static final String USER_USER = "userUser";
 
     private String courseId;
 
@@ -205,7 +207,7 @@ public class CourseManagerTest {
 
         for (int i = 0; i < 5; i++) {
             // We do not need to save the ids because we expect an empty list.
-            String assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER,
+            AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER,
                     Assignment.SrlAssignment.newBuilder()
                             .setId("ID")
                             .setCourseId(courseId)

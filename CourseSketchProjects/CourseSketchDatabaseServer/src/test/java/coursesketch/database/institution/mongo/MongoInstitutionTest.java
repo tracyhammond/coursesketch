@@ -15,9 +15,9 @@ import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.AuthenticationUpdater;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.identity.IdentityManagerInterface;
+import coursesketch.database.user.UserClient;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.DatabaseStringConstants;
-import coursesketch.database.user.UserClient;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -27,7 +27,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import protobuf.srl.commands.Commands;
 import protobuf.srl.school.Assignment;
 import protobuf.srl.school.Problem;
 import protobuf.srl.school.School;
@@ -57,37 +56,35 @@ public class MongoInstitutionTest {
 
     @Rule
     public FongoRule fongo = new FongoRule();
-    @Mock AuthenticationChecker authChecker;
-    @Mock AuthenticationOptionChecker optionChecker;
-    @Mock AuthenticationDataCreator dataCreator;
-    @Mock AuthenticationUpdater authenticationUpdater;
-    @Mock IdentityManagerInterface identityManager;
+    @Mock
+    private AuthenticationChecker authChecker;
+    @Mock
+    private AuthenticationOptionChecker optionChecker;
+    @Mock
+    private AuthenticationDataCreator dataCreator;
+    @Mock
+    private AuthenticationUpdater authenticationUpdater;
+    @Mock
+    private IdentityManagerInterface identityManager;
 
-    public MongoDatabase db;
-    public Authenticator authenticator;
-    public MongoInstitution institution;
+    private MongoDatabase db;
+    private Authenticator authenticator;
+    private MongoInstitution institution;
 
-    public static final String VALID_REGISTRATION_KEY = "VALID KEY!";
-    public static final String VALID_NAME = "Valid course name!";
-    public static final String FAKE_DESCRIPTION = "DESCRIPTIONS YAY";
-    public static final String FAKE_ID = "507f1f77bcf86cd799439011";
-    public static final String FAKE_QUESTION_TEXT = "Question Texts";
-    public static final String FAKE_SCRIPT = "fake script";
-    public static final String TEACHER_AUTH_ID = new ObjectId().toHexString();
-    public static final String STUDENT_AUTH_ID = new ObjectId().toHexString();
-    public static final String MOD_AUTH_ID = new ObjectId().toHexString();
-    public static final String TEACHER_USER_ID = new ObjectId().toHexString();
-    public static final String STUDENT_USER_ID = new ObjectId().toHexString();
-    public static final String MOD_USER_ID = new ObjectId().toHexString();
+    private static final String VALID_REGISTRATION_KEY = "VALID KEY!";
+    private static final String VALID_NAME = "Valid course name!";
+    private static final String FAKE_DESCRIPTION = "DESCRIPTIONS YAY";
+    private static final String FAKE_ID = "507f1f77bcf86cd799439011";
+    private static final String FAKE_QUESTION_TEXT = "Question Texts";
+    private static final String TEACHER_AUTH_ID = new ObjectId().toHexString();
+    private static final String TEACHER_USER_ID = new ObjectId().toHexString();
 
-    public static final long FAKE_VALID_DATE = 1000;
-    public static final Util.DateTime FAKE_VALID_DATE_OBJECT = Util.DateTime.newBuilder().setMillisecond(FAKE_VALID_DATE).build();
-    public static final long FAKE_INVALID_DATE = 1001;
+    private static final long FAKE_VALID_DATE = 1000;
+    private static final Util.DateTime FAKE_VALID_DATE_OBJECT = Util.DateTime.newBuilder().setMillisecond(FAKE_VALID_DATE).build();
 
-    public static final Commands.SrlUpdateList.Builder FAKE_UPDATELIST = Commands.SrlUpdateList.newBuilder();
-    public static final Util.QuestionType FAKE_QUESTION_TYPE = Util.QuestionType.FREE_RESP;
-    public static final Assignment.AssignmentType VALID_ASSIGNMENT_TYPE = Assignment.AssignmentType.GRADED;
-    public static final int VALID_ASSIGNMENT_TYPE_VALUE = Assignment.AssignmentType.GRADED_VALUE;
+    private static final Util.QuestionType FAKE_QUESTION_TYPE = Util.QuestionType.FREE_RESP;
+    private static final Assignment.AssignmentType VALID_ASSIGNMENT_TYPE = Assignment.AssignmentType.GRADED;
+    private static final int VALID_ASSIGNMENT_TYPE_VALUE = Assignment.AssignmentType.GRADED_VALUE;
 
     private String courseId;
     private String assignmentId;
@@ -113,9 +110,7 @@ public class MongoInstitutionTest {
             when(optionChecker.isItemRegistrationRequired(any(AuthenticationDataCreator.class)))
                     .thenReturn(true);
 
-        } catch (DatabaseAccessException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | DatabaseAccessException e) {
             e.printStackTrace();
         }
     }
@@ -228,11 +223,13 @@ public class MongoInstitutionTest {
 
         String registrationKey = (String) mongoBankProblem.get(REGISTRATION_KEY);
 
-        verify(authenticationUpdater, atLeastOnce()).createNewItem(eq(TEACHER_AUTH_ID), eq(problemBankId), eq(Util.ItemType.BANK_PROBLEM), (String)isNull(),
-                eq(registrationKey));
+        verify(authenticationUpdater, atLeastOnce())
+                .createNewItem(eq(TEACHER_AUTH_ID), eq(problemBankId), eq(Util.ItemType.BANK_PROBLEM), (String) isNull(),
+                        eq(registrationKey));
 
-        verify(identityManager, atLeastOnce()).createNewItem(eq(TEACHER_USER_ID), eq(TEACHER_AUTH_ID), eq(problemBankId), eq(Util.ItemType.BANK_PROBLEM),
-                (String)isNull(), any(Authenticator.class));
+        verify(identityManager, atLeastOnce())
+                .createNewItem(eq(TEACHER_USER_ID), eq(TEACHER_AUTH_ID), eq(problemBankId), eq(Util.ItemType.BANK_PROBLEM),
+                        (String) isNull(), any(Authenticator.class));
     }
 
     @Test
@@ -258,11 +255,11 @@ public class MongoInstitutionTest {
 
         String registrationKey = (String) mongoCourse.get(REGISTRATION_KEY);
 
-        verify(authenticationUpdater, atLeastOnce()).createNewItem(eq(TEACHER_AUTH_ID), eq(courseId), eq(Util.ItemType.COURSE), (String)isNull(),
+        verify(authenticationUpdater, atLeastOnce()).createNewItem(eq(TEACHER_AUTH_ID), eq(courseId), eq(Util.ItemType.COURSE), (String) isNull(),
                 eq(registrationKey));
 
         verify(identityManager, atLeastOnce()).createNewItem(eq(TEACHER_USER_ID), eq(TEACHER_AUTH_ID), eq(courseId), eq(Util.ItemType.COURSE),
-                (String)isNull(), any(Authenticator.class));
+                (String) isNull(), any(Authenticator.class));
     }
 
 
@@ -325,8 +322,9 @@ public class MongoInstitutionTest {
                 eq(assignmentId),
                 (String) isNull());
 
-        verify(identityManager, atLeastOnce()).createNewItem(eq(TEACHER_USER_ID), eq(TEACHER_AUTH_ID), eq(courseProblemId), eq(Util.ItemType.COURSE_PROBLEM),
-                eq(assignmentId), any(Authenticator.class));
+        verify(identityManager, atLeastOnce())
+                .createNewItem(eq(TEACHER_USER_ID), eq(TEACHER_AUTH_ID), eq(courseProblemId), eq(Util.ItemType.COURSE_PROBLEM),
+                        eq(assignmentId), any(Authenticator.class));
     }
 
     @Test

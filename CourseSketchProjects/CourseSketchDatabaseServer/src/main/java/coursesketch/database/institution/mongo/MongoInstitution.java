@@ -9,18 +9,17 @@ import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationUpdater;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.identity.IdentityManagerInterface;
+import coursesketch.database.institution.Institution;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
+import coursesketch.database.submission.SubmissionManager;
 import coursesketch.database.submission.SubmissionManagerInterface;
+import coursesketch.database.user.UserClient;
+import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.identity.IdentityWebSocketClient;
 import coursesketch.server.authentication.HashManager;
-import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.services.submission.SubmissionWebSocketClient;
-import coursesketch.database.util.DatabaseAccessException;
-import coursesketch.database.institution.Institution;
-import coursesketch.database.submission.SubmissionManager;
-import coursesketch.database.user.UserClient;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +35,7 @@ import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.services.identity.Identity;
 import protobuf.srl.submission.Submission;
 import protobuf.srl.utils.Util;
+import utilities.Encoder;
 import utilities.LoggingConstants;
 import utilities.TimeManager;
 
@@ -304,7 +304,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
 
     @Override
     public String insertCourse(final String userId, final String authId, final SrlCourse course) throws DatabaseAccessException {
-        final String registrationId = AbstractServerWebSocketHandler.Encoder.nextID().toString();
+        final String registrationId = Encoder.nextID().toString();
 
         LOG.debug("Course is being inserted with registration key {}", registrationId);
         // we first add the registration key before we add it to the database.
@@ -404,7 +404,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     public String insertBankProblem(final String userId, final String authId, final SrlBankProblem problem)
             throws AuthenticationException, DatabaseAccessException {
 
-        final String registrationId = AbstractServerWebSocketHandler.Encoder.nextID().toString();
+        final String registrationId = Encoder.nextID().toString();
 
         LOG.debug("Bank problem is being inserted with registration key {}", registrationId);
         // we first add the registration key before we add it to the database.
@@ -554,7 +554,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
 
     @Override
     public List<Submission.SrlExperiment> getExperimentAsInstructor(final String authId, final List<String> identifier,
-            final Message.Request  sessionInfo, final MultiConnectionManager internalConnections, final ByteString review)
+            final Message.Request sessionInfo, final MultiConnectionManager internalConnections, final ByteString review)
             throws DatabaseAccessException, AuthenticationException {
         return SubmissionManager.mongoGetAllExperimentsAsInstructor(auth, database, authId, identifier,
                 internalConnections.getBestConnection(SubmissionWebSocketClient.class),

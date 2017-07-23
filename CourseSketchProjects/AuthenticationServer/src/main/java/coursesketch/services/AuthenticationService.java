@@ -121,8 +121,8 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
     }
 
     @Override
-    public void addUser(final RpcController controller, final Authentication.UserRegistration request, final RpcCallback<Message.DefaultResponse>
-            done) {
+    public void addUser(final RpcController controller, final Authentication.UserRegistration request,
+            final RpcCallback<Message.DefaultResponse> done) {
         final Authentication.AuthRequest authRequest = request.getItemRequest();
         try {
             authManager.addUser(request.getRegistrationKey(), authRequest.getAuthId(), authRequest.getItemId(),

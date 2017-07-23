@@ -1,13 +1,18 @@
 package coursesketch.utilities;
 
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.server.authentication.HashManager;
 import protobuf.srl.services.authentication.Authentication;
+
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Contains utilities for {@link protobuf.srl.services.authentication.Authentication.AuthType}.
  *
  * Created by dtracers on 9/16/2015.
  */
-@SuppressWarnings("checkstyle:magicnumber")
+@SuppressWarnings({ "checkstyle:magicnumber", "PMD.TooManyMethods" })
 public final class AuthUtilities {
 
     /**
@@ -131,5 +136,35 @@ public final class AuthUtilities {
      */
     static long convertAndShift(final boolean bool, final int shiftAmount) {
         return (bool ? 1 : 0) << shiftAmount;
+    }
+
+    /**
+     * Generates a salt and throws only AuthenticationException.
+     *
+     * @return A string that can be used for salting.
+     * @throws AuthenticationException Thrown for multiple reasons.
+     */
+    public static String generateAuthSalt() throws AuthenticationException {
+        try {
+            return HashManager.generateSalt();
+        } catch (NoSuchAlgorithmException e) {
+            throw new AuthenticationException(e);
+        }
+    }
+
+    /**
+     * Generates a hash and throws only AuthenticationException.
+     *
+     * @param authId The id being hashed.
+     * @param salt The salt of the hash.
+     * @return A hashed string.
+     * @throws AuthenticationException Thrown for multiple reasons.
+     */
+    public static String generateHash(final String authId, final String salt) throws AuthenticationException {
+        try {
+            return HashManager.toHex(HashManager.createHash(authId, salt).getBytes(StandardCharsets.UTF_8));
+        } catch (NoSuchAlgorithmException e) {
+            throw new AuthenticationException(e);
+        }
     }
 }

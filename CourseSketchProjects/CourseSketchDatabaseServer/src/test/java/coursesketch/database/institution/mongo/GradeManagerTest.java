@@ -6,9 +6,13 @@ import com.coursesketch.test.utilities.DocumentComparisonOptions;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Projections;
-import coursesketch.server.authentication.HashManager;
+import coursesketch.database.auth.AuthenticationChecker;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationOptionChecker;
+import coursesketch.database.auth.Authenticator;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.RequestConverter;
+import coursesketch.server.authentication.HashManager;
 import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,16 +22,17 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.grading.Grading.GradeHistory;
+import protobuf.srl.grading.Grading.ProtoGrade;
+import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
-import protobuf.srl.school.School.SrlCourse;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static coursesketch.database.institution.mongo.MongoInstitutionTest.genericDatabaseMock;
 import static coursesketch.database.util.DatabaseStringConstants.ASSIGNMENT_ID;
 import static coursesketch.database.util.DatabaseStringConstants.COMMENT;
 import static coursesketch.database.util.DatabaseStringConstants.COURSE_ID;
@@ -41,7 +46,6 @@ import static coursesketch.database.util.DatabaseStringConstants.GRADE_VALUE;
 import static coursesketch.database.util.DatabaseStringConstants.SELF_ID;
 import static coursesketch.database.util.DatabaseStringConstants.USER_ID;
 import static coursesketch.database.util.DatabaseStringConstants.WHO_CHANGED;
-import static coursesketch.database.institution.mongo.MongoInstitutionTest.genericDatabaseMock;
 
 /**
  * Tests for GradeManager.
@@ -58,11 +62,11 @@ public class GradeManagerTest {
     @Rule
     public FongoRule fongo = new FongoRule();
     @Mock
-    AuthenticationChecker authChecker;
+    private AuthenticationChecker authChecker;
     @Mock
-    AuthenticationOptionChecker optionChecker;
+    private AuthenticationOptionChecker optionChecker;
 
-    public MongoDatabase db;
+    private MongoDatabase db;
     private Authenticator authenticator;
     private SrlCourse.Builder courseBuilder = SrlCourse.newBuilder();
 
@@ -98,7 +102,7 @@ public class GradeManagerTest {
         genericDatabaseMock(authChecker, optionChecker);
         authenticator = new Authenticator(authChecker, optionChecker);
 
-        /**
+        /*
          * Setting up fake Proto data.
          */
         fakeProtoHistory1.setGradeValue(FAKE_OLD_GRADE).setComment(FAKE_COMMENT + "1").setWhoChanged(FAKE_ADMIN_ID)
@@ -115,7 +119,7 @@ public class GradeManagerTest {
         protoGradeGrabber.setCourseId(FAKE_COURSE_ID).setUserId(userIdHash).setAssignmentId(FAKE_ASGN_ID)
                 .setProblemId(FAKE_PROB_ID);
 
-        /**
+        /*
          * Setting up fake Mongo data.
          */
         Document mongoHistory1 = new Document(GRADE_VALUE, FAKE_OLD_GRADE)
@@ -480,7 +484,7 @@ public class GradeManagerTest {
     public void getAllAssignmentGradesInstructorNotAuthorizedTest() throws Exception {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
 
-        List<ProtoGrade> testGrades = GradeManager.getAllAssignmentGradesInstructor(authenticator, db, courseId, FAKE_USER_ID);
+        GradeManager.getAllAssignmentGradesInstructor(authenticator, db, courseId, FAKE_USER_ID);
     }
 
     @Test(expected = DatabaseAccessException.class)
@@ -490,7 +494,7 @@ public class GradeManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        List<ProtoGrade> testGrades = GradeManager.getAllAssignmentGradesInstructor(authenticator, db, courseId, FAKE_ADMIN_ID);
+        GradeManager.getAllAssignmentGradesInstructor(authenticator, db, courseId, FAKE_ADMIN_ID);
     }
 
     @Test

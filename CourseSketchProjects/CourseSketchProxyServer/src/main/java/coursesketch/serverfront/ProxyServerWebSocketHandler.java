@@ -22,6 +22,7 @@ import protobuf.srl.request.Message.Request.MessageType;
 import utilities.ConnectionException;
 import utilities.CourseSketchException;
 import coursesketch.utilities.ExceptionUtilities;
+import utilities.Encoder;
 import utilities.LoggingConstants;
 import utilities.TimeManager;
 

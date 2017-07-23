@@ -18,8 +18,8 @@
         <mainClass>connection.AuthenticationServerRunner</mainClass>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>85</projectBranchLevel>
-        <projectLineLevel>62</projectLineLevel>
+        <projectBranchLevel>84</projectBranchLevel>
+        <projectLineLevel>84</projectLineLevel>
     </properties>
 
     <build>

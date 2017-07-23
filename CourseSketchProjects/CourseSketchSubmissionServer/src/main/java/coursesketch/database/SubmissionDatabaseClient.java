@@ -12,7 +12,6 @@ import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.SubmissionException;
-import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
 import org.bson.Document;
 import org.bson.types.Binary;
@@ -110,8 +109,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      *
      * It also ensures that the solution received is built on the previous solution as we do not permit the overwriting of history
      *
-     * @param solution
-     *         TODO change this to use new stuff
+     * @param solution The element being saved.
      * @return id if the element does not already exist.
      * @throws DatabaseAccessException
      *         problems
@@ -122,7 +120,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
 
         final Document findQuery = new Document(PROBLEM_BANK_ID, solution.getProblemBankId());
         final MongoCursor<Document> multipleObjectCursor = solutions.find(findQuery).iterator();
-        Document existingSolution = null;
+        Document existingSolution;
         if (multipleObjectCursor.hasNext()) {
             existingSolution = multipleObjectCursor.next();
             multipleObjectCursor.close();
@@ -130,7 +128,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
             try {
                 updateObj = createSubmission(solution.getSubmission(), existingSolution, false, TimeManager.getSystemTime());
             } catch (SubmissionException e) {
-                throw new DatabaseAccessException("Exception while creating submission", e);
+                throw new DatabaseAccessException("Exception while creating submission from existing submission", e);
             }
             solutions.updateOne(existingSolution, new Document("$set", updateObj));
         } else {
@@ -138,7 +136,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
 
             final Document submissionObject;
             try {
-                submissionObject = createSubmission(solution.getSubmission(), existingSolution, false, TimeManager.getSystemTime());
+                submissionObject = createSubmission(solution.getSubmission(), null, false, TimeManager.getSystemTime());
             } catch (SubmissionException e) {
                 throw new DatabaseAccessException("Exception while creating submission", e);
             }
@@ -189,7 +187,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         if (LOG.isDebugEnabled()) {
             LOG.info("Number of solutions found {}", experiments.count(findQuery));
         }
-        Document existingSubmission = null;
+        Document existingSubmission;
 
         if (multipleObjectCursor.hasNext()) {
             LOG.info("UPDATING AN EXPERIMENT!!!!!!!!");
@@ -201,7 +199,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
             try {
                 updateObj = createSubmission(experiment.getSubmission(), existingSubmission, false, submissionTime);
             } catch (SubmissionException e) {
-                throw new DatabaseAccessException("Exception while creating submission", e);
+                throw new DatabaseAccessException("Exception while creating submission from existing submission", e);
             }
             final Document updateObj2 = new Document(SUBMISSION_TIME, submissionTime);
             final Document updateQueryPart2 = new Document("$set", updateObj);
@@ -214,7 +212,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
             multipleObjectCursor.close();
             final Document submissionObject;
             try {
-                submissionObject = createSubmission(experiment.getSubmission(), existingSubmission, false, submissionTime);
+                submissionObject = createSubmission(experiment.getSubmission(), null, false, submissionTime);
             } catch (SubmissionException e) {
                 throw new DatabaseAccessException("Exception while creating submission", e);
             }
@@ -305,7 +303,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         build.setProblemId(cursor.get(COURSE_PROBLEM_ID).toString());
         build.setCourseId(cursor.get(COURSE_ID).toString());
         build.setPartId(cursor.get(ITEM_ID).toString());
-        SrlSubmission sub = null;
+        SrlSubmission sub;
         try {
             sub = getSubmission(cursor, submissionId);
         } catch (SubmissionException e) {
@@ -332,7 +330,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * @throws AuthenticationException
      *         thrown if the problemId given does not match the problemId in the database.
      */
-    public SrlSolution getSolution(final String itemId, final String bankProblemId, AuthenticationResponder permissions)
+    public SrlSolution getSolution(final String itemId, final String bankProblemId, final AuthenticationResponder permissions)
             throws DatabaseAccessException, AuthenticationException {
         if (Strings.isNullOrEmpty(bankProblemId) || Strings.isNullOrEmpty(itemId)) {
             throw new DatabaseAccessException("Invalid arguments while getting solution",
@@ -361,7 +359,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         build.setProblemBankId(cursor.get(PROBLEM_BANK_ID).toString());
         build.setIsPracticeProblem((Boolean) cursor.get(IS_PRACTICE_PROBLEM));
         build.setAllowedInProblemBank((Boolean) cursor.get(ALLOWED_IN_PROBLEMBANK));
-        SrlSubmission sub = null;
+        SrlSubmission sub;
         try {
             sub = getSubmission(cursor, submissionId);
         } catch (SubmissionException e) {
@@ -446,7 +444,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         if (!submission.hasSubmissionData()) {
             throw new SubmissionException("Tried to save as an invalid submission", null);
         }
-        Document document = null;
+        Document document;
         final QuestionData submissionData = submission.getSubmissionData();
         switch (submissionData.getElementTypeCase()) {
             case SKETCHAREA:
@@ -528,7 +526,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * @param updateList The updateList in a submission.
      * @return the time for the last stroke recorded.
      */
-    static long getFirstSubmissionTime(final SrlUpdateList updateList) {
+    private static long getFirstSubmissionTime(final SrlUpdateList updateList) {
         try {
             for (int i = 0; i < updateList.getListList().size(); i++) {
                 final Commands.SrlUpdate tmpUpdate = updateList.getListList().get(i);
@@ -568,7 +566,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
             final boolean isMod, final long submissionTime)
             throws SubmissionException {
         if (cursor != null) {
-            SrlUpdateList result = null;
+            SrlUpdateList result;
             try {
                 final Object binary = cursor.get(UPDATELIST);
                 if (getExpectedType(cursor) != QuestionData.ElementTypeCase.SKETCHAREA) {

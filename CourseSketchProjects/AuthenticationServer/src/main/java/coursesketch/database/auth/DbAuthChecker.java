@@ -5,19 +5,17 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.DatabaseStringConstants;
-import coursesketch.server.authentication.HashManager;
 import coursesketch.utilities.AuthUtilities;
 import org.bson.types.ObjectId;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 
-import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
 import static coursesketch.database.util.MongoUtilities.getUserGroup;
+import static coursesketch.utilities.AuthUtilities.generateHash;
 import static protobuf.srl.services.authentication.Authentication.AuthResponse.PermissionLevel.OWNER;
 import static protobuf.srl.services.authentication.Authentication.AuthResponse.PermissionLevel.STUDENT;
 
@@ -158,13 +156,9 @@ public final class DbAuthChecker implements AuthenticationChecker {
             throw new DatabaseAccessException("Can not find group with id: " + groupId);
         }
 
-        String hash;
         final String salt = group.get(DatabaseStringConstants.SALT).toString();
-        try {
-            hash = HashManager.toHex(HashManager.createHash(userId, salt).getBytes(StandardCharsets.UTF_8));
-        } catch (NoSuchAlgorithmException e) {
-            throw new AuthenticationException(e);
-        }
+        final String hash = generateHash(userId, salt);
+
         final Object permissionLevel = group.get(hash);
         if (permissionLevel == null) {
             return Authentication.AuthResponse.PermissionLevel.NO_PERMISSION;

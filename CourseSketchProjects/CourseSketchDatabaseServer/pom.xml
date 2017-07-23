@@ -19,8 +19,8 @@
         <mainClass>connection.DatabaseRunner</mainClass>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>37</projectBranchLevel>
-        <projectLineLevel>38</projectLineLevel>
+        <projectBranchLevel>50</projectBranchLevel>
+        <projectLineLevel>48</projectLineLevel>
     </properties>
 
     <build>
@@ -100,12 +100,6 @@
         <dependency>
             <groupId>CourseSketch</groupId>
             <artifactId>BlankServer</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>CourseSketch</groupId>
-            <artifactId>MongoDatabaseHelper</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

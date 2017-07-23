@@ -19,8 +19,8 @@
         <mainClass>connection.SubmissionRunner</mainClass>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>75</projectBranchLevel>
-        <projectLineLevel>59</projectLineLevel>
+        <projectBranchLevel>73</projectBranchLevel>
+        <projectLineLevel>60</projectLineLevel>
     </properties>
     <build>
         <plugins>

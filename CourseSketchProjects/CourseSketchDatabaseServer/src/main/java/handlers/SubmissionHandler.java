@@ -3,18 +3,18 @@ package handlers;
 import com.google.common.base.Strings;
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.database.auth.AuthenticationException;
-import coursesketch.database.submission.SubmissionManagerInterface;
-import coursesketch.server.interfaces.SocketSession;
-import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.institution.Institution;
 import coursesketch.database.institution.mongo.MongoInstitution;
+import coursesketch.database.submission.SubmissionManagerInterface;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.server.interfaces.SocketSession;
+import coursesketch.utilities.ExceptionUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data;
 import protobuf.srl.request.Message;
 import protobuf.srl.school.Problem;
 import protobuf.srl.submission.Submission;
-import coursesketch.utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
 import java.util.Collections;
@@ -129,10 +129,8 @@ public final class SubmissionHandler {
         }
 
         final Message.Request result = ResultBuilder.buildRequest(
-                Collections.singletonList(ResultBuilder.buildResult(Data.ItemQuery.NO_OP, "SUCCESSFULLY STORED SUBMISSION")),
-                "SUCCESSFULLY STORED SUBMISSION",
-                req
-                                                                 );
+                Collections.singletonList(ResultBuilder.buildResult(Data.ItemQuery.NO_OP, "SUCCESSFULLY STORED EXPERIMENT")),
+                "SUCCESSFULLY STORED EXPERIMENT", req);
         conn.send(result);
     }
 
@@ -171,7 +169,7 @@ public final class SubmissionHandler {
 
         if (!solution.getSubmission().getId().equals(submissionId)) {
             // Update the submission id for the bank problem
-            Problem.SrlBankProblem bankProblem =
+            final Problem.SrlBankProblem bankProblem =
                     Problem.SrlBankProblem.newBuilder().setSolutionId(submissionId).setId(solution.getProblemBankId()).build();
             try {
                 instance.updateBankProblem(req.getServersideId(), bankProblem);
@@ -188,10 +186,8 @@ public final class SubmissionHandler {
         }
 
         final Message.Request result = ResultBuilder.buildRequest(
-                Collections.singletonList(ResultBuilder.buildResult(Data.ItemQuery.NO_OP, "SUCCESSFULLY STORED SUBMISSION")),
-                "SUCCESSFULLY STORED SUBMISSION",
-                req
-                                                                 );
+                Collections.singletonList(ResultBuilder.buildResult(Data.ItemQuery.NO_OP, "SUCCESSFULLY STORED SOLUTION")),
+                "SUCCESSFULLY STORED SOLUTION", req);
         conn.send(result);
     }
 }

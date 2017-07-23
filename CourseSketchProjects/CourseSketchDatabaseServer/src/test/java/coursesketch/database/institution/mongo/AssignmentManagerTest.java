@@ -45,20 +45,20 @@ public class AssignmentManagerTest {
 
     @Rule
     public FongoRule fongo = new FongoRule();
-    @Mock AuthenticationChecker authChecker;
-    @Mock AuthenticationOptionChecker optionChecker;
+    private @Mock AuthenticationChecker authChecker;
+    private @Mock AuthenticationOptionChecker optionChecker;
 
     public MongoDatabase db;
-    public Authenticator authenticator;
+    private Authenticator authenticator;
 
-    public static final String VALID_NAME = "Valid course name!";
-    public static final String FAKE_DESCRIPTION = "DESCRIPTIONS YAY";
-    public static final String FAKE_ID = "507f1f77bcf86cd799439011";
-    public static final long FAKE_VALID_DATE = 1000;
-    public static final Util.DateTime FAKE_VALID_DATE_OBJECT = Util.DateTime.newBuilder().setMillisecond(FAKE_VALID_DATE).build();
-    public static final long FAKE_INVALID_DATE = 1001;
-    public static final String ADMIN_USER = "adminUser";
-    public static final String USER_USER = "userUser";
+    private static final String VALID_NAME = "Valid course name!";
+    private static final String FAKE_DESCRIPTION = "DESCRIPTIONS YAY";
+    private static final String FAKE_ID = "507f1f77bcf86cd799439011";
+    private static final long FAKE_VALID_DATE = 1000;
+    private static final Util.DateTime FAKE_VALID_DATE_OBJECT = Util.DateTime.newBuilder().setMillisecond(FAKE_VALID_DATE).build();
+    private static final long FAKE_INVALID_DATE = 1001;
+    private static final String ADMIN_USER = "adminUser";
+    private static final String USER_USER = "userUser";
     private static final Assignment.AssignmentType VALID_ASSIGNMENT_TYPE = Assignment.AssignmentType.PRACTICE;
     private static final Assignment.NavigationType VALID_NAVIGATION_TYPE = Assignment.NavigationType.LOOPING;
 
@@ -301,7 +301,7 @@ public class AssignmentManagerTest {
 
         for (int i = 0; i < 5; i++) {
             // We do not save the newly created problemIds because an empty problem list should be returned.
-            String problemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER,
+            CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER,
                     Problem.SrlProblem.newBuilder()
                             .setId("ID")
                             .setAssignmentId(assignmentId)

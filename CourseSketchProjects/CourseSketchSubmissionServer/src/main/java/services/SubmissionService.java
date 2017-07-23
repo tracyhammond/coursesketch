@@ -97,8 +97,8 @@ public final class SubmissionService extends SubmissionServer.SubmissionService 
      *
      */
     @Override
-    public void getSolution(RpcController controller, SubmissionServer.SubmissionRequest request,
-            RpcCallback<SubmissionServer.SolutionResponse> done) {
+    public void getSolution(final RpcController controller, final SubmissionServer.SubmissionRequest request,
+            final RpcCallback<SubmissionServer.SolutionResponse> done) {
         final String solutionId = request.getSubmissionIds(0);
         Submission.SrlSolution srlSolution;
         try {

@@ -7,21 +7,20 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.DatabaseStringConstants;
-import coursesketch.server.authentication.HashManager;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 
-import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
 import static coursesketch.database.util.DbSchoolUtility.getParentItemType;
 import static coursesketch.database.util.MongoUtilities.getUserGroup;
+import static coursesketch.utilities.AuthUtilities.generateAuthSalt;
+import static coursesketch.utilities.AuthUtilities.generateHash;
 import static coursesketch.utilities.AuthUtilities.largestAllowedLevel;
 
 /**
@@ -172,14 +171,8 @@ public final class DbAuthManager {
      * @throws AuthenticationException Thrown if there are problems creating the hash data.
      */
     String createNewGroup(final String authId, final String courseId) throws AuthenticationException {
-        String hash;
-        String salt;
-        try {
-            salt = HashManager.generateSalt();
-            hash = HashManager.toHex(HashManager.createHash(authId, salt).getBytes(StandardCharsets.UTF_8));
-        } catch (NoSuchAlgorithmException e) {
-            throw new AuthenticationException(e);
-        }
+        final String salt = generateAuthSalt();
+        final String hash = generateHash(authId, salt);
         final BasicDBObject groupQuery = new BasicDBObject(DatabaseStringConstants.COURSE_ID, new ObjectId(courseId))
                 .append(DatabaseStringConstants.SALT, salt)
                 .append(hash, Authentication.AuthResponse.PermissionLevel.TEACHER.getNumber());
@@ -213,12 +206,7 @@ public final class DbAuthManager {
             throw new DatabaseAccessException("Group with id " + groupId + " could not be found.");
         }
         final String salt = group.get(DatabaseStringConstants.SALT).toString();
-        String hash;
-        try {
-            hash = HashManager.toHex(HashManager.createHash(authId, salt).getBytes(StandardCharsets.UTF_8));
-        } catch (NoSuchAlgorithmException e) {
-            throw new AuthenticationException(e);
-        }
+        final String hash = generateHash(authId, salt);
 
         final BasicDBObject update = new BasicDBObject(hash, permissionLevel.getNumber());
         database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).update(
