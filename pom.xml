@@ -21,10 +21,10 @@
         <module>CourseSketchProjects/IdentityServer</module>
         <module>CourseSketchProjects/CourseSketchDatabaseServer</module>
         <module>CourseSketchProjects/CourseSketchLoginServer</module>
-        <module>CourseSketchProjects/CourseSketchProxyServer</module>
         <module>CourseSketchProjects/CourseSketchSubmissionServer</module>
         <module>CourseSketchProjects/CourseSketchAnswerCheckerServer</module>
         <module>CourseSketchProjects/CourseSketchRecognitionServer</module>
+        <module>CourseSketchProjects/CourseSketchProxyServer</module>
         <module>TestUtilities/Integration</module>
     </modules>
 
@@ -162,49 +162,56 @@
                 </pluginManagement>
             </build>
         </profile>
+        <profile>
+            <id>reporting</id>
+            <activation>
+                <property>
+                    <name>report</name>
+                </property>
+            </activation>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${checkstyleVersion}</version>
+                        <configuration>
+                            <configLocation>${absoluteCheckstyleLocation}</configLocation>
+                            <suppressionsLocation>${checkstyleSuppressionLocation}</suppressionsLocation>
+                            <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
+                            <encoding>UTF-8</encoding>
+                        </configuration>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>checkstyle</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                        <version>${findbugVersion}</version>
+                        <configuration>
+                            <excludeFilterFile>${findbugSupressionLocation}</excludeFilterFile>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>cobertura-maven-plugin</artifactId>
+                        <version>${coberturaVersion}</version>
+                        <configuration>
+                            <formats>
+                                <format>html</format>
+                                <format>xml</format>
+                            </formats>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
     </profiles>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${checkstyleVersion}</version>
-                <configuration>
-                    <configLocation>${absoluteCheckstyleLocation}</configLocation>
-                    <suppressionsLocation>${checkstyleSuppressionLocation}</suppressionsLocation>
-                    <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>checkstyle</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>${findbugVersion}</version>
-                <configuration>
-                    <excludeFilterFile>${findbugSupressionLocation}</excludeFilterFile>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>${coberturaVersion}</version>
-                <configuration>
-                    <formats>
-                        <format>html</format>
-                        <format>xml</format>
-                    </formats>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
 
     <scm>
         <url>https://github.com/${githubLocation}</url>

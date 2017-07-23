@@ -2,10 +2,12 @@ package coursesketch.utilities;
 
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.server.interfaces.SocketSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
 import utilities.CourseSketchException;
+import utilities.LoggingConstants;
 import utilities.ProtobufUtilities;
 
 /**
@@ -67,7 +69,7 @@ public final class ExceptionUtilities {
      * @param successful true if the request was successful even with the exception
      * @return A response that contains the exception.
      */
-    public static Message.DefaultResponse createExceptionResponse(final Throwable tException, final boolean successful) {
+    static Message.DefaultResponse createExceptionResponse(final Throwable tException, final boolean successful) {
         return Message.DefaultResponse.newBuilder().setException(createProtoException(tException)).setSuccessful(true).build();
     }
 
@@ -142,7 +144,7 @@ public final class ExceptionUtilities {
      * @param exception The proto exception that is being checked.
      * @return true if the given Throwable is the same type as the protoException
      */
-    public static boolean isSameType(final Throwable throwable, final Message.ProtoException exception) {
+    static boolean isSameType(final Throwable throwable, final Message.ProtoException exception) {
         return exception.getExceptionType().equals(throwable.getClass().toString());
     }
 
@@ -151,7 +153,7 @@ public final class ExceptionUtilities {
      * @param exception The proto exception that is being checked.
      * @return true if the given Throwable is the same type as the protoException
      */
-    public static boolean isSameType(final Class<? extends Throwable> throwable, final Message.ProtoException exception) {
+    static boolean isSameType(final Class<? extends Throwable> throwable, final Message.ProtoException exception) {
         return exception.getExceptionType().equals(throwable.toString());
     }
 
@@ -174,5 +176,21 @@ public final class ExceptionUtilities {
             throw exception1;
         }
         LOG.error(message, exception);
+    }
+
+    /**
+     * Creates and sends an exception.
+     *
+     * @param req
+     *         The request that has data being inserted.
+     * @param conn
+     *         The connection where the result is sent to.
+     * @param exception
+     *         The exception that occurred.
+     */
+    public static void createAndSendException(final SocketSession conn, final Message.Request req, final Exception exception) {
+        final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(exception);
+        conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
+        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, exception);
     }
 }

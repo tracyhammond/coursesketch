@@ -19,6 +19,8 @@ import utilities.LoggingConstants;
 
 import java.util.Collections;
 
+import static coursesketch.utilities.ExceptionUtilities.createAndSendException;
+
 /**
  * Handles submission storage requests.
  *
@@ -57,22 +59,6 @@ public final class SubmissionHandler {
         } else {
             saveSolution(req, conn, submissionManager, instance);
         }
-    }
-
-    /**
-     * Creates and sends an exception.
-     *
-     * @param req
-     *         The request that has data being inserted.
-     * @param conn
-     *         The connection where the result is sent to.
-     * @param exception
-     *         The exception that occurred.
-     */
-    private static void createAndSendException(final SocketSession conn, final Message.Request req, final Exception exception) {
-        final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(exception);
-        conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, exception);
     }
 
     /**

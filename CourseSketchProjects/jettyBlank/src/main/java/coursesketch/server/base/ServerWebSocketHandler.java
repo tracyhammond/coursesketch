@@ -117,9 +117,9 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * By default it is an echo server, basically it echos what it receives.
      *
      * @param session
-     *            the session object that created the message
+     *            The session object that created the message.
      * @param req
-     *            the message itself
+     *            The message itself.
      */
     @SuppressWarnings("checkstyle:designforextension")
     @Override

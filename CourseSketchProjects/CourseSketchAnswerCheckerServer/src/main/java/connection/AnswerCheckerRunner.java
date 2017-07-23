@@ -1,9 +1,9 @@
 package connection;
 
+import coursesketch.database.util.DatabaseStringConstants;
 import coursesketch.server.base.GeneralConnectionRunner;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.ServerInfo;
-import coursesketch.database.util.DatabaseStringConstants;
 
 /**
  * Runs and sets up the server.
@@ -23,7 +23,7 @@ public class AnswerCheckerRunner extends GeneralConnectionRunner {
      * @param arguments
      *         the arguments from the server are then parsed.
      */
-    public AnswerCheckerRunner(final String... arguments) {
+    AnswerCheckerRunner(final String... arguments) {
         super(arguments);
         super.setPort(PORT);
     }
@@ -52,7 +52,7 @@ public class AnswerCheckerRunner extends GeneralConnectionRunner {
      * {@inheritDoc}
      */
     @Override
-    protected void loadConfigurations() {
+    protected final void loadConfigurations() {
         super.setDatabaseName(DatabaseStringConstants.ANSWER_CHECKER_DATABASE);
     }
 
