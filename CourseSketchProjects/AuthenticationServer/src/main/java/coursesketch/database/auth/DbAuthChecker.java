@@ -1,12 +1,11 @@
 package coursesketch.database.auth;
 
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.DatabaseStringConstants;
 import coursesketch.utilities.AuthUtilities;
-import org.bson.types.ObjectId;
+import org.bson.Document;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 
@@ -14,6 +13,7 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
+import static coursesketch.database.util.MongoUtilities.convertStringToObjectId;
 import static coursesketch.database.util.MongoUtilities.getUserGroup;
 import static coursesketch.utilities.AuthUtilities.generateHash;
 import static protobuf.srl.services.authentication.Authentication.AuthResponse.PermissionLevel.OWNER;
@@ -29,13 +29,13 @@ public final class DbAuthChecker implements AuthenticationChecker {
     /**
      * The database that the auth checker grabs data from.
      */
-    private final DB database;
+    private final MongoDatabase database;
 
     /**
      * Creates a DbAuthChecker that takes in the database.
      * @param database The database.
      */
-    public DbAuthChecker(final DB database) {
+    public DbAuthChecker(final MongoDatabase database) {
         this.database = database;
     }
 
@@ -70,8 +70,8 @@ public final class DbAuthChecker implements AuthenticationChecker {
                     AuthenticationException.NO_AUTH_SENT);
         }
 
-        final DBCollection collection = this.database.getCollection(getCollectionFromType(collectionType));
-        final DBObject result = collection.findOne(new ObjectId(itemId));
+        final MongoCollection<Document> collection = this.database.getCollection(getCollectionFromType(collectionType));
+        final Document result = collection.find(convertStringToObjectId(itemId)).first();
         if (result == null) {
             throw new DatabaseAccessException("The item with the id " + itemId + " was not found in the database.");
         }
@@ -115,7 +115,7 @@ public final class DbAuthChecker implements AuthenticationChecker {
      *         Thrown if there are problems creating the auth response.
      */
     private Authentication.AuthResponse.PermissionLevel getPermissionLevel(final Authentication.AuthType preFixedCheckType,
-            final String userId, final DBObject authDatabaseObject) throws DatabaseAccessException, AuthenticationException {
+            final String userId, final Document authDatabaseObject) throws DatabaseAccessException, AuthenticationException {
 
         if (preFixedCheckType.getCheckingOwner()
                 && authDatabaseObject.get(DatabaseStringConstants.OWNER_ID).toString().equals(userId)) {
@@ -126,7 +126,7 @@ public final class DbAuthChecker implements AuthenticationChecker {
         final List<String> groupList = getUserGroup(authDatabaseObject);
         Authentication.AuthResponse.PermissionLevel permissionLevel = null;
 
-        final DBCollection groupCollection = this.database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
+        final MongoCollection<Document> groupCollection = this.database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
 
         // Checks the permission level for each group that is used by the item+
         for (String groupId : groupList) {
@@ -149,9 +149,9 @@ public final class DbAuthChecker implements AuthenticationChecker {
      * @throws DatabaseAccessException Thrown if the group does not exist.
      * @throws AuthenticationException Thrown if there are problems comparing the hashes.
      */
-    private Authentication.AuthResponse.PermissionLevel getUserPermissionLevel(final DBCollection collection, final String groupId,
+    private Authentication.AuthResponse.PermissionLevel getUserPermissionLevel(final MongoCollection<Document> collection, final String groupId,
             final String userId) throws DatabaseAccessException, AuthenticationException {
-        final DBObject group = collection.findOne(new ObjectId(groupId));
+        final Document group = collection.find(convertStringToObjectId(groupId)).first();
         if (group == null) {
             throw new DatabaseAccessException("Can not find group with id: " + groupId);
         }

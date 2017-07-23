@@ -3,12 +3,7 @@ package connection;
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.auth.AuthenticationWebSocketClient;
 import coursesketch.database.AnswerCheckerDatabase;
-import coursesketch.database.auth.AuthenticationChecker;
-import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
-import coursesketch.database.auth.AuthenticationOptionChecker;
-import coursesketch.database.auth.AuthenticationResponder;
-import coursesketch.database.auth.Authenticator;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.database.submission.SubmissionManagerInterface;
 import coursesketch.database.util.DatabaseAccessException;
@@ -84,6 +79,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                 }
             }
         } catch (AuthenticationException | DatabaseAccessException e) {
+            LOG.error("Exception handling problem", e);
             createAndSendException(conn, req, e);
         }
     }
@@ -115,15 +111,6 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                     studentExperiment.getProblemId());
             // No need to try and automatically grade something that does not exist.
             return;
-        }
-
-        final AuthenticationChecker authChecker = getConnectionManager().getBestConnection(AuthenticationWebSocketClient.class);
-        final Authentication.AuthResponse authenticated = authChecker
-                .isAuthenticated(Util.ItemType.COURSE_PROBLEM, studentExperiment.getProblemId(), req.getServersideId(), Authentication.AuthType
-                        .newBuilder().setCheckAccess(true).setCheckingUser(true).build());
-
-        if (!new AuthenticationResponder(authenticated).hasStudentPermission()) {
-            throw new AuthenticationException("User can not get this submission graded", AuthenticationException.INVALID_PERMISSION);
         }
 
         final String authId = ((AnswerCheckerDatabase) getDatabaseReader()).getKey(req.getServersideId(), studentExperiment);
@@ -162,7 +149,8 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
 
         final String userId = ((AnswerCheckerDatabase) getDatabaseReader()).generateKey(req.getServersideId(), solution);
         if (userId != null) {
-            authentication.addUser(req.getServersideId(), userId, solution.getProblemBankId(), Util.ItemType.BANK_PROBLEM);
+            authentication.addUser(req.getServersideId(), userId, solution.getProblemBankId(), Util.ItemType.BANK_PROBLEM,
+                    Authentication.AuthResponse.PermissionLevel.TEACHER);
         }
     }
 
@@ -183,37 +171,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
     protected final AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
         final AuthenticationWebSocketClient authChecker = getConnectionManager()
                 .getBestConnection(AuthenticationWebSocketClient.class);
-        final Authenticator auth = new Authenticator(authChecker, createAuthChecker());
 
-        return new AnswerCheckerDatabase(info, auth);
+        return new AnswerCheckerDatabase(info, authChecker);
     }
-
-    /**
-     * @return An AuthChecker that ignores everything.
-     */
-    private AuthenticationOptionChecker createAuthChecker() {
-        return new AuthenticationOptionChecker() {
-            @Override
-            public boolean authenticateDate(final AuthenticationDataCreator dataCreator, final long checkTime) throws DatabaseAccessException {
-                return true;
-            }
-
-            @Override
-            public boolean isItemRegistrationRequired(final AuthenticationDataCreator dataCreator) throws DatabaseAccessException {
-                return false;
-            }
-
-            @Override
-            public boolean isItemPublished(final AuthenticationDataCreator dataCreator) throws DatabaseAccessException {
-                return true;
-            }
-
-            @Override
-            public AuthenticationDataCreator createDataGrabber(final Util.ItemType collectionType, final String itemId)
-                    throws DatabaseAccessException {
-                return null;
-            }
-        };
-    }
-
 }

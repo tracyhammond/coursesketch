@@ -94,6 +94,31 @@ public class AuthenticationWebSocketClientTest {
         Mockito.verify(mockAuthenticationService).authorizeUser(any(RpcController.class), eq(request));
     }
 
+    @Test(expected = AuthenticationException.class)
+    public void errorsOutIfResponseHasError() throws Exception {
+        Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckAccess(true)
+                .build();
+
+        final Authentication.AuthResponse build =
+                Authentication.AuthResponse.newBuilder().setDefaultResponse(Message.DefaultResponse.newBuilder().setException(
+                        Message.ProtoException.newBuilder().setMssg("Messg"))).build();
+
+        when(mockAuthenticationService.authorizeUser(any(RpcController.class), any(Authentication.AuthRequest.class)))
+                .thenReturn(build);
+
+        webclient.isAuthenticated(VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_AUTH_ID, authType);
+
+        final Authentication.AuthRequest request = Authentication.AuthRequest.newBuilder()
+                .setItemId(VALID_ITEM_ID)
+                .setItemType(VALID_ITEM_TYPE)
+                .setAuthId(TEACHER_AUTH_ID)
+                .setAuthParams(authType)
+                .build();
+
+        Mockito.verify(mockAuthenticationService).authorizeUser(any(RpcController.class), eq(request));
+    }
+
     @Test
     public void callsAuthorizeUserServiceCorrectly() throws Exception {
         Authentication.AuthType authType = Authentication.AuthType.newBuilder()
@@ -174,20 +199,19 @@ public class AuthenticationWebSocketClientTest {
     @Test
     public void addUserCallsServiceWithCorrectValues() throws Exception {
 
-        webclient.addUser(VALID_REGISTRATION_KEY, TEACHER_USER_ID, VALID_ITEM_ID, VALID_ITEM_TYPE);
+        webclient.addUser(VALID_REGISTRATION_KEY, TEACHER_USER_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
         final Authentication.AuthRequest request = Authentication.AuthRequest.newBuilder()
                 .setItemId(VALID_ITEM_ID)
                 .setItemType(VALID_ITEM_TYPE)
                 .setAuthId(TEACHER_USER_ID)
-                .setAuthParams(Authentication.AuthType.newBuilder().setCheckingOwner(true))
+                .setAuthParams(Authentication.AuthType.newBuilder().setCheckingOwner(true).setCheckingUser(true))
                 .build();
 
         final Authentication.UserRegistration userRequest = Authentication.UserRegistration.newBuilder()
                 .setItemRequest(request)
                 .setRegistrationKey(VALID_REGISTRATION_KEY)
                 .build();
-
 
         Mockito.verify(mockAuthenticationService).addUser(any(RpcController.class), eq(userRequest));
     }

@@ -2,12 +2,11 @@ package coursesketch.database.identity;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Projections;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
@@ -16,6 +15,7 @@ import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.DatabaseStringConstants;
 import coursesketch.server.authentication.HashManager;
 import coursesketch.server.interfaces.ServerInfo;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +33,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static coursesketch.database.util.DatabaseStringConstants.COURSE_ID;
+import static coursesketch.database.util.DatabaseStringConstants.OWNER_ID;
+import static coursesketch.database.util.DatabaseStringConstants.SELF_ID;
+import static coursesketch.database.util.DatabaseStringConstants.USER_LIST;
+import static coursesketch.database.util.DatabaseStringConstants.USER_NAME;
 import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
 import static coursesketch.database.util.DbSchoolUtility.getParentItemType;
+import static coursesketch.database.util.MongoUtilities.convertStringToObjectId;
 import static coursesketch.database.util.MongoUtilities.getUserGroup;
 
 /**
@@ -50,7 +56,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
     /**
      * The database that the auth checker grabs data from.
      */
-    private DB database;
+    private MongoDatabase database;
 
     /**
      * Creates An IdentityManager with a database.
@@ -58,7 +64,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * @param database
      *         The database where all of the data is stored.
      */
-    public IdentityManager(final DB database) {
+    public IdentityManager(final MongoDatabase database) {
         super(null);
         this.database = database;
     }
@@ -78,8 +84,8 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      */
     @Override
     protected void setUpIndexes() {
-        final DBCollection collection = this.database.getCollection(DatabaseStringConstants.USER_COLLECTION);
-        collection.createIndex(new BasicDBObject(DatabaseStringConstants.USER_NAME, 1));
+        final MongoCollection<Document> collection = this.database.getCollection(DatabaseStringConstants.USER_COLLECTION);
+        collection.createIndex(new Document(DatabaseStringConstants.USER_NAME, 1));
     }
 
     /**
@@ -94,7 +100,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
             throw new DatabaseAccessException("Mongo instance already exists!");
         }
         final MongoClient mongoClient = new MongoClient(super.getServerInfo().getDatabaseUrl());
-        this.database = mongoClient.getDB(super.getServerInfo().getDatabaseName());
+        this.database = mongoClient.getDatabase(super.getServerInfo().getDatabaseName());
         super.setDatabaseStarted();
     }
 
@@ -118,7 +124,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
             }
         }
 
-        final BasicDBObject insertQuery = createItemInsertQuery(userId, itemId, itemType);
+        final Document insertQuery = createItemInsertQuery(userId, itemId, itemType);
         if (!parentType.equals(itemType)) {
             copyParentDetails(insertQuery, itemId, itemType, parentId);
         }
@@ -128,11 +134,11 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
             final String groupId = createNewGroup(userId, itemId);
             final List<String> groupList = new ArrayList<>();
             groupList.add(groupId);
-            insertQuery.append(DatabaseStringConstants.USER_LIST, groupList);
+            insertQuery.append(USER_LIST, groupList);
         } else if (itemType.equals(Util.ItemType.BANK_PROBLEM)) {
             final String groupId = createNewGroup(userId, itemId);
             final List<String> groupList = Lists.newArrayList(groupId);
-            insertQuery.append(DatabaseStringConstants.USER_LIST, groupList);
+            insertQuery.append(USER_LIST, groupList);
 
             if (!Strings.isNullOrEmpty(parentId)) {
                 LOG.warn("Inserting bank problem {} with no parent id", itemId);
@@ -140,8 +146,8 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
             }
         }
 
-        final DBCollection collection = database.getCollection(getCollectionFromType(itemType));
-        collection.insert(insertQuery);
+        final MongoCollection<Document> collection = database.getCollection(getCollectionFromType(itemType));
+        collection.insertOne(insertQuery);
     }
 
     /**
@@ -153,10 +159,10 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      *         The id of the item being inserted
      * @param itemType
      *         The type of item that is being inserted, EX: {@link Util.ItemType#COURSE}
-     * @return {@link BasicDBObject} that contains the basic set up that every item has for its creation.
+     * @return {@link Document} that contains the basic set up that every item has for its creation.
      */
-    private BasicDBObject createItemInsertQuery(final String userId, final String itemId, final Util.ItemType itemType) {
-        final BasicDBObject query = new BasicDBObject(DatabaseStringConstants.SELF_ID, new ObjectId(itemId));
+    private Document createItemInsertQuery(final String userId, final String itemId, final Util.ItemType itemType) {
+        final Document query = new Document(DatabaseStringConstants.SELF_ID, new ObjectId(itemId));
         if (Util.ItemType.COURSE.equals(itemType)) {
             query.append(DatabaseStringConstants.COURSE_ID, new ObjectId(itemId))
                     .append(DatabaseStringConstants.OWNER_ID, userId);
@@ -183,20 +189,18 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * @throws DatabaseAccessException
      *         Thrown if the parent object can not be found.
      */
-    private void copyParentDetails(final BasicDBObject insertQuery, final String itemId, final Util.ItemType itemType, final String parentId)
+    private void copyParentDetails(final Document insertQuery, final String itemId, final Util.ItemType itemType, final String parentId)
             throws DatabaseAccessException {
         final Util.ItemType collectionType = getParentItemType(itemType);
-        final DBCollection collection = database.getCollection(getCollectionFromType(collectionType));
-        final DBObject result = collection.findOne(new ObjectId(parentId),
-                new BasicDBObject(DatabaseStringConstants.USER_LIST, true)
-                        .append(DatabaseStringConstants.COURSE_ID, true)
-                        .append(DatabaseStringConstants.OWNER_ID, true));
+        final MongoCollection<Document> collection = database.getCollection(getCollectionFromType(collectionType));
+        final Document result = collection.find(convertStringToObjectId(parentId))
+                .projection(Projections.include(USER_LIST, COURSE_ID, OWNER_ID)).first();
         if (result == null) {
             throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the database");
         }
 
         // This would overwrite existing id but there is already a valid id in here.
-        result.removeField(DatabaseStringConstants.SELF_ID);
+        result.remove(DatabaseStringConstants.SELF_ID);
         insertQuery.putAll(result);
     }
 
@@ -219,14 +223,14 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
         } catch (NoSuchAlgorithmException e) {
             throw new AuthenticationException("Invalid algorithm when creating a new group", e);
         }
-        final BasicDBObject nonStudent = new BasicDBObject();
+        final Document nonStudent = new Document();
         nonStudent.append(userId, hash);
-        final BasicDBObject groupQuery = new BasicDBObject(DatabaseStringConstants.COURSE_ID, new ObjectId(courseId))
-                .append(DatabaseStringConstants.USER_LIST, new BasicDBObject())
+        final Document groupQuery = new Document(DatabaseStringConstants.COURSE_ID, new ObjectId(courseId))
+                .append(USER_LIST, new Document())
                 .append(DatabaseStringConstants.NON_USER_LIST, nonStudent);
 
-        final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
-        collection.insert(groupQuery);
+        final MongoCollection<Document> collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
+        collection.insertOne(groupQuery);
         return groupQuery.get(DatabaseStringConstants.SELF_ID).toString();
     }
 
@@ -251,10 +255,9 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
                     new IllegalArgumentException("UserId can not be null or empty"));
         }
 
-        final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
-        final DBObject group = collection.findOne(new ObjectId(groupId),
-                new BasicDBObject(DatabaseStringConstants.SELF_ID, true)
-                        .append(DatabaseStringConstants.COURSE_ID, true));
+        final MongoCollection<Document> collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
+        final Document group = collection.find(convertStringToObjectId(groupId))
+                .projection(Projections.include(SELF_ID, COURSE_ID)).first();
         if (group == null) {
             throw new DatabaseAccessException("group could not be found");
         }
@@ -267,12 +270,12 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
             throw new AuthenticationException("Invalid algorithm when inserting a user into group", e);
         }
 
-        // final BasicDBObject newIdentity = new BasicDBObject(userId, hash);
-        final String list = isUser ? DatabaseStringConstants.USER_LIST : DatabaseStringConstants.NON_USER_LIST;
-        database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).update(
+        // final Document newIdentity = new Document(userId, hash);
+        final String list = isUser ? USER_LIST : DatabaseStringConstants.NON_USER_LIST;
+        database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).updateOne(
                 group,
-                new BasicDBObject(DatabaseStringConstants.SET_COMMAND,
-                        new BasicDBObject(list + DatabaseStringConstants.SUBFIELD_COMMAND + userId, hash)));
+                new Document(DatabaseStringConstants.SET_COMMAND,
+                        new Document(list + DatabaseStringConstants.SUBFIELD_COMMAND + userId, hash)));
     }
 
     /**
@@ -285,9 +288,9 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
             throw new AuthenticationException("Can only register users in a course or a bank problem", AuthenticationException.OTHER);
         }
 
-        final DBCollection collection = database.getCollection(getCollectionFromType(itemType));
-        final DBObject result = collection.findOne(new ObjectId(itemId),
-                new BasicDBObject(DatabaseStringConstants.USER_LIST, true));
+        final MongoCollection<Document> collection = database.getCollection(getCollectionFromType(itemType));
+        final Document result = collection.find(convertStringToObjectId(itemId))
+                .projection(Projections.include(USER_LIST)).first();
 
         if (result == null) {
             throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the database");
@@ -317,11 +320,11 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
         } catch (NoSuchAlgorithmException e) {
             throw new AuthenticationException("Invalid algorithm when creating a new user", e);
         }
-        final DBCollection userCollection = database.getCollection(DatabaseStringConstants.USER_COLLECTION);
-        final BasicDBObject query = new BasicDBObject(DatabaseStringConstants.USER_NAME, userName);
-        final DBObject cursor = userCollection.findOne(query);
+        final MongoCollection<Document> userCollection = database.getCollection(DatabaseStringConstants.USER_COLLECTION);
+        final Document query = new Document(DatabaseStringConstants.USER_NAME, userName);
+        final Document cursor = userCollection.find(query).first();
         if (cursor == null) {
-            userCollection.insert(new BasicDBObject(DatabaseStringConstants.SELF_ID, userId)
+            userCollection.insertOne(new Document(DatabaseStringConstants.SELF_ID, userId)
                     .append(DatabaseStringConstants.USER_NAME, userName)
                     .append(DatabaseStringConstants.PASSWORD, hashPassword));
         } else {
@@ -338,8 +341,8 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      */
     @Override
     public String getUserIdentity(final String userName, final String authId) throws AuthenticationException, DatabaseAccessException {
-        final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_COLLECTION);
-        final DBObject userInfo = collection.findOne(new BasicDBObject(DatabaseStringConstants.USER_NAME, userName));
+        final MongoCollection<Document> collection = database.getCollection(DatabaseStringConstants.USER_COLLECTION);
+        final Document userInfo = collection.find(new Document(DatabaseStringConstants.USER_NAME, userName)).first();
 
         if (userInfo == null) {
             throw new DatabaseAccessException("User not found with username [" + userName + "]");
@@ -368,10 +371,10 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
             throw new AuthenticationException("Need to be at least a peer teacher", AuthenticationException.INVALID_PERMISSION);
         }
 
-        final DBCollection collection = database.getCollection(getCollectionFromType(itemType));
+        final MongoCollection<Document> collection = database.getCollection(getCollectionFromType(itemType));
 
-        final DBObject item = collection.findOne(new ObjectId(itemId),
-                new BasicDBObject(DatabaseStringConstants.USER_LIST, true));
+        final Document item = collection.find(convertStringToObjectId(itemId))
+                .projection(Projections.include(USER_LIST)).first();
 
         if (item == null) {
             throw new DatabaseAccessException(getCollectionFromType(itemType) + " can not be found with the given itemId: " + itemId);
@@ -381,7 +384,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
 
         final List<String> groupList = getUserGroup(item);
 
-        final DBCollection groupCollection = this.database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
+        final MongoCollection<Document> groupCollection = this.database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
 
         for (String groupId : groupList) {
             courseRoster.putAll(getGroupRoster(groupCollection, groupId));
@@ -419,12 +422,14 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * @param groupId
      *         The id where the group is located
      * @return A {@code Map<String, String>} which is a {@code Map<UnhashedUserId, HashedUserId>}.
+     * @throws DatabaseAccessException Thrown if a valid id can not be created.
      */
-    private Map<String, String> getGroupRoster(final DBCollection collection, final String groupId) {
-        final DBObject group = collection.findOne(new ObjectId(groupId),
-                new BasicDBObject(DatabaseStringConstants.USER_LIST, true));
+    private Map<String, String> getGroupRoster(final MongoCollection<Document> collection, final String groupId)
+            throws DatabaseAccessException {
+        final Document group = collection.find(convertStringToObjectId(groupId))
+                .projection(Projections.include(USER_LIST)).first();
 
-        return (Map<String, String>) group.get(DatabaseStringConstants.USER_LIST);
+        return (Map<String, String>) group.get(USER_LIST);
     }
 
     /**
@@ -476,17 +481,18 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
         for (String userId : identity) {
             identityList.add(new ObjectId(userId));
         }
-        final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_COLLECTION);
-        final DBCursor cursor = collection.find(
-                new BasicDBObject(DatabaseStringConstants.SELF_ID, new BasicDBObject(DatabaseStringConstants.IN_COMMAND, identityList)),
-                new BasicDBObject(DatabaseStringConstants.SELF_ID, 1).append(DatabaseStringConstants.USER_NAME, 1));
+        final MongoCollection<Document> collection = database.getCollection(DatabaseStringConstants.USER_COLLECTION);
+        final MongoCursor<Document> cursor = collection.find(
+                new Document(DatabaseStringConstants.SELF_ID, new Document(DatabaseStringConstants.IN_COMMAND, identityList)))
+                .projection(Projections.include(SELF_ID, USER_NAME)).iterator();
 
         if (!cursor.hasNext()) {
             throw new DatabaseAccessException("No users were found with the given userIds");
         }
 
         final Map<String, String> userNameMap = new HashMap<>();
-        for (DBObject userName : cursor) {
+        while (cursor.hasNext()) {
+            final Document userName = cursor.next();
             userNameMap.put(userName.get(DatabaseStringConstants.SELF_ID).toString(),
                     userName.get(DatabaseStringConstants.USER_NAME).toString());
         }
@@ -518,15 +524,15 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      */
     boolean isUserInItem(final String userId, final boolean isUser, final String itemId, final Util.ItemType itemType)
             throws DatabaseAccessException {
-        final DBCollection collection = this.database.getCollection(getCollectionFromType(itemType));
-        final DBObject result = collection.findOne(new ObjectId(itemId));
+        final MongoCollection<Document> collection = this.database.getCollection(getCollectionFromType(itemType));
+        final Document result = collection.find(convertStringToObjectId(itemId)).first();
         if (result == null) {
             throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the database");
         }
 
         final List<String> groupList = getUserGroup(result);
 
-        final DBCollection groupCollection = this.database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
+        final MongoCollection<Document> groupCollection = this.database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
 
         for (String groupId : groupList) {
             if (isUserInGroup(groupCollection, groupId, userId, isUser)) {
@@ -551,15 +557,16 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * @throws DatabaseAccessException
      *         Thrown if the group does not exist.
      */
-    private boolean isUserInGroup(final DBCollection collection, final String groupId,
+    private boolean isUserInGroup(final MongoCollection<Document> collection, final String groupId,
             final String userId, final boolean isUser) throws DatabaseAccessException {
-        final String listType = isUser ? DatabaseStringConstants.USER_LIST : DatabaseStringConstants.NON_USER_LIST;
-        final DBObject group = collection.findOne(new ObjectId(groupId), new BasicDBObject(listType, 1));
+        final String listType = isUser ? USER_LIST : DatabaseStringConstants.NON_USER_LIST;
+        final Document group = collection.find(convertStringToObjectId(groupId))
+                .projection(Projections.include(listType)).first();
         if (group == null) {
             throw new DatabaseAccessException("Can not find group with id: " + groupId);
         }
 
-        final DBObject list = (DBObject) group.get(listType);
-        return list.containsField(userId);
+        final Document list = (Document) group.get(listType);
+        return list.containsKey(userId);
     }
 }

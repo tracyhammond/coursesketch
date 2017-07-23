@@ -1,12 +1,13 @@
 package coursesketch.database.auth;
 
 import com.google.common.base.Strings;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Projections;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.DatabaseStringConstants;
+import coursesketch.database.util.MongoUtilities;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,11 @@ import protobuf.srl.utils.Util;
 import java.util.ArrayList;
 import java.util.List;
 
+import static coursesketch.database.util.DatabaseStringConstants.COURSE_ID;
+import static coursesketch.database.util.DatabaseStringConstants.OWNER_ID;
+import static coursesketch.database.util.DatabaseStringConstants.REGISTRATION_KEY;
+import static coursesketch.database.util.DatabaseStringConstants.SELF_ID;
+import static coursesketch.database.util.DatabaseStringConstants.USER_LIST;
 import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
 import static coursesketch.database.util.DbSchoolUtility.getParentItemType;
 import static coursesketch.database.util.MongoUtilities.getUserGroup;
@@ -36,13 +42,13 @@ public final class DbAuthManager {
     /**
      * The database that the auth checker grabs data from.
      */
-    private final DB database;
+    private final MongoDatabase database;
 
     /**
      * Creates A DbAuthManager with a database.
      * @param database The database where all of the data is stored.
      */
-    public DbAuthManager(final DB database) {
+    public DbAuthManager(final MongoDatabase database) {
         this.database = database;
     }
 
@@ -77,7 +83,7 @@ public final class DbAuthManager {
             }
         }
 
-        final BasicDBObject insertQuery = createItemInsertQuery(authId, itemId, itemType, registrationKey);
+        final Document insertQuery = createItemInsertQuery(authId, itemId, itemType, registrationKey);
         if (!parentType.equals(itemType)) {
             copyParentDetails(insertQuery, itemId, itemType, parentId);
         }
@@ -103,8 +109,8 @@ public final class DbAuthManager {
         }
 
         // Collection is created by mongo if it did not exist before.
-        final DBCollection collection = database.getCollection(getCollectionFromType(itemType));
-        collection.insert(insertQuery);
+        final MongoCollection<Document> collection = database.getCollection(getCollectionFromType(itemType));
+        collection.insertOne(insertQuery);
 
     }
 
@@ -115,18 +121,18 @@ public final class DbAuthManager {
      * @param itemId The id of the item being inserted.
      * @param itemType The type of item that is being inserted. EX: {@link Util.ItemType#COURSE}
      * @param registrationKey This key is needed for a user to grant themself access permission to a course.
-     * @return {@link BasicDBObject} that contains the basic set up that every item has for its creation.
+     * @return {@link Document} that contains the basic set up that every item has for its creation.
      */
-    private BasicDBObject createItemInsertQuery(final String authId, final String itemId, final Util.ItemType itemType,
+    private Document createItemInsertQuery(final String authId, final String itemId, final Util.ItemType itemType,
             final String registrationKey) {
-        final BasicDBObject query = new BasicDBObject(DatabaseStringConstants.SELF_ID, new ObjectId(itemId));
+        final Document query = new Document(SELF_ID, new ObjectId(itemId));
         if (Util.ItemType.COURSE.equals(itemType)) {
-            query.append(DatabaseStringConstants.COURSE_ID, new ObjectId(itemId))
-                    .append(DatabaseStringConstants.OWNER_ID, authId);
+            query.append(COURSE_ID, new ObjectId(itemId))
+                    .append(OWNER_ID, authId);
         }
         if (Util.ItemType.BANK_PROBLEM.equals(itemType)) {
             query.append(DatabaseStringConstants.PROBLEM_BANK_ID, itemId)
-                    .append(DatabaseStringConstants.OWNER_ID, authId);
+                    .append(OWNER_ID, authId);
         }
         if (registrationKey != null) {
             query.append(DatabaseStringConstants.REGISTRATION_KEY, registrationKey);
@@ -145,20 +151,18 @@ public final class DbAuthManager {
      *                 problem.
      * @throws DatabaseAccessException Thrown if the parent object can not be found.
      */
-    private void copyParentDetails(final BasicDBObject insertQuery, final String itemId, final Util.ItemType itemType, final String parentId)
+    private void copyParentDetails(final Document insertQuery, final String itemId, final Util.ItemType itemType, final String parentId)
             throws DatabaseAccessException {
         final Util.ItemType collectionType = getParentItemType(itemType);
-        final DBCollection collection = database.getCollection(getCollectionFromType(collectionType));
-        final DBObject result = collection.findOne(new ObjectId(parentId),
-                new BasicDBObject(DatabaseStringConstants.USER_LIST, true)
-                        .append(DatabaseStringConstants.COURSE_ID, true)
-                        .append(DatabaseStringConstants.OWNER_ID, true));
+        final MongoCollection<Document> collection = database.getCollection(getCollectionFromType(collectionType));
+        final Document result = collection.find(MongoUtilities.convertStringToObjectId(parentId))
+                .projection(Projections.include(USER_LIST, COURSE_ID, OWNER_ID)).first();
         if (result == null) {
             throw new DatabaseAccessException("The item with the id " + itemId + " was not found in the database.");
         }
 
         // This prevents the existing insertQuery ObjectId from being overwritten by the result ObjectId.
-        result.removeField(DatabaseStringConstants.SELF_ID);
+        result.remove(SELF_ID);
         insertQuery.putAll(result);
     }
 
@@ -173,13 +177,12 @@ public final class DbAuthManager {
     String createNewGroup(final String authId, final String courseId) throws AuthenticationException {
         final String salt = generateAuthSalt();
         final String hash = generateHash(authId, salt);
-        final BasicDBObject groupQuery = new BasicDBObject(DatabaseStringConstants.COURSE_ID, new ObjectId(courseId))
+        final Document groupQuery = new Document(COURSE_ID, new ObjectId(courseId))
                 .append(DatabaseStringConstants.SALT, salt)
                 .append(hash, Authentication.AuthResponse.PermissionLevel.TEACHER.getNumber());
 
-        final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
-        collection.insert(groupQuery);
-        return groupQuery.get(DatabaseStringConstants.SELF_ID).toString();
+        database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).insertOne(groupQuery);
+        return groupQuery.get(SELF_ID).toString();
     }
 
     /**
@@ -199,19 +202,18 @@ public final class DbAuthManager {
                     new IllegalArgumentException("UserId can not be null or empty"));
         }
 
-        final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
-        final DBObject group = collection.findOne(new ObjectId(groupId),
-                new BasicDBObject(DatabaseStringConstants.SALT, true));
+        final MongoCollection<Document> collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
+        final Document group = collection.find(MongoUtilities.convertStringToObjectId(groupId))
+                .projection(Projections.include(SELF_ID, DatabaseStringConstants.SALT)).first();
         if (group == null) {
             throw new DatabaseAccessException("Group with id " + groupId + " could not be found.");
         }
         final String salt = group.get(DatabaseStringConstants.SALT).toString();
         final String hash = generateHash(authId, salt);
 
-        final BasicDBObject update = new BasicDBObject(hash, permissionLevel.getNumber());
-        database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).update(
-                group,
-                new BasicDBObject(DatabaseStringConstants.SET_COMMAND, update));
+        final Document update = new Document(hash, permissionLevel.getNumber());
+        collection.updateOne(MongoUtilities.convertStringToObjectId(group.get(SELF_ID).toString()),
+                new Document(DatabaseStringConstants.SET_COMMAND, update));
     }
 
     /**
@@ -223,20 +225,18 @@ public final class DbAuthManager {
      * @param itemType The type of item the user is registering for (Only {@link Util.ItemType#COURSE}
      *                 and (Only {@link Util.ItemType#BANK_PROBLEM} are valid types.
      * @param registrationKey The key that is used to register for the course.
-     * @param authChecker Used to check permissions in the database.
      * @throws AuthenticationException If the user does not have access or an invalid {@code registrationKey}.
      * @throws DatabaseAccessException Thrown if the item can not be found.
      */
-    public void registerSelf(final String authId, final String itemId, final Util.ItemType itemType, final String registrationKey,
-            final DbAuthChecker authChecker) throws AuthenticationException, DatabaseAccessException {
+    public void registerSelf(final String authId, final String itemId, final Util.ItemType itemType, final String registrationKey)
+            throws AuthenticationException, DatabaseAccessException {
         if (!Util.ItemType.COURSE.equals(itemType) && !Util.ItemType.BANK_PROBLEM.equals(itemType)) {
             throw new AuthenticationException("Can only register users in a course or a bank problem.", AuthenticationException.OTHER);
         }
 
-        final DBCollection collection = database.getCollection(getCollectionFromType(itemType));
-        final DBObject result = collection.findOne(new ObjectId(itemId),
-                new BasicDBObject(DatabaseStringConstants.USER_LIST, true)
-                        .append(DatabaseStringConstants.REGISTRATION_KEY, true));
+        final MongoCollection<Document> collection = database.getCollection(getCollectionFromType(itemType));
+        final Document result = collection.find(MongoUtilities.convertStringToObjectId(itemId))
+                .projection(Projections.include(USER_LIST, REGISTRATION_KEY)).first();
 
         if (result == null) {
             throw new DatabaseAccessException("The item with the id: " + itemId + " was not found in the database.");
@@ -271,10 +271,9 @@ public final class DbAuthManager {
     public void addUser(final String registrationKey, final String authId, final String itemId, final Util.ItemType itemType,
             final DbAuthChecker authChecker, final Authentication.AuthType authParams) throws DatabaseAccessException, AuthenticationException {
 
-        final DBCollection collection = database.getCollection(getCollectionFromType(itemType));
-        final DBObject result = collection.findOne(new ObjectId(itemId),
-                new BasicDBObject(DatabaseStringConstants.USER_LIST, true)
-                        .append(DatabaseStringConstants.REGISTRATION_KEY, true));
+        final MongoCollection<Document> collection = database.getCollection(getCollectionFromType(itemType));
+        final Document result = collection.find(MongoUtilities.convertStringToObjectId(itemId))
+                .projection(Projections.include(USER_LIST, REGISTRATION_KEY)).first();
 
         if (result == null) {
             throw new DatabaseAccessException("The item with the id: " + itemId + " was not found in the database.");

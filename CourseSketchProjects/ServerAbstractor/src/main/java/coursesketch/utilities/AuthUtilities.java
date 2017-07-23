@@ -64,6 +64,32 @@ public final class AuthUtilities {
     }
 
     /**
+     * Creates an Authtype to make it a cumulative permission check.
+     *
+     * Only returns the most restrictive permission level allowed.
+     * @param permissionLevel an AuthType that may not be cumulative.
+     * @return The largest level that is asked for by the given check type.
+     */
+    @SuppressWarnings("PMD.MissingBreakInSwitch")
+    public static Authentication.AuthType.Builder createAuthTypeCheckFromLevel(final Authentication.AuthResponse.PermissionLevel permissionLevel) {
+        final Authentication.AuthType.Builder builder = Authentication.AuthType.newBuilder();
+        switch (permissionLevel) {
+            case TEACHER:
+                builder.setCheckingAdmin(true);
+            case MODERATOR:
+                builder.setCheckingMod(true);
+            case PEER_TEACHER:
+                builder.setCheckingPeerTeacher(true);
+            case STUDENT:
+                builder.setCheckingUser(true);
+                break;
+            default:
+                // do nothing
+        }
+        return builder;
+    }
+
+    /**
      * Returns a long that contains all of the values in the auth check combined.
      *
      * @param preFixedCheckType An AuthType that may not be cumulative.

@@ -341,11 +341,13 @@ module.exports = function(grunt) {
          */
         wiredep: {
             task: {
-
                 // Point to the files that should be updated when you run `grunt wiredep`
                 src: '<%= fileConfigOptions.prodHtml %>',
 
                 options: {
+
+                    exclude: [ /touchy/ ],
+
                     // https://github.com/taptapship/wiredep#configuration
                     directory: 'target/website/bower_components',
 

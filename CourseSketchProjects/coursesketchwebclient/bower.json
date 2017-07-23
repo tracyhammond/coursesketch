@@ -2,6 +2,7 @@
   "name": "coursesketchwebclient",
   "version": "0.0.1",
   "dependencies": {
+    "jquery": "3.2.1",
     "validate-first-run": "dtracers/validateFirstRun#0.0.4",
     "babel-polyfill" : "babel/babel#5.8.26",
     "webcomponentsjs": "webcomponents/webcomponentsjs#0.7.14",

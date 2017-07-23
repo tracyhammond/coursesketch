@@ -13,6 +13,8 @@ import protobuf.srl.utils.Util;
 
 import java.net.URI;
 
+import static coursesketch.utilities.AuthUtilities.createAuthTypeCheckFromLevel;
+
 /**
  * A Websocket that connects to the Authentication server and abstracts the RPC method of sending request to the authentication server.
  *
@@ -91,6 +93,12 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
             e.printStackTrace();
             throw new AuthenticationException(e);
         }
+        if (response.hasDefaultResponse() && response.getDefaultResponse().hasException()) {
+            final AuthenticationException authExcep =
+                    new AuthenticationException(AuthenticationException.OTHER);
+            authExcep.setProtoException(response.getDefaultResponse().getException());
+            throw authExcep;
+        }
         return response;
     }
 
@@ -162,14 +170,15 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
     }
 
     @Override
-    public final void addUser(final String ownerId, final String authId, final String itemId, final Util.ItemType collectionType)
+    public final void addUser(final String ownerId, final String authId, final String itemId, final Util.ItemType collectionType,
+            final Authentication.AuthResponse.PermissionLevel permissionLevel)
             throws AuthenticationException {
         if (authService == null) {
             authService = Authentication.AuthenticationService.newBlockingStub(getRpcChannel());
         }
 
         final Authentication.UserRegistration registrationRequest = createRegistrationRequest(ownerId, authId, itemId, collectionType,
-                Authentication.AuthType.newBuilder().setCheckingOwner(true).build());
+                createAuthTypeCheckFromLevel(permissionLevel).setCheckingOwner(true).build());
 
         Message.DefaultResponse response;
         try {
