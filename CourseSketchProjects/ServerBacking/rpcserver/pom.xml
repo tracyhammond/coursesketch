@@ -9,11 +9,11 @@
         <groupId>CourseSketch</groupId>
         <artifactId>CourseSketch-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../../</relativePath>
+        <relativePath>../../../</relativePath>
     </parent>
 
     <properties>
-        <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
+        <parentConfigLocationDir>${basedir}/../../..</parentConfigLocationDir>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
         <projectBranchLevel>35</projectBranchLevel>

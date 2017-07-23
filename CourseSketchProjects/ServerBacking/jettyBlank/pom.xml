@@ -1,24 +1,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>MongoDatabaseHelper</artifactId>
+    <artifactId>BlankServer</artifactId>
     <packaging>jar</packaging>
-    <name>MongoDatabaseHelper</name>
+    <name>BlankServer</name>
 
     <parent>
         <groupId>CourseSketch</groupId>
         <artifactId>CourseSketch-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../../</relativePath>
+        <relativePath>../../../</relativePath>
     </parent>
 
     <properties>
         <!-- This may be removed and a later solution will need to be worked on -->
-        <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
+        <parentConfigLocationDir>${basedir}/../../..</parentConfigLocationDir>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>100</projectBranchLevel>
-        <projectLineLevel>51</projectLineLevel>
+        <projectBranchLevel>0</projectBranchLevel>
+        <projectLineLevel>0</projectLineLevel>
     </properties>
     <build>
         <plugins>
@@ -46,20 +46,19 @@
     </build>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.eclipse.jetty.aggregate</groupId>
+            <artifactId>jetty-all</artifactId>
+            <version>${jettyVersion}</version>
+        </dependency>
+
         <dependency>
             <groupId>CourseSketch</groupId>
             <artifactId>ProtoFiles</artifactId>
             <version>${protoFileVersion}</version>
             <scope>compile</scope>
         </dependency>
-
-        <dependency>
-            <groupId>CourseSketch</groupId>
-            <artifactId>ProtobufComparison</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -67,41 +66,21 @@
         </dependency>
 
         <dependency>
-            <groupId>com.boundary</groupId>
-            <artifactId>high-scale-lib</artifactId>
-            <version>1.0.6</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.jeremyh</groupId>
-            <artifactId>jBCrypt</artifactId>
-            <version>jbcrypt-0.4</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.cedarsoftware</groupId>
-            <artifactId>json-io</artifactId>
-            <version>4.4.0</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>${mongodbJavaDriverVersion}</version>
+            <groupId>CourseSketch</groupId>
+            <artifactId>ServerAbstractor</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>CourseSketch</groupId>
-            <artifactId>ProtoFiles</artifactId>
-            <version>1.0.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>CourseSketch</groupId>
-            <artifactId>Utilities</artifactId>
+            <artifactId>MongoDatabaseHelper</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.9-RC1</version>
         </dependency>
     </dependencies>
 </project>
