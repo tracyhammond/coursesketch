@@ -62,7 +62,7 @@ public final class SubmissionManager implements SubmissionManagerInterface {
         final AuthenticationResponder authenticationResponder = authenticator
                 .checkAuthentication(Util.ItemType.BANK_PROBLEM, bankProblemId, authId, TimeManager.getSystemTime(),
                         authType.build());
-        if (!authenticationResponder.hasStudentPermission()) {
+        if (!authenticationResponder.hasTeacherPermission()) {
             throw new AuthenticationException("User does not have permission to for this solution:", AuthenticationException.INVALID_PERMISSION);
         }
 

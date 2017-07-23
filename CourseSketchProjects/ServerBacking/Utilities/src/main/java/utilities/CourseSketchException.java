@@ -103,7 +103,18 @@ public class CourseSketchException extends Exception {
      * @return A {@link utilities.ProtobufUtilities.ProtobufException} if it exist or null if it does not.
      */
     public final Message.ProtoException getProtoException() {
+        if (protoException == null) {
+            return createSpecialProtoException();
+        }
         return protoException;
+    }
+
+    /**
+     * @return a special version of the proto exception for this specific exception.
+     */
+    @SuppressWarnings("checkstyle:designforextension")
+    protected Message.ProtoException createSpecialProtoException() {
+        return null;
     }
 
     @Override

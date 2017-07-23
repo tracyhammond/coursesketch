@@ -76,7 +76,6 @@
         <module name="StaticVariableName"/>
         <module name="TypeName"/>
 
-
         <!-- Checks for Headers -->
         <!-- See http://checkstyle.sf.net/config_header.html -->
         <!-- <module name="Header"> -->
@@ -173,7 +172,9 @@
         <!-- Miscellaneous other checks. -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
         <module name="ArrayTypeStyle"/>
-        <module name="FinalParameters"/>
+        <module name="FinalParameters">
+            <property name="tokens" value="CTOR_DEF"/>
+        </module>
         <module name="FinalLocalVariableCheck"/>
         <module name="TodoComment"/>
         <module name="UpperEll"/>

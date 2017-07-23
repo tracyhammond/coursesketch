@@ -1,24 +1,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>ServerAbstractor</artifactId>
+    <artifactId>MongoDatabaseHelper</artifactId>
     <packaging>jar</packaging>
-    <name>ServerAbstractor</name>
+    <name>MongoDatabaseHelper</name>
 
     <parent>
         <groupId>CourseSketch</groupId>
         <artifactId>CourseSketch-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../../</relativePath>
+        <relativePath>../../../</relativePath>
     </parent>
 
     <properties>
         <!-- This may be removed and a later solution will need to be worked on -->
-        <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
+        <parentConfigLocationDir>${basedir}/../../..</parentConfigLocationDir>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>41</projectBranchLevel>
-        <projectLineLevel>34</projectLineLevel>
+        <projectBranchLevel>100</projectBranchLevel>
+        <projectLineLevel>51</projectLineLevel>
     </properties>
     <build>
         <plugins>
@@ -61,20 +61,6 @@
         </dependency>
 
         <dependency>
-            <groupId>CourseSketch</groupId>
-            <artifactId>Utilities</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>CourseSketch</groupId>
-            <artifactId>MongoDatabaseHelper</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.3.2</version>
@@ -97,6 +83,24 @@
             <groupId>com.cedarsoftware</groupId>
             <artifactId>json-io</artifactId>
             <version>4.4.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>${mongodbJavaDriverVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>ProtoFiles</artifactId>
+            <version>1.0.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>Utilities</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

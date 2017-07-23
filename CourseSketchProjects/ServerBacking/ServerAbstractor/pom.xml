@@ -1,24 +1,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>Utilities</artifactId>
+    <artifactId>ServerAbstractor</artifactId>
     <packaging>jar</packaging>
-    <name>Utilities</name>
+    <name>ServerAbstractor</name>
 
     <parent>
         <groupId>CourseSketch</groupId>
         <artifactId>CourseSketch-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../../</relativePath>
+        <relativePath>../../../</relativePath>
     </parent>
 
     <properties>
         <!-- This may be removed and a later solution will need to be worked on -->
-        <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
+        <parentConfigLocationDir>${basedir}/../../..</parentConfigLocationDir>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>57</projectBranchLevel>
-        <projectLineLevel>66</projectLineLevel>
+        <projectBranchLevel>41</projectBranchLevel>
+        <projectLineLevel>34</projectLineLevel>
     </properties>
     <build>
         <plugins>
@@ -58,6 +58,20 @@
             <artifactId>ProtobufComparison</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>Utilities</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>MongoDatabaseHelper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

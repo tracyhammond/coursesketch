@@ -13,6 +13,9 @@ import coursesketch.database.util.DatabaseStringConstants;
 import coursesketch.server.interfaces.ServerInfo;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import protobuf.srl.grading.Rubric;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.submission.Submission;
 import protobuf.srl.utils.Util;
@@ -24,6 +27,12 @@ import static coursesketch.database.util.DatabaseStringConstants.SELF_ID;
  * Holds information for the answer checker server.
  */
 public class AnswerCheckerDatabase extends AbstractCourseSketchDatabaseReader {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(AnswerCheckerDatabase.class);
+
     /**
      * Mongo database.
      */
@@ -126,5 +135,16 @@ public class AnswerCheckerDatabase extends AbstractCourseSketchDatabaseReader {
         final Document first = collection.find(new Document(SELF_ID, new ObjectId(studentExperiment.getProblemBankId()))).first();
 
         return first.get(REGISTRATION_KEY).toString();
+    }
+
+    /**
+     * Loads a rubric from the database.
+     *
+     * @param rubricId The id of where the rubric lives.
+     * @return The rubric data
+     */
+    public final Rubric.GradingRubric.Builder loadRubric(Util.DomainId rubricId) {
+        LOG.info("Loading Rubric with id {}", rubricId);
+        return Rubric.GradingRubric.newBuilder();
     }
 }

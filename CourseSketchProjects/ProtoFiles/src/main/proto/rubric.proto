@@ -5,6 +5,8 @@ package protobuf.srl.grading;
 
 message GradingRubric {
     optional protobuf.srl.utils.DomainId domainId = 1;
+    optional protobuf.srl.submission.FeedbackLimitations limitations = 2;
     repeated protobuf.srl.submission.FeedbackData feedbackData = 3;
-    repeated protobuf.srl.utils.DomainId subRubrics = 4;
+    // A leaf node is the most specific to this problem.
+    repeated protobuf.srl.utils.DomainId parentRubrics = 4;
 }
