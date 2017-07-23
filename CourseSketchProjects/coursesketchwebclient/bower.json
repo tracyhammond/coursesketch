@@ -16,7 +16,8 @@
     "d3": "3.5.5",
     "interactjs":"v1.2.9",
     "requirejs": "2.2.0",
-    "CallbackBarrier": "dtracers/CallbackBarrier#0.0.1"
+    "CallbackBarrier": "dtracers/CallbackBarrier#0.0.1",
+    "touchy": "HotStudio/touchy#37a29b6a18bc2ef72214b11ad776520a8600d45d"
   },
   "devDependencies": {
     "blanket": "1.1.7",
