@@ -8,14 +8,12 @@ import coursesketch.database.institution.mongo.MongoInstitution;
 import coursesketch.database.submission.SubmissionManagerInterface;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.server.interfaces.SocketSession;
-import coursesketch.utilities.ExceptionUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data;
 import protobuf.srl.request.Message;
 import protobuf.srl.school.Problem;
 import protobuf.srl.submission.Submission;
-import utilities.LoggingConstants;
 
 import java.util.Collections;
 
