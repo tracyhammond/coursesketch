@@ -5,22 +5,23 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import coursesketch.server.authentication.HashManager;
-import database.DatabaseAccessException;
-import database.DatabaseStringConstants;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.DatabaseStringConstants;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
+import protobuf.srl.utils.Util;
 
-import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static database.DbSchoolUtility.getCollectionFromType;
-import static database.DbSchoolUtility.getParentItemType;
+import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
+import static coursesketch.database.util.DbSchoolUtility.getParentItemType;
+import static coursesketch.database.util.MongoUtilities.getUserGroup;
+import static coursesketch.utilities.AuthUtilities.generateAuthSalt;
+import static coursesketch.utilities.AuthUtilities.generateHash;
+import static coursesketch.utilities.AuthUtilities.largestAllowedLevel;
 
 /**
  * Created by dtracers on 10/7/2015.
@@ -63,6 +64,9 @@ public final class DbAuthManager {
             final String parentId, final String registrationKey, final DbAuthChecker authChecker)
             throws DatabaseAccessException, AuthenticationException {
         final Util.ItemType parentType = getParentItemType(itemType);
+        if (parentType == null) {
+            throw new DatabaseAccessException("Invalid type for checking permissions");
+        }
         if (!parentType.equals(itemType)) {
             final Authentication.AuthResponse response = authChecker.isAuthenticated(getParentItemType(itemType), parentId, authId,
                     Authentication.AuthType.newBuilder().setCheckingAdmin(true).build());
@@ -166,15 +170,9 @@ public final class DbAuthManager {
      * @return A {@link String} that is the mongo id of the new group.
      * @throws AuthenticationException Thrown if there are problems creating the hash data.
      */
-    public String createNewGroup(final String authId, final String courseId) throws AuthenticationException {
-        String hash;
-        String salt;
-        try {
-            salt = HashManager.generateSalt();
-            hash = HashManager.toHex(HashManager.createHash(authId, salt).getBytes(StandardCharsets.UTF_8));
-        } catch (NoSuchAlgorithmException e) {
-            throw new AuthenticationException(e);
-        }
+    String createNewGroup(final String authId, final String courseId) throws AuthenticationException {
+        final String salt = generateAuthSalt();
+        final String hash = generateHash(authId, salt);
         final BasicDBObject groupQuery = new BasicDBObject(DatabaseStringConstants.COURSE_ID, new ObjectId(courseId))
                 .append(DatabaseStringConstants.SALT, salt)
                 .append(hash, Authentication.AuthResponse.PermissionLevel.TEACHER.getNumber());
@@ -208,16 +206,7 @@ public final class DbAuthManager {
             throw new DatabaseAccessException("Group with id " + groupId + " could not be found.");
         }
         final String salt = group.get(DatabaseStringConstants.SALT).toString();
-        String hash = null;
-        try {
-            hash = HashManager.toHex(HashManager.createHash(authId, salt).getBytes(StandardCharsets.UTF_8));
-        } catch (NoSuchAlgorithmException e) {
-            throw new AuthenticationException(e);
-        }
-
-        if (hash == null) {
-            throw new AuthenticationException("Unable to create authentication hash for group " + groupId, AuthenticationException.OTHER);
-        }
+        final String hash = generateHash(authId, salt);
 
         final BasicDBObject update = new BasicDBObject(hash, permissionLevel.getNumber());
         database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).update(
@@ -260,7 +249,46 @@ public final class DbAuthManager {
             throw new AuthenticationException("Invalid Registration key [" + registrationKey + "]"
                     + " is not equal to stored registration key [" + databaseRegistrationKey + "] ", AuthenticationException.INVALID_PERMISSION);
         }
-        final List<String> userGroups = (List<String>) result.get(DatabaseStringConstants.USER_LIST);
+        final List<String> userGroups = getUserGroup(result);
         insertUserIntoGroup(authId, userGroups.get(0), Authentication.AuthResponse.PermissionLevel.STUDENT);
+    }
+
+    /**
+     * Adds a user to a group for a certain type
+     *
+     * The person authorizing the addition must be the owner of the group.
+     *
+     * @param registrationKey The owner of the group that the user is being added to.
+     * @param authId The authentication Id of the user that is being added.
+     * @param itemId The Id of the course or bank problem the user is being added to.
+     * @param itemType The type of item the user is registering for (Only {@link Util.ItemType#COURSE}
+     *                 and (Only {@link Util.ItemType#BANK_PROBLEM} are valid types.
+     * @param authChecker Used to check permissions in the database.
+     * @param authParams Used to give the level of the user that should be added.
+     * @throws AuthenticationException If the user does not have access or an invalid {@code registrationKey}.
+     * @throws DatabaseAccessException Thrown if the item can not be found.
+     */
+    public void addUser(final String registrationKey, final String authId, final String itemId, final Util.ItemType itemType,
+            final DbAuthChecker authChecker, final Authentication.AuthType authParams) throws DatabaseAccessException, AuthenticationException {
+
+        final DBCollection collection = database.getCollection(getCollectionFromType(itemType));
+        final DBObject result = collection.findOne(new ObjectId(itemId),
+                new BasicDBObject(DatabaseStringConstants.USER_LIST, true)
+                        .append(DatabaseStringConstants.REGISTRATION_KEY, true));
+
+        if (result == null) {
+            throw new DatabaseAccessException("The item with the id: " + itemId + " was not found in the database.");
+        }
+        if (Strings.isNullOrEmpty(registrationKey)) {
+            throw new AuthenticationException("Registration key is required but none is given", AuthenticationException.INVALID_PERMISSION);
+        }
+        final Authentication.AuthResponse authenticated = authChecker.isAuthenticated(itemType, itemId, registrationKey, authParams);
+
+        if (!new AuthenticationResponder(authenticated).isOwner()) {
+            throw new AuthenticationException("Only owners can modify user lists", AuthenticationException.INVALID_PERMISSION);
+        }
+
+        final List<String> userGroups = getUserGroup(result);
+        insertUserIntoGroup(authId, userGroups.get(0), largestAllowedLevel(authParams));
     }
 }

@@ -2,7 +2,7 @@ package coursesketch.server.rpc;
 
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationException;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 

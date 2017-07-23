@@ -92,9 +92,9 @@ validateFirstRun(document.currentScript);
             var reviewPanel = document.createElement('mv-sketch');
             document.querySelector('.submissions').appendChild(reviewPanel);
             reviewPanel.setUserId(submissions[i].userId);
-            reviewPanel.setSubmission(questionType, submissions[i].getSubmission());
+            reviewPanel.setSubmission(questionType, submissions[i].getExperiment());
             reviewPanel.setSubmissionClickedFunction(function() {
-                CourseSketch.multiViewPage.loadProblem(navigator, this.getSubmission());
+                CourseSketch.multiViewPage.loadProblem(navigator, this.getExperiment());
             });
 
             var protoGrade = CourseSketch.prutil.ProtoGrade();

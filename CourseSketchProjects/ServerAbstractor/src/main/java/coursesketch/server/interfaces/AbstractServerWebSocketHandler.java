@@ -2,20 +2,19 @@ package coursesketch.server.interfaces;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
-import utilities.ExceptionUtilities;
-import utilities.ProtobufUtilities;
-import utilities.TimeManager;
+import coursesketch.utilities.ExceptionUtilities;
+import utilities.Encoder;
 
 import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
+
 /**
  * Manages a socket on the server side if you want to know about the client side see {@link AbstractClientWebSocket}.
  *
@@ -395,53 +394,6 @@ public abstract class AbstractServerWebSocketHandler {
                 LOG.error("Error parsing request", e);
                 return null;
             }
-        }
-    }
-
-    /**
-     * Encodes messages with important information.
-     * @author gigemjt
-     */
-    public static final class Encoder {
-        /**
-         * Empty constructor.
-         */
-        private Encoder() {
-        }
-
-        /**
-         * Returns a {@link Request} that contains the sessionInfo and the time
-         * that the message was sent.
-         *
-         * @param req The message that is being rebuilt.
-         *
-         * @param sessionInfo The information about the session.
-         *
-         * @return itself if the sessionInfo is null.
-         */
-        public static Request requestIDBuilder(final Request req, final String sessionInfo) {
-            if (sessionInfo == null) {
-                return req;
-            }
-
-            // why do the work if they are the same?
-            if (sessionInfo.equals(req.getSessionInfo())) {
-                return req;
-            }
-
-            final Request.Builder sessionInfoReplacement = ProtobufUtilities.createBaseResponse(req, true);
-            sessionInfoReplacement.setSessionInfo(sessionInfo);
-            if (!sessionInfoReplacement.hasMessageTime()) {
-                sessionInfoReplacement.setMessageTime(TimeManager.getSystemTime());
-            }
-            return sessionInfoReplacement.build();
-        }
-
-        /**
-         * @return The next UUID that is generated.
-         */
-        public static UUID nextID() {
-            return UUID.randomUUID();
         }
     }
 }

@@ -6,9 +6,9 @@ import coursesketch.database.auth.AuthenticationException;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.SocketSession;
 import coursesketch.services.submission.SubmissionWebSocketClient;
-import database.DatabaseAccessException;
-import database.institution.Institution;
-import database.user.UserClient;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.institution.Institution;
+import coursesketch.database.user.UserClient;
 import handlers.subhandlers.GradingPolicyRequestHandler;
 import handlers.subhandlers.GradingRequestHandler;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ import protobuf.srl.school.Problem.SrlProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.services.identity.Identity;
 import protobuf.srl.submission.Submission;
-import utilities.ExceptionUtilities;
+import coursesketch.utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 import utilities.ProtobufUtilities;
 
@@ -165,11 +165,21 @@ public final class DataRequestHandler {
 
                                 final List<Submission.SrlExperiment> experimentList =
                                         instance.getExperimentAsInstructor(authId, itemIdList, baseRequest, internalConnections,
-                                                itemRequest .getAdvanceQuery());
+                                                itemRequest.getAdvanceQuery());
                                 for (Submission.SrlExperiment experiment : experimentList) {
                                     results.add(ResultBuilder.buildResult(ItemQuery.EXPERIMENT, experiment));
                                 }
                             }
+                        }
+                        break;
+                        case SOLUTION: {
+                            final ProtocolStringList itemIdList = itemRequest.getItemIdList();
+                            LOG.info("Trying to retrieve a solution from a user!");
+                            final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
+                            build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
+                            final Submission.SrlSolution experiment = instance.getSolution(userId, authId, itemIdList,
+                                    internalConnections.getBestConnection(SubmissionWebSocketClient.class));
+                            results.add(ResultBuilder.buildResult(ItemQuery.SOLUTION, experiment));
                         }
                         break;
                         case UPDATE: {

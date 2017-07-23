@@ -1,4 +1,5 @@
 package coursesketch.database;
+
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -6,14 +7,14 @@ import connection.LoginServerWebSocketHandler;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.identity.IdentityManagerInterface;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.DatabaseStringConstants;
 import coursesketch.server.authentication.HashManager;
-import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
-import database.DatabaseAccessException;
-import database.DatabaseStringConstants;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utilities.Encoder;
 import utilities.LoggingConstants;
 
 import java.security.GeneralSecurityException;
@@ -21,16 +22,16 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
-import static database.DatabaseStringConstants.EMAIL;
-import static database.DatabaseStringConstants.INSTRUCTOR_CLIENT_ID;
-import static database.DatabaseStringConstants.INSTRUCTOR_ID;
-import static database.DatabaseStringConstants.IS_DEFAULT_INSTRUCTOR;
-import static database.DatabaseStringConstants.LOGIN_COLLECTION;
-import static database.DatabaseStringConstants.LOGIN_DATABASE;
-import static database.DatabaseStringConstants.PASSWORD;
-import static database.DatabaseStringConstants.STUDENT_CLIENT_ID;
-import static database.DatabaseStringConstants.STUDENT_ID;
-import static database.DatabaseStringConstants.USER_NAME;
+import static coursesketch.database.util.DatabaseStringConstants.EMAIL;
+import static coursesketch.database.util.DatabaseStringConstants.INSTRUCTOR_CLIENT_ID;
+import static coursesketch.database.util.DatabaseStringConstants.INSTRUCTOR_ID;
+import static coursesketch.database.util.DatabaseStringConstants.IS_DEFAULT_INSTRUCTOR;
+import static coursesketch.database.util.DatabaseStringConstants.LOGIN_COLLECTION;
+import static coursesketch.database.util.DatabaseStringConstants.LOGIN_DATABASE;
+import static coursesketch.database.util.DatabaseStringConstants.PASSWORD;
+import static coursesketch.database.util.DatabaseStringConstants.STUDENT_CLIENT_ID;
+import static coursesketch.database.util.DatabaseStringConstants.STUDENT_ID;
+import static coursesketch.database.util.DatabaseStringConstants.USER_NAME;
 
 /**
  * A client for the login database.
@@ -111,7 +112,8 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
     /**
      * Sets up any indexes that need to be set up or have not yet been set up.
      */
-    @Override protected void setUpIndexes() {
+    @Override
+    protected void setUpIndexes() {
         //
     }
 
@@ -120,7 +122,8 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      *
      * Creates a database if one does not already exist.
      */
-    @Override protected void onStartDatabase() {
+    @Override
+    protected void onStartDatabase() {
         final MongoClient mongoClient = new MongoClient(super.getServerInfo().getDatabaseUrl());
         database = mongoClient.getDatabase(super.getServerInfo().getDatabaseName());
         super.setDatabaseStarted();
@@ -224,7 +227,7 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      */
     @SuppressWarnings("PMD.UselessParentheses")
     private Document getUserInfo(final Document cursor, final boolean loginAsDefault, final boolean loginAsInstructor) throws LoginException {
-        final Document result =  new Document();
+        final Document result = new Document();
         final boolean defaultAccountIsInstructor = (Boolean) cursor.get(IS_DEFAULT_INSTRUCTOR);
 
         final boolean isDefaultInstructor = loginAsDefault && defaultAccountIsInstructor;
@@ -297,11 +300,11 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
             if (result.isEmpty()) {
                 throw new RegistrationException("Unable to get the password from the new user");
             }
-            final Map.Entry<String, String> userIdentity =  result.entrySet().iterator().next();
+            final Map.Entry<String, String> userIdentity = result.entrySet().iterator().next();
             query = new Document(USER_NAME, user).append(PASSWORD, HashManager.createHash(password)).append(EMAIL, email)
                     .append(IS_DEFAULT_INSTRUCTOR, isInstructor).append(INSTRUCTOR_ID, FancyEncoder.fancyID())
-                    .append(STUDENT_ID, FancyEncoder.fancyID()).append(STUDENT_CLIENT_ID, AbstractServerWebSocketHandler.Encoder.nextID().toString())
-                    .append(INSTRUCTOR_CLIENT_ID, AbstractServerWebSocketHandler.Encoder.nextID().toString())
+                    .append(STUDENT_ID, FancyEncoder.fancyID()).append(STUDENT_CLIENT_ID, Encoder.nextID().toString())
+                    .append(INSTRUCTOR_CLIENT_ID, Encoder.nextID().toString())
                     .append(DatabaseStringConstants.IDENTITY_AUTH, userIdentity.getValue());
             loginCollection.insertOne(query);
             return userIdentity.getKey();

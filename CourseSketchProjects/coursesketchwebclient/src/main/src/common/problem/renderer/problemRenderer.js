@@ -206,6 +206,10 @@ function ProblemRenderer(problemPanel) {
         startWaiting();
     };
 
+    this.finishWaiting = function() {
+        finishWaiting();
+    };
+
     this.setStartWaitingFunction = function(startWaitingFunction) {
         startWaiting = function() {
             isRunning = true;

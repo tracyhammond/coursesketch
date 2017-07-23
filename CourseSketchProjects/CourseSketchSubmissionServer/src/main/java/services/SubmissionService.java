@@ -7,12 +7,12 @@ import coursesketch.database.auth.Authenticator;
 import coursesketch.database.submission.SubmissionManagerInterface;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.rpc.CourseSketchRpcService;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.services.submission.SubmissionServer;
 import protobuf.srl.submission.Submission;
-import utilities.ExceptionUtilities;
+import coursesketch.utilities.ExceptionUtilities;
 
 import java.util.List;
 
@@ -84,6 +84,36 @@ public final class SubmissionService extends SubmissionServer.SubmissionService 
             return;
         }
         done.run(SubmissionServer.ExperimentResponse.newBuilder().addAllExperiments(srlExperimentList).build());
+    }
+
+    /**
+     * {@inheritDoc}
+     * <code>rpc getSubmission(.protobuf.srl.services.submission.SubmissionRequest) returns
+     * (.protobuf.srl.services.submission.SolutionResponse);</code>
+     *
+     * <pre>
+     * Gets the solution. given the id.
+     * </pre>
+     *
+     */
+    @Override
+    public void getSolution(final RpcController controller, final SubmissionServer.SubmissionRequest request,
+            final RpcCallback<SubmissionServer.SolutionResponse> done) {
+        final String solutionId = request.getSubmissionIds(0);
+        Submission.SrlSolution srlSolution;
+        try {
+            srlSolution = submissionDatabaseInterface
+                    .getSolution(request.getAuthId(), authenticator, request.getProblemId(), solutionId);
+        } catch (DatabaseAccessException e) {
+            LOG.error("Database exception occurred while trying to get experiments", e);
+            done.run(SubmissionServer.SolutionResponse.newBuilder().setDefaultResponse(ExceptionUtilities.createExceptionResponse(e)).build());
+            return;
+        } catch (AuthenticationException e) {
+            LOG.error("Authentication exception occurred while trying to get experiments", e);
+            done.run(SubmissionServer.SolutionResponse.newBuilder().setDefaultResponse(ExceptionUtilities.createExceptionResponse(e)).build());
+            return;
+        }
+        done.run(SubmissionServer.SolutionResponse.newBuilder().setSolution(srlSolution).build());
     }
 
     /**

@@ -31,7 +31,7 @@ public interface AuthenticationUpdater {
             throws AuthenticationException;
 
     /**
-     * Attempts to register the given userId in the items.
+     * Attempts to register the given authId in the items.
      *
      * This will only be used to give users an authentication level of user.
      * Different methods must be used to obtain larger authentication levels.
@@ -48,4 +48,22 @@ public interface AuthenticationUpdater {
      *         Thrown if the user does not have permission to register for this item.  (Typically that means the key is wrong)
      */
     void registerUser(String authId, String itemId, Util.ItemType itemType, String registrationKey) throws AuthenticationException;
+
+    /**
+     * Attempts to register the given authId in the items.
+     *
+     * This will only be used to give users an authentication level of user.
+     * Different methods must be used to obtain larger authentication levels.
+     * @param ownerId
+     *         The id of the owner of this item.
+     * @param authId
+     *         The user that is being registered.
+     * @param itemId
+     *         The id of the item that the user is requesting registration for.
+     * @param itemType
+     *         The type of item it is: course, assignment.
+     * @throws AuthenticationException
+     *         Thrown if the user does not have permission to register for this item.  (Typically that means the owner id is wrong)
+     */
+    void addUser(String ownerId, String authId, String itemId, Util.ItemType itemType) throws AuthenticationException;
 }

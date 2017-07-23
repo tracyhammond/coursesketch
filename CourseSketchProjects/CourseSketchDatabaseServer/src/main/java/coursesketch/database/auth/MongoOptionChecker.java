@@ -3,13 +3,13 @@ package coursesketch.database.auth;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import coursesketch.server.interfaces.ServerInfo;
-import database.DatabaseAccessException;
-import database.DatabaseStringConstants;
-import database.DbSchoolUtility;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.DatabaseStringConstants;
+import coursesketch.database.util.DbSchoolUtility;
 import org.bson.Document;
 import protobuf.srl.utils.Util;
 
-import static database.utilities.MongoUtilities.convertStringToObjectId;
+import static coursesketch.database.util.MongoUtilities.convertStringToObjectId;
 
 /**
  * Checks the database for auxiliary permission data.

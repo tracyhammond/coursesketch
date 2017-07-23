@@ -12,16 +12,16 @@ import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.DatabaseStringConstants;
 import coursesketch.server.authentication.HashManager;
-import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
-import database.DatabaseAccessException;
-import database.DatabaseStringConstants;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
+import protobuf.srl.utils.Util;
+import utilities.Encoder;
 
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
@@ -33,8 +33,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static database.DbSchoolUtility.getCollectionFromType;
-import static database.DbSchoolUtility.getParentItemType;
+import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
+import static coursesketch.database.util.DbSchoolUtility.getParentItemType;
+import static coursesketch.database.util.MongoUtilities.getUserGroup;
 
 /**
  * Created by dtracers on 10/7/2015.
@@ -75,7 +76,8 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
     /**
      * Sets up any indexes that need to be set up or have not yet been set up.
      */
-    @Override protected void setUpIndexes() {
+    @Override
+    protected void setUpIndexes() {
         final DBCollection collection = this.database.getCollection(DatabaseStringConstants.USER_COLLECTION);
         collection.createIndex(new BasicDBObject(DatabaseStringConstants.USER_NAME, 1));
     }
@@ -86,7 +88,8 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * @throws DatabaseAccessException
      *         thrown if the database already exist when the database is created.
      */
-    @Override protected void onStartDatabase() throws DatabaseAccessException {
+    @Override
+    protected void onStartDatabase() throws DatabaseAccessException {
         if (this.database != null) {
             throw new DatabaseAccessException("Mongo instance already exists!");
         }
@@ -103,6 +106,9 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
             final String parentId, final Authenticator authChecker)
             throws DatabaseAccessException, AuthenticationException {
         final Util.ItemType parentType = getParentItemType(itemType);
+        if (parentType == null) {
+            throw new DatabaseAccessException("Invalid parent type");
+        }
         if (!parentType.equals(itemType)) {
             final AuthenticationResponder responder = authChecker.checkAuthentication(getParentItemType(itemType), parentId, authId, 0,
                     Authentication.AuthType.newBuilder().setCheckingAdmin(true).build());
@@ -205,7 +211,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * @throws AuthenticationException
      *         Thrown if there are problems creating the hash data.
      */
-    public String createNewGroup(final String userId, final String courseId) throws AuthenticationException {
+    String createNewGroup(final String userId, final String courseId) throws AuthenticationException {
         String hash;
         try {
             final String unsecuredSalt = HashManager.generateUnSecureSalt(courseId);
@@ -252,17 +258,13 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
         if (group == null) {
             throw new DatabaseAccessException("group could not be found");
         }
-        String hash = null;
+        String hash;
         try {
             final String unsecuredSalt = HashManager.generateUnSecureSalt(group.get(DatabaseStringConstants.COURSE_ID).toString());
             hash = HashManager.toHex(HashManager.createHash(userId, unsecuredSalt)
                     .getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException e) {
             throw new AuthenticationException("Invalid algorithm when inserting a user into group", e);
-        }
-
-        if (hash == null) {
-            throw new AuthenticationException("Unable to create authentication hash for group " + groupId, AuthenticationException.OTHER);
         }
 
         // final BasicDBObject newIdentity = new BasicDBObject(userId, hash);
@@ -298,7 +300,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
                     AuthenticationException.INVALID_PERMISSION);
         }
 
-        final List<String> userGroups = (List<String>) result.get(DatabaseStringConstants.USER_LIST);
+        final List<String> userGroups = getUserGroup(result);
         insertUserIntoGroup(userId, userGroups.get(0), !responder.hasPeerTeacherPermission());
     }
 
@@ -308,7 +310,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
     @Override
     public Map<String, String> createNewUser(final String userName) throws AuthenticationException, DatabaseAccessException {
         final ObjectId userId = new ObjectId();
-        final String userPassword = AbstractServerWebSocketHandler.Encoder.nextID().toString();
+        final String userPassword = Encoder.nextID().toString();
         String hashPassword;
         try {
             hashPassword = HashManager.createHash(userPassword);
@@ -377,7 +379,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
 
         final Map<String, String> courseRoster = new HashMap<>();
 
-        final List<String> groupList = (List<String>) item.get(DatabaseStringConstants.USER_LIST);
+        final List<String> groupList = getUserGroup(item);
 
         final DBCollection groupCollection = this.database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
 
@@ -484,7 +486,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
         }
 
         final Map<String, String> userNameMap = new HashMap<>();
-        for (DBObject userName: cursor) {
+        for (DBObject userName : cursor) {
             userNameMap.put(userName.get(DatabaseStringConstants.SELF_ID).toString(),
                     userName.get(DatabaseStringConstants.USER_NAME).toString());
         }
@@ -522,7 +524,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
             throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the database");
         }
 
-        final List<String> groupList = (List<String>) result.get(DatabaseStringConstants.USER_LIST);
+        final List<String> groupList = getUserGroup(result);
 
         final DBCollection groupCollection = this.database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
 

@@ -1,24 +1,41 @@
 package connection;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.auth.AuthenticationWebSocketClient;
+import coursesketch.database.AnswerCheckerDatabase;
+import coursesketch.database.auth.AuthenticationChecker;
+import coursesketch.database.auth.AuthenticationDataCreator;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationOptionChecker;
+import coursesketch.database.auth.AuthenticationResponder;
+import coursesketch.database.auth.Authenticator;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
+import coursesketch.database.submission.SubmissionManagerInterface;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.grading.AutoGrader;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionState;
+import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
+import coursesketch.services.submission.SubmissionWebSocketClient;
+import coursesketch.utilities.ExceptionUtilities;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.query.Data.ItemQuery;
-import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
-import protobuf.srl.request.Message.Request.MessageType;
+import protobuf.srl.services.authentication.Authentication;
+import protobuf.srl.submission.Feedback;
+import protobuf.srl.submission.Submission;
 import protobuf.srl.submission.Submission.SrlExperiment;
-import utilities.ConnectionException;
-import utilities.ExceptionUtilities;
+import protobuf.srl.utils.Util;
+import utilities.Encoder;
 import utilities.LoggingConstants;
-import utilities.ProtobufUtilities;
 import utilities.TimeManager;
+
+import static coursesketch.utilities.ExceptionUtilities.createAndSendException;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * A simple WebSocketServer implementation.
@@ -39,7 +56,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
      * @param parent
      *         The parent servlet of this server.
      */
-    public AnswerCheckerServerWebSocketHandler(final ServerWebSocketInitializer parent) {
+    AnswerCheckerServerWebSocketHandler(final ServerWebSocketInitializer parent) {
         super(parent, parent.getServerInfo());
     }
 
@@ -55,58 +72,100 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
             }
             return;
         }
-        if (req.getRequestType() == Request.MessageType.SUBMISSION) {
-            // then we submit!
-            if (req.getResponseText().equals("student")) {
-                final MultiConnectionState state = getConnectionToId().get(conn);
-                LOG.info("Parsing as an experiment");
-                SrlExperiment student = null;
-                try {
-                    student = SrlExperiment.parseFrom(req.getOtherData());
-                } catch (InvalidProtocolBufferException e1) {
-                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e1);
-                    conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
-                    return; // sorry but we are bailing if anything does not look right.
-                }
+        try {
+            if (req.getRequestType() == Request.MessageType.SUBMISSION) {
+                // then we submit!
+                if (req.getResponseText().equals("student")) {
 
-                ((AnswerConnectionState) state).addPendingExperiment(
-                        req.getSessionInfo(), student);
-                LOG.info("Student experiment {}", student);
-                try {
-                    getConnectionManager().send(req,
-                            req.getSessionInfo() + "+" + state.getSessionId(),
-                            SubmissionClientWebSocket.class);
-                } catch (ConnectionException e1) {
-                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
-                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e1);
-                    conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-                } // pass submission on
+                    handleStudentSubmission(conn, req);
 
-                // request the solution for checking FUTURE: need to
-                // actually retrieve answer.
-                final Request.Builder builder = ProtobufUtilities.createRequestFromData(MessageType.DATA_REQUEST, null,
-                        req.getSessionInfo() + "+" + state.getSessionId());
-
-                final ItemRequest.Builder itemRequest = ItemRequest.newBuilder();
-                itemRequest.setQuery(ItemQuery.SOLUTION);
-                itemRequest.addItemId(student.getProblemId());
-                builder.setOtherData(itemRequest.build().toByteString());
-                // FIXME this needs to change probably to make this work
-                // internalconnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(),
-                // state.getSessionId(), SubmissionConnection.class);
-            } else {
-                try {
-                    getConnectionManager().send(req, req.getSessionInfo(),
-                            SubmissionClientWebSocket.class);
-                } catch (ConnectionException e) {
-                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                    conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
+                } else if (req.getResponseText().equals("instructor")) {
+                    handleInstructorSubmission(conn, req);
                 }
             }
+        } catch (AuthenticationException | DatabaseAccessException e) {
+            createAndSendException(conn, req, e);
         }
     }
+
+    /**
+     * Checks the student solution and automatically grades it.
+     *
+     * @param conn
+     *            The session object that created the message.
+     * @param req
+     *            The message itself.
+     * @throws AuthenticationException Thrown if the user can not be authenticated.
+     * @throws DatabaseAccessException Thrown if there is a problem getting submission data.
+     */
+    private void handleStudentSubmission(final SocketSession conn, final Request req) throws AuthenticationException, DatabaseAccessException {
+        final SubmissionManagerInterface submissionInterface = getConnectionManager().getBestConnection(SubmissionWebSocketClient.class);
+        SrlExperiment studentExperiment;
+        try {
+            studentExperiment = SrlExperiment.parseFrom(req.getOtherData());
+        } catch (InvalidProtocolBufferException e1) {
+            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e1);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
+            return; // sorry but we are bailing if anything does not look right.
+        }
+
+        if (!studentExperiment.hasSolutionId() || isEmpty(studentExperiment.getSolutionId())) {
+            LOG.info("Experiment user: {} problem: {} does not have an associated solution", studentExperiment.getUserId(),
+                    studentExperiment.getProblemId());
+            // No need to try and automatically grade something that does not exist.
+            return;
+        }
+
+        final AuthenticationChecker authChecker = getConnectionManager().getBestConnection(AuthenticationWebSocketClient.class);
+        final Authentication.AuthResponse authenticated = authChecker
+                .isAuthenticated(Util.ItemType.COURSE_PROBLEM, studentExperiment.getProblemId(), req.getServersideId(), Authentication.AuthType
+                        .newBuilder().setCheckAccess(true).setCheckingUser(true).build());
+
+        if (!new AuthenticationResponder(authenticated).hasStudentPermission()) {
+            throw new AuthenticationException("User can not get this submission graded", AuthenticationException.INVALID_PERMISSION);
+        }
+
+        final String authId = ((AnswerCheckerDatabase) getDatabaseReader()).getKey(req.getServersideId(), studentExperiment);
+
+        final Submission.SrlSolution solution =
+                submissionInterface.getSolution(authId, null, studentExperiment.getProblemBankId(), studentExperiment.getSolutionId());
+
+        final Feedback.SubmissionFeedback submissionFeedback =
+                new AutoGrader(((AnswerCheckerDatabase) getDatabaseReader())).gradeProblem(studentExperiment, solution);
+
+        LOG.info("Feedback is: {}", submissionFeedback);
+    }
+
+    /**
+     * Inserts an instructor submission into the database.
+     *
+     * @param conn
+     *            The session object that created the message.
+     * @param req
+     *            The message itself.
+     * @throws AuthenticationException Thrown if the user can not be authenticated.
+     * @throws DatabaseAccessException Thrown if there is a problem getting submission data.
+     */
+    private void handleInstructorSubmission(final SocketSession conn, final Request req) throws DatabaseAccessException, AuthenticationException {
+        Submission.SrlSolution solution;
+        try {
+            solution = Submission.SrlSolution.parseFrom(req.getOtherData());
+        } catch (InvalidProtocolBufferException e) {
+            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+            return; // sorry but we are bailing if anything does not look right.
+        }
+
+        final AuthenticationWebSocketClient authentication = getConnectionManager().getBestConnection(AuthenticationWebSocketClient.class);
+
+        final String userId = ((AnswerCheckerDatabase) getDatabaseReader()).generateKey(req.getServersideId(), solution);
+        if (userId != null) {
+            authentication.addUser(req.getServersideId(), userId, solution.getProblemBankId(), Util.ItemType.BANK_PROBLEM);
+        }
+    }
+
     /**
      * @return {@link AnswerConnectionState} that can be used for holding experiments for checking.
      */
@@ -114,4 +173,47 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
     public final MultiConnectionState getUniqueState() {
         return new AnswerConnectionState(Encoder.nextID().toString());
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@link AnswerCheckerDatabase}.
+     */
+    @Override
+    protected final AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
+        final AuthenticationWebSocketClient authChecker = getConnectionManager()
+                .getBestConnection(AuthenticationWebSocketClient.class);
+        final Authenticator auth = new Authenticator(authChecker, createAuthChecker());
+
+        return new AnswerCheckerDatabase(info, auth);
+    }
+
+    /**
+     * @return An AuthChecker that ignores everything.
+     */
+    private AuthenticationOptionChecker createAuthChecker() {
+        return new AuthenticationOptionChecker() {
+            @Override
+            public boolean authenticateDate(final AuthenticationDataCreator dataCreator, final long checkTime) throws DatabaseAccessException {
+                return true;
+            }
+
+            @Override
+            public boolean isItemRegistrationRequired(final AuthenticationDataCreator dataCreator) throws DatabaseAccessException {
+                return false;
+            }
+
+            @Override
+            public boolean isItemPublished(final AuthenticationDataCreator dataCreator) throws DatabaseAccessException {
+                return true;
+            }
+
+            @Override
+            public AuthenticationDataCreator createDataGrabber(final Util.ItemType collectionType, final String itemId)
+                    throws DatabaseAccessException {
+                return null;
+            }
+        };
+    }
+
 }

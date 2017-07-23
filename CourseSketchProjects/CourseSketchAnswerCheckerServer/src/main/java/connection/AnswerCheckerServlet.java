@@ -20,7 +20,7 @@ public class AnswerCheckerServlet extends ServerWebSocketInitializer {
      *
      * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public AnswerCheckerServlet(final ServerInfo serverInfo) {
+    AnswerCheckerServlet(final ServerInfo serverInfo) {
         super(serverInfo);
     }
 

@@ -1,7 +1,7 @@
 package coursesketch.database.auth;
 
-import database.DatabaseAccessException;
-import database.RequestConverter;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.RequestConverter;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Assert;
@@ -456,5 +456,59 @@ public class AuthenticatorTest {
         assertFalse(responder.isItemOpen());
         assertFalse(responder.hasAccess());
         assertFalse(responder.isItemPublished());
+    }
+
+    @Test
+    public void authenticatorIsOwnerWhenOwnerExplictlySet() throws Exception {
+        when(authChecker.isAuthenticated(any(Util.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
+                .thenReturn(Authentication.AuthResponse.newBuilder()
+                        .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.OWNER)
+                        .setIsOwner(true)
+                        .build());
+
+        final Authentication.AuthType type = Authentication.AuthType.newBuilder()
+                .setCheckIsRegistrationRequired(true)
+                .setCheckingOwner(true)
+                .setCheckingAdmin(true)
+                .build();
+        AuthenticationResponder responder = authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, type);
+
+        assertTrue(responder.isOwner());
+    }
+
+    @Test
+    public void authenticatorDoesNotReportOwnerEvenIfPermissionLevelIsOwner() throws Exception {
+        when(authChecker.isAuthenticated(any(Util.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
+                .thenReturn(Authentication.AuthResponse.newBuilder()
+                        .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.OWNER)
+                        .build());
+
+        final Authentication.AuthType type = Authentication.AuthType.newBuilder()
+                .setCheckIsRegistrationRequired(true)
+                .setCheckingOwner(true)
+                .setCheckingAdmin(true)
+                .build();
+        AuthenticationResponder responder = authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, type);
+
+        assertFalse(responder.isOwner());
+    }
+
+    @Test
+    public void authenticatorHasOwnerOnlyIfExactlyOwnerIsSet() throws Exception {
+        when(authChecker.isAuthenticated(any(Util.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
+                .thenReturn(Authentication.AuthResponse.newBuilder()
+                        .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.TEACHER)
+                        .setIsOwner(false)
+                        .build());
+
+        final Authentication.AuthType type = Authentication.AuthType.newBuilder()
+                .setCheckIsRegistrationRequired(true)
+                .setCheckingOwner(true)
+                .setCheckingAdmin(true)
+                .build();
+        AuthenticationResponder responder = authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, type);
+
+        assertTrue(responder.hasTeacherPermission());
+        assertFalse(responder.isOwner());
     }
 }

@@ -1,14 +1,13 @@
 package local.data;
 
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
-import database.institution.mongo.MongoInstitution;
-import database.user.UserClient;
+import coursesketch.database.institution.mongo.MongoInstitution;
+import coursesketch.database.user.UserClient;
 import protobuf.srl.school.Problem;
 import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.utils.Util.QuestionType;
 import protobuf.srl.utils.Util.SrlPermission;
-import protobuf.srl.school.Problem.SrlBankProblem;
 
 public class LocalAddProblems {
 	public static void testProblems(String courseId, String assignmentId, String mastId) {

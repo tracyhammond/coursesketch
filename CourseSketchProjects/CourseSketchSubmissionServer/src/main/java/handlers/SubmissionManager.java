@@ -1,14 +1,14 @@
 package handlers;
 
+import coursesketch.database.SubmissionDatabaseClient;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.submission.SubmissionManagerInterface;
-import database.DatabaseAccessException;
-import database.SubmissionDatabaseClient;
-import protobuf.srl.utils.Util;
+import coursesketch.database.util.DatabaseAccessException;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.submission.Submission;
+import protobuf.srl.utils.Util;
 import utilities.TimeManager;
 
 import java.util.ArrayList;
@@ -35,7 +35,8 @@ public final class SubmissionManager implements SubmissionManagerInterface {
     /**
      * {@inheritDoc}
      */
-    @Override public List<Submission.SrlExperiment> getSubmission(final String authId, final Authenticator authenticator,
+    @Override
+    public List<Submission.SrlExperiment> getSubmission(final String authId, final Authenticator authenticator,
             final String problemId, final String... submissionIds) throws DatabaseAccessException, AuthenticationException {
         final Authentication.AuthType.Builder authType = Authentication.AuthType.newBuilder();
         authType.setCheckingAdmin(true);
@@ -47,16 +48,32 @@ public final class SubmissionManager implements SubmissionManagerInterface {
         }
 
         final List<Submission.SrlExperiment> experiments = new ArrayList<>();
-        for (String submission: submissionIds) {
+        for (String submission : submissionIds) {
             experiments.add(submissionDatabaseClient.getExperiment(submission, problemId, authenticationResponder));
         }
         return experiments;
     }
 
+    @Override
+    public Submission.SrlSolution getSolution(final String authId, final Authenticator authenticator, final String bankProblemId,
+            final String submissionId) throws DatabaseAccessException, AuthenticationException {
+        final Authentication.AuthType.Builder authType = Authentication.AuthType.newBuilder();
+        authType.setCheckingAdmin(true);
+        final AuthenticationResponder authenticationResponder = authenticator
+                .checkAuthentication(Util.ItemType.BANK_PROBLEM, bankProblemId, authId, TimeManager.getSystemTime(),
+                        authType.build());
+        if (!authenticationResponder.hasStudentPermission()) {
+            throw new AuthenticationException("User does not have permission to for this solution:", AuthenticationException.INVALID_PERMISSION);
+        }
+
+        return submissionDatabaseClient.getSolution(submissionId, bankProblemId, authenticationResponder);
+    }
+
     /**
      * {@inheritDoc}
      */
-    @Override public String insertExperiment(final String authId, final Authenticator authenticator, final Submission.SrlExperiment submission,
+    @Override
+    public String insertExperiment(final String authId, final Authenticator authenticator, final Submission.SrlExperiment submission,
             final long submissionTime)
             throws AuthenticationException, DatabaseAccessException {
         final String problemId = submission.getProblemId();
@@ -75,13 +92,14 @@ public final class SubmissionManager implements SubmissionManagerInterface {
     /**
      * {@inheritDoc}
      */
-    @Override public String insertSolution(final String authId, final Authenticator authenticator, final Submission.SrlSolution submission)
+    @Override
+    public String insertSolution(final String authId, final Authenticator authenticator, final Submission.SrlSolution submission)
             throws AuthenticationException, DatabaseAccessException {
         final String problemBankId = submission.getProblemBankId();
         final Authentication.AuthType.Builder authType = Authentication.AuthType.newBuilder();
         authType.setCheckingAdmin(true);
         final AuthenticationResponder authenticationResponder = authenticator
-                .checkAuthentication(Util.ItemType.COURSE_PROBLEM, problemBankId, authId, TimeManager.getSystemTime(),
+                .checkAuthentication(Util.ItemType.BANK_PROBLEM, problemBankId, authId, TimeManager.getSystemTime(),
                         authType.build());
         if (!authenticationResponder.hasModeratorPermission()) {
             throw new AuthenticationException("User does not have permission to for this submission", AuthenticationException.INVALID_PERMISSION);

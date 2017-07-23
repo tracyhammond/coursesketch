@@ -1,8 +1,8 @@
 package handlers.subhandlers;
 
 import coursesketch.database.auth.AuthenticationException;
-import database.DatabaseAccessException;
-import database.institution.Institution;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.institution.Institution;
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
 import protobuf.srl.query.Data.ItemRequest;
 

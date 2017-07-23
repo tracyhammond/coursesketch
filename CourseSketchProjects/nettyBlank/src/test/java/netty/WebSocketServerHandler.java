@@ -25,8 +25,8 @@ import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaderNames;
-import io.netty.handler.codec.http.HttpHeaderUtil;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
@@ -57,7 +57,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
     private WebSocketServerHandshaker handshaker;
 
     @Override
-    public void messageReceived(final ChannelHandlerContext ctx, final Object msg) throws Exception {
+    public void channelRead0(final ChannelHandlerContext ctx, final Object msg) throws Exception {
         if (msg instanceof FullHttpRequest) {
             handleHttpRequest(ctx, (FullHttpRequest) msg);
         } else if (msg instanceof WebSocketFrame) {
@@ -90,7 +90,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
             final FullHttpResponse res = new DefaultFullHttpResponse(HTTP_1_1, OK, content);
 
             res.headers().set(CONTENT_TYPE, "text/html; charset=UTF-8");
-            HttpHeaderUtil.setContentLength(res, content.readableBytes());
+            HttpUtil.setContentLength(res, content.readableBytes());
 
             sendHttpResponse(ctx, req, res);
             return;
@@ -154,12 +154,12 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
             final ByteBuf buf = Unpooled.copiedBuffer(res.status().toString(), CharsetUtil.UTF_8);
             res.content().writeBytes(buf);
             buf.release();
-            HttpHeaderUtil.setContentLength(res, res.content().readableBytes());
+            HttpUtil.setContentLength(res, res.content().readableBytes());
         }
 
         // Send the response and close the connection if necessary.
         ChannelFuture f = ctx.channel().writeAndFlush(res);
-        if (!HttpHeaderUtil.isKeepAlive(req) || res.status() != HttpResponseStatus.OK) {
+        if (!HttpUtil.isKeepAlive(req) || res.status() != HttpResponseStatus.OK) {
             f.addListener(ChannelFutureListener.CLOSE);
         }
     }

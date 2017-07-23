@@ -70,6 +70,12 @@
             <artifactId>ServerAbstractor</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>MongoDatabaseHelper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.reflections</groupId>

@@ -8,7 +8,7 @@ import coursesketch.server.rpc.CourseSketchRpcService;
 import coursesketch.server.rpc.ServerWebSocketHandler;
 import coursesketch.server.rpc.ServerWebSocketInitializer;
 import coursesketch.services.RecognitionService;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

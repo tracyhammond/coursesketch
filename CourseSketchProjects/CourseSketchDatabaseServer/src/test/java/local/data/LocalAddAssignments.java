@@ -1,12 +1,11 @@
 package local.data;
 
-import database.DatabaseAccessException;
-import database.RequestConverter;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.RequestConverter;
 import coursesketch.database.auth.AuthenticationException;
-import database.institution.mongo.MongoInstitution;
-import database.user.UserClient;
+import coursesketch.database.institution.mongo.MongoInstitution;
+import coursesketch.database.user.UserClient;
 import protobuf.srl.school.Assignment.SrlAssignment;
-import protobuf.srl.utils.Util.SrlPermission;
 
 import java.util.Date;
 

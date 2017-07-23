@@ -6,9 +6,9 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.DatabaseStringConstants;
 import coursesketch.server.authentication.HashManager;
-import database.DatabaseAccessException;
-import database.DatabaseStringConstants;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,15 +17,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
+import protobuf.srl.utils.Util;
 
 import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.List;
 
-import static database.DbSchoolUtility.getCollectionFromType;
+import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
+import static coursesketch.database.util.MongoUtilities.getUserGroup;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -39,33 +40,26 @@ import static org.mockito.Mockito.when;
 public class DbAuthManagerTest {
 
     @Rule
-    public FongoRule fongo = new FongoRule();
+    private FongoRule fongo = new FongoRule();
 
     private static final String VALID_REGISTRATION_KEY = "VALID KEY YO";
     private static final String INVALID_REGISTRATION_KEY = "NOT VALID KEY YO";
 
-    public static final Util.ItemType INVALID_ITEM_TYPE = Util.ItemType.BANK_PROBLEM;
-    public static final Util.ItemType VALID_ITEM_TYPE = Util.ItemType.COURSE;
-    public static final Util.ItemType VALID_ITEM_CHILD_TYPE = Util.ItemType.ASSIGNMENT;
+    private static final Util.ItemType VALID_ITEM_TYPE = Util.ItemType.COURSE;
+    private static final Util.ItemType VALID_ITEM_CHILD_TYPE = Util.ItemType.ASSIGNMENT;
 
-    public static final String INVALID_ITEM_ID = new ObjectId().toHexString();
-    public static final String VALID_ITEM_CHILD_ID = new ObjectId().toHexString();
-    public static final String VALID_ITEM_ID = new ObjectId().toHexString();
+    private static final String INVALID_ITEM_ID = new ObjectId().toHexString();
+    private static final String VALID_ITEM_CHILD_ID = new ObjectId().toHexString();
+    private static final String VALID_ITEM_ID = new ObjectId().toHexString();
 
-    public static final String VALID_GROUP_ID = new ObjectId().toHexString();
-    public static final String INVALID_GROUP_ID = new ObjectId().toHexString();
+    private static final String TEACHER_ID = new ObjectId().toHexString();
+    private static final String STUDENT_ID = new ObjectId().toHexString();
+    private static final String MOD_ID = new ObjectId().toHexString();
 
-    public static final String TEACHER_ID = new ObjectId().toHexString();
-    public static final String STUDENT_ID = new ObjectId().toHexString();
-    public static final String MOD_ID = new ObjectId().toHexString();
+    private DB db;
 
-    // this user id is not in the db
-    public static final String NO_ACCESS_ID = new ObjectId().toHexString();
-
-    public DB db;
-
-    public DbAuthManager dbAuthManager;
-    DbAuthChecker dbAuthChecker;
+    private DbAuthManager dbAuthManager;
+    private DbAuthChecker dbAuthChecker;
 
     @Before
     public void before() throws UnknownHostException {
@@ -84,10 +78,9 @@ public class DbAuthManagerTest {
     }
 
     public void insertValidGroup(String groupId, String courseId, BasicDBObject... permissions) {
-        List<Object> list = new BasicDBList();
-        BasicDBObject group = new BasicDBObject(DatabaseStringConstants.SELF_ID,  new ObjectId(groupId))
+        BasicDBObject group = new BasicDBObject(DatabaseStringConstants.SELF_ID, new ObjectId(groupId))
                 .append(DatabaseStringConstants.COURSE_ID, courseId);
-        for (BasicDBObject obj: permissions) {
+        for (BasicDBObject obj : permissions) {
             // grabs the first key and value in the object
             group.append(obj.keySet().iterator().next(), obj.values().iterator().next());
         }
@@ -109,9 +102,7 @@ public class DbAuthManagerTest {
         String hash = null;
         try {
             hash = HashManager.toHex(HashManager.createHash(TEACHER_ID, salt).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         Assert.assertTrue(dbObject.containsField(hash));
@@ -137,15 +128,13 @@ public class DbAuthManagerTest {
         String hash = null;
         try {
             hash = HashManager.toHex(HashManager.createHash(TEACHER_ID, salt).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         Assert.assertTrue(dbObject.containsField(hash));
         Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.TEACHER_VALUE, dbObject.get(hash));
 
-        List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
+        List<String> userList = getUserGroup(dbItemObject);
         Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userList.get(0));
     }
 
@@ -169,9 +158,7 @@ public class DbAuthManagerTest {
         String teacherHash = null;
         try {
             teacherHash = HashManager.toHex(HashManager.createHash(TEACHER_ID, salt).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         Assert.assertTrue(dbObject.containsField(teacherHash));
@@ -180,15 +167,13 @@ public class DbAuthManagerTest {
         String courseHash = null;
         try {
             courseHash = HashManager.toHex(HashManager.createHash(courseId, salt).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         Assert.assertTrue(dbObject.containsField(courseHash));
         Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.STUDENT_VALUE, dbObject.get(courseHash));
 
-        List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
+        List<String> userList = getUserGroup(dbItemObject);
         Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userList.get(0));
     }
 
@@ -213,9 +198,7 @@ public class DbAuthManagerTest {
         String teacherHash = null;
         try {
             teacherHash = HashManager.toHex(HashManager.createHash(TEACHER_ID, salt).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         Assert.assertTrue(dbObject.containsField(teacherHash));
@@ -224,14 +207,12 @@ public class DbAuthManagerTest {
         String courseHash = null;
         try {
             courseHash = HashManager.toHex(HashManager.createHash(courseId, salt).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         Assert.assertEquals(null, dbObject.get(courseHash));
 
-        List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
+        List<String> userList = getUserGroup(dbItemObject);
         Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userList.get(0));
     }
 
@@ -255,9 +236,7 @@ public class DbAuthManagerTest {
         String teacherHash = null;
         try {
             teacherHash = HashManager.toHex(HashManager.createHash(TEACHER_ID, salt).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         Assert.assertTrue(dbObject.containsField(teacherHash));
@@ -266,15 +245,13 @@ public class DbAuthManagerTest {
         String courseHash = null;
         try {
             courseHash = HashManager.toHex(HashManager.createHash(courseId, salt).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
 
         Assert.assertEquals(null, dbObject.get(courseHash));
 
-        List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
+        List<String> userList = getUserGroup(dbItemObject);
         Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userList.get(0));
     }
 
@@ -303,16 +280,14 @@ public class DbAuthManagerTest {
         String hash = null;
         try {
             hash = HashManager.toHex(HashManager.createHash(TEACHER_ID, salt).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         Assert.assertTrue(dbObject.containsField(hash));
         Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.TEACHER_VALUE, dbObject.get(hash));
 
-        List<String> userListParent = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
-        List<String> userListChild = (List<String>) dbItemChildObject.get(DatabaseStringConstants.USER_LIST);
+        List<String> userListParent = getUserGroup(dbItemObject);
+        List<String> userListChild = getUserGroup(dbItemChildObject);
         Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userListParent.get(0));
         Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userListChild.get(0));
         Assert.assertEquals(userListParent, userListChild);
@@ -356,9 +331,7 @@ public class DbAuthManagerTest {
         String hash = null;
         try {
             hash = HashManager.toHex(HashManager.createHash(MOD_ID, groupToModify.get(DatabaseStringConstants.SALT).toString()).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         BasicDBObject update = new BasicDBObject(hash, Authentication.AuthResponse.PermissionLevel.MODERATOR_VALUE);
@@ -381,9 +354,7 @@ public class DbAuthManagerTest {
         String teacherHash = null;
         try {
             teacherHash = HashManager.toHex(HashManager.createHash(TEACHER_ID, salt).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         Assert.assertTrue(dbObject.containsField(teacherHash));
@@ -391,8 +362,8 @@ public class DbAuthManagerTest {
         Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.TEACHER_VALUE, dbObject.get(teacherHash));
         Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.MODERATOR_VALUE, dbObject.get(hash));
 
-        List<String> userListParent = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
-        List<String> userListChild = (List<String>) dbItemChildObject.get(DatabaseStringConstants.USER_LIST);
+        List<String> userListParent = getUserGroup(dbItemObject);
+        List<String> userListChild = getUserGroup(dbItemChildObject);
         Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userListParent.get(0));
         Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userListChild.get(0));
         Assert.assertEquals(userListParent, userListChild);
@@ -423,38 +394,7 @@ public class DbAuthManagerTest {
 
         dbAuthManager.registerSelf(userId, VALID_ITEM_ID, VALID_ITEM_TYPE, VALID_REGISTRATION_KEY, dbAuthChecker);
 
-        // Looks for group data
-        final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).find();
-        final DBObject dbObject = cursor.next();
-        System.out.println(dbObject);
-        Assert.assertEquals(VALID_ITEM_ID, dbObject.get(DatabaseStringConstants.COURSE_ID).toString());
-        String salt = dbObject.get(DatabaseStringConstants.SALT).toString();
-
-
-        String teacherHash = null;
-        try {
-            teacherHash = HashManager.toHex(HashManager.createHash(TEACHER_ID, salt).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        }
-        Assert.assertTrue(dbObject.containsField(teacherHash));
-        Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.TEACHER_VALUE, dbObject.get(teacherHash));
-
-        String userHash = null;
-        try {
-            userHash = HashManager.toHex(HashManager.createHash(userId, salt).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        }
-        Assert.assertTrue(dbObject.containsField(userHash));
-        Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.STUDENT_VALUE, dbObject.get(userHash));
-
-        List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userList.get(0));
+        checkAddedUser(userId, Authentication.AuthResponse.PermissionLevel.STUDENT, dbItemObject);
     }
 
     @Test(expected = AuthenticationException.class)
@@ -519,5 +459,133 @@ public class DbAuthManagerTest {
         Assert.assertEquals(TEACHER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
 
         dbAuthManager.registerSelf(userId, VALID_ITEM_ID, VALID_ITEM_TYPE, VALID_REGISTRATION_KEY, dbAuthChecker);
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void testAddingUserToDatabaseValidKey() throws AuthenticationException, DatabaseAccessException {
+        String userId = "New User!";
+        dbAuthManager.insertNewItem(TEACHER_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, VALID_REGISTRATION_KEY, null);
+
+        // looks for item data
+        final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
+        Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
+        Assert.assertEquals(VALID_REGISTRATION_KEY, dbItemObject.get(DatabaseStringConstants.REGISTRATION_KEY).toString());
+        Assert.assertEquals(TEACHER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
+
+        dbAuthManager.addUser(TEACHER_ID, userId, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker, Authentication.AuthType.getDefaultInstance());
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void testAddingUserToDatabaseInvalidKey() throws AuthenticationException, DatabaseAccessException {
+        dbAuthManager.insertNewItem(TEACHER_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, VALID_REGISTRATION_KEY, null);
+
+        // looks for item data
+        final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
+        Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
+        Assert.assertEquals(VALID_REGISTRATION_KEY, dbItemObject.get(DatabaseStringConstants.REGISTRATION_KEY).toString());
+        Assert.assertEquals(TEACHER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
+
+        dbAuthManager.addUser(INVALID_REGISTRATION_KEY, "New User!", VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker,
+                Authentication.AuthType.getDefaultInstance());
+    }
+
+    @Test
+    public void testAddingUserAsStudentToExistingGroup() throws AuthenticationException, DatabaseAccessException {
+        String userId = "New User!";
+        dbAuthManager.insertNewItem(TEACHER_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, VALID_REGISTRATION_KEY, null);
+
+        // looks for item data
+        final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
+        Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
+        Assert.assertEquals(VALID_REGISTRATION_KEY, dbItemObject.get(DatabaseStringConstants.REGISTRATION_KEY).toString());
+        Assert.assertEquals(TEACHER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
+
+        dbAuthManager.addUser(TEACHER_ID, userId, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker, Authentication.AuthType.newBuilder()
+                .setCheckingOwner(true).setCheckingUser(true).build());
+
+        checkAddedUser(userId, Authentication.AuthResponse.PermissionLevel.STUDENT, dbItemObject);
+    }
+
+    @Test
+    public void testAddingUserAsPerrTeacherToExistingGroup() throws AuthenticationException, DatabaseAccessException {
+        String userId = "New User!";
+        dbAuthManager.insertNewItem(TEACHER_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, VALID_REGISTRATION_KEY, null);
+
+        // looks for item data
+        final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
+        Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
+        Assert.assertEquals(VALID_REGISTRATION_KEY, dbItemObject.get(DatabaseStringConstants.REGISTRATION_KEY).toString());
+        Assert.assertEquals(TEACHER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
+
+        dbAuthManager.addUser(TEACHER_ID, userId, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker, Authentication.AuthType.newBuilder()
+                .setCheckingOwner(true).setCheckingPeerTeacher(true).build());
+
+        checkAddedUser(userId, Authentication.AuthResponse.PermissionLevel.PEER_TEACHER, dbItemObject);
+    }
+
+    @Test
+    public void testAddingUserAsModeratorToExistingGroup() throws AuthenticationException, DatabaseAccessException {
+        String userId = "New User!";
+        dbAuthManager.insertNewItem(TEACHER_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, VALID_REGISTRATION_KEY, null);
+
+        // looks for item data
+        final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
+        Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
+        Assert.assertEquals(VALID_REGISTRATION_KEY, dbItemObject.get(DatabaseStringConstants.REGISTRATION_KEY).toString());
+        Assert.assertEquals(TEACHER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
+
+        dbAuthManager.addUser(TEACHER_ID, userId, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker, Authentication.AuthType.newBuilder()
+                .setCheckingOwner(true).setCheckingMod(true).build());
+
+        checkAddedUser(userId, Authentication.AuthResponse.PermissionLevel.MODERATOR, dbItemObject);
+    }
+
+    @Test
+    public void testAddingUserAsTeacherToExistingGroup() throws AuthenticationException, DatabaseAccessException {
+        String userId = "New User!";
+        dbAuthManager.insertNewItem(TEACHER_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, VALID_REGISTRATION_KEY, null);
+
+        // looks for item data
+        final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
+        Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
+        Assert.assertEquals(VALID_REGISTRATION_KEY, dbItemObject.get(DatabaseStringConstants.REGISTRATION_KEY).toString());
+        Assert.assertEquals(TEACHER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
+
+        dbAuthManager.addUser(TEACHER_ID, userId, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker, Authentication.AuthType.newBuilder()
+                .setCheckingOwner(true).setCheckingAdmin(true).build());
+
+        checkAddedUser(userId, Authentication.AuthResponse.PermissionLevel.TEACHER, dbItemObject);
+    }
+
+    private void checkAddedUser(String userId, Authentication.AuthResponse.PermissionLevel permissionLevel, DBObject dbItemObject) {
+
+        // Looks for group data
+        final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).find();
+        final DBObject dbObject = cursor.next();
+        System.out.println(dbObject);
+        Assert.assertEquals(VALID_ITEM_ID, dbObject.get(DatabaseStringConstants.COURSE_ID).toString());
+        String salt = dbObject.get(DatabaseStringConstants.SALT).toString();
+
+
+        String teacherHash = null;
+        try {
+            teacherHash = HashManager.toHex(HashManager.createHash(TEACHER_ID, salt).getBytes());
+        } catch (AuthenticationException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        Assert.assertTrue(dbObject.containsField(teacherHash));
+        Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.TEACHER_VALUE, dbObject.get(teacherHash));
+
+        String userHash = null;
+        try {
+            userHash = HashManager.toHex(HashManager.createHash(userId, salt).getBytes());
+        } catch (AuthenticationException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        Assert.assertTrue(dbObject.containsField(userHash));
+        Assert.assertEquals(permissionLevel.getNumber(), dbObject.get(userHash));
+
+        List<String> userList = getUserGroup(dbItemObject);
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userList.get(0));
     }
 }

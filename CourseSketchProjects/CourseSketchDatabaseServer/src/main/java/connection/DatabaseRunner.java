@@ -3,8 +3,8 @@ package connection;
 import coursesketch.server.base.GeneralConnectionRunner;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.ServerInfo;
-import database.DatabaseStringConstants;
-import database.user.UserClient;
+import coursesketch.database.util.DatabaseStringConstants;
+import coursesketch.database.user.UserClient;
 
 /**
  * Starts the database server.

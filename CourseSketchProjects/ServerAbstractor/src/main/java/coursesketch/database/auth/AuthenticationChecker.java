@@ -1,6 +1,6 @@
 package coursesketch.database.auth;
 
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 

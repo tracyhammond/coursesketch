@@ -13,7 +13,7 @@ import protobuf.srl.commands.Commands.SrlUpdateList;
 import protobuf.srl.request.Message;
 import protobuf.srl.services.recognition.RecognitionServer;
 import protobuf.srl.sketch.Sketch;
-import utilities.ExceptionUtilities;
+import coursesketch.utilities.ExceptionUtilities;
 
 /**
  * Created by David Windows on 4/13/2016.

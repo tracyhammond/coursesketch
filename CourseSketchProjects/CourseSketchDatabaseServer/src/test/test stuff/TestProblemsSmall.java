@@ -1,8 +1,8 @@
 package test;
 
 import coursesketch.database.auth.AuthenticationException;
-import database.DatabaseAccessException;
-import database.institution.Institution;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.institution.Institution;
 import protobuf.srl.school.Assignment.SrlAssignment;
 import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.school.Problem.SrlBankProblem.QuestionType;

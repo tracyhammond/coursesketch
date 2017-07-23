@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message.Request;
 import utilities.ConnectionException;
+import utilities.Encoder;
 
 import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
@@ -145,7 +146,7 @@ public class MultiConnectionManager {
     public void send(final Request req, final String sessionID, final Class<? extends AbstractClientWebSocket> connectionType)
             throws ConnectionException {
         // Attach the existing request with the UserID
-        final Request packagedRequest = AbstractServerWebSocketHandler.Encoder.requestIDBuilder(req, sessionID);
+        final Request packagedRequest = Encoder.requestIDBuilder(req, sessionID);
         final AbstractClientWebSocket connection = getBestConnection(connectionType);
         if (connection == null) {
             LOG.info("Failed to get a local connection");

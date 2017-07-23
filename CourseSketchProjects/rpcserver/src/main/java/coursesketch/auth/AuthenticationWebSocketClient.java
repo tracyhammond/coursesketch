@@ -8,8 +8,8 @@ import coursesketch.database.auth.Authenticator;
 import coursesketch.server.compat.ClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import protobuf.srl.request.Message;
-import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
+import protobuf.srl.utils.Util;
 
 import java.net.URI;
 
@@ -68,7 +68,8 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
      *
      * @throws AuthenticationException Thrown if there is a problem creating the auth response.
      */
-    @Override public final Authentication.AuthResponse isAuthenticated(final Util.ItemType collectionType, final String itemId,
+    @Override
+    public final Authentication.AuthResponse isAuthenticated(final Util.ItemType collectionType, final String itemId,
             final String userId, final Authentication.AuthType checkType) throws AuthenticationException {
         if (!Authenticator.validRequest(checkType)) {
             throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
@@ -83,7 +84,7 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
                 .setItemType(collectionType)
                 .setAuthParams(checkType)
                 .build();
-        Authentication.AuthResponse response = null;
+        Authentication.AuthResponse response;
         try {
             response = authService.authorizeUser(getNewRpcController(), request);
         } catch (ServiceException e) {
@@ -93,7 +94,8 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
         return response;
     }
 
-    @Override public final void createNewItem(final String authId, final String itemId, final Util.ItemType collectionType,
+    @Override
+    public final void createNewItem(final String authId, final String itemId, final Util.ItemType collectionType,
             final String parentId,
             final String registrationKey) throws AuthenticationException {
 
@@ -119,7 +121,7 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
             creationRequestBuilder.setRegistrationKey(registrationKey);
         }
 
-        Message.DefaultResponse response = null;
+        Message.DefaultResponse response;
         try {
             final Authentication.AuthCreationRequest creationRequest = creationRequestBuilder.build();
             response = authService.createNewItem(getNewRpcController(), creationRequest);
@@ -134,29 +136,20 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
         }
     }
 
-    @Override public final void registerUser(final String authId, final String itemId, final Util.ItemType collectionType,
+    @Override
+    public final void registerUser(final String authId, final String itemId, final Util.ItemType collectionType,
             final String registrationKey)
             throws AuthenticationException {
         if (authService == null) {
             authService = Authentication.AuthenticationService.newBlockingStub(getRpcChannel());
         }
 
-        final Authentication.AuthRequest request = Authentication.AuthRequest.newBuilder()
-                .setAuthId(authId)
-                .setItemId(itemId)
-                .setItemType(collectionType)
-                .build();
+        final Authentication.UserRegistration registrationRequest =
+                createRegistrationRequest(registrationKey, authId, itemId, collectionType, Authentication.AuthType.getDefaultInstance());
 
-        final Authentication.UserRegistration.Builder creationRequest = Authentication.UserRegistration.newBuilder()
-                .setItemRequest(request);
-
-        if (registrationKey != null) {
-            creationRequest.setRegistrationKey(registrationKey);
-        }
-
-        Message.DefaultResponse response = null;
+        Message.DefaultResponse response;
         try {
-            response = authService.registerUser(getNewRpcController(), creationRequest.build());
+            response = authService.registerUser(getNewRpcController(), registrationRequest);
             if (response.hasException()) {
                 final AuthenticationException authExcep =
                         new AuthenticationException("Exception with authentication server", AuthenticationException.OTHER);
@@ -166,5 +159,58 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
         } catch (ServiceException e) {
             throw new AuthenticationException(e);
         }
+    }
+
+    @Override
+    public final void addUser(final String ownerId, final String authId, final String itemId, final Util.ItemType collectionType)
+            throws AuthenticationException {
+        if (authService == null) {
+            authService = Authentication.AuthenticationService.newBlockingStub(getRpcChannel());
+        }
+
+        final Authentication.UserRegistration registrationRequest = createRegistrationRequest(ownerId, authId, itemId, collectionType,
+                Authentication.AuthType.newBuilder().setCheckingOwner(true).build());
+
+        Message.DefaultResponse response;
+        try {
+            response = authService.addUser(getNewRpcController(), registrationRequest);
+            if (response.hasException()) {
+                final AuthenticationException authExcep =
+                        new AuthenticationException("Exception with authentication server", AuthenticationException.OTHER);
+                authExcep.setProtoException(response.getException());
+                throw authExcep;
+            }
+        } catch (ServiceException e) {
+            throw new AuthenticationException(e);
+        }
+    }
+
+    /**
+     * Creates a request for registration/adding a user.
+     *
+     * @param registrationKey Used to authenticate the request
+     * @param authId The id being registered/added
+     * @param itemId The item it belongs to
+     * @param collectionType The type of collection
+     * @param authParams optional parameters
+     * @return A registration proto.
+     */
+    private Authentication.UserRegistration createRegistrationRequest(final String registrationKey, final String authId, final String itemId,
+            final Util.ItemType collectionType, final Authentication.AuthType authParams) {
+
+        final Authentication.AuthRequest request = Authentication.AuthRequest.newBuilder()
+                .setAuthId(authId)
+                .setItemId(itemId)
+                .setItemType(collectionType)
+                .setAuthParams(authParams)
+                .build();
+
+        final Authentication.UserRegistration.Builder creationRequest = Authentication.UserRegistration.newBuilder()
+                .setItemRequest(request);
+
+        if (registrationKey != null) {
+            creationRequest.setRegistrationKey(registrationKey);
+        }
+        return creationRequest.build();
     }
 }

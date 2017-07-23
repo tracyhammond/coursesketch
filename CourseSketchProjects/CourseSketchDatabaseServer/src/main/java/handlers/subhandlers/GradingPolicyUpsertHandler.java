@@ -2,8 +2,8 @@ package handlers.subhandlers;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.database.auth.AuthenticationException;
-import database.DatabaseAccessException;
-import database.institution.Institution;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.institution.Institution;
 import protobuf.srl.grading.Grading;
 import protobuf.srl.query.Data;
 

@@ -5,9 +5,7 @@ import com.google.protobuf.Descriptors;
 import com.google.protobuf.GeneratedMessage;
 import org.junit.Assert;
 
-import javax.naming.OperationNotSupportedException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -213,6 +211,8 @@ public class ProtobufComparison {
                     incorrectFields.putAll(incorrectFieldClone);
                     return false;
                 }
+            } else {
+                return true;
             }
         }
         if (!expectedValue.equals(actualValue)) {

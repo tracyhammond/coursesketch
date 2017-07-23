@@ -21,9 +21,9 @@ import com.mongodb.DBCursor;
 import com.mongodb.Document;
 import com.mongodb.MongoClient;
 
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
-import database.institution.Institution;
+import coursesketch.database.institution.Institution;
 
 public class SubmissionWriter {
 	public static void start() throws IOException, AuthenticationException, DatabaseAccessException {

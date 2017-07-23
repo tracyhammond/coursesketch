@@ -46,7 +46,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         CourseSketch.courseManagement.waitingIcon.startWaiting();
 
         /**
-         * Helper function to stop the waiting icon and show the courses once that database is ready.
+         * Helper function to stop the waiting icon and show the courses once that util is ready.
          *
          * @param {Array<SrlCourse>} courseList - a list of courses.
          * @memberof courseManagement

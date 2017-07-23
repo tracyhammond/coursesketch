@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import protobuf.srl.school.School.SrlCourse;
 
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
-import database.institution.CourseManager;
-import database.institution.Institution;
+import coursesketch.database.institution.CourseManager;
+import coursesketch.database.institution.Institution;
 
 public class CourseTester {
 

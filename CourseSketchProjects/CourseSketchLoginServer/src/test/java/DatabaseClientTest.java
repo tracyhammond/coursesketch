@@ -5,8 +5,8 @@ import coursesketch.database.LoginException;
 import coursesketch.database.RegistrationException;
 import coursesketch.database.identity.IdentityManagerInterface;
 import coursesketch.server.authentication.HashManager;
-import database.DatabaseAccessException;
-import database.DatabaseStringConstants;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.DatabaseStringConstants;
 import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,10 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static database.DatabaseStringConstants.INSTRUCTOR_CLIENT_ID;
-import static database.DatabaseStringConstants.INSTRUCTOR_ID;
-import static database.DatabaseStringConstants.STUDENT_CLIENT_ID;
-import static database.DatabaseStringConstants.STUDENT_ID;
+import static coursesketch.database.util.DatabaseStringConstants.INSTRUCTOR_CLIENT_ID;
+import static coursesketch.database.util.DatabaseStringConstants.INSTRUCTOR_ID;
+import static coursesketch.database.util.DatabaseStringConstants.STUDENT_CLIENT_ID;
+import static coursesketch.database.util.DatabaseStringConstants.STUDENT_ID;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 

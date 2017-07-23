@@ -6,10 +6,10 @@ import com.mongodb.Document;
 import com.mongodb.DB;
 import com.mongodb.MongoCollection<Document>;
 
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
-import database.institution.Institution;
-import database.user.UserClient;
+import coursesketch.database.institution.Institution;
+import coursesketch.database.user.UserClient;
 
 public class DatabaseTester {
 	public static void main(String args[]) throws AuthenticationException {

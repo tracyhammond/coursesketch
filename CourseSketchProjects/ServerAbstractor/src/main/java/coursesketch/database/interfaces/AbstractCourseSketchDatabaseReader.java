@@ -1,7 +1,7 @@
 package coursesketch.database.interfaces;
 
 import coursesketch.server.interfaces.ServerInfo;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

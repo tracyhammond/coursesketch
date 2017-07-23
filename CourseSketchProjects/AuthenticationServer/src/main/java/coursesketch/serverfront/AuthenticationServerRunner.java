@@ -3,7 +3,7 @@ package coursesketch.serverfront;
 import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.rpc.GeneralConnectionRunner;
 import coursesketch.server.rpc.ServerWebSocketInitializer;
-import database.DatabaseStringConstants;
+import coursesketch.database.util.DatabaseStringConstants;
 
 /**
  * A subclass of the runner which sets up some special information for running the

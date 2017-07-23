@@ -19,8 +19,8 @@
         <mainClass>connection.DatabaseRunner</mainClass>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>37</projectBranchLevel>
-        <projectLineLevel>38</projectLineLevel>
+        <projectBranchLevel>50</projectBranchLevel>
+        <projectLineLevel>48</projectLineLevel>
     </properties>
 
     <build>

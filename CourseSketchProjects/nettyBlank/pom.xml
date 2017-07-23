@@ -62,7 +62,7 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>5.0.0.Alpha2</version>
+            <version>${nettyVersion}</version>
         </dependency>
 
         <dependency>
@@ -94,6 +94,12 @@
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.9.9-RC2</version>
+        </dependency>
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>MongoDatabaseHelper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>

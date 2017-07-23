@@ -32,6 +32,53 @@ SubmissionException.prototype = new BaseException();
  * @constructor SubmissionPanel
  */
 function SubmissionPanel() {
+    /**
+     * Called when the submission is saved successfully.
+     *
+     * Called with a paramter of type {SrlSubmission}.
+     * @type {Function}
+     */
+    this.saveListener = undefined;
+
+    /**
+     * Called when the submission fails to submit.
+     *
+     * Called with a paramter of type {BaseException}.
+     * @type {Function}
+     */
+    this.errorListener = undefined;
+
+    /**
+     * The type of the problem
+     * @type {QuestionType}
+     */
+    this.problemType = undefined;
+
+    /**
+     * The index of the problem
+     * @type {Number}
+     */
+    this.problemIndex = undefined;
+    /**
+     * True if the submitter is a student otherwise false
+     * @type {Boolean}
+     */
+    this.isStudent = undefined;
+
+    /**
+     * True if the submitter is currently grading otherwise false
+     * @type {Boolean}
+     */
+    this.isGrader = undefined;
+
+    /**
+     * Called to wrap the submission.
+     *
+     * Called with a paramter of type {SrlSubmission}.
+     * @type {Function}
+     */
+    this.wrapperFunction = undefined;
+
 
     /**
      * @param {Element} templateClone - An element representing the data inside tag, its
@@ -138,10 +185,11 @@ function SubmissionPanel() {
             CourseSketch.prutil.getRequestClass().MessageType.SUBMISSION);
         var problemType = this.problemType;
         var problemIndex = this.problemIndex;
-        CourseSketch.connection.setSubmissionListener(function(event, request) {
+        CourseSketch.connection.setSubmissionListener();
+        submissionRequest.setResponseText(this.isStudent ? 'student' : this.isGrader ? 'grader' : 'instructor');
+        CourseSketch.dataListener.sendRequestWithTimeout(submissionRequest, function(event, request) {
             console.log(request);
-            CourseSketch.connection.setSubmissionListener(undefined);
-            alert(request.responseText);
+            console.log(request.responseText);
             if (problemIndex === this.problemIndex && this.problemType === CourseSketch.prutil.QuestionType.SKETCH) {
                 var sketchSurface = this.querySelector('.submittable');
                 // Potential conflict if it was save multiple times in quick succession.
@@ -150,12 +198,8 @@ function SubmissionPanel() {
             }
             problemType = undefined;
             problemIndex = undefined;
-        }.bind(this));
-        submissionRequest.setResponseText(this.isStudent ? 'student' : this.isGrader ? 'grader' : 'instructor');
-        CourseSketch.connection.sendRequest(submissionRequest);
-        QuestionType = undefined;
+        }.bind(this), 1, CourseSketch.dataListener.getRequestType());
         submission = undefined;
-        subPanel = undefined;
     };
 
     /**
@@ -217,20 +261,6 @@ function SubmissionPanel() {
     }
 
     /**
-     * Sets the wrapperFunction.
-     *
-     * This function takes in a submission and wraps it as either the experiment or solution.
-     * This wrapped value is returned from the function and then it is sent to the server internally.
-     *
-     * @param  {Function} wrapperFunction - used to wrap the submission in its required data.
-     * @instance
-     * @memberof SubmissionPanel
-     */
-    this.setWrapperFunction = function(wrapperFunction) {
-        this.wrapperFunction = wrapperFunction;
-    };
-
-    /**
      * Called when the panel is removed from the DOM.
      *
      * @instance
@@ -238,6 +268,7 @@ function SubmissionPanel() {
      */
     this.detachedCallback = function() {
         this.setWrapperFunction(undefined);
+        this.setOnSavedListener(undefined, undefined);
     };
 
     /**
@@ -311,6 +342,7 @@ function SubmissionPanel() {
         toolbar = undefined;
         problemType = undefined;
     };
+
 }
 
 SubmissionPanel.prototype = Object.create(HTMLElement.prototype);
@@ -326,4 +358,29 @@ SubmissionPanel.prototype = Object.create(HTMLElement.prototype);
  */
 SubmissionPanel.prototype.setProblemType = function(problemType) {
     this.problemType = problemType;
+};
+
+/**
+ * Sets the wrapperFunction.
+ *
+ * This function takes in a submission and wraps it as either the experiment or solution.
+ * This wrapped value is returned from the function and then it is sent to the server internally.
+ *
+ * @param  {Function | undefined} wrapperFunction - used to wrap the submission in its required data.
+ * @instance
+ * @memberof SubmissionPanel
+ */
+SubmissionPanel.prototype.setWrapperFunction = function(wrapperFunction) {
+    this.wrapperFunction = wrapperFunction;
+};
+
+/**
+ * Sets a listener that is called when a submission is sent to the server.
+ *
+ * @param {Function} onSaveListener - Called for a successful submission
+ * @param {Function} [onErrorListener] - Called for any error during submission
+ */
+SubmissionPanel.prototype.setOnSavedListener = function(onSaveListener, onErrorListener) {
+    this.saveListener = onSaveListener;
+    this.errorListener = onErrorListener;
 };

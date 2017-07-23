@@ -3,9 +3,7 @@ package coursesketch.auth;
 import com.google.protobuf.BlockingRpcChannel;
 import com.google.protobuf.RpcController;
 import com.googlecode.protobuf.pro.duplex.RpcClientChannel;
-import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationException;
-import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import org.bson.types.ObjectId;
 import org.junit.Before;
@@ -31,48 +29,27 @@ import static org.powermock.api.mockito.PowerMockito.when;
  * Created by dtracers on 12/30/2015.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ Authentication.AuthenticationService.class, AuthenticationWebSocketClient.class})
+@PrepareForTest({ Authentication.AuthenticationService.class, AuthenticationWebSocketClient.class })
 public class AuthenticationWebSocketClientTest {
 
     private static final String VALID_USERNAME = "Valid username";
     private static final String VALID_REGISTRATION_KEY = "VALID KEY YO";
-    private static final String INVALID_REGISTRATION_KEY = "NOT VALID KEY YO";
-    private static final String INVALID_USERNAME = "NOT VALID USERNAME";
 
-    public static final Util.ItemType INVALID_ITEM_TYPE = Util.ItemType.SLIDE;
-    public static final Util.ItemType VALID_ITEM_TYPE = Util.ItemType.COURSE;
-    public static final Util.ItemType VALID_ITEM_CHILD_TYPE = Util.ItemType.ASSIGNMENT;
+    private static final Util.ItemType VALID_ITEM_TYPE = Util.ItemType.COURSE;
 
-    public static final String INVALID_ITEM_ID = new ObjectId().toHexString();
-    public static final String VALID_ITEM_CHILD_ID = new ObjectId().toHexString();
-    public static final String VALID_ITEM_ID = new ObjectId().toHexString();
+    private static final String VALID_ITEM_CHILD_ID = new ObjectId().toHexString();
+    private static final String VALID_ITEM_ID = new ObjectId().toHexString();
 
-    public static final String VALID_GROUP_ID = new ObjectId().toHexString();
-    public static final String INVALID_GROUP_ID = new ObjectId().toHexString();
+    private static final String TEACHER_AUTH_ID = new ObjectId().toHexString();
 
-    public static final String TEACHER_AUTH_ID = new ObjectId().toHexString();
-    public static final String STUDENT_AUTH_ID = new ObjectId().toHexString();
-    public static final String MOD_AUTH_ID = new ObjectId().toHexString();
-
-    public static final String TEACHER_USER_ID = new ObjectId().toHexString();
-    public static final String STUDENT_USER_ID = new ObjectId().toHexString();
-    public static final String MOD_USER_ID = new ObjectId().toHexString();
-
-    // this user id is not in the db
-    public static final String NO_ACCESS_ID = new ObjectId().toHexString();
+    private static final String TEACHER_USER_ID = new ObjectId().toHexString();
 
     @Mock
-    Authentication.AuthenticationService.BlockingInterface mockAuthenticationService;
-    URI mockUri;
+    private Authentication.AuthenticationService.BlockingInterface mockAuthenticationService;
     @Mock
-    AbstractServerWebSocketHandler mockHandler;
+    private AbstractServerWebSocketHandler mockHandler;
 
-    @Mock
-    private AuthenticationChecker authChecker;
-    @Mock
-    private AuthenticationOptionChecker optionChecker;
-
-    AuthenticationWebSocketClient webclient;
+    private AuthenticationWebSocketClient webclient;
 
     @Before
     public void before() throws Exception {
@@ -80,7 +57,7 @@ public class AuthenticationWebSocketClientTest {
 
         when(Authentication.AuthenticationService.newBlockingStub(any(BlockingRpcChannel.class))).thenReturn(mockAuthenticationService);
 
-        mockUri = new URI("http://localhost");
+        URI mockUri = new URI("http://localhost");
         webclient = new AuthenticationWebSocketClient(mockUri, mockHandler);
 
         webclient = PowerMockito.spy(webclient);
@@ -97,6 +74,8 @@ public class AuthenticationWebSocketClientTest {
                 .thenReturn(Message.DefaultResponse.getDefaultInstance());
 
         when(mockAuthenticationService.registerUser(any(RpcController.class), any(Authentication.UserRegistration.class)))
+                .thenReturn(Message.DefaultResponse.getDefaultInstance());
+        when(mockAuthenticationService.addUser(any(RpcController.class), any(Authentication.UserRegistration.class)))
                 .thenReturn(Message.DefaultResponse.getDefaultInstance());
     }
 
@@ -180,6 +159,7 @@ public class AuthenticationWebSocketClientTest {
                 .setItemId(VALID_ITEM_ID)
                 .setItemType(VALID_ITEM_TYPE)
                 .setAuthId(TEACHER_USER_ID)
+                .setAuthParams(Authentication.AuthType.getDefaultInstance())
                 .build();
 
         final Authentication.UserRegistration userRequest = Authentication.UserRegistration.newBuilder()
@@ -189,5 +169,26 @@ public class AuthenticationWebSocketClientTest {
 
 
         Mockito.verify(mockAuthenticationService).registerUser(any(RpcController.class), eq(userRequest));
+    }
+
+    @Test
+    public void addUserCallsServiceWithCorrectValues() throws Exception {
+
+        webclient.addUser(VALID_REGISTRATION_KEY, TEACHER_USER_ID, VALID_ITEM_ID, VALID_ITEM_TYPE);
+
+        final Authentication.AuthRequest request = Authentication.AuthRequest.newBuilder()
+                .setItemId(VALID_ITEM_ID)
+                .setItemType(VALID_ITEM_TYPE)
+                .setAuthId(TEACHER_USER_ID)
+                .setAuthParams(Authentication.AuthType.newBuilder().setCheckingOwner(true))
+                .build();
+
+        final Authentication.UserRegistration userRequest = Authentication.UserRegistration.newBuilder()
+                .setItemRequest(request)
+                .setRegistrationKey(VALID_REGISTRATION_KEY)
+                .build();
+
+
+        Mockito.verify(mockAuthenticationService).addUser(any(RpcController.class), eq(userRequest));
     }
 }

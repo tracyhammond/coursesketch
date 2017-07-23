@@ -27,6 +27,11 @@ message SrlChecksum {
     required int64 secondBits = 2; // summation of times
 }
 
+message DomainId {
+    optional string domainId = 1;
+    optional QuestionType questionType = 2;
+}
+
 /**
  * Contains the type of questions that course sketch supports.
  * (This should only be what is currently supported)

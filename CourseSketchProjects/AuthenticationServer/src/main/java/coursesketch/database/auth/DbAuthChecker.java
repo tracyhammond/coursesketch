@@ -3,20 +3,20 @@ package coursesketch.database.auth;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import coursesketch.server.authentication.HashManager;
-import database.DatabaseAccessException;
-import database.DatabaseStringConstants;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.DatabaseStringConstants;
+import coursesketch.utilities.AuthUtilities;
 import org.bson.types.ObjectId;
-import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
-import utilities.AuthUtilities;
+import protobuf.srl.utils.Util;
 
-import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static database.DbSchoolUtility.getCollectionFromType;
+import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
+import static coursesketch.database.util.MongoUtilities.getUserGroup;
+import static coursesketch.utilities.AuthUtilities.generateHash;
+import static protobuf.srl.services.authentication.Authentication.AuthResponse.PermissionLevel.OWNER;
 import static protobuf.srl.services.authentication.Authentication.AuthResponse.PermissionLevel.STUDENT;
 
 /**
@@ -56,7 +56,8 @@ public final class DbAuthChecker implements AuthenticationChecker {
      * @throws AuthenticationException
      *         Thrown if there are problems creating the auth response.
      */
-    @Override public Authentication.AuthResponse isAuthenticated(final Util.ItemType collectionType, final String itemId, final String userId,
+    @Override
+    public Authentication.AuthResponse isAuthenticated(final Util.ItemType collectionType, final String itemId, final String userId,
             final Authentication.AuthType preFixedCheckType) throws DatabaseAccessException, AuthenticationException {
 
         checkNotNull(collectionType, "collectionType");
@@ -75,7 +76,54 @@ public final class DbAuthChecker implements AuthenticationChecker {
             throw new DatabaseAccessException("The item with the id " + itemId + " was not found in the database.");
         }
 
-        final List<String> groupList = (List<String>) result.get(DatabaseStringConstants.USER_LIST);
+        final Authentication.AuthResponse.PermissionLevel permissionLevel = getPermissionLevel(preFixedCheckType, userId, result);
+
+        if (permissionLevel == null) {
+            return Authentication.AuthResponse.getDefaultInstance();
+        }
+
+        final Authentication.AuthResponse.Builder responseBuilder = Authentication.AuthResponse.newBuilder();
+        if (permissionLevel.equals(OWNER) && checkType.getCheckingOwner()) {
+            responseBuilder.setIsOwner(true);
+        }
+
+        if (checkType.getCheckAccess()) {
+            responseBuilder.setHasAccess(permissionLevel.compareTo(STUDENT) >= 0);
+        }
+        final Authentication.AuthResponse.PermissionLevel largestAllowedLevel = AuthUtilities.largestAllowedLevel(checkType);
+        // left - right
+        if (permissionLevel.compareTo(largestAllowedLevel) >= 0) {
+            responseBuilder.setPermissionLevel(largestAllowedLevel);
+        } else {
+            responseBuilder.setPermissionLevel(permissionLevel);
+        }
+        return responseBuilder.build();
+    }
+
+    /**
+     * Gets the permission level from the document.
+     * @param userId
+     *         The user we are checking is valid.
+     * @param preFixedCheckType
+     *         The rules that we check against to determine if the user is authenticated or not.
+     * @param authDatabaseObject
+     *         The object that was grabbed from the database.
+     * @return Permission level of the user.
+     * @throws DatabaseAccessException
+     *         Thrown if there are issues grabbing data for the database.
+     * @throws AuthenticationException
+     *         Thrown if there are problems creating the auth response.
+     */
+    private Authentication.AuthResponse.PermissionLevel getPermissionLevel(final Authentication.AuthType preFixedCheckType,
+            final String userId, final DBObject authDatabaseObject) throws DatabaseAccessException, AuthenticationException {
+
+        if (preFixedCheckType.getCheckingOwner()
+                && authDatabaseObject.get(DatabaseStringConstants.OWNER_ID).toString().equals(userId)) {
+            // This may need to be larger permission if needed.
+            return Authentication.AuthResponse.PermissionLevel.OWNER;
+        }
+
+        final List<String> groupList = getUserGroup(authDatabaseObject);
         Authentication.AuthResponse.PermissionLevel permissionLevel = null;
 
         final DBCollection groupCollection = this.database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
@@ -88,23 +136,7 @@ public final class DbAuthChecker implements AuthenticationChecker {
                 break;
             }
         }
-
-        if (permissionLevel == null) {
-            return Authentication.AuthResponse.getDefaultInstance();
-        }
-
-        final Authentication.AuthResponse.Builder responseBuilder = Authentication.AuthResponse.newBuilder();
-        if (checkType.getCheckAccess()) {
-            responseBuilder.setHasAccess(permissionLevel.compareTo(STUDENT) >= 0);
-        }
-        final Authentication.AuthResponse.PermissionLevel largestAllowedLevel = AuthUtilities.largestAllowedLevel(checkType);
-        // left - right
-        if (permissionLevel.compareTo(largestAllowedLevel) >= 0) {
-            responseBuilder.setPermissionLevel(largestAllowedLevel);
-        } else {
-            responseBuilder.setPermissionLevel(permissionLevel);
-        }
-        return responseBuilder.build();
+        return permissionLevel;
     }
 
     /**
@@ -124,16 +156,9 @@ public final class DbAuthChecker implements AuthenticationChecker {
             throw new DatabaseAccessException("Can not find group with id: " + groupId);
         }
 
-        String hash = null;
         final String salt = group.get(DatabaseStringConstants.SALT).toString();
-        try {
-            hash = HashManager.toHex(HashManager.createHash(userId, salt).getBytes(StandardCharsets.UTF_8));
-        } catch (NoSuchAlgorithmException e) {
-            throw new AuthenticationException(e);
-        }
-        if (hash == null) {
-            throw new AuthenticationException("Unable to create authentication hash for group " + groupId, AuthenticationException.OTHER);
-        }
+        final String hash = generateHash(userId, salt);
+
         final Object permissionLevel = group.get(hash);
         if (permissionLevel == null) {
             return Authentication.AuthResponse.PermissionLevel.NO_PERMISSION;

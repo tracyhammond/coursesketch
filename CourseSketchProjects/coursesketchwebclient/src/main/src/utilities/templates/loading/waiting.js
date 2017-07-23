@@ -145,6 +145,7 @@ function WaitScreenManager() {
         overlay.open = true;
         overlay.id = 'overlay';
         element.appendChild(overlay);
+        return overlay;
     };
 
     /**

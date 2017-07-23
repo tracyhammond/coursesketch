@@ -33,10 +33,18 @@ CourseSketch.AdvanceListenerException = AdvanceListenerException;
  * @param {Function} defListener - The default listener that is called if a function is not assigned to a server response.
  */
 function AdvanceDataListener(Request, defListener) {
+
+    /**
+     * Called if no decoding should be done and the entire request should be passed through.
+     * @type {string}
+     */
+    var REQUEST_TYPE = 'REQUEST';
+
     var requestMap = {};
     requestMap[Request.MessageType.DATA_REQUEST] = {};
     requestMap[Request.MessageType.DATA_INSERT] = {};
     requestMap[Request.MessageType.DATA_UPDATE] = {};
+    requestMap[Request.MessageType.SUBMISSION] = {};
     var TIMEOUT_CONST = 'TIMED_OUT';
     var TIMEOUT_TIME = 5000;
 
@@ -150,6 +158,11 @@ function AdvanceDataListener(Request, defListener) {
                 func(evt, new AdvanceListenerException('Connection to the database Timed Out'));
                 return;
             }
+            if (returnType === getRequestType()) {
+                result = msg;
+                manageTimeCallback(result);
+                return;
+            }
             if (!isUndefined(returnType)) {
                 result = CourseSketch.prutil.decodeProtobuf(msg.otherData, returnType);
                 manageTimeCallback(result);
@@ -213,6 +226,9 @@ function AdvanceDataListener(Request, defListener) {
      */
     this.setupConnectionListeners = function() {
         CourseSketch.connection.setSchoolDataListener(function(evt, msg) {
+            decode(evt, msg);
+        });
+        CourseSketch.connection.setSubmissionListener(function(evt, msg) {
             decode(evt, msg);
         });
     };
@@ -354,4 +370,11 @@ function AdvanceDataListener(Request, defListener) {
         this.sendRequestWithTimeout(request, callback, times);
     };
 
+    /**
+     * @returns {ProtoBufMessage} for the cases where you want the entire request returned instead of part of a request.
+     */
+    function getRequestType() {
+        return REQUEST_TYPE;
+    }
+    this.getRequestType = getRequestType;
 }

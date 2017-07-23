@@ -501,9 +501,8 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
             submissionWrapper.assignmentId = currentSubgroup.getAssignmentId();
             submissionWrapper.problemId = currentSubgroup.getId();
             submissionWrapper.partId = '' + currentSubgroupPartIndex;
-        } else {
-            submissionWrapper.problemBankId = currentSubgroupPart.getId();
         }
+        submissionWrapper.problemBankId = currentSubgroupPart.getId();
     };
 
     /**

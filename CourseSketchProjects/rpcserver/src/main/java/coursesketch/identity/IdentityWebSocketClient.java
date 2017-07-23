@@ -6,7 +6,7 @@ import coursesketch.database.auth.Authenticator;
 import coursesketch.database.identity.IdentityManagerInterface;
 import coursesketch.server.compat.ClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static utilities.ExceptionUtilities.handleProtoException;
+import static coursesketch.utilities.ExceptionUtilities.handleProtoException;
 
 /**
  * A Websocket that connects to the Identity server and abstracts the RPC method of sending request to the authentication server.

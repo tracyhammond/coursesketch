@@ -10,7 +10,7 @@ import com.mongodb.MongoClient;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.recognition.framework.TemplateDatabaseInterface;
 import coursesketch.server.interfaces.ServerInfo;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.sketch.Sketch;

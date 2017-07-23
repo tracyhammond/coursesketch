@@ -2,7 +2,7 @@ package coursesketch.database.submission;
 
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.Authenticator;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import protobuf.srl.submission.Submission;
 
 import java.util.List;
@@ -20,11 +20,12 @@ public interface SubmissionManagerInterface {
      * @param authenticator Used to authenticate the user and validate permissions.
      * @param problemId This should related with the submission and is used to validate permissions
      * @param submissionIds A list of submission ids that are used to identify the specific submissions wanted.
-     * @return A {@link List<protobuf.srl.submission.Submission.SrlExperiment>} That matches the
+     * @return A {@link List<protobuf.srl.submission.Submission.SrlExperiment>} That matches the submissions requested.
      * @throws DatabaseAccessException Thrown if the submission can not be found.
      * @throws AuthenticationException Thrown if the user does not have permission to access the submission.
      */
-    List<Submission.SrlExperiment> getSubmission(String authId, final Authenticator authenticator, final String problemId, String... submissionIds)
+    List<Submission.SrlExperiment> getSubmission(final String authId, final Authenticator authenticator, final String problemId, String...
+            submissionIds)
             throws DatabaseAccessException, AuthenticationException;
 
     /**
@@ -55,4 +56,19 @@ public interface SubmissionManagerInterface {
      */
     String insertSolution(final String authId, final Authenticator authenticator, final Submission.SrlSolution submission)
             throws AuthenticationException, DatabaseAccessException;
+
+    /**
+     * Inserts a solution.
+     *
+     * @param authId The id used to authenticate the user.
+     * @param authenticator The object that performs the authentication on the user.
+     * @param bankProblemId This should related with the submission and is used to validate permissions
+     * @param submissionId An id that is used to identify the specific submission wanted.
+     * @return {@link Submission.SrlSolution} The solution requested.
+     * @throws AuthenticationException Thrown if the user does not have permission to get the solution.
+     * @throws DatabaseAccessException Thrown if there are problems merging an existing solution or creating a new solution.
+     */
+    Submission.SrlSolution getSolution(final String authId, final Authenticator authenticator, final String bankProblemId, final String
+            submissionId)
+            throws DatabaseAccessException, AuthenticationException;
 }

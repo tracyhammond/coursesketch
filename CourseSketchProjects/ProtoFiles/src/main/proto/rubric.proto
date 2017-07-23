@@ -1,0 +1,10 @@
+import "feedback.proto";
+import "util.proto";
+
+package protobuf.srl.grading;
+
+message GradingRubric {
+    optional protobuf.srl.utils.DomainId domainId = 1;
+    repeated protobuf.srl.submission.FeedbackData feedbackData = 3;
+    repeated protobuf.srl.utils.DomainId subRubrics = 4;
+}

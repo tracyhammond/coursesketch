@@ -7,7 +7,7 @@ import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;

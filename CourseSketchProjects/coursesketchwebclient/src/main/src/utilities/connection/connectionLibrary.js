@@ -282,6 +282,32 @@ function Connection(uri, encrypted, attemptReconnect) {
     };
 
     /**
+     * Adds the message length to the beginning of the socket message.
+     *
+     * @param {ArrayBuffer} arrayBuffer - The buffer where we are getting the message length from.
+     * @returns {Uint8Array} A modified array that has 8bytes of length for the rest of the message.
+     */
+    function addMessageLength(arrayBuffer) {
+        /*jslint bitwise: true */
+        var long = arrayBuffer.byteLength;
+        // we want to represent the input as a 8-bytes array
+        var byteArray = new Uint8Array(8);
+
+        for (var index = 0; index < byteArray.byteLength; index++) {
+            var byte = long & 0xff;
+            byteArray [ byteArray.byteLength - 1 - index ] = byte;
+            long = (long - byte) / 256 ;
+        }
+
+        var resultBuffer = new ArrayBuffer(byteArray.byteLength + arrayBuffer.byteLength);
+        var newBuffer = new Uint8Array(resultBuffer);
+        newBuffer.set(byteArray, 0);
+        newBuffer.set(new Uint8Array(arrayBuffer).subarray(0, arrayBuffer.byteLength), byteArray.byteLength);
+
+        return resultBuffer;
+    }
+
+    /**
      * Given a Request object (message defined in proto), send it over the wire.
      *
      * The message must be a protobuf object.
@@ -290,7 +316,10 @@ function Connection(uri, encrypted, attemptReconnect) {
      */
     this.sendRequest = function(message) {
         try {
-            websocket.send(message.toArrayBuffer());
+            var arrayBuffer = message.toArrayBuffer();
+            arrayBuffer = addMessageLength(arrayBuffer);
+            console.log('sending message', message, arrayBuffer.byteLength);
+            websocket.send(arrayBuffer);
         } catch (err) {
             console.error(err);
             if (onError) {

@@ -1,0 +1,54 @@
+import "grading.proto";
+import "questionData.proto";
+
+package protobuf.srl.submission;
+
+message SubmissionFeedback {
+    optional FeedbackData feedbackData = 4;
+}
+
+enum FeedbackState {
+    UNKOWN = 0;
+    CORRECT = 1;
+    INCORRECT = 2;
+}
+
+message BasicFeedback {
+    optional string feedbackMessage = 1;
+}
+
+message FeedbackData {
+    optional FeedbackState feedbackState = 1;
+    optional BasicFeedback basicFeedback = 2;
+    optional protobuf.srl.grading.ProtoGrade grade = 3;
+
+    oneof ElementType {
+        SketchAreaFeedback sketchArea = 4;
+        FreeResponseFeedback freeResponse = 5;
+        MultipleChoiceFeedback multipleChoice = 6;
+        CheckBoxFeedback checkBox = 7;
+        // for external problem solvings
+        EmbeddedHtmlFeedback embeddedHtml = 8;
+    }
+
+}
+
+message SketchAreaFeedback {
+    optional protobuf.srl.question.SketchArea sketchArea = 1;
+}
+
+message FreeResponseFeedback {
+    optional protobuf.srl.question.FreeResponse freeResponse = 1;
+}
+
+message MultipleChoiceFeedback {
+    optional protobuf.srl.question.MultipleChoice multipleChoice = 1;
+}
+
+message CheckBoxFeedback {
+    optional protobuf.srl.question.CheckBox checkBox = 1;
+}
+
+message EmbeddedHtmlFeedback {
+    optional protobuf.srl.question.EmbeddedHtml embeddedHtml = 1;
+}

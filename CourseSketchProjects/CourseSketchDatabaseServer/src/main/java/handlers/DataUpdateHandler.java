@@ -3,8 +3,8 @@ package handlers;
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.SocketSession;
 import coursesketch.database.auth.AuthenticationException;
-import database.DatabaseAccessException;
-import database.institution.Institution;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.institution.Institution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.school.Problem.LectureSlide;
@@ -17,7 +17,7 @@ import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.Assignment;
 import protobuf.srl.school.Problem;
 import protobuf.srl.school.School;
-import utilities.ExceptionUtilities;
+import coursesketch.utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public final class DataUpdateHandler {
     /**
      * Takes in a request that has to deal with inserting data.
      *
-     * decode request and pull correct information from {@link database.institution.Institution}
+     * decode request and pull correct information from {@link coursesketch.database.institution.Institution}
      * (courses, assignments, ...) then repackage everything and send it out.
      * @param req
      *         The request that has data being inserted.

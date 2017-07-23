@@ -1,17 +1,16 @@
 package handlers;
 
 import com.github.fakemongo.junit.FongoRule;
-import com.mongodb.DB;
 import com.mongodb.client.MongoDatabase;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.SocketSession;
-import database.DatabaseAccessException;
+import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.Authenticator;
-import database.institution.mongo.MongoInstitution;
+import coursesketch.database.institution.mongo.MongoInstitution;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

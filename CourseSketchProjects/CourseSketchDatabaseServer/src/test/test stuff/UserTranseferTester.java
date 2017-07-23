@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Scanner;
 
 import protobuf.srl.school.School.SrlUser;
-import database.DatabaseAccessException;
-import database.institution.Institution;
-import database.user.UserClient;
+import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.institution.Institution;
+import coursesketch.database.user.UserClient;
 
 
 
