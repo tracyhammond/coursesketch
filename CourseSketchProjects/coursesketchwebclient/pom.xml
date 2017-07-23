@@ -141,6 +141,7 @@
         <nodeVersion>v4.2.2</nodeVersion>
         <protoDirectory>${basedir}/src/main/resources/other/protobuf</protoDirectory>
         <sketchSurfaceVersion>0.0.3</sketchSurfaceVersion>
+        <meSpeakFileName>mespeak.zip?v=1.9.7.1</meSpeakFileName>
     </properties>
 
     <reporting>
@@ -152,9 +153,51 @@
         <sourceDirectory>${basedir}/src/main/src</sourceDirectory>
         <plugins>
             <plugin>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <version>1.3.0</version>
+                <executions>
+                    <execution>
+                        <id>install-mespeack</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>http://www.masswerk.at/mespeak/${meSpeakFileName}</url>
+                            <unpack>false</unpack>
+                            <outputDirectory>${basedir}/target/temp</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>prepare</id>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <target>
+                                <property name="meSpeakFileName" value="${meSpeakFileName}"/>
+                                <property name="basedir" value="${basedir}"/>
+                                <echo message="unpacking ${basedir}/target/temp/${meSpeakFileName}" />
+                                <echo message="to directory ${basedir}/target/temp/${meSpeakFileName}" />
+                                <unzip src="${basedir}/target/temp/${meSpeakFileName}" dest="${basedir}/bower_components/mespeak" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.10</version>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>unpack recognition libraries</id>
