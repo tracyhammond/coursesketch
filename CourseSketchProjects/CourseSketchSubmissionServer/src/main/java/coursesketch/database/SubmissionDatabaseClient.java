@@ -416,7 +416,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
                 if (answerChoice == null) {
                     throw new SubmissionException("Text answer did not contain any data", null);
                 }
-                questionData.setMultipleChoice(MultipleChoice.newBuilder().setCorrectId(answerChoice.toString()));
+                questionData.setMultipleChoice(MultipleChoice.newBuilder().setSelectedId(answerChoice.toString()));
                 break;
             default:
                 throw new SubmissionException("Submission data is not supported type or does not exist", null);
@@ -498,7 +498,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
             throw new SubmissionException("Can not switch to a multiple choice submission from a different type", null);
         }
         // don't store it as changes for right now.
-        return new Document(ANSWER_CHOICE, submission.getCorrectId());
+        return new Document(ANSWER_CHOICE, submission.getSelectedId());
     }
 
     /**

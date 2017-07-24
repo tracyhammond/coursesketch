@@ -81,29 +81,9 @@ function MultiChoice() {
      * @returns {MultipleChoice} the created protobuf object.
      */
     this.saveData = function(event) {
-        var mcProto = CourseSketch.prutil.MultipleChoice();
+        var mcProto = CourseSketch.prutil.cleanProtobuf(this.protoData, 'MultipleChoice');
+        this.saveToProto(mcProto);
 
-        // Populate data in the proto object
-        var answerChoices = this.shadowRoot.querySelectorAll('.answer-choice');
-        for (var i = 0; i < answerChoices.length; ++i) {
-            var answerChoice = CourseSketch.prutil.AnswerChoice();
-            answerChoice.id = answerChoices[i].id;
-            answerChoice.text = answerChoices[i].querySelector('.label').value;
-            mcProto.answerChoices.push(answerChoice);
-        }
-        mcProto.correctId = this.correctId;
-
-        // If the multi-choice item does not have an id, then a command has not been created for the multi-choice item
-        if ((isUndefined(this.id) || this.id === null || this.id === '')) {
-            this.command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_MULTIPLE_CHOICE, true);
-        }
-        this.command.setCommandData(mcProto.toArrayBuffer()); // Sets commandData for commandlist
-        this.createdCommand = this.command;
-        this.id = this.command.commandId;
-        var callback = this.getFinishedCallback();
-        if (!isUndefined(callback)) {
-            callback(this.command, event, this.currentUpdate, mcProto); // Gets finishedCallback and calls it with command as parameter
-        }
         return mcProto;
     };
 
@@ -139,9 +119,14 @@ function MultiChoice() {
             });
         }
 
+        if (this.studentMode && !isUndefined(this.protoData)) {
+            this.protoData.selectedId = mcProto.selectedId;
+            mcProto = this.protoData;
+        }
+
         this.initialData = this.editPanel.loadData(mcProto, this.shadowRoot);
         this.protoData = CourseSketch.prutil.cleanProtobuf(mcProto, 'MultipleChoice');
-        if (!isUndefined(this.protoData.selectedId) && this.protoData.selectedId !== null) {
+        if (!isUndefined(this.protoData.selectedId) && this.protoData.selectedId !== null && this.studentMode) {
             this.shadowRoot.querySelector('#' + this.protoData.selectedId).checked = true;
         }
     };
@@ -150,6 +135,8 @@ function MultiChoice() {
         this.shadowRoot.querySelector('#instructorTemplate').className = 'ignore';
         this.shadowRoot.querySelector('#studentTemplate').className = 'template';
         this.shadowRoot.querySelector('#remove').style.display = 'none';
+        this.shadowRoot.querySelector('#add').style.display = 'none';
+        this.studentMode = true;
     };
 
     this.turnOnReadOnlyMode = function() {

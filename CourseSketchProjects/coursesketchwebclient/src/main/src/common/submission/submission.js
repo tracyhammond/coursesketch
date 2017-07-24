@@ -166,6 +166,9 @@ function SubmissionPanel() {
             case QuestionType.FREE_RESP:
                 submissionData.freeResponse = createTextSubmission(subPanel, isSubmitting);
                 break;
+            case QuestionType.MULT_CHOICE:
+                submissionData.multipleChoice = createMultipleChoiceSubmission(subPanel, isSubmitting);
+                break;
         }
 
         if (isUndefined(submissionData)) {
@@ -251,6 +254,21 @@ function SubmissionPanel() {
     }
 
     /**
+     * Creates the submission object for the sketch surface.
+     *
+     * This also adds the submit or save marker to the update list.
+     *
+     * @param {MultiChoice} multiChoice - The sketch surface that is being submitted.
+     * @param {Boolean} isSubmitting - True if this is a submission instead of a save.
+     * @returns {SrlSubmission} object that is ready to be sent to the server.
+     * @instance
+     * @memberof SubmissionPanel
+     */
+    function createMultipleChoiceSubmission(multiChoice, isSubmitting) {
+        return multiChoice.saveData();
+    }
+
+    /**
      * @returns {SrlSubmission} a blank protobuf submission object.
      * @access private
      * @memberof SubmissionPanel
@@ -327,7 +345,8 @@ function SubmissionPanel() {
                 updateManager.addUpdate(update);
             });
         } else if (problemType === QuestionType.MULT_CHOICE) {
-            throw new SubmissionException('Callbacks for Multiple choice is not supported.');
+            // none currently needed
+            // throw new SubmissionException('Callbacks for Multiple choice is not supported.');
             // add mult choice tools
         } else if (problemType === QuestionType.FREE_RESP) {
             // add free resp tools

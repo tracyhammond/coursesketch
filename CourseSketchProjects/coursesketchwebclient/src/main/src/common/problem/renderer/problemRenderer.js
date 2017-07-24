@@ -51,6 +51,7 @@ function ProblemRenderer(problemPanel) {
         currentType = undefined;
         specialQuestionData = undefined;
         currentSaveListener = undefined;
+        reuse = undefined;
         errorListener = defaultErrorListener;
     };
 
@@ -150,7 +151,7 @@ function ProblemRenderer(problemPanel) {
         }
 
         copyQuestionData(bankProblem);
-        loadSpecificType(specialQuestionData, isStudent, internalCallback);
+        loadSpecificType(specialQuestionData, isStudent, internalCallback, false);
     };
 
     /**
@@ -175,7 +176,7 @@ function ProblemRenderer(problemPanel) {
         var internalCallback = setupWaiting(callback, stopWaiting);
 
         copyQuestionData(bankProblem);
-        loadSpecificType(submission.submissionData, isStudent, internalCallback);
+        loadSpecificType(submission.submissionData, isStudent, internalCallback, true);
     };
 
     /**
@@ -185,17 +186,15 @@ function ProblemRenderer(problemPanel) {
      * @param {Boolean} isSubmission - True if a submission is happening.
      * @param {Function} callback - Called after the data is rendered.
      */
-    function loadSpecificType(questionData, isSubmission, callback) {
-        problemPanel.emptyPanel();
-
+    function loadSpecificType(questionData, isSubmission, callback, reuse) {
         if (currentType === CourseSketch.prutil.QuestionType.SKETCH) {
-            loadSketch(questionData, callback);
+            loadSketch(questionData, callback, reuse);
         } else if (currentType === CourseSketch.prutil.QuestionType.FREE_RESP) {
-            loadTyping(questionData, callback);
+            loadTyping(questionData, callback, reuse);
         } else if (currentType === CourseSketch.prutil.QuestionType.MULT_CHOICE) {
-            loadMultipleChoice(questionData, isSubmission, callback);
+            loadMultipleChoice(questionData, isSubmission, callback, reuse);
         } else if (currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
-            loadCheckBox(questionData, callback);
+            loadCheckBox(questionData, callback, reuse);
         } else {
             errorListener(new ProblemRenderException('invalid questionType when rendering submission: ' + currentType));
             callback();
@@ -230,7 +229,8 @@ function ProblemRenderer(problemPanel) {
      * @param {QuestionData} questionData - questionData
      * @param {Function} callback - Called after data is loaded.
      */
-    function loadSketch(questionData, callback) {
+    function loadSketch(questionData, callback, reuse) {
+        problemPanel.emptyPanel();
         var sketchSurface = document.createElement('sketch-surface');
         if (!isUndefined(isReadOnly) && isReadOnly) {
             sketchSurface.setAttribute('read-only', '');
@@ -298,15 +298,20 @@ function ProblemRenderer(problemPanel) {
      * @param {QuestionData} questionData - questionData
      * @param {Function} callback - Called after data is loaded.
      */
-    function loadTyping(questionData, callback) {
-        var typingSurface = document.createElement('textarea');
-        typingSurface.className = 'sub-panel card-panel';
-        typingSurface.contentEditable = true;
-        setFullScreen(typingSurface);
+    function loadTyping(questionData, callback, reuse) {
+        var typingSurface = problemPanel.querySelector('textarea.sub-panel.card-panel.submittable');
+        if (isUndefined(typingSurface) || typingSurface === null || isUndefined(reuse) || !reuse) {
+            problemPanel.emptyPanel();
+            if (problemPanel.querySelector())
+                typingSurface = document.createElement('textarea');
+            typingSurface.className = 'sub-panel card-panel submittable';
+            typingSurface.contentEditable = true;
+            setFullScreen(typingSurface);
+            problemPanel.appendChild(typingSurface);
+        }
         if (isReadOnly) {
             typingSurface.setAttribute('disabled', '');
         }
-        problemPanel.appendChild(typingSurface);
         var freeResponse = questionData.freeResponse;
         loadIntoTyping(freeResponse, typingSurface, callback);
     }
@@ -332,13 +337,16 @@ function ProblemRenderer(problemPanel) {
      * @param {Boolean} isSubmission - True if a submission is happening.
      * @param {Function} callback - Called after data is loaded.
      */
-    function loadMultipleChoice(questionData, isSubmission, callback) {
-        var multiChoice = document.createElement('multi-choice');
-        multiChoice.className = 'sub-panel card-panel submittable col offset-s3 s9';
-        setFullScreen(multiChoice);
-        multiChoice.style.marginTop = '60px';
-
-        problemPanel.appendChild(multiChoice);
+    function loadMultipleChoice(questionData, isSubmission, callback, reuse) {
+        var multiChoice = problemPanel.querySelector('multi-choice.sub-panel.card-panel.submittable');
+        if (isUndefined(multiChoice) || multiChoice === null || isUndefined(reuse) || !reuse) {
+            problemPanel.emptyPanel();
+            multiChoice = document.createElement('multi-choice');
+            multiChoice.className = 'sub-panel card-panel submittable col offset-s3 s9';
+            setFullScreen(multiChoice);
+            multiChoice.style.marginTop = '60px';
+            problemPanel.appendChild(multiChoice);
+        }
 
         loadIntoMultipleChoice(questionData.multipleChoice, multiChoice, isSubmission, callback);
     }
@@ -387,6 +395,7 @@ function ProblemRenderer(problemPanel) {
      * @param {Function} callback - Called after data is loaded.
      */
     function loadCheckBox(questionData, callback) {
+        problemPanel.emptyPanel();
         callback();
 
         /*
@@ -494,11 +503,8 @@ function ProblemRenderer(problemPanel) {
      */
     function saveMultipleChoice(callback) {
         var multipleChoiceElement = problemPanel.querySelector('multi-choice');
-        multipleChoiceElement.setFinishedListener(function(command, evnt, update, multiChoice) {
-            specialQuestionData.multipleChoice = multiChoice;
-            callback();
-        });
-        multipleChoiceElement.saveData();
+        specialQuestionData.multipleChoice = multipleChoiceElement.saveData();
+        callback();
     }
 
     /**
@@ -512,6 +518,14 @@ function ProblemRenderer(problemPanel) {
             specialQuestionData.checkBox = multiChoice;
             callback();
         });
+    }
+
+    /**
+     * Called when trying to kill the element.
+     */
+    this.finalize = function () {
+        this.reset();
+        problemPanel = undefined;
     }
 }
 CourseSketch.ProblemRenderer = ProblemRenderer;

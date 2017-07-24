@@ -1,6 +1,6 @@
 validateFirstRun(document.currentScript);
 
-(function() {
+(function () {
     CourseSketch.problemEditor.waitScreenManager = new WaitScreenManager();
     var advancedEdit = undefined;
     var editPanel = undefined;
@@ -18,13 +18,13 @@ validateFirstRun(document.currentScript);
     var mutators = {};
     var actions = {};
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         waiter = new DefaultWaiter(CourseSketch.problemEditor.waitScreenManager,
             document.getElementById('percentBar'));
 
         editPanel = document.getElementById('editPanel');
         questionTextPanel = document.querySelector('problem-text-panel');
-        CourseSketch.dataManager.waitForDatabase(function() {
+        CourseSketch.dataManager.waitForDatabase(function () {
             advancedEdit = new CourseSketch.AdvanceEditPanel();
             var panel = document.querySelector('navigation-panel');
             navigator = panel.getNavigator();
@@ -64,17 +64,18 @@ validateFirstRun(document.currentScript);
         });
     });
 
-    mutators.questionText = function(element) {
-        element.oninput = function(e) {
+    mutators.questionText = function (element) {
+        element.oninput = function (e) {
             questionTextPanel.setRapidProblemText(element.value);
         };
     };
 
-    mutators.questionType = function(element) {
-        element.onchange = function() {
-            problemRenderer.stashData(function() {
-                currentProblem.questionType = advancedEdit.getDataFromElement(element, undefined, 'questionType', undefined);
-                problemRenderer.renderBankProblem(currentProblem, function() {
+    mutators.questionType = function (element) {
+        element.onchange = function () {
+            problemRenderer.stashData(function () {
+                var questionType = advancedEdit.getDataFromElement(element, undefined, 'questionType', undefined);
+                currentProblem.questionType = questionType;
+                problemRenderer.renderBankProblem(currentProblem, function () {
                     submissionPanel.setProblemType(questionType);
                     submissionPanel.refreshPanel();
                     console.log(' rendering is finished');
@@ -111,7 +112,7 @@ validateFirstRun(document.currentScript);
         currentProblem = bankProblem;
         resetSubmissionPanel(submissionPanel, assignmentNavigator, bankProblem.questionType);
         problemRenderer.startWaiting();
-        setTimeout(function() {
+        setTimeout(function () {
             loadBankProblem(bankProblem);
         }, 1100);
     }
@@ -125,7 +126,7 @@ validateFirstRun(document.currentScript);
         questionTextPanel.setRapidProblemText(bankProblem.getQuestionText());
         originalMap = advancedEdit.loadData(bankProblem, editPanel);
 
-        problemRenderer.renderBankProblem(bankProblem, function() {
+        problemRenderer.renderBankProblem(bankProblem, function () {
             submissionPanel.refreshPanel();
             console.log(' rendering is finished');
         }, true);
@@ -136,22 +137,23 @@ validateFirstRun(document.currentScript);
      */
     function saveData() {
         originalMap = advancedEdit.getInput(currentProblem, editPanel, originalMap);
-        if (isUndefined(currentProblem.problemDomain) || currentProblem.problemDomain  === null) {
+        if (isUndefined(currentProblem.problemDomain) || currentProblem.problemDomain === null) {
             currentProblem.problemDomain = CourseSketch.prutil.DomainId();
         }
         currentProblem.problemDomain.questionType = currentProblem.questionType;
-        problemRenderer.saveData(currentProblem, function() {
-            CourseSketch.dataManager.updateBankProblem(currentProblem, function(argument) {
+        problemRenderer.saveData(currentProblem, function () {
+            CourseSketch.dataManager.updateBankProblem(currentProblem, function (argument) {
                 console.log(argument);
-            }, function(argument) {
+            }, function (argument) {
                 console.log(argument);
             });
         });
     }
 
-    actions.createSolution = function() {
+    actions.createSolution = function () {
         if (solutionMode) {
             solutionMode = false;
+            problemRenderer.setIsStudentProblem(false);
             loadProblem(navigator);
             return;
         }
@@ -163,10 +165,32 @@ validateFirstRun(document.currentScript);
         solutionMode = true;
         setupSolutionSubmissionPanel(submissionPanel, navigator, currentProblem.questionType);
 
+        function copyMultipleChoiceQuestionData() {
+            try {
+                if (currentProblem.questionType === CourseSketch.prutil.QuestionType.MULT_CHOICE) {
+                    if (isUndefined(currentSubmission) || currentSubmission === null) {
+                        currentSubmission = CourseSketch.prutil.SrlSubmission();
+                    }
+                    if (isUndefined(currentSubmission.submissionData) || currentSubmission.submissionData === null) {
+                        currentSubmission.submissionData = CourseSketch.prutil.QuestionData();
+                    }
+                    if (isUndefined(currentSubmission.submissionData.mutlipleChoice)
+                        || currentSubmission.submissionData.mutlipleChoice === null) {
+                        currentSubmission.submissionData.mutlipleChoice = CourseSketch.prutil.MultipleChoice();
+                    }
+                    currentSubmission.submissionData.mutlipleChoice.answerChoices = currentProblem.questionData.multipleChoice.answerChoices;
+                }
+            } catch (exception) {
+                console.log(exception);
+            }
+        }
+
         // eslint-disable-next-line
         function loadSubmission() {
-            setTimeout(function() {
-                problemRenderer.renderSubmission(currentProblem, currentSubmission, function() {
+            copyMultipleChoiceQuestionData();
+            setTimeout(function () {
+                problemRenderer.setIsStudentProblem(true);
+                problemRenderer.renderSubmission(currentProblem, currentSubmission, function () {
                     submissionPanel.refreshPanel();
                     console.log('submission');
                 }, true);
@@ -175,7 +199,7 @@ validateFirstRun(document.currentScript);
 
         if (isUndefined(currentSubmission) && !isUndefined(currentProblem.solutionId) &&
             currentProblem.solutionId !== null) {
-            CourseSketch.dataManager.getSolution([ currentProblem.id, currentProblem.solutionId ], function(solution) {
+            CourseSketch.dataManager.getSolution([currentProblem.id, currentProblem.solutionId], function (solution) {
                 currentSubmission = solution.submission;
                 loadSubmission();
             });
@@ -217,7 +241,7 @@ validateFirstRun(document.currentScript);
         $(subPanel).addClass('studentMode');
         $(editPanel).addClass('studentMode');
         $(editProblemButton).addClass('studentMode');
-        subPanel.setWrapperFunction(function(submission) {
+        subPanel.setWrapperFunction(function (submission) {
             var solution = CourseSketch.prutil.SrlSolution();
             assignmentNavigator.setSubmissionInformation(solution, false);
             console.log('student experiment data set', solution);
