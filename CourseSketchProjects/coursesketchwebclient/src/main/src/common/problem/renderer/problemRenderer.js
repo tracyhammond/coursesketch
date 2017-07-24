@@ -355,9 +355,7 @@ function ProblemRenderer(problemPanel) {
         if (isSubmission) {
             multiChoiceElement.turnOnStudentMode();
         }
-        if (isReadOnly) {
-            multiChoiceElement.turnOnReadOnlyMode();
-        }
+        multiChoiceElement.setAttribute('data-mode', isSubmission ? 'student' : 'instructor');
         if (isUndefined(multipleChoice) || multipleChoice === null) {
             if (!isSubmission) {
                 multiChoiceElement.loadData(CourseSketch.prutil.MultipleChoice());
@@ -369,6 +367,9 @@ function ProblemRenderer(problemPanel) {
             return;
         }
         multiChoiceElement.loadData(multipleChoice);
+        if (isReadOnly) {
+            multiChoiceElement.turnOnReadOnlyMode();
+        }
 
         if (isSubmission) {
             var id = multipleChoice.correctId;

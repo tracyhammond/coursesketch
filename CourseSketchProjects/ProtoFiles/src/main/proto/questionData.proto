@@ -25,8 +25,7 @@ message FreeResponse {
 
 message MultipleChoice {
     repeated AnswerChoice answerChoices = 1;
-    // only shown to instructor
-    optional string correctId = 2;
+    optional string selectedId = 2;
 }
 
 message CheckBox {

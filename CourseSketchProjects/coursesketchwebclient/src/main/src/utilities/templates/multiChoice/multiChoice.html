@@ -3,11 +3,51 @@
     <template id="multi-choice">
         <style>
             @import "/src/utilities/templates/multiChoice/multiChoice.css";
+            @import "/bower_components/materialize/dist/css/materialize.css";
+            @import "https://fonts.googleapis.com/icon?family=Material+Icons";
         </style>
-        <div id="correct">Correct?</div><br/>
-        <div id="answer-choices">
+        <div class="blue-grey lighten-4">
+            <div id="remove">Remove</div>
+            <br/>
+            <div id="answer-choices" data-prop="answerChoices" class="need-saving need-loading">
+                <div data-list class="data">
+                    <template class="template" id="instructorTemplate">
+                        <div class="answer-choice templateData row smoothHeight" >
+                            <div style="display:none"><span class="listNumber"></span></div>
+                            <div class="col s2 valign-wrapper radioHolder">
+                                <input class="radio with-gap need-action" type="radio" name="answer" disabled="" id="button"
+                                       data-action="setCorrectId" data-list-item-id="id" data-list-item-prefix="AI"
+                                       data-action="setCorrect" data-actionProp="text">
+                                <label for="button" data-list-item-id="htmlFor" data-list-item-prefix="AI"></label>
+                            </div>
+                            <div data-prop="text" class="label need-saving need-loading col offset-s1 s6 smoothHeight">
+                                <input type="text" class="data answerText smoothHeight" placeholder="Answer choice">
+                            </div>
+                            <div class="closeHolder col s1 offset-s2">
+                                <span class="close need-action" data-action="close" data-actionProp="id">
+                                    <i class="material-icons dp48">close</i>
+                                </span>
+                            </div>
+                        </div>
+                    </template>
+                    <template class="ignore" id="studentTemplate">
+                        <div class="answer-choice templateData row smoothHeight" >
+                            <div style="display:none"><span class="listNumber"></span></div>
+                            <div class="col s2 valign-wrapper radioHolder">
+                                <input class="radio with-gap need-action" type="radio" name="answer" id="button"
+                                       data-list-item-id="id" data-list-item-prefix="AI"
+                                       data-action="setCorrect" data-actionProp="text">
+                                <label for="button" data-list-item-id="htmlFor" data-list-item-prefix="AI"></label>
+                            </div>
+                            <div data-prop="text" class="label need-loading col offset-s1 s6 student">
+                                <span class="data answerText"></span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <div id="add">+ Add an answer</div>
         </div>
-        <div id="add">+ Add an answer</div>
     </template>
 </head>
 </html>

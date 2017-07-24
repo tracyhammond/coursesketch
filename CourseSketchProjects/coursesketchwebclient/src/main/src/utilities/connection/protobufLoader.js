@@ -494,6 +494,22 @@ function ProtobufSetup() {
     };
 
     /**
+     * @param {String} className Name of the protobuf.
+     * @return {ProtobufObject} An instance of a protobuf of that name.
+     */
+    this.getProtobufInstanceByName = function(proto) {
+        return CourseSketch.prutil[proto]();
+    };
+
+    /**
+     * @param {ProtobufObject} className Name of the protobuf.
+     * @return {ProtobufObject} An instance of a protobuf of that name.
+     */
+    this.createNewProtobufInstanceFromInstance = function(protoObject) {
+        return CourseSketch.prutil[proto.$type.name]();
+    };
+
+    /**
      * Decodes the data and preserves the bytebuffer for later use.
      *
      * @param {ArrayBuffer} data

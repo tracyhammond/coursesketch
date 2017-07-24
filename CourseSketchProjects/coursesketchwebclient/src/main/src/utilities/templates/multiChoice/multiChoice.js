@@ -2,15 +2,14 @@
  * Represents a custom multi-choice element that can have data saved/loaded to/from protobuf.
  */
 function MultiChoice() {
-    var correctId = undefined;
 
     /**
      * Removes an answer choice from this multiple choice element.
      *
-     * @param {Event} event - the event that triggered this function
-     * @param {Element} answer - the answer element to be removed
+     * @param {ProtobufObject} answer - the answer element to be removed
+     * @param {Element} element - the child of the answer element to be removed
      */
-    this.removeAnswer = function(event, answer) {
+    this.removeAnswer = function(answer, element) {
         this.getAnswerHolderElement().removeChild(answer);
     };
 
@@ -20,13 +19,9 @@ function MultiChoice() {
      * @param {Event} event - the event that triggered this function
      * @param {Element} answer - the answer element to set as the correct answer
      */
-    this.setCorrectAnswer = function(event, answer) {
-        var answerChoices = this.shadowRoot.querySelectorAll('.answer-choice');
-        for (var i = 0; i < answerChoices.length; ++i) {
-            answerChoices[i].querySelector('.correct').textContent = '';
-        }
-        answer.querySelector('.correct').textContent = '✔';
-        this.correctId = answer.id;
+    this.setCorrectAnswer = function(answerChoice, element) {
+        this.protoData.selectedId = answerChoice.id;
+        this.correctId = element.id;
     };
 
     /**
@@ -35,68 +30,19 @@ function MultiChoice() {
      * @param {Event} event - the event that triggered this function
      * @returns {Element} The element that was created that holds the answer.
      */
-    this.addAnswer = function(event) {
-        // Set up the parent
-        var answer = document.createElement('div');
-        var lastAnswer = this.shadowRoot.querySelector('#answer-choices').lastChild;
-        answer.className = 'answer-choice';
-        if (isUndefined(lastAnswer) || lastAnswer.className !== 'answer-choice') {
-            answer.id = 'A1';
-            answer.setAttribute('data-index', 1);
-        } else {
-            var nextIndex = parseInt(answer.getAttribute('data-index'), 10) + 1;
-            answer.id = 'A' + nextIndex;
-            answer.setAttribute('data-index', nextIndex);
+    this.addAnswer = function() {
+        var protoData = CourseSketch.prutil.cleanProtobuf(this.protoData, 'MultipleChoice');
+        this.saveToProto(protoData);
+        var answers = protoData.answerChoices;
+        if (isUndefined(answers) || answers === null) {
+            answers = [];
         }
+        var newAnswer = CourseSketch.prutil.AnswerChoice();
+        newAnswer.id = 'AI' + answers.length;
+        answers.push(newAnswer);
+        protoData.answerChoices = answers;
 
-        // Radio button
-        var radio = document.createElement('input');
-        radio.className = 'radio';
-        radio.type = 'radio';
-        radio.name = 'answer';
-        radio.disabled = true;
-        answer.appendChild(radio);
-
-        // Need a newline after radio or things don't display properly
-        var text = document.createTextNode('\n');
-        answer.appendChild(text);
-
-        // Radio label (will be an input for instructors)
-        var label = document.createElement('input');
-        label.className = 'label';
-        label.placeholder = 'Answer choice';
-        answer.appendChild(label);
-
-        // Correct check box
-        var correct = document.createElement('span');
-        correct.className = 'correct';
-        /**
-         * Called to say that a check box is correct.
-         *
-         * @param {Event} onClickEvent - On Click event.
-         */
-        correct.onclick = function(onClickEvent) {
-            localScope.setCorrectAnswer(onClickEvent, answer);
-        };
-        answer.appendChild(correct);
-
-        // Close icon
-        var close = document.createElement('span');
-        close.className = 'close';
-        close.textContent = '×';
-        /**
-         * Called to remove the answer choice.
-         *
-         * @param {Event} onClickEvent - On Click event.
-         */
-        close.onclick = function(onClickEvent) {
-            localScope.removeAnswer(onClickEvent, answer);
-        };
-        answer.appendChild(close);
-
-        // Now that we are done creating the answer choice, add it
-        this.getAnswerHolderElement().appendChild(answer);
-        return answer;
+        this.loadData(protoData);
     };
 
     this.getAnswerHolderElement = function() {
@@ -108,9 +54,11 @@ function MultiChoice() {
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
-        localScope = this; // This sets the variable to the level of the custom element tag
-        shadowRoot = this.createShadowRoot();
-        shadowRoot.appendChild(templateClone);
+        var localScope = this; // This sets the variable to the level of the custom element tag
+        this.shadowRoot = this.createShadowRoot();
+        this.shadowRoot.appendChild(templateClone);
+
+        this.style.backgroundColor = '#cfd8dc';
 
         /**
          * Bind addAnswer to click.
@@ -120,6 +68,10 @@ function MultiChoice() {
         localScope.shadowRoot.querySelector('#add').onclick = function(event) {
             localScope.addAnswer(event);
         };
+    };
+
+    this.saveToProto = function (protoData) {
+        this.editPanel.getInput(protoData, this.shadowRoot, this.initialData);
     };
 
     /**
@@ -155,29 +107,49 @@ function MultiChoice() {
         return mcProto;
     };
 
+    this.clearAnswers = function() {
+        var elements = this.shadowRoot.querySelectorAll('.answer-choice');
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].parentNode.removeChild(elements[i]);
+        }
+    };
     /**
-     * @param {ProtoCommand} mcProto - is the data to be loaded from the proto
+     * @param {ProtobufObject} mcProto - is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
      * If the protoCommand does not exist, returns because data cannot be loaded
      */
     this.loadData = function(mcProto) {
-        if (isUndefined(shadowRoot) || isUndefined(mcProto)) {
+
+        if (isUndefined(this.shadowRoot) || isUndefined(mcProto)) {
             return;
         }
-        for (var i = 0; i < mcProto.answerChoices.length; ++i) {
-            var answer = this.addAnswer();
-            answer.id = mcProto.answerChoices[i].id;
-            answer.querySelector('.label').value = mcProto.answerChoices[i].text;
+        this.clearAnswers();
+        if (isUndefined(this.editPanel)) {
+            var localScope = this;
+            this.editPanel = new CourseSketch.AdvanceEditPanel();
+            this.editPanel.setActions({
+                close: function(answerChoice, element) {
+                    console.log('removing choice', answerChoice);
+                    localScope.removeAnswer(answerChoice, element);
+                },
+                setCorrect: function(answerChoice, element) {
+                    console.log('Selecting answer choice', answerChoice);
+                    localScope.setCorrectAnswer(answerChoice, element);
+                }
+            });
         }
-        this.correctId = mcProto.correctId;
-        if (!isUndefined(this.correctId) && this.correctId !== '' && this.correctId !== null) {
-            var result = this.getAnswerHolderElement().querySelectorAll('#' + this.correctId)[0];
-            result.querySelector('.correct').textContent = '✔';
+
+        this.initialData = this.editPanel.loadData(mcProto, this.shadowRoot);
+        this.protoData = CourseSketch.prutil.cleanProtobuf(mcProto, 'MultipleChoice');
+        if (!isUndefined(this.protoData.selectedId) && this.protoData.selectedId !== null) {
+            this.shadowRoot.querySelector('#' + this.protoData.selectedId).checked = true;
         }
     };
 
     this.turnOnStudentMode = function() {
-        console.log('do nothing');
+        this.shadowRoot.querySelector('#instructorTemplate').className = 'ignore';
+        this.shadowRoot.querySelector('#studentTemplate').className = 'template';
+        this.shadowRoot.querySelector('#remove').style.display = 'none';
     };
 
     this.turnOnReadOnlyMode = function() {
