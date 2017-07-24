@@ -302,8 +302,7 @@ function ProblemRenderer(problemPanel) {
         var typingSurface = problemPanel.querySelector('textarea.sub-panel.card-panel.submittable');
         if (isUndefined(typingSurface) || typingSurface === null || isUndefined(reuse) || !reuse) {
             problemPanel.emptyPanel();
-            if (problemPanel.querySelector())
-                typingSurface = document.createElement('textarea');
+            if (problemPanel.querySelector())                {typingSurface = document.createElement('textarea');}
             typingSurface.className = 'sub-panel card-panel submittable';
             typingSurface.contentEditable = true;
             setFullScreen(typingSurface);
@@ -523,7 +522,7 @@ function ProblemRenderer(problemPanel) {
     /**
      * Called when trying to kill the element.
      */
-    this.finalize = function () {
+    this.finalize = function() {
         this.reset();
         problemPanel = undefined;
     }

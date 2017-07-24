@@ -1,19 +1,17 @@
 package coursesketch.database.util;
 
-import com.google.common.base.Strings;
-import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
 import org.bson.Document;
-import org.bson.types.Binary;
 import org.bson.types.ObjectId;
-import protobuf.srl.commands.Commands;
-import protobuf.srl.question.QuestionDataOuterClass;
-import protobuf.srl.submission.Submission;
+import protobuf.srl.question.QuestionDataOuterClass.QuestionData;
 import protobuf.srl.utils.Util;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static coursesketch.database.util.DatabaseStringConstants.*;
+import static coursesketch.database.util.DatabaseStringConstants.DOMAIN_ID;
+import static coursesketch.database.util.DatabaseStringConstants.QUESTION_TYPE;
+import static coursesketch.database.util.DatabaseStringConstants.SELF_ID;
+
 
 /**
  * Contains various Utilities for working with mongo databases.
@@ -29,9 +27,10 @@ public final class MongoUtilities {
 
     /**
      * Tries to convert a string into a mongo ObjectId.
-     *
+     * <p>
      * Throws a {@link DatabaseAccessException} if a valid id can not be created.
      * An id is valid if it is not null and conforms to the ObjectId Format.  It does not mean the id actually exist.
+     *
      * @param objectId The string id that we want convert to a mongo ObjectId.
      * @return {@link ObjectId} if it is successfully created.
      * @throws DatabaseAccessException Thrown if a valid id can not be created.
@@ -48,13 +47,32 @@ public final class MongoUtilities {
     }
 
     /**
-     * Creates the document for a domain id.
+     * Creates the database document for a {@link Util.DomainId}.
      *
-     * @param domainId The domain id to be converted into recognition data.
+     * @param domainId The domain id to be converted into database data.
      * @return {@link Document} containing a domainId
      */
-    public static Document createDomainId(final Util.DomainId domainId) {
-        return new Document();
+    public static Document createDomainIdFromProto(final Util.DomainId domainId) {
+        final Document document = new Document(DOMAIN_ID, domainId.getDomainId());
+        if (domainId.hasQuestionType()) {
+            document.append(QUESTION_TYPE, domainId.getQuestionType().getNumber());
+        }
+        return document;
+    }
+
+    /**
+     * Creates the {@link Util.DomainId} from the document
+     *
+     * @param document The domain id to be converted into protobuf data.
+     * @return {@link Util.DomainId} containing a domainId
+     */
+    public static Util.DomainId createDomainIdFromDocument(final Document document) {
+        final Util.DomainId.Builder domainId = Util.DomainId.newBuilder()
+                .setDomainId(document.getString(DOMAIN_ID));
+        if (document.containsKey(QUESTION_TYPE)) {
+            domainId.setQuestionType(Util.QuestionType.valueOf(document.getInteger(QUESTION_TYPE)));
+        }
+        return domainId.build();
     }
 
     /**
@@ -64,53 +82,30 @@ public final class MongoUtilities {
      * @return The list of users.
      */
     public static List<String> getUserGroup(final Document databaseResult) {
-        return (List<String>) databaseResult.get(DatabaseStringConstants.USER_LIST);
+        return databaseResult.get(DatabaseStringConstants.USER_LIST, new ArrayList<String>());
     }
 
     /**
-     * Retrieves the questionData portion of the document
+     * Returns the type of the submission.  Assumes this method is not called with null.
      *
-     * @param questionDocument
-     *         The database pointer to the data.
-     * @param questionType
-     *         The type of question it is.
-     * @return {@link protobuf.srl.submission.Submission.SrlSubmission} the resulting submission.
-     * @throws DatabaseAccessException
-     *         Thrown if there are issues getting the questionData.
+     * @param cursor The object that we are trying to determine the type of.
+     * @return The correct submission type given the cursor object.
      */
-    private static QuestionDataOuterClass.QuestionData getQuestionData(final Document questionDocument,
-                                                            final QuestionDataOuterClass.QuestionData.ElementTypeCase questionType) throws DatabaseAccessException {
-        final QuestionDataOuterClass.QuestionData.Builder questionData = QuestionDataOuterClass.QuestionData.newBuilder();
-        switch (questionType) {
-            case SKETCHAREA:
-                final Object binary = questionDocument.get(UPDATELIST);
-                if (binary == null) {
-                    throw new DatabaseAccessException("UpdateList did not contain any data", null);
-                }
-                try {
-                    final Commands.SrlUpdateList updateList = Commands.SrlUpdateList.parseFrom(ByteString.copyFrom(((Binary) binary).getData()));
-                    questionData.setSketchArea(QuestionDataOuterClass.SketchArea.newBuilder().setRecordedSketch(updateList));
-                } catch (InvalidProtocolBufferException e) {
-                    throw new DatabaseAccessException("Error decoding update list", e);
-                }
-                break;
-            case FREERESPONSE:
-                final Object text = questionDocument.get(TEXT_ANSWER);
-                if (text == null) {
-                    throw new DatabaseAccessException("Text answer did not contain any data", null);
-                }
-                questionData.setFreeResponse(QuestionDataOuterClass.FreeResponse.newBuilder().setStartingText(text.toString()));
-                break;
-            case MULTIPLECHOICE:
-                final Object answerChoice = questionDocument.get(ANSWER_CHOICE);
-                if (answerChoice == null) {
-                    throw new DatabaseAccessException("Text answer did not contain any data", null);
-                }
-                questionData.setMultipleChoice(QuestionDataOuterClass.MultipleChoice.newBuilder().setSelectedId(answerChoice.toString()));
-                break;
-            default:
-                throw new DatabaseAccessException("Submission data is not supported type or does not exist", null);
+    public static QuestionData.ElementTypeCase getQuestionType(final Document cursor) {
+        final int type = cursor.getInteger(QUESTION_TYPE);
+        if (type == -1) {
+            return QuestionData.ElementTypeCase.ELEMENTTYPE_NOT_SET;
         }
-        return questionData.build();
+        return QuestionData.ElementTypeCase.valueOf(type);
+    }
+
+    /**
+     * Returns the type of the submission.
+     *
+     * @param document The object that we are trying to determine the type of.
+     * @return The document that was sent in.
+     */
+    public static Document appendQuestionTypeToDocument(QuestionData.ElementTypeCase type, final Document document) {
+        return document.append(QUESTION_TYPE, type.getNumber());
     }
 }

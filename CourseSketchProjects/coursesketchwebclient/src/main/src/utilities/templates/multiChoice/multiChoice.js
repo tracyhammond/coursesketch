@@ -70,7 +70,7 @@ function MultiChoice() {
         };
     };
 
-    this.saveToProto = function (protoData) {
+    this.saveToProto = function(protoData) {
         this.editPanel.getInput(protoData, this.shadowRoot, this.initialData);
     };
 

@@ -115,11 +115,15 @@ public final class DatabaseStringConstants {
     public static final String ALLOWED_IN_PROBLEMBANK = "AllowedInProblemBank";
     public static final String IS_PRACTICE_PROBLEM = "PracticeProblem";
 
-    // submission specific
+    // QuestionData specific
     public static final String UPDATELIST = "UpdateList";
     public static final String TEXT_ANSWER = "TextAnswer";
+    public static final String EMBEDDED_HTML = "EmbeddedHtml";
+    public static final String ANSWER_CHOICES = "AnswerChoices"; // The list of answer options
+    public static final String SELECTED_ANSWER_CHOICES = "SelectedAnswerChoices";
+
+    // submission specific
     public static final String SKETCH = "Sketch";
-    public static final String ANSWER_CHOICE = "AnswerChoice";
     public static final String SUBMISSION_TIME = "time";
     public static final String FIRST_STROKE_TIME = "FirstStrokeTime";
     public static final String FIRST_SUBMISSION_TIME = "FirstSubmissionTime";
@@ -132,7 +136,6 @@ public final class DatabaseStringConstants {
     public static final String QUESTION_TYPE = "QuestionType";
     public static final String KEYWORDS = "OtherKeywords";
     public static final String SCRIPT = "Script";
-    public static final String BASE_SKETCH = "BaseSketch";
     public static final String SPECIAL_QUESTION_DATA = "SpecialQuestionData";
 
     // state specific

@@ -30,7 +30,6 @@ message FeedbackData {
         SketchAreaFeedback sketchArea = 4;
         FreeResponseFeedback freeResponse = 5;
         MultipleChoiceFeedback multipleChoice = 6;
-        CheckBoxFeedback checkBox = 7;
         // for external problem solvings
         EmbeddedHtmlFeedback embeddedHtml = 8;
     }
@@ -47,10 +46,6 @@ message FreeResponseFeedback {
 
 message MultipleChoiceFeedback {
     optional protobuf.srl.question.MultipleChoice multipleChoice = 1;
-}
-
-message CheckBoxFeedback {
-    optional protobuf.srl.question.CheckBox checkBox = 1;
 }
 
 message EmbeddedHtmlFeedback {

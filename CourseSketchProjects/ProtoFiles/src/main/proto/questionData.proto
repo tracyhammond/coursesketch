@@ -8,7 +8,6 @@ message QuestionData {
         SketchArea sketchArea = 1;
         FreeResponse freeResponse = 2;
         MultipleChoice multipleChoice = 3;
-        CheckBox checkBox = 4;
         // for external problem solvings
         EmbeddedHtml embeddedHtml = 5;
     }
@@ -25,13 +24,12 @@ message FreeResponse {
 
 message MultipleChoice {
     repeated AnswerChoice answerChoices = 1;
-    optional string selectedId = 2;
-}
-
-message CheckBox {
-    repeated AnswerChoice answerChoices = 1;
-    // only shown to instructor
-    repeated string correctId = 2;
+    repeated string selectedIds = 2;
+    enum DisplayType {
+        UNKNOWN = 0;
+        MULTIPLE_CHOICE = 1;
+        CHECKBOX = 2;
+    }
 }
 
 message AnswerChoice {

@@ -488,7 +488,7 @@ CourseSketch.AdvanceEditPanel = function() {
                 return false;
             }
             for (var i = 0; i < originalValue.length; i++) {
-                if(!compareValues(originalValue[i], newValue[i])) {
+                if (!compareValues(originalValue[i], newValue[i])) {
                     return false;
                 }
             }
