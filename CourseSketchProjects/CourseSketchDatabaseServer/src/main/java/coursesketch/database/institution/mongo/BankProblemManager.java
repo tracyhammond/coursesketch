@@ -37,6 +37,7 @@ import static coursesketch.database.util.DatabaseStringConstants.SUB_TOPIC;
 import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
 import static coursesketch.database.util.MongoUtilities.appendQuestionTypeToDocument;
 import static coursesketch.database.util.MongoUtilities.convertStringToObjectId;
+import static coursesketch.database.util.MongoUtilities.createDomainIdFromDocument;
 import static coursesketch.database.util.MongoUtilities.createDomainIdFromProto;
 import static coursesketch.database.util.MongoUtilities.getQuestionType;
 
@@ -86,8 +87,15 @@ public final class BankProblemManager {
                 .append(KEYWORDS, problem.getOtherKeywordsList())
                 .append(REGISTRATION_KEY, problem.getRegistrationKey())
                 .append(STATE_PUBLISHED, true)
-                .append(COURSE_ACCESS, 0)
-                .append(DOMAIN_ID, createDomainIdFromProto(problem.getProblemDomain()));
+                .append(COURSE_ACCESS, 0);
+
+        if (!problem.hasProblemDomain()) {
+            // We can at least set the question type.
+            insertObject.append(DOMAIN_ID, createDomainIdFromProto(
+                    Util.DomainId.newBuilder().setQuestionType(problem.getQuestionType()).build()));
+        } else {
+            insertObject.append(DOMAIN_ID, createDomainIdFromProto(problem.getProblemDomain()));
+        }
 
         if (problem.hasSpecialQuestionData()) {
             insertObject.append(DatabaseStringConstants.SPECIAL_QUESTION_DATA,
@@ -164,12 +172,12 @@ public final class BankProblemManager {
 
         exactProblem.setId(problemBankId);
         exactProblem.setQuestionText((String) mongoBankProblem.get(QUESTION_TEXT));
-        // FUTURE: add teacher check back && figure out how to make it work if the person is a teacher.
         exactProblem.setSolutionId((String) mongoBankProblem.get(SOLUTION_ID));
         exactProblem.setCourseTopic((String) mongoBankProblem.get(COURSE_TOPIC));
         exactProblem.setSubTopic((String) mongoBankProblem.get(SUB_TOPIC));
         exactProblem.setSource((String) mongoBankProblem.get(SOURCE));
         exactProblem.setQuestionType(Util.QuestionType.valueOf((Integer) mongoBankProblem.get(QUESTION_TYPE)));
+        exactProblem.setProblemDomain(createDomainIdFromDocument(mongoBankProblem.get(DOMAIN_ID, new Document())));
         try {
             if (mongoBankProblem.containsKey(DatabaseStringConstants.SPECIAL_QUESTION_DATA)) {
                 exactProblem.setSpecialQuestionData(

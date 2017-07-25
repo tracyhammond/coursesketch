@@ -18,6 +18,7 @@ import static coursesketch.database.util.DatabaseStringConstants.SELF_ID;
  * Created by gigemjt on 9/6/15.
  */
 public final class MongoUtilities {
+    private static final String EMPTY_STRING = "";
 
     /**
      * Empty constructor.
@@ -68,7 +69,7 @@ public final class MongoUtilities {
      */
     public static Util.DomainId createDomainIdFromDocument(final Document document) {
         final Util.DomainId.Builder domainId = Util.DomainId.newBuilder()
-                .setDomainId(document.getString(DOMAIN_ID));
+                .setDomainId(document.get(DOMAIN_ID, EMPTY_STRING));
         if (document.containsKey(QUESTION_TYPE)) {
             domainId.setQuestionType(Util.QuestionType.valueOf(document.getInteger(QUESTION_TYPE)));
         }

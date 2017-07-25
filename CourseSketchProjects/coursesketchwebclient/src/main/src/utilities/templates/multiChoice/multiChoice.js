@@ -16,12 +16,19 @@ function MultiChoice() {
     /**
      * Marks an answer choice as correct.
      *
-     * @param {Event} event - the event that triggered this function
-     * @param {Element} answer - the answer element to set as the correct answer
+     * @param {AnswerChoice} answerChoice - The answer choice that was selected.
      */
-    this.setCorrectAnswer = function(answerChoice, element) {
-        this.protoData.selectedId = answerChoice.id;
-        this.correctId = element.id;
+    this.setCorrectAnswer = function(answerChoice) {
+        if (this.protoData.displayType === CourseSketch.prutil.MultipleChoiceDisplayType.CHECKBOX) {
+            var index = this.protoData.selectedIds.indexOf(answerChoice.id);
+            if (index === -1) {
+                this.protoData.selectedIds.push(answerChoice.id);
+            } else {
+                this.protoData.selectedIds.splice(index, 1);
+            }
+        } else {
+            this.protoData.selectedIds = [ answerChoice.id ];
+        }
     };
 
     /**
@@ -77,10 +84,9 @@ function MultiChoice() {
     /**
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
      *
-     * @param {Event} event - event that triggered this function.
      * @returns {MultipleChoice} the created protobuf object.
      */
-    this.saveData = function(event) {
+    this.saveData = function() {
         var mcProto = CourseSketch.prutil.cleanProtobuf(this.protoData, 'MultipleChoice');
         this.saveToProto(mcProto);
 
@@ -93,14 +99,25 @@ function MultiChoice() {
             elements[i].parentNode.removeChild(elements[i]);
         }
     };
+
+    this.convertToCheckbox = function() {
+        var elements = this.shadowRoot.querySelectorAll('.answer-choice');
+        for (var i = 0; i < elements.length; i++) {
+            var inputButton = elements[i].querySelector('input[type="radio"]');
+            if (inputButton !== null) {
+                inputButton.type = 'checkbox';
+            }
+        }
+    };
+
     /**
-     * @param {ProtobufObject} mcProto - is the data to be loaded from the proto
+     * @param {MultipleChoice} mcProto - is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
      * If the protoCommand does not exist, returns because data cannot be loaded
      */
     this.loadData = function(mcProto) {
-
         if (isUndefined(this.shadowRoot) || isUndefined(mcProto)) {
+            this.protoData = CourseSketch.prutil.MultipleChoice();
             return;
         }
         this.clearAnswers();
@@ -119,15 +136,16 @@ function MultiChoice() {
             });
         }
 
-        if (this.studentMode && !isUndefined(this.protoData)) {
-            this.protoData.selectedId = mcProto.selectedId;
-            mcProto = this.protoData;
-        }
-
         this.initialData = this.editPanel.loadData(mcProto, this.shadowRoot);
         this.protoData = CourseSketch.prutil.cleanProtobuf(mcProto, 'MultipleChoice');
-        if (!isUndefined(this.protoData.selectedId) && this.protoData.selectedId !== null && this.studentMode) {
-            this.shadowRoot.querySelector('#' + this.protoData.selectedId).checked = true;
+
+        if (this.protoData.displayType === CourseSketch.prutil.MultipleChoiceDisplayType.CHECKBOX) {
+            this.convertToCheckbox();
+        }
+        if (!isUndefined(this.protoData.selectedIds) && this.protoData.selectedIds !== null && this.studentMode) {
+            for (var i = 0; i < this.protoData.selectedIds.length; i++) {
+                this.setSelectedId(this.protoData.selectedIds[i]);
+            }
         }
     };
 
@@ -143,8 +161,13 @@ function MultiChoice() {
         console.log('do nothing');
     };
 
-    this.setSelected = function() {
-        console.log('do nothing2');
+    this.turnOnCheckboxMode = function() {
+        this.convertToCheckbox();
+        this.protoData.displayType = CourseSketch.prutil.MultipleChoiceDisplayType.CHECKBOX;
+    };
+
+    this.setSelectedId = function(selectedId) {
+        this.shadowRoot.querySelector('#' + selectedId).checked = true;
     };
 
     /**

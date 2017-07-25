@@ -121,6 +121,7 @@ public final class DatabaseStringConstants {
     public static final String EMBEDDED_HTML = "EmbeddedHtml";
     public static final String ANSWER_CHOICES = "AnswerChoices"; // The list of answer options
     public static final String SELECTED_ANSWER_CHOICES = "SelectedAnswerChoices";
+    public static final String MULTIPLE_CHOICE_DISPLAY_TYPE = "DisplayType";
 
     // submission specific
     public static final String SKETCH = "Sketch";

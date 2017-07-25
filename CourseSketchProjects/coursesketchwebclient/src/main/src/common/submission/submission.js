@@ -133,6 +133,11 @@ function SubmissionPanel() {
         try {
             this.sendDataToServer(isSubmitting);
         } catch (exception) {
+            if (isUndefined(this.errorListener)) {
+                errorListener(exception);
+                // If someone set an error listener let it set the data
+                return;
+            }
             if (!suppressAlert) {
                 CourseSketch.clientException(exception);
             }
@@ -161,13 +166,14 @@ function SubmissionPanel() {
         var submissionData = CourseSketch.prutil.QuestionData();
         switch (this.problemType) {
             case QuestionType.SKETCH:
-                submissionData.sketchArea = createSketchSubmission(subPanel, isSubmitting);
+                submissionData.sketchArea = createSketchAreaData(subPanel, isSubmitting);
                 break;
             case QuestionType.FREE_RESP:
-                submissionData.freeResponse = createTextSubmission(subPanel, isSubmitting);
+                submissionData.freeResponse = createFreeResponseData(subPanel, isSubmitting);
                 break;
             case QuestionType.MULT_CHOICE:
-                submissionData.multipleChoice = createMultipleChoiceSubmission(subPanel, isSubmitting);
+            case QuestionType.CHECK_BOX:
+                submissionData.multipleChoice = createMultipleChoiceData(subPanel, isSubmitting);
                 break;
         }
 
@@ -208,14 +214,14 @@ function SubmissionPanel() {
     /**
      * Gets the text that has been typed.
      *
-     * @returns {SrlSubmission} object that is ready to be sent to the server.
+     * @returns {FreeResponse} object that is ready to be sent to the server.
      *
      * @param {Element} textArea - The element that contains the text answer
      * @param {Boolean} isSubmitting - Value Currently ignored but in the future it may be used.
      * @instance
      * @memberof SubmissionPanel
      */
-    function createTextSubmission(textArea, isSubmitting) {
+    function createFreeResponseData(textArea) {
         var submission = CourseSketch.prutil.FreeResponse();
         submission.startingText = textArea.value;
         return submission;
@@ -228,11 +234,11 @@ function SubmissionPanel() {
      *
      * @param {SketchSurface} sketchSurface - The sketch surface that is being submitted.
      * @param {Boolean} isSubmitting - True if this is a submission instead of a save.
-     * @returns {SrlSubmission} object that is ready to be sent to the server.
+     * @returns {SketchArea} object that is ready to be sent to the server.
      * @instance
      * @memberof SubmissionPanel
      */
-    function createSketchSubmission(sketchSurface, isSubmitting) {
+    function createSketchAreaData(sketchSurface, isSubmitting) {
         var updateManager = sketchSurface.getUpdateManager();
 
         if (isSubmitting && !updateManager.isValidForSubmission()) {
@@ -260,11 +266,11 @@ function SubmissionPanel() {
      *
      * @param {MultiChoice} multiChoice - The sketch surface that is being submitted.
      * @param {Boolean} isSubmitting - True if this is a submission instead of a save.
-     * @returns {SrlSubmission} object that is ready to be sent to the server.
+     * @returns {MultipleChoice} object that is ready to be sent to the server.
      * @instance
      * @memberof SubmissionPanel
      */
-    function createMultipleChoiceSubmission(multiChoice, isSubmitting) {
+    function createMultipleChoiceData(multiChoice, isSubmitting) {
         return multiChoice.saveData();
     }
 

@@ -44,6 +44,7 @@ function ProblemRenderer(problemPanel) {
      * Resets the data in the renderer to its initial value.
      */
     this.reset = function() {
+        isRunning = undefined;
         isReadOnly = undefined;
         isStudent = undefined;
         startWaiting = undefined;
@@ -51,7 +52,6 @@ function ProblemRenderer(problemPanel) {
         currentType = undefined;
         specialQuestionData = undefined;
         currentSaveListener = undefined;
-        reuse = undefined;
         errorListener = defaultErrorListener;
     };
 
@@ -191,10 +191,10 @@ function ProblemRenderer(problemPanel) {
             loadSketch(questionData, callback, reuse);
         } else if (currentType === CourseSketch.prutil.QuestionType.FREE_RESP) {
             loadTyping(questionData, callback, reuse);
-        } else if (currentType === CourseSketch.prutil.QuestionType.MULT_CHOICE) {
-            loadMultipleChoice(questionData, isSubmission, callback, reuse);
-        } else if (currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
-            loadCheckBox(questionData, callback, reuse);
+        } else if (currentType === CourseSketch.prutil.QuestionType.MULT_CHOICE ||
+            currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
+            loadMultipleChoice(questionData, isSubmission, callback, reuse,
+                currentType === CourseSketch.prutil.QuestionType.CHECK_BOX);
         } else {
             errorListener(new ProblemRenderException('invalid questionType when rendering submission: ' + currentType));
             callback();
@@ -336,7 +336,7 @@ function ProblemRenderer(problemPanel) {
      * @param {Boolean} isSubmission - True if a submission is happening.
      * @param {Function} callback - Called after data is loaded.
      */
-    function loadMultipleChoice(questionData, isSubmission, callback, reuse) {
+    function loadMultipleChoice(questionData, isSubmission, callback, reuse, isCheckbox) {
         var multiChoice = problemPanel.querySelector('multi-choice.sub-panel.card-panel.submittable');
         if (isUndefined(multiChoice) || multiChoice === null || isUndefined(reuse) || !reuse) {
             problemPanel.emptyPanel();
@@ -347,7 +347,7 @@ function ProblemRenderer(problemPanel) {
             problemPanel.appendChild(multiChoice);
         }
 
-        loadIntoMultipleChoice(questionData.multipleChoice, multiChoice, isSubmission, callback);
+        loadIntoMultipleChoice(questionData.multipleChoice, multiChoice, isSubmission, isCheckbox, callback);
     }
 
     /**
@@ -358,9 +358,19 @@ function ProblemRenderer(problemPanel) {
      * @param {Boolean} isSubmission - True if a submission is happening.
      * @param {Function} callback - Called after the data is loaded.
      */
-    function loadIntoMultipleChoice(multipleChoice, multiChoiceElement, isSubmission, callback) {
+    function loadIntoMultipleChoice(multipleChoice, multiChoiceElement, isSubmission, isCheckbox, callback) {
         if (isSubmission) {
             multiChoiceElement.turnOnStudentMode();
+        }
+        function newCallback() {
+            if (isReadOnly) {
+                multiChoiceElement.turnOnReadOnlyMode();
+            }
+
+            if (isCheckbox) {
+                multiChoiceElement.turnOnCheckboxMode();
+            }
+            callback();
         }
         multiChoiceElement.setAttribute('data-mode', isSubmission ? 'student' : 'instructor');
         if (isUndefined(multipleChoice) || multipleChoice === null) {
@@ -370,53 +380,11 @@ function ProblemRenderer(problemPanel) {
                 errorListener(new ProblemRenderException('Invalid multiple choice data occured for problem'));
                 multiChoiceElement.loadData(CourseSketch.prutil.MultipleChoice());
             }
-            callback();
+            newCallback();
             return;
         }
         multiChoiceElement.loadData(multipleChoice);
-        if (isReadOnly) {
-            multiChoiceElement.turnOnReadOnlyMode();
-        }
-
-        if (isSubmission) {
-            var id = multipleChoice.correctId;
-            if (!isUndefined(id) && id !== null) {
-                multiChoiceElement.setSelected(id);
-            }
-        }
-        callback();
-    }
-
-    /**
-     * Loads the checkbox from the {@link SrlBankProblem}
-     *
-     * @param {QuestionData} questionData - questionData
-     * @param {Function} callback - Called after data is loaded.
-     */
-    function loadCheckBox(questionData, callback) {
-        problemPanel.emptyPanel();
-        callback();
-
-        /*
-        return;
-        var question = document.createElement('question-element');
-        var multiChoice = document.createElement('multi-choice');
-        problemPanel.appendChild(question);
-        question.addAnswerContent(multiChoice);
-
-        if (!hasValidQuestionData(questionData)) {
-            callback();
-            return;
-        }
-        var checkBox = questionData.checkBox;
-        if (!isUndefined(checkBox) && checkBox !== null) {
-            question.loadData(checkBox);
-        } else {
-            // load in empty data
-            question.loadData(CourseSketch.prutil.CheckBox());
-        }
-        callback();
-        */
+        newCallback();
     }
 
     /**
@@ -433,10 +401,9 @@ function ProblemRenderer(problemPanel) {
                 questionData.sketchArea = specialQuestionData.sketchArea;
             } else if (currentType === CourseSketch.prutil.QuestionType.FREE_RESP) {
                 questionData.freeResponse = specialQuestionData.freeResponse;
-            } else if (currentType === CourseSketch.prutil.QuestionType.MULT_CHOICE) {
+            } else if (currentType === CourseSketch.prutil.QuestionType.MULT_CHOICE ||
+                currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
                 questionData.multipleChoice = specialQuestionData.multipleChoice;
-            } else if (currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
-                questionData.checkBox = specialQuestionData.checkBox;
             }
             bankProblem.specialQuestionData = questionData;
             callback();
@@ -463,10 +430,9 @@ function ProblemRenderer(problemPanel) {
             saveSketch(callback);
         } else if (currentType === CourseSketch.prutil.QuestionType.FREE_RESP) {
             saveTyping(callback);
-        } else if (currentType === CourseSketch.prutil.QuestionType.MULT_CHOICE) {
+        } else if (currentType === CourseSketch.prutil.QuestionType.MULT_CHOICE ||
+            currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
             saveMultipleChoice(callback);
-        } else if (currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
-            saveCheckbox(callback);
         }
     }
 
@@ -504,19 +470,6 @@ function ProblemRenderer(problemPanel) {
         var multipleChoiceElement = problemPanel.querySelector('multi-choice');
         specialQuestionData.multipleChoice = multipleChoiceElement.saveData();
         callback();
-    }
-
-    /**
-     * Saves checkbox data internally.
-     *
-     * @param {Function} callback - Called after data is saved.
-     */
-    function saveCheckbox(callback) {
-        var multipleChoiceElement = problemPanel.querySelector('multi-choice');
-        multipleChoiceElement.setFinishedListener(function(command, evnt, update, multiChoice) {
-            specialQuestionData.checkBox = multiChoice;
-            callback();
-        });
     }
 
     /**

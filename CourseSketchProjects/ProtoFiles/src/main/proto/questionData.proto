@@ -22,14 +22,16 @@ message FreeResponse {
     optional string startingText = 1;
 }
 
+enum MultipleChoiceDisplayType {
+    UNKNOWN = 0;
+    MULTIPLE_CHOICE = 1;
+    CHECKBOX = 2;
+}
+
 message MultipleChoice {
     repeated AnswerChoice answerChoices = 1;
     repeated string selectedIds = 2;
-    enum DisplayType {
-        UNKNOWN = 0;
-        MULTIPLE_CHOICE = 1;
-        CHECKBOX = 2;
-    }
+    optional MultipleChoiceDisplayType displayType = 3;
 }
 
 message AnswerChoice {

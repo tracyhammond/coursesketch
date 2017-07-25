@@ -62,6 +62,7 @@ public class AutoGrader {
                     .setAssignmentId(experiment.getAssignmentId())
                     .setProblemId(experiment.getProblemId())
                     .setPartId(experiment.getPartId()));
+            submissionFeedback.setFeedbackData(builder);
         } catch (GradingException exception) {
             if (exception.hasFeedbackData()) {
                 submissionFeedback.setFeedbackData(exception.getFeedbackData());
@@ -115,11 +116,11 @@ public class AutoGrader {
      */
     private AbstractGrader getCheckboxGrader(final QuestionDataOuterClass.QuestionData experimentQuestionData,
             final QuestionDataOuterClass.QuestionData solutionQuestionData) {
-        if (!experimentQuestionData.hasCheckBox()) {
+        if (!experimentQuestionData.hasMultipleChoice()) {
             return buildMissingExperimentDataGrader();
         }
         LOG.info("Grade info {}{} {}", experimentQuestionData, solutionQuestionData);
-        return buildThrowExceptionGrader(new UnsupportedOperationException("cant grade sketches"));
+        return buildThrowExceptionGrader(new UnsupportedOperationException("cant grade checkboxes"));
     }
 
     /**
@@ -135,7 +136,7 @@ public class AutoGrader {
             return buildMissingExperimentDataGrader();
         }
         LOG.info("Grade info {} {} {}", experimentQuestionData, solutionQuestionData);
-        return buildThrowExceptionGrader(new UnsupportedOperationException("cant grade sketches"));
+        return buildThrowExceptionGrader(new UnsupportedOperationException("cant grade free response problems"));
     }
 
     /**

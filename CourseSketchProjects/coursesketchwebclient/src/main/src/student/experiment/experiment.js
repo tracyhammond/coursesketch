@@ -5,6 +5,7 @@ validateFirstRun(document.currentScript);
     var questionTextPanel = undefined;
     var currentProblem = undefined;
     var problemRenderer = undefined;
+    var feedbackRenderer = undefined;
     var waiter = undefined;
     $(document).ready(function() {
         CourseSketch.dataManager.waitForDatabase(function() {
@@ -18,9 +19,11 @@ validateFirstRun(document.currentScript);
             waiter = new DefaultWaiter(CourseSketch.studentExperiment.waitScreenManager,
                 document.getElementById('percentBar'));
 
-            problemRenderer = new CourseSketch.ProblemRenderer(document.getElementById('problemPanel'));
+            var problemPanel = document.getElementById('problemPanel');
+            problemRenderer = new CourseSketch.ProblemRenderer(problemPanel);
             problemRenderer.setStartWaitingFunction(waiter.startWaiting);
             problemRenderer.setFinishWaitingFunction(waiter.finishWaiting);
+            feedbackRenderer = new CourseSketch.FeedbackRenderer(problemPanel, undefined, document.getElementById('feedbackBackground'));
 
             CourseSketch.dataManager.clearStates();
 
@@ -45,6 +48,7 @@ validateFirstRun(document.currentScript);
      */
     function loadProblem(navigator) {
         var bankProblem = navigator.getCurrentInfo();
+        feedbackRenderer.reset();
         problemRenderer.reset();
         problemRenderer.setIsStudentProblem(true);
         problemRenderer.setStartWaitingFunction(waiter.startWaiting);
@@ -66,9 +70,12 @@ validateFirstRun(document.currentScript);
         CourseSketch.dataManager.getExperiment(navigator.getSubmissionIdentifier(), function(submission) {
             if (CourseSketch.isException(submission)) {
                 CourseSketch.clientException(submission);
+                // Do not return we still need to set up the submission to look at feedback
             }
             problemRenderer.renderSubmission(bankProblem, submission, function() {
                 setupSubmissionPanel(document.getElementById('problemPanel'), navigator, bankProblem.questionType);
+                // FUTURE: Render the last feedback for this problem.
+                // feedbackRenderer.renderFeedback()
             }, true);
         });
     }
@@ -88,6 +95,8 @@ validateFirstRun(document.currentScript);
         submissionPanel.isGrader = false;
 
         submissionPanel.setWrapperFunction(function(submission) {
+            startFeedbackRenderer(submission);
+
             var studentExperiment = CourseSketch.prutil.SrlExperiment();
             navigator.setSubmissionInformation(studentExperiment, true);
             console.log('student experiment data set', studentExperiment);
@@ -97,5 +106,22 @@ validateFirstRun(document.currentScript);
             }
             return studentExperiment;
         });
+    }
+
+    function startFeedbackRenderer(submission) {
+        try {
+            feedbackRenderer.listenToFeedback(currentProblem, submission, true, function () {
+                console.log('feedback rendered');
+            });
+
+            // prevent students from being stupid while waiting for feedback
+            // Only wait 3 seconds max
+            feedbackRenderer.startWaiting();
+            setTimeout(function () {
+                feedbackRenderer.finishWaiting();
+            }, 3000);
+        } catch (exception) {
+            console.log(exception);
+        }
     }
 })();

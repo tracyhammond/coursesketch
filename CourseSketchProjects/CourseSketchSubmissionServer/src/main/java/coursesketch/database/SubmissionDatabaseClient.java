@@ -12,6 +12,7 @@ import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.MongoQuestionDataBuilder;
+import coursesketch.database.util.MongoUtilities;
 import coursesketch.database.util.SubmissionException;
 import coursesketch.server.interfaces.ServerInfo;
 import org.bson.Document;
@@ -36,6 +37,7 @@ import static coursesketch.database.util.DatabaseStringConstants.ASSIGNMENT_ID;
 import static coursesketch.database.util.DatabaseStringConstants.COURSE_ID;
 import static coursesketch.database.util.DatabaseStringConstants.COURSE_PROBLEM_ID;
 import static coursesketch.database.util.DatabaseStringConstants.DATABASE;
+import static coursesketch.database.util.DatabaseStringConstants.DOMAIN_ID;
 import static coursesketch.database.util.DatabaseStringConstants.EXPERIMENT_COLLECTION;
 import static coursesketch.database.util.DatabaseStringConstants.FIRST_STROKE_TIME;
 import static coursesketch.database.util.DatabaseStringConstants.FIRST_SUBMISSION_TIME;
@@ -48,6 +50,7 @@ import static coursesketch.database.util.DatabaseStringConstants.SUBMISSION_TIME
 import static coursesketch.database.util.DatabaseStringConstants.UPDATELIST;
 import static coursesketch.database.util.DatabaseStringConstants.USER_ID;
 import static coursesketch.database.util.MongoUtilities.convertStringToObjectId;
+import static coursesketch.database.util.MongoUtilities.createDomainIdFromProto;
 import static coursesketch.database.util.MongoUtilities.getQuestionType;
 
 /**
@@ -124,6 +127,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
             } catch (SubmissionException e) {
                 throw new DatabaseAccessException("Exception while creating submission from existing submission", e);
             }
+            updateObj.append(DOMAIN_ID, createDomainIdFromProto(solution.getProblemDomain()));
             solutions.updateOne(existingSolution, new Document("$set", updateObj));
         } else {
             LOG.info("No existing submissions found");
@@ -316,12 +320,12 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         }
 
         LOG.info("Fetching solution");
-        final Document cursor = database.getCollection(SOLUTION_COLLECTION).find(convertStringToObjectId(itemId)).first();
-        if (cursor == null) {
+        final Document document = database.getCollection(SOLUTION_COLLECTION).find(convertStringToObjectId(itemId)).first();
+        if (document == null) {
             throw new DatabaseAccessException("There is no experiment with id: " + itemId);
         }
 
-        if (!bankProblemId.equals(cursor.get(PROBLEM_BANK_ID).toString())) {
+        if (!bankProblemId.equals(document.get(PROBLEM_BANK_ID).toString())) {
             throw new AuthenticationException("Bank Problem Id of the submission must match the submission being requested.",
                     AuthenticationException.INVALID_PERMISSION);
         }
@@ -332,17 +336,18 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
 
         // only moderators and above are allowed to see the user id.
         if (permissions.hasModeratorPermission()) {
-            submissionId = cursor.get(SELF_ID).toString();
+            submissionId = document.get(SELF_ID).toString();
         }
-        build.setProblemBankId(cursor.get(PROBLEM_BANK_ID).toString());
-        build.setIsPracticeProblem((Boolean) cursor.get(IS_PRACTICE_PROBLEM));
-        build.setAllowedInProblemBank((Boolean) cursor.get(ALLOWED_IN_PROBLEMBANK));
+        build.setProblemBankId(document.get(PROBLEM_BANK_ID).toString());
+        build.setIsPracticeProblem((Boolean) document.get(IS_PRACTICE_PROBLEM));
+        build.setAllowedInProblemBank((Boolean) document.get(ALLOWED_IN_PROBLEMBANK));
         SrlSubmission sub;
         try {
-            sub = getSubmission(cursor, submissionId);
+            sub = getSubmission(document, submissionId);
         } catch (SubmissionException e) {
             throw new DatabaseAccessException("Error getting submission data", e);
         }
+        build.setProblemDomain(MongoUtilities.createDomainIdFromDocument(document.get(DOMAIN_ID, new Document())));
 
         build.setSubmission(sub);
         LOG.info("Experiment successfully fetched");

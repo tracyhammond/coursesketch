@@ -6,6 +6,11 @@ import org.bson.Document;
 import org.bson.types.Binary;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.question.QuestionDataOuterClass;
+import protobuf.srl.question.QuestionDataOuterClass.EmbeddedHtml;
+import protobuf.srl.question.QuestionDataOuterClass.FreeResponse;
+import protobuf.srl.question.QuestionDataOuterClass.MultipleChoice;
+import protobuf.srl.question.QuestionDataOuterClass.QuestionData;
+import protobuf.srl.question.QuestionDataOuterClass.SketchArea;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +18,7 @@ import java.util.List;
 import static coursesketch.database.util.DatabaseStringConstants.ANSWER_CHOICES;
 import static coursesketch.database.util.DatabaseStringConstants.EMBEDDED_HTML;
 import static coursesketch.database.util.DatabaseStringConstants.ITEM_ID;
+import static coursesketch.database.util.DatabaseStringConstants.MULTIPLE_CHOICE_DISPLAY_TYPE;
 import static coursesketch.database.util.DatabaseStringConstants.QUESTION_TEXT;
 import static coursesketch.database.util.DatabaseStringConstants.SELECTED_ANSWER_CHOICES;
 import static coursesketch.database.util.DatabaseStringConstants.TEXT_ANSWER;
@@ -29,8 +35,8 @@ public class MongoQuestionDataBuilder {
      * @return {@link protobuf.srl.submission.Submission.SrlSubmission} the resulting submission.
      * @throws DatabaseAccessException Thrown if there are issues getting the questionData.
      */
-    public QuestionDataOuterClass.QuestionData buildQuestionDataProto(final Document questionDocument) throws DatabaseAccessException {
-        final QuestionDataOuterClass.QuestionData.Builder questionData = QuestionDataOuterClass.QuestionData.newBuilder();
+    public QuestionData buildQuestionDataProto(final Document questionDocument) throws DatabaseAccessException {
+        final QuestionData.Builder questionData = QuestionData.newBuilder();
 
         switch (getQuestionType(questionDocument)) {
             case SKETCHAREA:
@@ -40,7 +46,7 @@ public class MongoQuestionDataBuilder {
                 }
                 try {
                     final Commands.SrlUpdateList updateList = Commands.SrlUpdateList.parseFrom(ByteString.copyFrom(((Binary) binary).getData()));
-                    questionData.setSketchArea(QuestionDataOuterClass.SketchArea.newBuilder().setRecordedSketch(updateList));
+                    questionData.setSketchArea(SketchArea.newBuilder().setRecordedSketch(updateList));
                 } catch (InvalidProtocolBufferException e) {
                     throw new DatabaseAccessException("Error decoding update list", e);
                 }
@@ -50,7 +56,7 @@ public class MongoQuestionDataBuilder {
                 if (text == null) {
                     throw new DatabaseAccessException("Text answer did not contain any data", null);
                 }
-                questionData.setFreeResponse(QuestionDataOuterClass.FreeResponse.newBuilder().setStartingText(text.toString()));
+                questionData.setFreeResponse(FreeResponse.newBuilder().setStartingText(text.toString()));
                 break;
             case MULTIPLECHOICE:
                 questionData.setMultipleChoice(buildMultipleChoiceProto(questionDocument));
@@ -61,7 +67,7 @@ public class MongoQuestionDataBuilder {
                     throw new DatabaseAccessException("Embedded html did not contain any data", null);
                 }
                 try {
-                    questionData.setEmbeddedHtml(QuestionDataOuterClass.EmbeddedHtml.parseFrom(
+                    questionData.setEmbeddedHtml(EmbeddedHtml.parseFrom(
                             ByteString.copyFrom(((Binary) embeddedHtmlBinary).getData())));
                 } catch (InvalidProtocolBufferException e) {
                     throw new DatabaseAccessException("Error decoding embedded html", e);
@@ -73,14 +79,20 @@ public class MongoQuestionDataBuilder {
         return questionData.build();
     }
 
-    private QuestionDataOuterClass.MultipleChoice buildMultipleChoiceProto(Document questionDocument) throws DatabaseAccessException {
+    private MultipleChoice buildMultipleChoiceProto(Document questionDocument) throws DatabaseAccessException {
         final List<String> selectedChoices = questionDocument.get(SELECTED_ANSWER_CHOICES, new ArrayList<String>());
         final List<Document> listOfAnswerChoices = questionDocument.get(ANSWER_CHOICES, new ArrayList<Document>());
         if (selectedChoices == null && listOfAnswerChoices == null) {
             throw new DatabaseAccessException("MultipleChoice answer did not contain any data", null);
         }
 
-        final QuestionDataOuterClass.MultipleChoice.Builder multipleChoice = QuestionDataOuterClass.MultipleChoice.newBuilder();
+        final MultipleChoice.Builder multipleChoice = MultipleChoice.newBuilder();
+
+        if (questionDocument.containsKey(MULTIPLE_CHOICE_DISPLAY_TYPE)) {
+            multipleChoice.setDisplayType(
+                    QuestionDataOuterClass.MultipleChoiceDisplayType
+                            .valueOf(questionDocument.getInteger(MULTIPLE_CHOICE_DISPLAY_TYPE)));
+        }
 
         if (listOfAnswerChoices != null && listOfAnswerChoices.size() > 0) {
             multipleChoice.addAllAnswerChoices(getAnswerChoices(listOfAnswerChoices));
@@ -133,7 +145,7 @@ public class MongoQuestionDataBuilder {
         return document;
     }
 
-    protected Document createUpdateList(QuestionDataOuterClass.SketchArea sketchArea) throws DatabaseAccessException {
+    protected Document createUpdateList(SketchArea sketchArea) throws DatabaseAccessException {
         return new Document(UPDATELIST, new Binary(sketchArea.getRecordedSketch().toByteArray()));
     }
 
@@ -154,9 +166,12 @@ public class MongoQuestionDataBuilder {
      * @param multipleChoice The multipleChoice that is being inserted.
      * @return An object that represents how it would be stored in the database.
      */
-    private Document createMultipleChoiceSolution(final QuestionDataOuterClass.MultipleChoice multipleChoice) {
+    private Document createMultipleChoiceSolution(final MultipleChoice multipleChoice) {
         // don't store it as changes for right now.
         Document document = new Document();
+        if (multipleChoice.hasDisplayType()) {
+            document.append(MULTIPLE_CHOICE_DISPLAY_TYPE, multipleChoice.getDisplayType().getNumber());
+        }
         if (multipleChoice.getAnswerChoicesCount() > 0) {
             document.append(SELECTED_ANSWER_CHOICES, multipleChoice.getSelectedIdsList());
         }

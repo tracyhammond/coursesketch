@@ -56,7 +56,7 @@ div.radioHolder.col, .row div.col.closeHolder, .row div[data-prop="text"].studen
     min-height: calc(3rem + 20px);
 }
 
-.radioHolder > input.radio {
+.radioHolder > input {
     min-height: 3rem;
 }
 

@@ -289,7 +289,7 @@ public class SubmissionDatabaseClientTest {
 
         // round 2
         Submission.SrlSubmission.Builder secondList = Submission.SrlSubmission.newBuilder();
-        secondList.setSubmissionData(QuestionData.newBuilder().setMultipleChoice(MultipleChoice.newBuilder().setSelectedId("" + 94)));
+        secondList.setSubmissionData(QuestionData.newBuilder().setMultipleChoice(MultipleChoice.newBuilder().addSelectedIds("" + 94)));
         Submission.SrlExperiment secondSubmission = getFakeExperiment("User1", secondList.build());
         String secondId = databaseClient.saveExperiment(secondSubmission, 200);
 
@@ -391,13 +391,13 @@ public class SubmissionDatabaseClientTest {
 
         // round 1
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
-        build.setSubmissionData(QuestionData.newBuilder().setMultipleChoice(MultipleChoice.newBuilder().setSelectedId(answerChoice)));
+        build.setSubmissionData(QuestionData.newBuilder().setMultipleChoice(MultipleChoice.newBuilder().addSelectedIds(answerChoice)));
         Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
         String id = databaseClient.saveExperiment(expected, 200);
 
         // get experiment
         Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, responder);
-        String resultAnswer = result.getSubmission().getSubmissionData().getMultipleChoice().getSelectedId();
+        String resultAnswer = result.getSubmission().getSubmissionData().getMultipleChoice().getSelectedIds(0);
 
         Assert.assertEquals(answerChoice, resultAnswer);
     }
@@ -409,19 +409,19 @@ public class SubmissionDatabaseClientTest {
 
         // round 1
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
-        build.setSubmissionData(QuestionData.newBuilder().setMultipleChoice(MultipleChoice.newBuilder().setSelectedId(textAnswer)));
+        build.setSubmissionData(QuestionData.newBuilder().setMultipleChoice(MultipleChoice.newBuilder().addSelectedIds(textAnswer)));
         Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
         String id = databaseClient.saveExperiment(expected, 200);
 
         // round 2
         Submission.SrlSubmission.Builder secondList = Submission.SrlSubmission.newBuilder();
-        secondList.setSubmissionData(QuestionData.newBuilder().setMultipleChoice(MultipleChoice.newBuilder().setSelectedId(textAnswer2)));
+        secondList.setSubmissionData(QuestionData.newBuilder().setMultipleChoice(MultipleChoice.newBuilder().addSelectedIds(textAnswer2)));
         Submission.SrlExperiment secondSubmission = getFakeExperiment("User1", secondList.build());
         databaseClient.saveExperiment(secondSubmission, 200);
 
         // get experiment
         Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, responder);
-        String resultAnswer = result.getSubmission().getSubmissionData().getMultipleChoice().getSelectedId();
+        String resultAnswer = result.getSubmission().getSubmissionData().getMultipleChoice().getSelectedIds(0);
 
         Assert.assertEquals(textAnswer2, resultAnswer);
     }

@@ -36,8 +36,8 @@ public class MultipleChoiceGrader extends AbstractGrader<QuestionDataOuterClass.
 
     @Override
     public final Feedback.FeedbackData.Builder gradeProblem(Rubric.GradingRubric gradingRubric) throws GradingException {
-        final String studentAnswer = this.experiment.getSelectedId();
-        final String correctAnswer = this.solution.getSelectedId();
+        final String studentAnswer = this.experiment.getSelectedIds(0);
+        final String correctAnswer = this.solution.getSelectedIds(0);
 
         if (correctAnswer.equals(studentAnswer)) {
             return createCorrectFeedback();
@@ -78,7 +78,7 @@ public class MultipleChoiceGrader extends AbstractGrader<QuestionDataOuterClass.
         }
         return Feedback.MultipleChoiceFeedback.newBuilder()
                 .setMultipleChoice(QuestionDataOuterClass.MultipleChoice.newBuilder()
-                        .setSelectedId(correctChoice).build())
+                        .addSelectedIds(correctChoice).build())
                 .build();
     }
 }

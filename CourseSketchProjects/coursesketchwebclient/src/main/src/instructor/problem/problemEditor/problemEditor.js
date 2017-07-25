@@ -135,7 +135,7 @@ validateFirstRun(document.currentScript);
     /**
      * Saves the data to the database.
      */
-    function saveData() {
+    function saveData(callback) {
         originalMap = advancedEdit.getInput(currentProblem, editPanel, originalMap);
         if (isUndefined(currentProblem.problemDomain) || currentProblem.problemDomain === null) {
             currentProblem.problemDomain = CourseSketch.prutil.DomainId();
@@ -147,6 +147,9 @@ validateFirstRun(document.currentScript);
             }, function(argument) {
                 console.log(argument);
             });
+            if (!isUndefined(callback)) {
+                callback();
+            }
         });
     }
 
@@ -160,52 +163,52 @@ validateFirstRun(document.currentScript);
         problemRenderer.startWaiting();
 
         // save our data first
-        saveData();
+        saveData(function() {
+            solutionMode = true;
+            setupSolutionSubmissionPanel(submissionPanel, navigator, currentProblem.questionType);
 
-        solutionMode = true;
-        setupSolutionSubmissionPanel(submissionPanel, navigator, currentProblem.questionType);
-
-        function copyMultipleChoiceQuestionData() {
-            try {
-                if (currentProblem.questionType === CourseSketch.prutil.QuestionType.MULT_CHOICE) {
-                    if (isUndefined(currentSubmission) || currentSubmission === null) {
-                        currentSubmission = CourseSketch.prutil.SrlSubmission();
+            function copyMultipleChoiceQuestionData() {
+                try {
+                    if (currentProblem.questionType === CourseSketch.prutil.QuestionType.MULT_CHOICE) {
+                        if (isUndefined(currentSubmission) || currentSubmission === null) {
+                            currentSubmission = CourseSketch.prutil.SrlSubmission();
+                        }
+                        if (isUndefined(currentSubmission.submissionData) || currentSubmission.submissionData === null) {
+                            currentSubmission.submissionData = CourseSketch.prutil.QuestionData();
+                        }
+                        if (isUndefined(currentSubmission.submissionData.multipleChoice) ||
+                            currentSubmission.submissionData.multipleChoice === null) {
+                            currentSubmission.submissionData.multipleChoice = CourseSketch.prutil.MultipleChoice();
+                        }
+                        currentSubmission.submissionData.multipleChoice.answerChoices = currentProblem.specialQuestionData.multipleChoice.answerChoices;
                     }
-                    if (isUndefined(currentSubmission.submissionData) || currentSubmission.submissionData === null) {
-                        currentSubmission.submissionData = CourseSketch.prutil.QuestionData();
-                    }
-                    if (isUndefined(currentSubmission.submissionData.mutlipleChoice) ||
-                        currentSubmission.submissionData.mutlipleChoice === null) {
-                        currentSubmission.submissionData.mutlipleChoice = CourseSketch.prutil.MultipleChoice();
-                    }
-                    currentSubmission.submissionData.mutlipleChoice.answerChoices = currentProblem.questionData.multipleChoice.answerChoices;
+                } catch (exception) {
+                    console.log(exception);
                 }
-            } catch (exception) {
-                console.log(exception);
             }
-        }
 
-        // eslint-disable-next-line
-        function loadSubmission() {
-            copyMultipleChoiceQuestionData();
-            setTimeout(function() {
-                problemRenderer.setIsStudentProblem(true);
-                problemRenderer.renderSubmission(currentProblem, currentSubmission, function() {
-                    submissionPanel.refreshPanel();
-                    console.log('submission');
-                }, true);
-            }, 2100);
-        }
+            // eslint-disable-next-line
+            function loadSubmission() {
+                copyMultipleChoiceQuestionData();
+                setTimeout(function() {
+                    problemRenderer.setIsStudentProblem(true);
+                    problemRenderer.renderSubmission(currentProblem, currentSubmission, function() {
+                        submissionPanel.refreshPanel();
+                        console.log('submission');
+                    }, true);
+                }, 2100);
+            }
 
-        if (isUndefined(currentSubmission) && !isUndefined(currentProblem.solutionId) &&
-            currentProblem.solutionId !== null) {
-            CourseSketch.dataManager.getSolution([ currentProblem.id, currentProblem.solutionId ], function(solution) {
-                currentSubmission = solution.submission;
+            if (isUndefined(currentSubmission) && !isUndefined(currentProblem.solutionId) &&
+                currentProblem.solutionId !== null) {
+                CourseSketch.dataManager.getSolution([ currentProblem.id, currentProblem.solutionId ], function(solution) {
+                    currentSubmission = solution.submission;
+                    loadSubmission();
+                });
+            } else {
                 loadSubmission();
-            });
-        } else {
-            loadSubmission();
-        }
+            }
+        });
 
         // take the question and render it also set up the button and rename it
     };

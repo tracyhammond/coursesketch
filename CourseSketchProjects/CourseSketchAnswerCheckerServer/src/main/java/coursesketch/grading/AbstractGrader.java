@@ -78,14 +78,14 @@ public abstract class AbstractGrader<T extends GeneratedMessage> {
      * @return A grade.
      * @throws GradingException Thrown if there are problems while creating the grade
      */
-    static Grading.ProtoGrade createGrade(final float grade) throws GradingException {
+    static Grading.ProtoGrade.Builder createGrade(final float grade) throws GradingException {
         if (grade > 1) {
             throw new GradingException("Cant submit a grade larger than 1");
         }
         if (grade < 0) {
             throw new GradingException("Cant submit a grade less than 0");
         }
-        return Grading.ProtoGrade.newBuilder().setUnscaledGrade(grade).build();
+        return Grading.ProtoGrade.newBuilder().setUnscaledGrade(grade);
     }
 
     /**

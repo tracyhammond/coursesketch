@@ -134,6 +134,7 @@ function Connection(uri, encrypted, attemptReconnect) {
                     } else if (onRequest) {
                         onRequest(evt, msg);
                     }
+                    console.log('ignored response from server', msg);
                 } catch (err) {
                     console.error(err.stack);
                     if (onError) {

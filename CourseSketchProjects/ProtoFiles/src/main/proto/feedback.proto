@@ -11,7 +11,7 @@ message SubmissionFeedback {
 }
 
 enum FeedbackState {
-    UNKOWN = 0;
+    UNKNOWN = 0;
     CORRECT = 1;
     INCORRECT = 2;
     EXCEPTION = 3;

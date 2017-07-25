@@ -11,7 +11,12 @@
         <module>CourseSketchProjects/ProtoFiles</module>
         <module>CourseSketchProjects/coursesketchwebclient</module>
         <module>TestUtilities</module>
-        <module>CourseSketchProjects/ServerBacking</module>
+        <module>CourseSketchProjects/ServerBacking/Utilities</module>
+        <module>CourseSketchProjects/ServerBacking/MongoDatabaseHelper</module>
+        <module>CourseSketchProjects/ServerBacking/ServerAbstractor</module>
+        <module>CourseSketchProjects/ServerBacking/jettyBlank</module>
+        <module>CourseSketchProjects/ServerBacking/nettyBlank</module>
+        <module>CourseSketchProjects/ServerBacking/rpcserver</module>
         <module>CourseSketchProjects/AuthenticationServer</module>
         <module>CourseSketchProjects/IdentityServer</module>
         <module>CourseSketchProjects/CourseSketchDatabaseServer</module>
