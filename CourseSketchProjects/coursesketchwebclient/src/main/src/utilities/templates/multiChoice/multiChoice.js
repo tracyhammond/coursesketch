@@ -33,9 +33,6 @@ function MultiChoice() {
 
     /**
      * Adds an answer choice to this multiple choice element.
-     *
-     * @param {Event} event - the event that triggered this function
-     * @returns {Element} The element that was created that holds the answer.
      */
     this.addAnswer = function() {
         var protoData = CourseSketch.prutil.cleanProtobuf(this.protoData, 'MultipleChoice');
@@ -169,27 +166,5 @@ function MultiChoice() {
     this.setSelectedId = function(selectedId) {
         this.shadowRoot.querySelector('#' + selectedId).checked = true;
     };
-
-    /**
-     * @returns {Function} finishedCallback is the callback set at implementation.
-     * The callback can be called immediately using .getFinishedCallback()(argument) with argument being optional
-     */
-    this.getFinishedCallback = function() {
-        return this.finishedCallback;
-    };
-
-    /**
-     * Sets the listener.
-     *
-     * The listener is called with (SrlCommand, event, SrlUpdate, MultiChoice)
-     * With MultiChoice being the same type as LoadData.
-     *
-     * @param {Function} listener - called when the data is finished saving.
-     */
-    this.setFinishedListener = function(listener) {
-        this.finishedCallback = listener;
-    };
 }
 MultiChoice.prototype = Object.create(HTMLElement.prototype);
-MultiChoice.prototype.finishedCallback = undefined; // Defined by whoever implements this by using setFinishedListener().
-MultiChoice.prototype.createdCommand = undefined;

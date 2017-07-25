@@ -7,7 +7,7 @@ validateFirstRun(document.currentScript);
  * @param {String} message - The message to show for the exception.
  * @param {BaseException} [cause] - The cause of the exception.
  */
-function FeedbackRenderer(message, cause) {
+function FeedbackRendererException(message, cause) {
     this.name = 'FeedbackRenderer';
     this.setMessage(message);
     this.message = '';
@@ -15,10 +15,10 @@ function FeedbackRenderer(message, cause) {
     this.createStackTrace();
 }
 
-FeedbackRenderer.prototype = new BaseException();
+FeedbackRendererException.prototype = new BaseException();
 
 /**
- * Renders problem data given a bank problem.
+ * Renders feedback and listens to the server.
  *
  * @constructor FeedbackRenderer
  * @param {Element} problemPanel - The element where all the data is being rendered.
@@ -51,6 +51,7 @@ function FeedbackRenderer(problemPanel, basicFeedbackPanel, backgroundColorPanel
         currentProblemId = undefined;
         errorListener = defaultErrorListener;
         renderBackgroundColor(CourseSketch.prutil.FeedbackState.UNKNOWN);
+        CourseSketch.connection.setAnswerCheckingListener(undefined);
     };
 
     /**
@@ -94,8 +95,8 @@ function FeedbackRenderer(problemPanel, basicFeedbackPanel, backgroundColorPanel
      *
      * @param {SrlBankProblem} currentProblem - The bank problem that is being rendered.
      * @param {SrlSubmission} currentSubmission - The bank problem that is being rendered.
-     * @param {Function} callback - Called after the data is rendered.
      * @param {Boolean} stopWaiting - If false the {@code finishWaiting} function will not be called.
+     * @param {Function} callback - Called after the data is rendered.
      */
     this.listenToFeedback = function(currentProblem, currentSubmission, stopWaiting, callback) {
         currentType = currentProblem.questionType;
@@ -122,8 +123,8 @@ function FeedbackRenderer(problemPanel, basicFeedbackPanel, backgroundColorPanel
      * @param {SubmissionFeedback} feedback - The feedback of the problem.
      * @param {SrlBankProblem} currentProblem - The bank problem that is being rendered.
      * @param {SrlSubmission} currentSubmission - The submission the student submitted that is being rendered.
-     * @param {Function} callback - Called after the data is rendered.
      * @param {Boolean} stopWaiting - If false the {@code finishWaiting} function will not be called.
+     * @param {Function} callback - Called after the data is rendered.
      */
     function renderFeedback(feedback, currentProblem, currentSubmission, stopWaiting, callback) {
         var internalCallback = setupWaiting(callback, stopWaiting);
@@ -142,7 +143,7 @@ function FeedbackRenderer(problemPanel, basicFeedbackPanel, backgroundColorPanel
     /**
      * Loads the data for the {@link QuestionType}.
      *
-     * @param {SubmissionFeedback} feedback - The feedback of the problem.
+     * @param {FeedbackData} feedback - The feedback of the problem.
      * @param {SrlSubmission} currentSubmission - The submission the student submitted that is being rendered.
      * @param {Function} callback - Called after the data is rendered.
      */
@@ -172,26 +173,36 @@ function FeedbackRenderer(problemPanel, basicFeedbackPanel, backgroundColorPanel
         }
     }
 
+    /**
+     * Renders feedback that is not specific to any problem.
+     *
+     * @param {FeedbackData} feedback - The holder of basic feedback
+     */
     function renderBasicFeedback(feedback) {
         var basicFeedback = feedback.basicFeedback;
         var state = feedback.feedbackState;
         renderBackgroundColor(state);
     }
 
+    /**
+     * Renders the background state.
+     *
+     * @param {FeedbackState} state - The state of the problem.
+     */
     function renderBackgroundColor(state) {
         if (state === CourseSketch.prutil.FeedbackState.UNKNOWN) {
             backgroundColorPanel.style.backgroundColor = initialColor;
         } else if (state === CourseSketch.prutil.FeedbackState.CORRECT) {
-            backgroundColorPanel.setAttribute( 'style', 'background-color: #a5d6a7 !important' );
+            backgroundColorPanel.setAttribute('style', 'background-color: #a5d6a7 !important');
         } else if (state === CourseSketch.prutil.FeedbackState.INCORRECT) {
-            backgroundColorPanel.setAttribute( 'style', 'background-color: #ef9a9a !important' );
+            backgroundColorPanel.setAttribute('style', 'background-color: #ef9a9a !important');
         }
     }
 
     /**
      * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
      *
-     * @param {SketchAreaFeedback} feedback - questionData
+     * @param {SketchAreaFeedback} feedback - The feedback of the problem.
      * @param {SrlSubmission} currentSubmission - The submission the student submitted that is being rendered.
      * @param {Function} callback - Called after feedback is rendered
      */
@@ -202,7 +213,7 @@ function FeedbackRenderer(problemPanel, basicFeedbackPanel, backgroundColorPanel
     /**
      * Loads the typing from the {@link SrlBankProblem}.
      *
-     * @param {FreeResponseFeedback} feedback - questionData
+     * @param {FreeResponseFeedback} feedback - The feedback of the problem.
      * @param {SrlSubmission} currentSubmission - The submission the student submitted that is being rendered.
      * @param {Function} callback - Called after feedback is rendered
      */
@@ -213,7 +224,7 @@ function FeedbackRenderer(problemPanel, basicFeedbackPanel, backgroundColorPanel
     /**
      * renders the multiple choice feedback
      *
-     * @param {QuestionData} questionData - questionData
+     * @param {QuestionData} feedback - The feedback of the problem.
      * @param {SrlSubmission} currentSubmission - The submission the student submitted that is being rendered.
      * @param {Function} callback - Called after feedback is rendered
      */
@@ -224,7 +235,7 @@ function FeedbackRenderer(problemPanel, basicFeedbackPanel, backgroundColorPanel
     /**
      * Renders the checkbox feedback
      *
-     * @param {QuestionData} questionData - questionData
+     * @param {QuestionData} feedback - The feedback of the problem.
      * @param {SrlSubmission} currentSubmission - The submission the student submitted that is being rendered.
      * @param {Function} callback - Called after feedback is rendered
      */
@@ -232,14 +243,23 @@ function FeedbackRenderer(problemPanel, basicFeedbackPanel, backgroundColorPanel
         callback();
     }
 
+    /**
+     * Called to start a waiting screen or other things to happen when it should start waiting.
+     */
     this.startWaiting = function() {
         startWaiting();
     };
 
+    /**
+     * Called to end a waiting screen or other things to happen when it should stop waiting.
+     */
     this.finishWaiting = function() {
         finishWaiting();
     };
 
+    /**
+     * @param {Function} startWaitingFunction - Sets a function to be called when it should start waiting.
+     */
     this.setStartWaitingFunction = function(startWaitingFunction) {
         startWaiting = function() {
             isRunning = true;
@@ -247,6 +267,9 @@ function FeedbackRenderer(problemPanel, basicFeedbackPanel, backgroundColorPanel
         };
     };
 
+    /**
+     * @param {Function} finishWaitingFunction - Sets a function to be called when it should finish waiting.
+     */
     this.setFinishWaitingFunction = function(finishWaitingFunction) {
         finishWaiting = function() {
             isRunning = false;
@@ -259,8 +282,7 @@ function FeedbackRenderer(problemPanel, basicFeedbackPanel, backgroundColorPanel
      */
     this.finalize = function() {
         this.reset();
-        CourseSketch.connection.setAnswerCheckingListener(undefined);
         problemPanel = undefined;
-    }
+    };
 }
 CourseSketch.FeedbackRenderer = FeedbackRenderer;

@@ -146,22 +146,14 @@ function SubmissionPanel() {
     };
 
     /**
-     * Sends the submission to the server.
+     * Gets submission data from the given panel based on if the problem is submitting.
      *
-     * @param {Boolean} isSubmitting - true if the data is a submission as opposed to just a normal save.
-     * @throws {SubmissionException} - thrown if there is a problem
-     * @instance
-     * @memberof SubmissionPanel
+     * @param {Element} subPanel - The panel that holds submission data.
+     * @param {Boolean} isSubmitting - True if this is a submission instead of a save.
+     * @throws {SubmissionException} - If the question type can not be submitted.
+     * @return {QuestionData}
      */
-    this.sendDataToServer = function(isSubmitting) {
-        var subPanel = this.querySelector('.submittable');
-        if (isUndefined(subPanel)) {
-            throw new SubmissionException('There is no element that contains submittable data');
-        }
-        if (isUndefined(this.problemType)) {
-            throw new SubmissionException('Problem data is not set correctly aborting');
-        }
-        var submission = createBaseSubmission();
+    this.getSubmissionData = function(subPanel, isSubmitting) {
         var QuestionType = CourseSketch.prutil.QuestionType;
         var submissionData = CourseSketch.prutil.QuestionData();
         switch (this.problemType) {
@@ -180,8 +172,28 @@ function SubmissionPanel() {
         if (isUndefined(submissionData)) {
             throw new SubmissionException('submission type [' + this.problemType + '] not supported, aborting');
         }
+        return submissionData;
+    };
 
-        submission.setSubmissionData(submissionData);
+    /**
+     * Sends the submission to the server.
+     *
+     * @param {Boolean} isSubmitting - true if the data is a submission as opposed to just a normal save.
+     * @throws {SubmissionException} - thrown if there is a problem.
+     * @instance
+     * @memberof SubmissionPanel
+     */
+    this.sendDataToServer = function(isSubmitting) {
+        var subPanel = this.querySelector('.submittable');
+        if (isUndefined(subPanel)) {
+            throw new SubmissionException('There is no element that contains submittable data');
+        }
+        if (isUndefined(this.problemType)) {
+            throw new SubmissionException('Problem data is not set correctly aborting');
+        }
+        var submission = createBaseSubmission();
+
+        submission.setSubmissionData(this.getSubmissionData(subPanel, isSubmitting));
 
         if (isUndefined(this.wrapperFunction)) {
             // You need to set the wrapper function to either create an experiment or solution.
@@ -192,23 +204,28 @@ function SubmissionPanel() {
         console.log(submittingValue);
         var submissionRequest = CourseSketch.prutil.createRequestFromData(submittingValue,
             CourseSketch.prutil.getRequestClass().MessageType.SUBMISSION);
-        var problemType = this.problemType;
         var problemIndex = this.problemIndex;
         CourseSketch.connection.setSubmissionListener();
         submissionRequest.setResponseText(this.isStudent ? 'student' : this.isGrader ? 'grader' : 'instructor');
         CourseSketch.dataListener.sendRequestWithTimeout(submissionRequest, function(event, request) {
-            console.log(request);
-            console.log(request.responseText);
-            if (problemIndex === this.problemIndex && this.problemType === CourseSketch.prutil.QuestionType.SKETCH) {
-                var sketchSurface = this.querySelector('.submittable');
-                // Potential conflict if it was save multiple times in quick succession.
-                sketchSurface.getUpdateManager().setLastSaveTime(request.getMessageTime());
-                console.log('submission has been updated with the latest time', request.getMessageTime().toString());
-            }
-            problemType = undefined;
-            problemIndex = undefined;
+            this.submissionResponse(request, problemIndex);
         }.bind(this), 1, CourseSketch.dataListener.getRequestType());
-        submission = undefined;
+    };
+
+    /**
+     * Called after the submission has been submitted successfully.
+     *
+     * @param {Request} request - The protobuf request of the response.
+     * @param problemIndex - The old problem when it was being submitted.
+     */
+    this.submissionResponse = function(request, problemIndex) {
+        console.log(request);
+        if (problemIndex === this.problemIndex && this.problemType === CourseSketch.prutil.QuestionType.SKETCH) {
+            var sketchSurface = this.querySelector('.submittable');
+            // Potential conflict if it was save multiple times in quick succession.
+            sketchSurface.getUpdateManager().setLastSaveTime(request.getMessageTime());
+            console.log('submission has been updated with the latest time', request.getMessageTime().toString());
+        }
     };
 
     /**
@@ -351,6 +368,7 @@ function SubmissionPanel() {
                 updateManager.addUpdate(update);
             });
         } else if (problemType === QuestionType.MULT_CHOICE) {
+            console.log('No problem type needed');
             // none currently needed
             // throw new SubmissionException('Callbacks for Multiple choice is not supported.');
             // add mult choice tools

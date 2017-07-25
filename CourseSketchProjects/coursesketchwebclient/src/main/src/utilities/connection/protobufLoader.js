@@ -495,15 +495,15 @@ function ProtobufSetup() {
 
     /**
      * @param {String} className Name of the protobuf.
-     * @return {ProtobufObject} An instance of a protobuf of that name.
+     * @returns {ProtobufObject} An instance of a protobuf of that name.
      */
-    this.getProtobufInstanceByName = function(proto) {
-        return CourseSketch.prutil[proto]();
+    this.getProtobufInstanceByName = function(className) {
+        return CourseSketch.prutil[className]();
     };
 
     /**
-     * @param {ProtobufObject} className Name of the protobuf.
-     * @return {ProtobufObject} An instance of a protobuf of that name.
+     * @param {ProtobufObject} protoObject Name of the protobuf.
+     * @returns {ProtobufObject} An instance of a protobuf of that name.
      */
     this.createNewProtobufInstanceFromInstance = function(protoObject) {
         return CourseSketch.prutil[proto.$type.name]();

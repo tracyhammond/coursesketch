@@ -159,6 +159,7 @@ CourseSketch.AdvanceEditPanel = function() {
      * @param {Element} elementData - The parent element.
      * @param {ProtobufObject} schoolItemData - Data that is being attached to the action.
      * @param {String} property - A property of schoolItemData.
+     * @returns {Array} a list of how the data was loaded into the element.
      */
     function loadListIntoElement(elementData, schoolItemData, property) {
         var template = elementData.querySelector('.template');
@@ -179,6 +180,7 @@ CourseSketch.AdvanceEditPanel = function() {
      * @param {ProtobufObject} protobufData - Data that is being attached to the action.
      * @param {Element} newNode - The existing node
      * @param {Element} parent - The parent element.
+     * @returns {*} The equivalent of what would be grabbed by the field if not edited.
      */
     function createListElement(index, protobufData, newNode, parent) {
         newNode.classList.remove('templateData');
@@ -305,7 +307,7 @@ CourseSketch.AdvanceEditPanel = function() {
                     var elementData = element.querySelectorAll('.data')[0];
                     var subMapData = new Map();
                     if (!isUndefined(originalData)) {
-                        subMapData = originalData.get(property)
+                        subMapData = originalData.get(property);
                     }
 
                     result = getDataFromElement(elementData, schoolItemData[property], property, subMapData);
@@ -368,6 +370,16 @@ CourseSketch.AdvanceEditPanel = function() {
 
     this.getDataFromElement = getDataFromElement;
 
+    /**
+     * Gets data from the element if they are the same.
+     *
+     * It is expecting the data to be in a list though.
+     * @param {Element} elementData - The element the data is being loaded from.
+     * @param {*} schoolItemData - Data that is being loaded into.
+     * @param {String} property - A property of schoolItemData.
+     * @param {*} [originalData] - A map of the original data.
+     * @returns {*} The data loaded from the element.
+     */
     function getDataFromList(elementData, schoolItemData, property, originalData) {
         var elements = elementData.querySelectorAll(':scope > [data-list-item]');
         var resultData = [];

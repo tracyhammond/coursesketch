@@ -134,6 +134,8 @@ validateFirstRun(document.currentScript);
 
     /**
      * Saves the data to the database.
+     *
+     * @param {Function} [callback] Called after the data has been saved.
      */
     function saveData(callback) {
         originalMap = advancedEdit.getInput(currentProblem, editPanel, originalMap);
@@ -167,29 +169,8 @@ validateFirstRun(document.currentScript);
             solutionMode = true;
             setupSolutionSubmissionPanel(submissionPanel, navigator, currentProblem.questionType);
 
-            function copyMultipleChoiceQuestionData() {
-                try {
-                    if (currentProblem.questionType === CourseSketch.prutil.QuestionType.MULT_CHOICE) {
-                        if (isUndefined(currentSubmission) || currentSubmission === null) {
-                            currentSubmission = CourseSketch.prutil.SrlSubmission();
-                        }
-                        if (isUndefined(currentSubmission.submissionData) || currentSubmission.submissionData === null) {
-                            currentSubmission.submissionData = CourseSketch.prutil.QuestionData();
-                        }
-                        if (isUndefined(currentSubmission.submissionData.multipleChoice) ||
-                            currentSubmission.submissionData.multipleChoice === null) {
-                            currentSubmission.submissionData.multipleChoice = CourseSketch.prutil.MultipleChoice();
-                        }
-                        currentSubmission.submissionData.multipleChoice.answerChoices = currentProblem.specialQuestionData.multipleChoice.answerChoices;
-                    }
-                } catch (exception) {
-                    console.log(exception);
-                }
-            }
-
             // eslint-disable-next-line
             function loadSubmission() {
-                copyMultipleChoiceQuestionData();
                 setTimeout(function() {
                     problemRenderer.setIsStudentProblem(true);
                     problemRenderer.renderSubmission(currentProblem, currentSubmission, function() {

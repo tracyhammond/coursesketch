@@ -51,6 +51,8 @@ validateFirstRun(document.currentScript);
         feedbackRenderer.reset();
         problemRenderer.reset();
         problemRenderer.setIsStudentProblem(true);
+        feedbackRenderer.setStartWaitingFunction(waiter.startWaiting);
+        feedbackRenderer.setFinishWaitingFunction(waiter.finishWaiting);
         problemRenderer.setStartWaitingFunction(waiter.startWaiting);
         problemRenderer.setFinishWaitingFunction(waiter.finishWaiting);
         currentProblem = bankProblem;
@@ -108,16 +110,21 @@ validateFirstRun(document.currentScript);
         });
     }
 
+    /**
+     * sets up the feedback renderer to listen for feedback.
+     *
+     * @param {SrlSubmission} submission - The submission the user just submitted.
+     */
     function startFeedbackRenderer(submission) {
         try {
-            feedbackRenderer.listenToFeedback(currentProblem, submission, true, function () {
+            feedbackRenderer.listenToFeedback(currentProblem, submission, true, function() {
                 console.log('feedback rendered');
             });
 
             // prevent students from being stupid while waiting for feedback
             // Only wait 3 seconds max
             feedbackRenderer.startWaiting();
-            setTimeout(function () {
+            setTimeout(function() {
                 feedbackRenderer.finishWaiting();
             }, 3000);
         } catch (exception) {
