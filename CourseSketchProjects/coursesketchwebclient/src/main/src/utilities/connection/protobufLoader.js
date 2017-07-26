@@ -1,4 +1,4 @@
-/* Depends on the protobuf library, base.js, objectAndInheritance.js */
+/* Depends on the protobuf library, base.js */
 
 /**
  * Any exception that occurs relating to protobufs.

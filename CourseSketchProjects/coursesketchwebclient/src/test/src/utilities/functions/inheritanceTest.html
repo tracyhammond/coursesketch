@@ -24,7 +24,7 @@
 
             function child() {
             }
-            child.Inherits(parent);
+            inheritsParent(child, parent);
 
             assert.ok(new child() instanceof parent);
         });
@@ -39,7 +39,7 @@
             function child(arg1) {
                 this.superConstructor(arg1);
             }
-            child.Inherits(parent);
+            inheritsParent(child, parent);
 
             new child(true);
         });
@@ -61,7 +61,7 @@
                 assert.ok(this instanceof parentP, "parent instance");
                 this.superConstructor(arg1, childP, parentP);
             }
-            child.Inherits(parent);
+            inheritsParent(child, parent);
             console.log("presenting my argument");
             new child(true, child, parent);
         });
@@ -89,15 +89,15 @@
             }
 
             function grandChild(arg1, arg2, grandChildP, childP, parentP) {
-                console.log("prototype in grandchild");
+                console.log("prototype in grandChild");
                 console.log(Object.getPrototypeOf(this));
                 assert.ok(this instanceof grandChildP, "grandChild instance in grandChild");
                 assert.ok(this instanceof childP, "child instance in grandChild");
                 assert.ok(this instanceof parentP, "parent instance in grandChild");
                 this.superConstructor(arg1, arg2, grandChildP, childP, parentP);
             }
-            child.Inherits(parent);
-            grandChild.Inherits(child);
+            inheritsParent(child, parent);
+            inheritsParent(grandChild,  child);
 
             //console.log("CREATING PARENT");
             //new parent(true, grandChild, child, parent);
@@ -144,7 +144,7 @@
 
             function grandChild(arg1, arg2, grandChildP, childP, parentP) {
                 if (!isUndefined(arg2)) {
-                    console.log("prototype in grandchild");
+                    console.log("prototype in grandChild");
                     console.log(Object.getPrototypeOf(this));
                     assert.ok(this instanceof grandChildP, "grandChild instance in grandChild");
                     assert.ok(this instanceof childP, "child instance in grandChild");
@@ -154,11 +154,11 @@
                 this.gandChildFunction = function() {
                     alert("grandChild");
                 };
-                console.log("leaving grandchild");
+                console.log("leaving grandChild");
             }
 
             function superGrandChild(arg1, arg2, grandChildP, childP, parentP) {
-                console.log("prototype in supergrandchild");
+                console.log("prototype in supergrandChild");
                 console.log(Object.getPrototypeOf(this));
                 assert.ok(this instanceof grandChildP, "grandChild instance in grandChild");
                 assert.ok(this instanceof childP, "child instance in grandChild");
@@ -167,11 +167,11 @@
                 this.supergrandChildFunction = function() {
                     alert("superGrandChild");
                 };
-                console.log("leaving supergrandchild");
+                console.log("leaving supergrandChild");
             }
-            child.Inherits(parent);
-            grandChild.Inherits(child);
-            superGrandChild.Inherits(grandChild);
+            inheritsParent(child, parent);
+            inheritsParent(grandChild,  child);
+            inheritsParent(superGrandChild,  grandChild);
 
             //console.log("CREATING PARENT");
             //new parent(true, grandChild, child, parent);
@@ -196,11 +196,11 @@
             }
 
             function grandChild() {
-                assert.ok(true, "grandchild"); // run 1
+                assert.ok(true, "grandChild"); // run 1
                 this.superConstructor();
             }
-            child.Inherits(parent);
-            grandChild.Inherits(child);
+            inheritsParent(child, parent);
+            inheritsParent(grandChild,  child);
 
             new grandChild();
         });
@@ -220,11 +220,11 @@
             }
 
             function grandChild() {
-                assert.ok(true, "grandchild"); // run 1
+                assert.ok(true, "grandChild"); // run 1
                 this.superConstructor();
             }
-            child.Inherits(parent);
-            grandChild.Inherits(child);
+            inheritsParent(child, parent);
+            inheritsParent(grandChild,  child);
 
             new grandChild();
         });

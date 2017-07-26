@@ -92,9 +92,7 @@ if (isUndefined(getMapAsList)) {
     function getMapAsList(map) {
         var list = [];
         for (var key in map) {
-            if (key !== 'Inherits') {
-                list.push(map[key]);
-            }
+            list.push(map[key]);
         }
         return list;
     }

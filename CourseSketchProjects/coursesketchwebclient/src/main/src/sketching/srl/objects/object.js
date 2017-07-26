@@ -277,4 +277,4 @@ function SRL_Object() {
     };
 }
 
-SRL_Object.Inherits(Overloads);
+inheritsParent(SRL_Object, Overloads);
