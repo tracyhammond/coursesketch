@@ -241,6 +241,36 @@ public class SubmissionDatabaseClientTest {
                 .equals(secondSubmission, result);
     }
 
+
+    @Test(expected = DatabaseAccessException.class)
+    public void testUpdateListThrowsExceptionIfTryingToOverride() throws Exception {
+        // round 1
+        Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
+        final Commands.SrlUpdateList original = createSimpleDatabaseListWithSaveMarker(200);
+        build.setSubmissionData(QuestionData.newBuilder().setSketchArea(
+                SketchArea.newBuilder().setRecordedSketch(original)));
+        Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
+        String id = databaseClient.saveExperiment(expected, 200);
+
+        // round 2
+        Submission.SrlSubmission.Builder secondList = Submission.SrlSubmission.newBuilder();
+        secondList.setSubmissionData(QuestionData.newBuilder().setSketchArea(
+                SketchArea.newBuilder().setRecordedSketch(SubmissionMergerTest.createSimpleDatabaseList(500))));
+        Submission.SrlExperiment secondSubmission = getFakeExperiment("User1", secondList.build());
+        String secondId = databaseClient.saveExperiment(secondSubmission, 200);
+
+        Assert.assertEquals(id, secondId);
+
+        // get experiment
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, new AuthenticationResponder(
+                Authentication.AuthResponse.newBuilder().setPermissionLevel(Authentication.AuthResponse.PermissionLevel.MODERATOR).build()));
+        new ProtobufComparisonBuilder()
+                .ignoreField(Submission.SrlSubmission.getDescriptor(), Submission.SrlSubmission.ID_FIELD_NUMBER)
+                .ignoreField(Submission.SrlExperiment.getDescriptor(), Submission.SrlExperiment.USERID_FIELD_NUMBER)
+                .build()
+                .equals(secondSubmission, result);
+    }
+
     @Test(expected = AuthenticationException.class)
     public void testSubmissionThrowsExceptionIfGivenWrongProblemId() throws Exception {
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
@@ -424,6 +454,11 @@ public class SubmissionDatabaseClientTest {
         String resultAnswer = result.getSubmission().getSubmissionData().getMultipleChoice().getSelectedIds(0);
 
         Assert.assertEquals(textAnswer2, resultAnswer);
+    }
+
+    @Test
+    public void testSettingUpIndexes() throws Exception {
+        databaseClient.setUpIndexes();
     }
 
     private Submission.SrlExperiment getFakeExperiment(String userId, Submission.SrlSubmission sub) {

@@ -7,6 +7,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.IndexOptions;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
@@ -186,6 +187,8 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         if (multipleObjectCursor.hasNext()) {
             LOG.info("UPDATING AN EXPERIMENT!!!!!!!!");
             existingSubmission = multipleObjectCursor.next();
+
+            isSameQuestionType(existingSubmission, experiment.getSubmission());
 
             // TODO figure out how to update a document with a single command
 
@@ -387,13 +390,14 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * @return An object that represents how it would be stored in the database.
      * @throws SubmissionException thrown if there is a problem creating the database object.
      */
+    @SuppressWarnings({ "PMD.ExceptionAsFlowControl", "PMD.UselessParentheses" })
     private static Document createSubmission(final SrlSubmission submission, final Document cursor,
                                              final boolean isMod, final long submissionTime) throws SubmissionException {
         if (!submission.hasSubmissionData()) {
             throw new SubmissionException("Tried to save as an invalid submission", null);
         }
         try {
-            return new MongoQuestionDataBuilder() {
+            return (new MongoQuestionDataBuilder() {
                 @Override
                 protected Document createUpdateList(SketchArea sketchArea) throws DatabaseAccessException {
                     try {
@@ -402,9 +406,23 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
                         throw new DatabaseAccessException("Failed to create update list", e);
                     }
                 }
-            }.createSubmission(submission.getSubmissionData());
+            }).createSubmission(submission.getSubmissionData());
         } catch (DatabaseAccessException e) {
             throw new SubmissionException("Failed to create question data document", e);
+        }
+    }
+
+    /**
+     * Checks to make sure that the question type is still the same as the old time.
+     *
+     * @param document The document being checked.
+     * @param submissionData The new submission data.
+     * @throws DatabaseAccessException Thrown if the data does not match.
+     */
+    private void isSameQuestionType(Document document, SrlSubmission submissionData) throws DatabaseAccessException {
+        if (document != null && submissionData != null && submissionData.hasSubmissionData()
+                && getQuestionType(document) != submissionData.getSubmissionData().getElementTypeCase()) {
+            throw new DatabaseAccessException("Can not change the saved type of the question", null);
         }
     }
 
@@ -559,9 +577,9 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         LOG.info("Experiment Index command: {}", new Document(COURSE_PROBLEM_ID, 1).append(USER_ID, 1));
         database.getCollection(EXPERIMENT_COLLECTION).createIndex(new Document(COURSE_PROBLEM_ID, 1)
                 .append(ITEM_ID, 1)
-                .append(USER_ID, 1)
-                .append("unique", true));
-        database.getCollection(SOLUTION_COLLECTION).createIndex(new Document(PROBLEM_BANK_ID, 1).append("unique", true));
+                .append(USER_ID, 1), new IndexOptions().unique(true));
+        database.getCollection(SOLUTION_COLLECTION).createIndex(new Document(PROBLEM_BANK_ID, 1),
+                new IndexOptions().unique(true));
     }
 
     /**

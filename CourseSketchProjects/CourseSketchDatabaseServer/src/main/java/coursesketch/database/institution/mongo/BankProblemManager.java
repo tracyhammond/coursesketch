@@ -46,7 +46,7 @@ import static coursesketch.database.util.MongoUtilities.getQuestionType;
  *
  * @author gigemjt
  */
-@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity"})
+@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
 public final class BankProblemManager {
 
     /**
@@ -59,7 +59,10 @@ public final class BankProblemManager {
      */
     private static final int PAGE_LENGTH = 20;
 
-    private static final MongoQuestionDataBuilder databaseBuilder = new MongoQuestionDataBuilder();
+    /**
+     * Builds the {@link QuestionData}.
+     */
+    private static final MongoQuestionDataBuilder QUESTION_DATA_BUILDER = new MongoQuestionDataBuilder();
 
     /**
      * Private constructor.
@@ -115,7 +118,7 @@ public final class BankProblemManager {
             return appendQuestionTypeToDocument(questionData.getElementTypeCase(), new Document());
         }
         try {
-            return databaseBuilder.createSubmission(questionData);
+            return QUESTION_DATA_BUILDER.createSubmission(questionData);
         } catch (DatabaseAccessException exception) {
             LOG.error("Error creating question data {}", exception);
             return appendQuestionTypeToDocument(questionData.getElementTypeCase(), new Document());
@@ -207,7 +210,7 @@ public final class BankProblemManager {
         if (type == QuestionData.ElementTypeCase.ELEMENTTYPE_NOT_SET) {
             return element.build();
         }
-        return databaseBuilder.buildQuestionDataProto(query);
+        return QUESTION_DATA_BUILDER.buildQuestionDataProto(query);
     }
 
     /**
@@ -222,8 +225,8 @@ public final class BankProblemManager {
      * @throws AuthenticationException Thrown if the user does not have permission to update the bank problem.
      * @throws DatabaseAccessException Thrown if there is an issue updating the problem.
      */
-    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",
-            "PMD.NPathComplexity", "PMD.AvoidDeeplyNestedIfStmts"})
+    @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",
+            "PMD.NPathComplexity", "PMD.AvoidDeeplyNestedIfStmts" })
     static boolean mongoUpdateBankProblem(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
                                           final String problemBankId,
                                           final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException {
@@ -296,17 +299,17 @@ public final class BankProblemManager {
     /**
      * Returns all bank problems.  The user must be an instructor of a course.
      *
-     * @param authenticator the object that is performing authentication.
+     * @param authenticator The object that is performing authentication.
      * @param database      The database where the assignment is being stored.
-     * @param authId        the user asking for the bank problems.
+     * @param authId        The user asking for the bank problems.
      * @param courseId      The course the user is wanting to possibly be associated with the bank problem.
-     * @param page          the bank problems are limited to ensure that the database is not overwhelmed.
+     * @param page          The bank problems are limited to ensure that the database is not overwhelmed.
      * @return a list of {@link protobuf.srl.school.Problem.SrlBankProblem}.
      * @throws AuthenticationException Thrown if the user does not have permission to retrieve any bank problems.
      * @throws DatabaseAccessException Thrown if there are fields missing that make the problem inaccessible.
      */
     static List<SrlBankProblem> mongoGetAllBankProblems(final Authenticator authenticator, final MongoDatabase database, final String authId,
-                                                        final String courseId, final int page) throws AuthenticationException, DatabaseAccessException {
+            final String courseId, final int page) throws AuthenticationException, DatabaseAccessException {
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
                 .build();

@@ -24,12 +24,17 @@ import static coursesketch.database.util.DatabaseStringConstants.SELECTED_ANSWER
 import static coursesketch.database.util.DatabaseStringConstants.TEXT_ANSWER;
 import static coursesketch.database.util.DatabaseStringConstants.UPDATELIST;
 import static coursesketch.database.util.MongoUtilities.appendQuestionTypeToDocument;
+import static coursesketch.database.util.MongoUtilities.getNonNullList;
 import static coursesketch.database.util.MongoUtilities.getQuestionType;
 
+/**
+ * Builds question data for the servers.
+ */
+@SuppressWarnings("checkstyle:designforextension")
 public class MongoQuestionDataBuilder {
 
     /**
-     * Retrieves the questionData portion of the document
+     * Retrieves the questionData portion of the document.
      *
      * @param questionDocument The database pointer to the data.
      * @return {@link protobuf.srl.submission.Submission.SrlSubmission} the resulting submission.
@@ -40,38 +45,16 @@ public class MongoQuestionDataBuilder {
 
         switch (getQuestionType(questionDocument)) {
             case SKETCHAREA:
-                final Object binary = questionDocument.get(UPDATELIST);
-                if (binary == null) {
-                    throw new DatabaseAccessException("UpdateList did not contain any data", null);
-                }
-                try {
-                    final Commands.SrlUpdateList updateList = Commands.SrlUpdateList.parseFrom(ByteString.copyFrom(((Binary) binary).getData()));
-                    questionData.setSketchArea(SketchArea.newBuilder().setRecordedSketch(updateList));
-                } catch (InvalidProtocolBufferException e) {
-                    throw new DatabaseAccessException("Error decoding update list", e);
-                }
+                questionData.setSketchArea(buildSketchAreaProto(questionDocument));
                 break;
             case FREERESPONSE:
-                final Object text = questionDocument.get(TEXT_ANSWER);
-                if (text == null) {
-                    throw new DatabaseAccessException("Text answer did not contain any data", null);
-                }
-                questionData.setFreeResponse(FreeResponse.newBuilder().setStartingText(text.toString()));
+                questionData.setFreeResponse(buildFreeResponseProto(questionDocument));
                 break;
             case MULTIPLECHOICE:
                 questionData.setMultipleChoice(buildMultipleChoiceProto(questionDocument));
                 break;
             case EMBEDDEDHTML:
-                final Object embeddedHtmlBinary = questionDocument.get(EMBEDDED_HTML);
-                if (embeddedHtmlBinary == null) {
-                    throw new DatabaseAccessException("Embedded html did not contain any data", null);
-                }
-                try {
-                    questionData.setEmbeddedHtml(EmbeddedHtml.parseFrom(
-                            ByteString.copyFrom(((Binary) embeddedHtmlBinary).getData())));
-                } catch (InvalidProtocolBufferException e) {
-                    throw new DatabaseAccessException("Error decoding embedded html", e);
-                }
+                questionData.setEmbeddedHtml(buildEmbeddedHtmlProto(questionDocument));
                 break;
             default:
                 throw new DatabaseAccessException("question data is not supported type or does not exist", null);
@@ -79,10 +62,73 @@ public class MongoQuestionDataBuilder {
         return questionData.build();
     }
 
+    /**
+     * Builds a multiple choice proto from the server data.
+     *
+     * @param document A {@link Document} that contains free response data.
+     * @return A proto built by the server.
+     * @throws DatabaseAccessException Throw if the data does not exist.
+     */
+    private FreeResponse buildFreeResponseProto(Document document) throws DatabaseAccessException {
+        final Object text = document.get(TEXT_ANSWER);
+        if (text == null) {
+            throw new DatabaseAccessException("Text answer did not contain any data", null);
+        }
+        return FreeResponse.newBuilder().setStartingText(text.toString()).build();
+    }
+
+    /**
+     * Builds a multiple choice proto from the server data.
+     *
+     * @param document A {@link Document} that contains embeddedhtml data.
+     * @return A proto built by the server.
+     * @throws DatabaseAccessException Throw if there is a problem parsing the embedded html
+     */
+    private EmbeddedHtml buildEmbeddedHtmlProto(Document document) throws DatabaseAccessException {
+        final Object embeddedHtmlBinary = document.get(EMBEDDED_HTML);
+        if (embeddedHtmlBinary == null) {
+            throw new DatabaseAccessException("Embedded html did not contain any data", null);
+        }
+        try {
+            return EmbeddedHtml.parseFrom(
+                    ByteString.copyFrom(((Binary) embeddedHtmlBinary).getData()));
+        } catch (InvalidProtocolBufferException e) {
+            throw new DatabaseAccessException("Error decoding embedded html", e);
+        }
+    }
+
+    /**
+     * Builds a multiple choice proto from the server data.
+     *
+     * @param document A {@link Document} that contains sketch area data.
+     * @return A proto built by the server.
+     * @throws DatabaseAccessException Throw if there is no sketch area data in the document.
+     */
+    private SketchArea buildSketchAreaProto(Document document) throws DatabaseAccessException {
+        final Object binary = document.get(UPDATELIST);
+        if (binary == null) {
+            throw new DatabaseAccessException("UpdateList did not contain any data", null);
+        }
+        try {
+            final Commands.SrlUpdateList updateList = Commands.SrlUpdateList.parseFrom(ByteString.copyFrom(((Binary) binary).getData()));
+            return SketchArea.newBuilder().setRecordedSketch(updateList).build();
+        } catch (InvalidProtocolBufferException e) {
+            throw new DatabaseAccessException("Error decoding update list", e);
+        }
+    }
+
+    /**
+     * Builds a multiple choice proto from the server data.
+     *
+     * @param questionDocument A {@link Document} that contains multiple choice data.
+     * @return A proto built by the server.
+     * @throws DatabaseAccessException Throw if there is no multiple choice data in the document.
+     */
     private MultipleChoice buildMultipleChoiceProto(Document questionDocument) throws DatabaseAccessException {
-        final List<String> selectedChoices = questionDocument.get(SELECTED_ANSWER_CHOICES, new ArrayList<String>());
-        final List<Document> listOfAnswerChoices = questionDocument.get(ANSWER_CHOICES, new ArrayList<Document>());
-        if (selectedChoices == null && listOfAnswerChoices == null) {
+
+        final List<String> selectedChoices = getNonNullList(questionDocument, SELECTED_ANSWER_CHOICES);
+        final List<Document> listOfAnswerChoices = getNonNullList(questionDocument, ANSWER_CHOICES);
+        if (selectedChoices.isEmpty() && listOfAnswerChoices.isEmpty()) {
             throw new DatabaseAccessException("MultipleChoice answer did not contain any data", null);
         }
 
@@ -94,18 +140,24 @@ public class MongoQuestionDataBuilder {
                             .valueOf(questionDocument.getInteger(MULTIPLE_CHOICE_DISPLAY_TYPE)));
         }
 
-        if (listOfAnswerChoices != null && listOfAnswerChoices.size() > 0) {
+        if (!listOfAnswerChoices.isEmpty()) {
             multipleChoice.addAllAnswerChoices(getAnswerChoices(listOfAnswerChoices));
         }
 
-        if (selectedChoices != null) {
+        if (!selectedChoices.isEmpty()) {
             multipleChoice.addAllSelectedIds(selectedChoices);
         }
         return multipleChoice.build();
     }
 
+    /**
+     * Creates an answer choice from an answer choice document.
+     *
+     * @param answerChoices A list of answer choice documents
+     * @return A list of {@link QuestionDataOuterClass.AnswerChoice} objects.
+     */
     private Iterable<? extends QuestionDataOuterClass.AnswerChoice> getAnswerChoices(List<Document> answerChoices) {
-        List<QuestionDataOuterClass.AnswerChoice> protoAnswerChoices = new ArrayList<>();
+        final List<QuestionDataOuterClass.AnswerChoice> protoAnswerChoices = new ArrayList<>();
         for (Document answerChoice : answerChoices) {
             protoAnswerChoices.add(QuestionDataOuterClass.AnswerChoice.newBuilder()
                     .setId(answerChoice.getString(ITEM_ID))
@@ -120,6 +172,7 @@ public class MongoQuestionDataBuilder {
      *
      * @param questionData The questionData that is being inserted.
      * @return An object that represents how it would be stored in the database.
+     * @throws DatabaseAccessException Thrown if there are problems creating the document.
      */
     public Document createSubmission(final QuestionDataOuterClass.QuestionData questionData)
             throws DatabaseAccessException {
@@ -130,13 +183,13 @@ public class MongoQuestionDataBuilder {
                 document = createUpdateList(questionData.getSketchArea());
                 break;
             case FREERESPONSE:
-                document = createTextSubmission(questionData.getFreeResponse());
+                document = createFreeResponseDocument(questionData.getFreeResponse());
                 break;
             case MULTIPLECHOICE:
-                document = createMultipleChoiceSolution(questionData.getMultipleChoice());
+                document = createMultipleChoiceDocument(questionData.getMultipleChoice());
                 break;
             case EMBEDDEDHTML:
-                document = new Document(EMBEDDED_HTML, questionData.getEmbeddedHtml().toByteArray());
+                document = new Document(EMBEDDED_HTML, new Binary(questionData.getEmbeddedHtml().toByteArray()));
                 break;
             default:
                 throw new DatabaseAccessException("Tried to save invalid Question Data", null);
@@ -145,6 +198,13 @@ public class MongoQuestionDataBuilder {
         return document;
     }
 
+    /**
+     * Creates an update list document from the {@link SketchArea}.
+     *
+     * @param sketchArea The sketch area that contains the sketch data.
+     * @return A document represented by this data.
+     * @throws DatabaseAccessException Thrown if there are problems creating the update list.
+     */
     protected Document createUpdateList(SketchArea sketchArea) throws DatabaseAccessException {
         return new Document(UPDATELIST, new Binary(sketchArea.getRecordedSketch().toByteArray()));
     }
@@ -155,7 +215,7 @@ public class MongoQuestionDataBuilder {
      * @param submission The submission that is being inserted.
      * @return An object that represents how it would be stored in the database.
      */
-    private Document createTextSubmission(final QuestionDataOuterClass.FreeResponse submission) {
+    private Document createFreeResponseDocument(final QuestionDataOuterClass.FreeResponse submission) {
         // don't store it as changes for right now.
         return new Document(TEXT_ANSWER, submission.getStartingText());
     }
@@ -166,17 +226,17 @@ public class MongoQuestionDataBuilder {
      * @param multipleChoice The multipleChoice that is being inserted.
      * @return An object that represents how it would be stored in the database.
      */
-    private Document createMultipleChoiceSolution(final MultipleChoice multipleChoice) {
+    private Document createMultipleChoiceDocument(final MultipleChoice multipleChoice) {
         // don't store it as changes for right now.
-        Document document = new Document();
+        final Document document = new Document();
         if (multipleChoice.hasDisplayType()) {
             document.append(MULTIPLE_CHOICE_DISPLAY_TYPE, multipleChoice.getDisplayType().getNumber());
         }
-        if (multipleChoice.getAnswerChoicesCount() > 0) {
+        if (multipleChoice.getSelectedIdsCount() > 0) {
             document.append(SELECTED_ANSWER_CHOICES, multipleChoice.getSelectedIdsList());
         }
         if (multipleChoice.getAnswerChoicesCount() > 0) {
-            List<Document> answerChoices = new ArrayList<>();
+            final List<Document> answerChoices = new ArrayList<>();
             for (QuestionDataOuterClass.AnswerChoice choice : multipleChoice.getAnswerChoicesList()) {
                 answerChoices.add(new Document(ITEM_ID, choice.getId()).append(QUESTION_TEXT, choice.getText()));
             }
