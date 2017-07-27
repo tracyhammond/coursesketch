@@ -14,6 +14,7 @@ function SubmissionException(message, cause) {
     this.setCause(cause);
     this.createStackTrace();
 }
+
 SubmissionException.prototype = new BaseException();
 
 /**
@@ -133,8 +134,8 @@ function SubmissionPanel() {
         try {
             this.sendDataToServer(isSubmitting);
         } catch (exception) {
-            if (isUndefined(this.errorListener)) {
-                errorListener(exception);
+            if (!isUndefined(this.errorListener)) {
+                this.errorListener(exception);
                 // If someone set an error listener let it set the data
                 return;
             }
@@ -151,7 +152,7 @@ function SubmissionPanel() {
      * @param {Element} subPanel - The panel that holds submission data.
      * @param {Boolean} isSubmitting - True if this is a submission instead of a save.
      * @throws {SubmissionException} - If the question type can not be submitted.
-     * @return {QuestionData}
+     * @returns {QuestionData} Data that has been grabbed from the {@code subPanel}.
      */
     this.getSubmissionData = function(subPanel, isSubmitting) {
         var QuestionType = CourseSketch.prutil.QuestionType;
@@ -216,7 +217,7 @@ function SubmissionPanel() {
      * Called after the submission has been submitted successfully.
      *
      * @param {Request} request - The protobuf request of the response.
-     * @param problemIndex - The old problem when it was being submitted.
+     * @param {Number} problemIndex - The old problem when it was being submitted.
      */
     this.submissionResponse = function(request, problemIndex) {
         console.log(request);
@@ -225,6 +226,15 @@ function SubmissionPanel() {
             // Potential conflict if it was save multiple times in quick succession.
             sketchSurface.getUpdateManager().setLastSaveTime(request.getMessageTime());
             console.log('submission has been updated with the latest time', request.getMessageTime().toString());
+        }
+        if (request instanceof CourseSketch.BaseException) {
+            if (!isUndefined(this.errorListener)) {
+                this.errorListener(request);
+            }
+            return;
+        }
+        if (!isUndefined(this.saveListener)) {
+            this.saveListener(request);
         }
     };
 

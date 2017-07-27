@@ -339,6 +339,7 @@ CourseSketch.AdvanceEditPanel = function() {
      * @returns {*} The data loaded from the element.
      */
     function getDataFromElement(elementData, schoolItemData, property, originalData) {
+        /*jshint maxcomplexity:13 */
         if (protoTypes.hasOwnProperty(property + 'ProtoType')) {
             return saveSubObject(elementData, schoolItemData, property, originalData);
         } else if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-date')) {
@@ -465,7 +466,7 @@ CourseSketch.AdvanceEditPanel = function() {
      * @returns {Boolean} True if the values are the same otherwise this will return false;
      */
     function compareValues(originalValue, newValue) {
-        /*jshint maxcomplexity:18 */
+        /*jshint maxcomplexity:21 */
         if (originalValue === newValue) {
             return true;
         }

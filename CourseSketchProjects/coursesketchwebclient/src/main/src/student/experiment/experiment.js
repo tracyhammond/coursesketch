@@ -24,6 +24,7 @@ validateFirstRun(document.currentScript);
             problemRenderer.setStartWaitingFunction(waiter.startWaiting);
             problemRenderer.setFinishWaitingFunction(waiter.finishWaiting);
             feedbackRenderer = new CourseSketch.FeedbackRenderer(problemPanel, undefined, document.getElementById('feedbackBackground'));
+            problemPanel.setOnSavedListener(submissionSaved, submissionErrored);
 
             CourseSketch.dataManager.clearStates();
 
@@ -130,5 +131,24 @@ validateFirstRun(document.currentScript);
         } catch (exception) {
             console.log(exception);
         }
+    }
+
+    /**
+     * Called when the submission is successfully saved.
+     *
+     * @param {Request} request - The request response from the server.
+     */
+    function submissionSaved(request) {
+        Materialize.toast('Submission Was saved successfully', 4000);
+    }
+
+    /**
+     * Called when the submission fails to save.
+     *
+     * @param {BaseException} exception - The exception that occurred.
+     */
+    function submissionErrored(exception) {
+        console.log(exception);
+        Materialize.toast(exception.getMessage(), 4000);
     }
 })();

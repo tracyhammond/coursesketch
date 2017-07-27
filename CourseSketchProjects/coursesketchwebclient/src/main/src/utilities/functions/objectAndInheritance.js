@@ -17,14 +17,15 @@ if (isUndefined(inheritsParent)) {
      * sets up inheritance for functions
      *
      * inheritsParent(this, SuperClass); // super call inside object AND
-     * Inherits(SubClass, SuperClass);
+     * inheritsParent(SubClass, SuperClass);
      *
+     * @param {*} Child - The child class.
      * @param {*} Parent - The parent class.
      */
-     function inheritsParent(Child, Parent) {
-        var localScope = Child;
-        localScope.prototype = new Parent();
-        localScope.prototype.constructor = localScope;
+    function inheritsParent(Child, Parent) {
+        var child = Child;
+        child.prototype = new Parent();
+        child.prototype.constructor = child;
         if (!isUndefined(Parent.prototype.superConstructor)) {
             var parentConstructor = Parent.prototype.superConstructor;
             var localConstructor = undefined;
@@ -33,7 +34,7 @@ if (isUndefined(inheritsParent)) {
              *
              * @type {Function}
              */
-            localConstructor = localScope.prototype.superConstructor = function () {
+            localConstructor = child.prototype.superConstructor = function() {
                 // special setting
                 this.superConstructor = parentConstructor;
                 // console.log('Setting parent constructor' + parent);
@@ -50,7 +51,7 @@ if (isUndefined(inheritsParent)) {
             /**
              * SuperConstructor.
              */
-            localScope.prototype.superConstructor = function () {
+            child.prototype.superConstructor = function() {
                 if (arguments.length >= 1) {
                     Parent.apply(this, Array.prototype.slice.call(arguments, 0));
                 } else {
@@ -58,6 +59,6 @@ if (isUndefined(inheritsParent)) {
                 }
             };
         }
-    };
+    }
 
 }

@@ -123,7 +123,7 @@ function ProblemRenderer(problemPanel) {
         }
 
         copyQuestionData(bankProblem);
-        loadSpecificType(specialQuestionData, isStudent, internalCallback, false);
+        loadSpecificType(specialQuestionData, isStudent, false, internalCallback);
     };
 
     /**
@@ -163,14 +163,14 @@ function ProblemRenderer(problemPanel) {
      */
     function copyMultipleChoiceQuestionData(questionData, submissionData) {
         try {
-            if (isUndefined(submission.submissionData.multipleChoice) ||
-                submission.submissionData.multipleChoice === null) {
-                submission.submissionData.multipleChoice = CourseSketch.prutil.MultipleChoice();
+            if (isUndefined(submissionData.multipleChoice) ||
+                submissionData.multipleChoice === null) {
+                submissionData.multipleChoice = CourseSketch.prutil.MultipleChoice();
             }
             submissionData.multipleChoice.answerChoices =
                 questionData.multipleChoice.answerChoices;
         } catch (exception) {
-            console.log(exception);
+            console.error(exception);
         }
     }
 
@@ -261,7 +261,7 @@ function ProblemRenderer(problemPanel) {
         var typingSurface = problemPanel.querySelector('textarea.sub-panel.card-panel.submittable');
         if (isUndefined(typingSurface) || typingSurface === null || isUndefined(reuse) || !reuse) {
             problemPanel.emptyPanel();
-            if (problemPanel.querySelector())                {typingSurface = document.createElement('textarea');}
+            typingSurface = document.createElement('textarea');
             typingSurface.className = 'sub-panel card-panel submittable';
             typingSurface.contentEditable = true;
             setFullScreen(typingSurface);
@@ -337,12 +337,8 @@ function ProblemRenderer(problemPanel) {
         }
         multiChoiceElement.setAttribute('data-mode', isSubmission ? 'student' : 'instructor');
         if (isUndefined(multipleChoice) || multipleChoice === null) {
-            if (!isSubmission) {
-                multiChoiceElement.loadData(CourseSketch.prutil.MultipleChoice());
-            } else {
-                errorListener(new ProblemRenderException('Invalid multiple choice data occured for problem'));
-                multiChoiceElement.loadData(CourseSketch.prutil.MultipleChoice());
-            }
+            errorListener(new ProblemRenderException('Invalid multiple choice data occured for problem'));
+            multiChoiceElement.loadData(CourseSketch.prutil.MultipleChoice());
             newCallback();
             return;
         }

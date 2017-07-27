@@ -35,11 +35,11 @@ validateFirstRun(document.currentScript);
     var bankProblem14 = CourseSketch.prutil.SrlBankProblem();
 
     var multipleChoiceAnswer1 = CourseSketch.prutil.AnswerChoice();
-    multipleChoiceAnswer1.id = 'A1';
+    multipleChoiceAnswer1.id = 'AI0';
     multipleChoiceAnswer1.text = 'First question choice';
 
     var multipleChoiceAnswer2 = CourseSketch.prutil.AnswerChoice();
-    multipleChoiceAnswer2.id = 'A2';
+    multipleChoiceAnswer2.id = 'AI1';
     multipleChoiceAnswer2.text = 'Second question choice';
 
     problem1.courseId = '1';
@@ -103,7 +103,7 @@ validateFirstRun(document.currentScript);
     bankProblem3.specialQuestionData = CourseSketch.prutil.QuestionData();
     bankProblem3.specialQuestionData.multipleChoice = CourseSketch.prutil.MultipleChoice();
     bankProblem3.specialQuestionData.multipleChoice.answerChoices = [multipleChoiceAnswer1, multipleChoiceAnswer2];
-    bankProblem3.specialQuestionData.multipleChoice.correctId = 'A2';
+    bankProblem3.specialQuestionData.multipleChoice.selectedIds = ['AI1'];
     CourseSketch.fakeProblems.push(problem3);
     CourseSketch.fakeBankProblems.push(bankProblem3);
 
@@ -122,6 +122,11 @@ validateFirstRun(document.currentScript);
     bankProblem4.id = problem4.id;
     bankProblem4.questionText = 'Please select the correct answer (all or some!)';
     bankProblem4.questionType = CourseSketch.prutil.QuestionType.CHECK_BOX;
+    bankProblem4.specialQuestionData = CourseSketch.prutil.QuestionData();
+    bankProblem4.specialQuestionData.multipleChoice = CourseSketch.prutil.MultipleChoice();
+    bankProblem4.specialQuestionData.multipleChoice.answerChoices = [multipleChoiceAnswer1, multipleChoiceAnswer2];
+    bankProblem4.specialQuestionData.multipleChoice.selectedIds = ['AI0', 'AI1'];
+    bankProblem4.specialQuestionData.multipleChoice.displayType = CourseSketch.prutil.MultipleChoiceDisplayType.CHECKBOX;
     CourseSketch.fakeProblems.push(problem4);
     CourseSketch.fakeBankProblems.push(bankProblem4);
 

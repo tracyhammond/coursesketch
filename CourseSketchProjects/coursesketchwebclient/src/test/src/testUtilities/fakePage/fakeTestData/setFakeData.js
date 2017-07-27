@@ -74,28 +74,31 @@
      *
      */
     function setDataListenerFunctions() {
-        CourseSketch.dataListener.sendDataInsert = function (queryType, data, callback, requestId, times) {
-            var oldId;
-            if (queryType === CourseSketch.prutil.ItemQuery.ASSIGNMENT) {
-                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlAssignmentClass()).id;
-            }
-            if (queryType === CourseSketch.prutil.ItemQuery.COURSE) {
-                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlCourseClass()).id;
-            }
-            if (queryType === CourseSketch.prutil.ItemQuery.COURSE_PROBLEM) {
-                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlProblemClass()).id;
-            }
-            if (queryType === CourseSketch.prutil.ItemQuery.BANK_PROBLEM) {
-                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlBankProblemClass()).id;
-            }
-            var result = {
-                getReturnText: function() { return oldId + ':' + oldId; }
-            };
-            callback(undefined, result);
+        CourseSketch.Testing.dataListenerConfig = {
+            callRealDataUpdate: false,
+            callRealDataInsert: false,
+            callRealRequest: true
         };
-        CourseSketch.dataListener.sendDataUpdate = function (queryType, data, callback, requestId, times) {
-            callback();
-        }
+
+        CourseSketch.Testing.addFakeInsertFunction(CourseSketch.prutil.ItemQuery.ASSIGNMENT, function (data) {
+            return CourseSketch.Testing.createFakeResult(CourseSketch.prutil.decodeProtobuf(data,
+                CourseSketch.prutil.getSrlAssignmentClass()).id);
+        });
+
+        CourseSketch.Testing.addFakeInsertFunction(CourseSketch.prutil.ItemQuery.COURSE, function (data) {
+            return CourseSketch.Testing.createFakeResult(CourseSketch.prutil.decodeProtobuf(data,
+                CourseSketch.prutil.getSrlCourseClass()).id);
+        });
+
+        CourseSketch.Testing.addFakeInsertFunction(CourseSketch.prutil.ItemQuery.COURSE_PROBLEM, function (data) {
+            return CourseSketch.Testing.createFakeResult(CourseSketch.prutil.decodeProtobuf(data,
+                CourseSketch.prutil.getSrlProblemClass()).id);
+        });
+
+        CourseSketch.Testing.addFakeInsertFunction(CourseSketch.prutil.ItemQuery.BANK_PROBLEM, function (data) {
+            return CourseSketch.Testing.createFakeResult(CourseSketch.prutil.decodeProtobuf(data,
+                CourseSketch.prutil.getSrlBankProblemClass()).id);
+        });
     }
 
     /**

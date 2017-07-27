@@ -33,6 +33,7 @@ validateFirstRun(document.currentScript);
             var problemIndex = CourseSketch.dataManager.getState('partIndex');
             var addCallback = isUndefined(panel.dataset.callbackset);
             submissionPanel = document.getElementById('problemPanel');
+            submissionPanel.setOnSavedListener(submissionSaved, submissionErrored);
 
             problemRenderer = new CourseSketch.ProblemRenderer(submissionPanel);
             problemRenderer.setStartWaitingFunction(waiter.startWaiting);
@@ -234,5 +235,24 @@ validateFirstRun(document.currentScript);
             solution.problemDomain = currentProblem.problemDomain;
             return solution;
         });
+    }
+
+    /**
+     * Called when the submission is successfully saved.
+     *
+     * @param {Request} request - The request response from the server.
+     */
+    function submissionSaved(request) {
+        Materialize.toast('Submission Was saved successfully', 4000);
+    }
+
+    /**
+     * Called when the submission fails to save.
+     *
+     * @param {BaseException} exception - The exception that occurred.
+     */
+    function submissionErrored(exception) {
+        console.log(exception);
+        Materialize.toast(exception.getMessage(), 4000);
     }
 })();
