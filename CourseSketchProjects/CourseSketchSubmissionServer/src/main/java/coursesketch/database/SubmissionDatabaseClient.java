@@ -7,10 +7,13 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.IndexOptions;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.MongoQuestionDataBuilder;
+import coursesketch.database.util.MongoUtilities;
 import coursesketch.database.util.SubmissionException;
 import coursesketch.server.interfaces.ServerInfo;
 import org.bson.Document;
@@ -19,9 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.commands.Commands.SrlUpdateList;
-import protobuf.srl.question.QuestionDataOuterClass;
-import protobuf.srl.question.QuestionDataOuterClass.FreeResponse;
-import protobuf.srl.question.QuestionDataOuterClass.MultipleChoice;
 import protobuf.srl.question.QuestionDataOuterClass.QuestionData;
 import protobuf.srl.question.QuestionDataOuterClass.SketchArea;
 import protobuf.srl.submission.Submission.SrlExperiment;
@@ -34,11 +34,11 @@ import utilities.LoggingConstants;
 import utilities.TimeManager;
 
 import static coursesketch.database.util.DatabaseStringConstants.ALLOWED_IN_PROBLEMBANK;
-import static coursesketch.database.util.DatabaseStringConstants.ANSWER_CHOICE;
 import static coursesketch.database.util.DatabaseStringConstants.ASSIGNMENT_ID;
 import static coursesketch.database.util.DatabaseStringConstants.COURSE_ID;
 import static coursesketch.database.util.DatabaseStringConstants.COURSE_PROBLEM_ID;
 import static coursesketch.database.util.DatabaseStringConstants.DATABASE;
+import static coursesketch.database.util.DatabaseStringConstants.DOMAIN_ID;
 import static coursesketch.database.util.DatabaseStringConstants.EXPERIMENT_COLLECTION;
 import static coursesketch.database.util.DatabaseStringConstants.FIRST_STROKE_TIME;
 import static coursesketch.database.util.DatabaseStringConstants.FIRST_SUBMISSION_TIME;
@@ -46,13 +46,13 @@ import static coursesketch.database.util.DatabaseStringConstants.IS_PRACTICE_PRO
 import static coursesketch.database.util.DatabaseStringConstants.ITEM_ID;
 import static coursesketch.database.util.DatabaseStringConstants.PROBLEM_BANK_ID;
 import static coursesketch.database.util.DatabaseStringConstants.SELF_ID;
-import static coursesketch.database.util.DatabaseStringConstants.SLIDE_BLOB_TYPE;
 import static coursesketch.database.util.DatabaseStringConstants.SOLUTION_COLLECTION;
 import static coursesketch.database.util.DatabaseStringConstants.SUBMISSION_TIME;
-import static coursesketch.database.util.DatabaseStringConstants.TEXT_ANSWER;
 import static coursesketch.database.util.DatabaseStringConstants.UPDATELIST;
 import static coursesketch.database.util.DatabaseStringConstants.USER_ID;
 import static coursesketch.database.util.MongoUtilities.convertStringToObjectId;
+import static coursesketch.database.util.MongoUtilities.createDomainIdFromProto;
+import static coursesketch.database.util.MongoUtilities.getQuestionType;
 
 /**
  * Manages the submissions in the database.
@@ -74,7 +74,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * A private SubmissionDatabaseClient that accepts data for the database location.
      *
      * @param info Server information.
-     *         The location that the server is taking place.
+     *             The location that the server is taking place.
      */
     public SubmissionDatabaseClient(final ServerInfo info) {
         super(info);
@@ -83,10 +83,9 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     /**
      * Used only for the purpose of testing overwrite the instance with a test instance that can only access a test database.
      *
-     * @param testOnly
-     *         if true it uses the test database. Otherwise it uses the real
-     *         name of the database.
-     * @param fakeDB The fake database.
+     * @param testOnly if true it uses the test database. Otherwise it uses the real
+     *                 name of the database.
+     * @param fakeDB   The fake database.
      */
     public SubmissionDatabaseClient(final boolean testOnly, final MongoDatabase fakeDB) {
         this(null);
@@ -104,15 +103,14 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
 
     /**
      * Saves the experiment trying to make sure that there are no duplicates.
-     *
+     * <p>
      * First it searches to see if any experiments exist.  If they do then we sort them by submission time and overwrite them!
-     *
+     * <p>
      * It also ensures that the solution received is built on the previous solution as we do not permit the overwriting of history
      *
      * @param solution The element being saved.
      * @return id if the element does not already exist.
-     * @throws DatabaseAccessException
-     *         problems
+     * @throws DatabaseAccessException problems
      */
     public String saveSolution(final SrlSolution solution) throws DatabaseAccessException {
         LOG.info("\n\n\nsaving the experiment!");
@@ -126,17 +124,18 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
             multipleObjectCursor.close();
             final Document updateObj;
             try {
-                updateObj = createSubmission(solution.getSubmission(), existingSolution, false, TimeManager.getSystemTime());
+                updateObj = createSubmission(solution.getSubmission(), existingSolution, true, TimeManager.getSystemTime());
             } catch (SubmissionException e) {
                 throw new DatabaseAccessException("Exception while creating submission from existing submission", e);
             }
+            updateObj.append(DOMAIN_ID, createDomainIdFromProto(solution.getProblemDomain()));
             solutions.updateOne(existingSolution, new Document("$set", updateObj));
         } else {
             LOG.info("No existing submissions found");
 
             final Document submissionObject;
             try {
-                submissionObject = createSubmission(solution.getSubmission(), null, false, TimeManager.getSystemTime());
+                submissionObject = createSubmission(solution.getSubmission(), null, true, TimeManager.getSystemTime());
             } catch (SubmissionException e) {
                 throw new DatabaseAccessException("Exception while creating submission", e);
             }
@@ -156,17 +155,13 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
 
     /**
      * Saves the experiment trying to make sure that there are no duplicates.
-     *
+     * <p>
      * First it searches to see if any experiments exist.  If they do then we sort them by submission time and overwrite them!
      *
-     *
-     * @param experiment
-     *         What the user is submitting.
-     * @param submissionTime
-     *         What time the server got the submission.
+     * @param experiment     What the user is submitting.
+     * @param submissionTime What time the server got the submission.
      * @return A string representing the id if it exists or is a new submission.
-     * @throws DatabaseAccessException
-     *         thrown if there are problems saving the experiment.
+     * @throws DatabaseAccessException thrown if there are problems saving the experiment.
      */
     public String saveExperiment(final SrlExperiment experiment, final long submissionTime)
             throws DatabaseAccessException {
@@ -192,6 +187,8 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         if (multipleObjectCursor.hasNext()) {
             LOG.info("UPDATING AN EXPERIMENT!!!!!!!!");
             existingSubmission = multipleObjectCursor.next();
+
+            isSameQuestionType(existingSubmission, experiment.getSubmission());
 
             // TODO figure out how to update a document with a single command
 
@@ -232,10 +229,8 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     /**
      * Verifies that the input is valid.
      *
-     * @param experiment
-     *         The experiment that is trying to be stored in the database.
-     * @throws DatabaseAccessException
-     *         Thrown if a part of the experiment is invalid.
+     * @param experiment The experiment that is trying to be stored in the database.
+     * @throws DatabaseAccessException Thrown if a part of the experiment is invalid.
      */
     @SuppressWarnings("PMD.CyclomaticComplexity")
     private static void verifyInput(final SrlExperiment experiment) throws DatabaseAccessException {
@@ -261,17 +256,12 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     /**
      * Gets the experiment by its id and sends all of the important information associated with it.
      *
-     * @param itemId
-     *         The id of the experiment we are trying to retrieve.
-     * @param problemId
-     *         This much match the problemId of the submission stored here otherwise it is considered an invalid retrieval.
-     * @param permissions
-     *          The permissions of the person attempting to get the experiment.
+     * @param itemId      The id of the experiment we are trying to retrieve.
+     * @param problemId   This much match the problemId of the submission stored here otherwise it is considered an invalid retrieval.
+     * @param permissions The permissions of the person attempting to get the experiment.
      * @return the experiment found in the database.
-     * @throws DatabaseAccessException
-     *         thrown if there are problems getting the item.
-     * @throws AuthenticationException
-     *         thrown if the problemId given does not match the problemId in the database.
+     * @throws DatabaseAccessException thrown if there are problems getting the item.
+     * @throws AuthenticationException thrown if the problemId given does not match the problemId in the database.
      */
     public SrlExperiment getExperiment(final String itemId, final String problemId, final AuthenticationResponder permissions)
             throws DatabaseAccessException, AuthenticationException {
@@ -318,17 +308,12 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     /**
      * Gets the experiment by its id and sends all of the important information associated with it.
      *
-     * @param itemId
-     *         The id of the experiment we are trying to retrieve.
-     * @param bankProblemId
-     *         This much match the problemId of the submission stored here otherwise it is considered an invalid retrieval.
-     * @param permissions
-     *          The permissions of the person attempting to get the experiment.
+     * @param itemId        The id of the experiment we are trying to retrieve.
+     * @param bankProblemId This much match the problemId of the submission stored here otherwise it is considered an invalid retrieval.
+     * @param permissions   The permissions of the person attempting to get the experiment.
      * @return the experiment found in the database.
-     * @throws DatabaseAccessException
-     *         thrown if there are problems getting the item.
-     * @throws AuthenticationException
-     *         thrown if the problemId given does not match the problemId in the database.
+     * @throws DatabaseAccessException thrown if there are problems getting the item.
+     * @throws AuthenticationException thrown if the problemId given does not match the problemId in the database.
      */
     public SrlSolution getSolution(final String itemId, final String bankProblemId, final AuthenticationResponder permissions)
             throws DatabaseAccessException, AuthenticationException {
@@ -338,12 +323,12 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         }
 
         LOG.info("Fetching solution");
-        final Document cursor = database.getCollection(SOLUTION_COLLECTION).find(convertStringToObjectId(itemId)).first();
-        if (cursor == null) {
+        final Document document = database.getCollection(SOLUTION_COLLECTION).find(convertStringToObjectId(itemId)).first();
+        if (document == null) {
             throw new DatabaseAccessException("There is no experiment with id: " + itemId);
         }
 
-        if (!bankProblemId.equals(cursor.get(PROBLEM_BANK_ID).toString())) {
+        if (!bankProblemId.equals(document.get(PROBLEM_BANK_ID).toString())) {
             throw new AuthenticationException("Bank Problem Id of the submission must match the submission being requested.",
                     AuthenticationException.INVALID_PERMISSION);
         }
@@ -354,17 +339,18 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
 
         // only moderators and above are allowed to see the user id.
         if (permissions.hasModeratorPermission()) {
-            submissionId = cursor.get(SELF_ID).toString();
+            submissionId = document.get(SELF_ID).toString();
         }
-        build.setProblemBankId(cursor.get(PROBLEM_BANK_ID).toString());
-        build.setIsPracticeProblem((Boolean) cursor.get(IS_PRACTICE_PROBLEM));
-        build.setAllowedInProblemBank((Boolean) cursor.get(ALLOWED_IN_PROBLEMBANK));
+        build.setProblemBankId(document.get(PROBLEM_BANK_ID).toString());
+        build.setIsPracticeProblem((Boolean) document.get(IS_PRACTICE_PROBLEM));
+        build.setAllowedInProblemBank((Boolean) document.get(ALLOWED_IN_PROBLEMBANK));
         SrlSubmission sub;
         try {
-            sub = getSubmission(cursor, submissionId);
+            sub = getSubmission(document, submissionId);
         } catch (SubmissionException e) {
             throw new DatabaseAccessException("Error getting submission data", e);
         }
+        build.setProblemDomain(MongoUtilities.createDomainIdFromDocument(document.get(DOMAIN_ID, new Document())));
 
         build.setSubmission(sub);
         LOG.info("Experiment successfully fetched");
@@ -374,13 +360,10 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     /**
      * Retrieves the submission portion of the solution or experiment.
      *
-     * @param submissionObject
-     *         The database pointer to the data.
-     * @param submissionId
-     *         An optional id to add to the submission.
+     * @param submissionObject The database pointer to the data.
+     * @param submissionId     An optional id to add to the submission.
      * @return {@link protobuf.srl.submission.Submission.SrlSubmission} the resulting submission.
-     * @throws SubmissionException
-     *         Thrown if there are issues getting the submission.
+     * @throws SubmissionException Thrown if there are issues getting the submission.
      */
     private static SrlSubmission getSubmission(final Document submissionObject, final String submissionId) throws SubmissionException {
         final SrlSubmission.Builder subBuilder = SrlSubmission.newBuilder();
@@ -388,38 +371,11 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
             subBuilder.setId(submissionId);
         }
 
-        final QuestionData.ElementTypeCase submissionType = getExpectedType(submissionObject);
-
-        final QuestionData.Builder questionData = QuestionData.newBuilder();
-        switch (submissionType) {
-            case SKETCHAREA:
-                final Object binary = submissionObject.get(UPDATELIST);
-                if (binary == null) {
-                    throw new SubmissionException("UpdateList did not contain any data", null);
-                }
-                try {
-                    final SrlUpdateList updateList = SrlUpdateList.parseFrom(ByteString.copyFrom(((Binary) binary).getData()));
-                    questionData.setSketchArea(QuestionDataOuterClass.SketchArea.newBuilder().setRecordedSketch(updateList));
-                } catch (InvalidProtocolBufferException e) {
-                    throw new SubmissionException("Error decoding update list", e);
-                }
-                break;
-            case FREERESPONSE:
-                final Object text = submissionObject.get(TEXT_ANSWER);
-                if (text == null) {
-                    throw new SubmissionException("Text answer did not contain any data", null);
-                }
-                questionData.setFreeResponse(QuestionDataOuterClass.FreeResponse.newBuilder().setStartingText(text.toString()));
-                break;
-            case MULTIPLECHOICE:
-                final Object answerChoice = submissionObject.get(ANSWER_CHOICE);
-                if (answerChoice == null) {
-                    throw new SubmissionException("Text answer did not contain any data", null);
-                }
-                questionData.setMultipleChoice(MultipleChoice.newBuilder().setCorrectId(answerChoice.toString()));
-                break;
-            default:
-                throw new SubmissionException("Submission data is not supported type or does not exist", null);
+        final QuestionData questionData;
+        try {
+            questionData = new MongoQuestionDataBuilder().buildQuestionDataProto(submissionObject);
+        } catch (DatabaseAccessException e) {
+            throw new SubmissionException("Failed to build question data", e);
         }
         return subBuilder.setSubmissionData(questionData).build();
     }
@@ -427,85 +383,54 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     /**
      * Creates a database object for the submission object.  Handles certain values in certain ways if they exist.
      *
-     * @param submission
-     *         The submission that is being inserted.
-     * @param cursor
-     *         The existing submission,  This should be null if an existing list does not exist.
-     * @param isMod
-     *         True if the user is acting as a moderator.
-     * @param submissionTime
-     *         The time that the server received the submission.
+     * @param submission     The submission that is being inserted.
+     * @param cursor         The existing submission,  This should be null if an existing list does not exist.
+     * @param isMod          True if the user is acting as a moderator.
+     * @param submissionTime The time that the server received the submission.
      * @return An object that represents how it would be stored in the database.
-     * @throws SubmissionException
-     *         thrown if there is a problem creating the database object.
+     * @throws SubmissionException thrown if there is a problem creating the database object.
      */
+    @SuppressWarnings({ "PMD.ExceptionAsFlowControl", "PMD.UselessParentheses" })
     private static Document createSubmission(final SrlSubmission submission, final Document cursor,
-            final boolean isMod, final long submissionTime) throws SubmissionException {
+                                             final boolean isMod, final long submissionTime) throws SubmissionException {
         if (!submission.hasSubmissionData()) {
             throw new SubmissionException("Tried to save as an invalid submission", null);
         }
-        Document document;
-        final QuestionData submissionData = submission.getSubmissionData();
-        switch (submissionData.getElementTypeCase()) {
-            case SKETCHAREA:
-                document = createUpdateList(submissionData.getSketchArea(), cursor, isMod, submissionTime);
-                break;
-            case FREERESPONSE:
-                document = createTextSubmission(submissionData.getFreeResponse(), cursor);
-                break;
-            case MULTIPLECHOICE:
-                document = createMultipleChoiceSolution(submissionData.getMultipleChoice(), cursor);
-                break;
-            default:
-                throw new SubmissionException("Tried to save as an invalid submission", null);
+        try {
+            return (new MongoQuestionDataBuilder() {
+                @Override
+                protected Document createUpdateList(SketchArea sketchArea) throws DatabaseAccessException {
+                    try {
+                        return SubmissionDatabaseClient.createUpdateList(sketchArea, cursor, isMod, submissionTime);
+                    } catch (SubmissionException e) {
+                        throw new DatabaseAccessException("Failed to create update list", e);
+                    }
+                }
+            }).createSubmission(submission.getSubmissionData());
+        } catch (DatabaseAccessException e) {
+            throw new SubmissionException("Failed to create question data document", e);
         }
-        document.append(SLIDE_BLOB_TYPE, submissionData.getElementTypeCase().getNumber());
-        return document;
     }
 
     /**
-     * Creates a database object for the text submission.
+     * Checks to make sure that the question type is still the same as the old time.
      *
-     * @param submission
-     *         The submission that is being inserted.
-     * @param cursor
-     *         The existing submission,  This should be null if an existing list does not exist.
-     * @return An object that represents how it would be stored in the database.
-     * @throws SubmissionException
-     *         thrown if there is a problem creating the database object.
+     * @param document The document being checked.
+     * @param submissionData The new submission data.
+     * @throws DatabaseAccessException Thrown if the data does not match.
      */
-    private static Document createTextSubmission(final FreeResponse submission, final Document cursor) throws SubmissionException {
-        if (cursor != null && getExpectedType(cursor) != QuestionData.ElementTypeCase.FREERESPONSE) {
-            throw new SubmissionException("Can not switch to a text submission from a different type", null);
+    private void isSameQuestionType(Document document, SrlSubmission submissionData) throws DatabaseAccessException {
+        if (document != null && submissionData != null && submissionData.hasSubmissionData()
+                && getQuestionType(document) != submissionData.getSubmissionData().getElementTypeCase()) {
+            throw new DatabaseAccessException("Can not change the saved type of the question", null);
         }
-        // don't store it as changes for right now.
-        return new Document(TEXT_ANSWER, submission.getStartingText());
-    }
-
-    /**
-     * Creates a database object for the multiple choice submission.
-     *
-     * @param submission
-     *         The submission that is being inserted.
-     * @param cursor
-     *         The existing submission,  This should be null if an existing list does not exist.
-     * @return An object that represents how it would be stored in the database.
-     * @throws SubmissionException
-     *         thrown if there is a problem creating the database object.
-     */
-    private static Document createMultipleChoiceSolution(final MultipleChoice submission, final Document cursor) throws SubmissionException {
-        if (cursor != null && getExpectedType(cursor) != QuestionData.ElementTypeCase.MULTIPLECHOICE) {
-            throw new SubmissionException("Can not switch to a multiple choice submission from a different type", null);
-        }
-        // don't store it as changes for right now.
-        return new Document(ANSWER_CHOICE, submission.getCorrectId());
     }
 
     /**
      * Gets the time for the first stroke in a submission.
+     *
      * @param updateList The updateList in a submission.
      * @return the time for the first stroke recorded.
-     *
      */
     private static long getFirstStrokeTime(final SrlUpdateList updateList) {
         for (int i = 0; i < updateList.getListList().size(); i++) {
@@ -521,8 +446,8 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     }
 
     /**
+     * Gets the time for the last stroke in a submission.
      *
-     *  Gets the time for the last stroke in a submission.
      * @param updateList The updateList in a submission.
      * @return the time for the last stroke recorded.
      */
@@ -550,26 +475,21 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     /**
      * Creates a database object for the update list, merges the list if there is already a list in the database.
      *
-     * @param submission
-     *         The submission that is being inserted.
-     * @param cursor
-     *         The existing submission,  This should be null if an existing list does not exist.
-     * @param isMod
-     *         True if the user is acting as a moderator.
-     * @param submissionTime
-     *         The time that the server received the submission.
+     * @param submission     The submission that is being inserted.
+     * @param cursor         The existing submission,  This should be null if an existing list does not exist.
+     * @param isMod          True if the user is acting as a moderator.
+     * @param submissionTime The time that the server received the submission.
      * @return An object that represents how it would be stored in the database.
-     * @throws SubmissionException
-     *         thrown if there is a problem creating the database object.
+     * @throws SubmissionException thrown if there is a problem creating the database object.
      */
     static Document createUpdateList(final SketchArea submission, final Document cursor,
-            final boolean isMod, final long submissionTime)
+                                     final boolean isMod, final long submissionTime)
             throws SubmissionException {
         if (cursor != null) {
             SrlUpdateList result;
             try {
                 final Object binary = cursor.get(UPDATELIST);
-                if (getExpectedType(cursor) != QuestionData.ElementTypeCase.SKETCHAREA) {
+                if (getQuestionType(cursor) != QuestionData.ElementTypeCase.SKETCHAREA) {
                     throw new SubmissionException("Can not switch type of submission.", null);
                 }
                 if (binary == null) {
@@ -603,10 +523,8 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * Sets the time of the last update to be the submission time.
      * If the last update is not a save marker or a submission marker then it creates a new save marker.
      *
-     * @param updateList
-     *         The update list that will have its last time set to the correct value.
-     * @param submissionTime
-     *         The time at which the server recieved the submission.
+     * @param updateList     The update list that will have its last time set to the correct value.
+     * @param submissionTime The time at which the server recieved the submission.
      * @return An update list with the correct submission time.
      */
     private static SrlUpdateList setTime(final SrlUpdateList updateList, final long submissionTime) {
@@ -651,23 +569,6 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     }
 
     /**
-     * Returns the type of the submission.  Assumes this method is not called with null.
-     *
-     * @param cursor
-     *         The object that we are trying to determine the type of.
-     * @return The correct submission type given the cursor object.
-     * @throws SubmissionException
-     *         Thrown if there is no type found or if there are multiple types found.
-     */
-    private static QuestionData.ElementTypeCase getExpectedType(final Document cursor) throws SubmissionException {
-        final int type = (int) cursor.get(SLIDE_BLOB_TYPE);
-        if (type == -1) {
-            return QuestionData.ElementTypeCase.ELEMENTTYPE_NOT_SET;
-        }
-        return QuestionData.ElementTypeCase.valueOf(type);
-    }
-
-    /**
      * Sets up the index to allow for quicker access to the submission.
      */
     @Override
@@ -676,14 +577,14 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         LOG.info("Experiment Index command: {}", new Document(COURSE_PROBLEM_ID, 1).append(USER_ID, 1));
         database.getCollection(EXPERIMENT_COLLECTION).createIndex(new Document(COURSE_PROBLEM_ID, 1)
                 .append(ITEM_ID, 1)
-                .append(USER_ID, 1)
-                .append("unique", true));
-        database.getCollection(SOLUTION_COLLECTION).createIndex(new Document(PROBLEM_BANK_ID, 1).append("unique", true));
+                .append(USER_ID, 1), new IndexOptions().unique(true));
+        database.getCollection(SOLUTION_COLLECTION).createIndex(new Document(PROBLEM_BANK_ID, 1),
+                new IndexOptions().unique(true));
     }
 
     /**
      * Called when startDatabase is called if the database has not already been started.
-     *
+     * <p>
      * This method should be synchronous.
      */
     @Override

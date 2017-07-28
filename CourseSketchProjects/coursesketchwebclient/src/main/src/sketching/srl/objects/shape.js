@@ -114,4 +114,4 @@ function SRL_Shape() {
     };
 }
 
-SRL_Shape.Inherits(SRL_Object);
+inheritsParent(SRL_Shape, SRL_Object);

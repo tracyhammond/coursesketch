@@ -33,6 +33,7 @@ validateFirstRun(document.currentScript);
             var problemIndex = CourseSketch.dataManager.getState('partIndex');
             var addCallback = isUndefined(panel.dataset.callbackset);
             submissionPanel = document.getElementById('problemPanel');
+            submissionPanel.setOnSavedListener(submissionSaved, submissionErrored);
 
             problemRenderer = new CourseSketch.ProblemRenderer(submissionPanel);
             problemRenderer.setStartWaitingFunction(waiter.startWaiting);
@@ -73,7 +74,8 @@ validateFirstRun(document.currentScript);
     mutators.questionType = function(element) {
         element.onchange = function() {
             problemRenderer.stashData(function() {
-                currentProblem.questionType = advancedEdit.getDataFromElement(element, undefined, 'questionType', undefined);
+                var questionType = advancedEdit.getDataFromElement(element, undefined, 'questionType', undefined);
+                currentProblem.questionType = questionType;
                 problemRenderer.renderBankProblem(currentProblem, function() {
                     submissionPanel.setProblemType(questionType);
                     submissionPanel.refreshPanel();
@@ -133,10 +135,12 @@ validateFirstRun(document.currentScript);
 
     /**
      * Saves the data to the database.
+     *
+     * @param {Function} [callback] Called after the data has been saved.
      */
-    function saveData() {
+    function saveData(callback) {
         originalMap = advancedEdit.getInput(currentProblem, editPanel, originalMap);
-        if (isUndefined(currentProblem.problemDomain) || currentProblem.problemDomain  === null) {
+        if (isUndefined(currentProblem.problemDomain) || currentProblem.problemDomain === null) {
             currentProblem.problemDomain = CourseSketch.prutil.DomainId();
         }
         currentProblem.problemDomain.questionType = currentProblem.questionType;
@@ -146,42 +150,47 @@ validateFirstRun(document.currentScript);
             }, function(argument) {
                 console.log(argument);
             });
+            if (!isUndefined(callback)) {
+                callback();
+            }
         });
     }
 
     actions.createSolution = function() {
         if (solutionMode) {
             solutionMode = false;
+            problemRenderer.setIsStudentProblem(false);
             loadProblem(navigator);
             return;
         }
         problemRenderer.startWaiting();
 
         // save our data first
-        saveData();
+        saveData(function() {
+            solutionMode = true;
+            setupSolutionSubmissionPanel(submissionPanel, navigator, currentProblem.questionType);
 
-        solutionMode = true;
-        setupSolutionSubmissionPanel(submissionPanel, navigator, currentProblem.questionType);
+            // eslint-disable-next-line
+            function loadSubmission() {
+                setTimeout(function() {
+                    problemRenderer.setIsStudentProblem(true);
+                    problemRenderer.renderSubmission(currentProblem, currentSubmission, function() {
+                        submissionPanel.refreshPanel();
+                        console.log('submission');
+                    }, true);
+                }, 2100);
+            }
 
-        // eslint-disable-next-line
-        function loadSubmission() {
-            setTimeout(function() {
-                problemRenderer.renderSubmission(currentProblem, currentSubmission, function() {
-                    submissionPanel.refreshPanel();
-                    console.log('submission');
-                }, true);
-            }, 2100);
-        }
-
-        if (isUndefined(currentSubmission) && !isUndefined(currentProblem.solutionId) &&
-            currentProblem.solutionId !== null) {
-            CourseSketch.dataManager.getSolution([ currentProblem.id, currentProblem.solutionId ], function(solution) {
-                currentSubmission = solution.submission;
+            if (isUndefined(currentSubmission) && !isUndefined(currentProblem.solutionId) &&
+                currentProblem.solutionId !== null) {
+                CourseSketch.dataManager.getSolution([ currentProblem.id, currentProblem.solutionId ], function(solution) {
+                    currentSubmission = solution.submission;
+                    loadSubmission();
+                });
+            } else {
                 loadSubmission();
-            });
-        } else {
-            loadSubmission();
-        }
+            }
+        });
 
         // take the question and render it also set up the button and rename it
     };
@@ -226,5 +235,24 @@ validateFirstRun(document.currentScript);
             solution.problemDomain = currentProblem.problemDomain;
             return solution;
         });
+    }
+
+    /**
+     * Called when the submission is successfully saved.
+     *
+     * @param {Request} request - The request response from the server.
+     */
+    function submissionSaved(request) {
+        Materialize.toast('Submission Was saved successfully', 4000);
+    }
+
+    /**
+     * Called when the submission fails to save.
+     *
+     * @param {BaseException} exception - The exception that occurred.
+     */
+    function submissionErrored(exception) {
+        console.log(exception);
+        Materialize.toast(exception.getMessage(), 4000);
     }
 })();

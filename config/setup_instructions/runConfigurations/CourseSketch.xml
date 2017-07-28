@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="CourseSketch" type="Multirun" factoryName="Multirun" separateTabs="false" startOneByOne="true" markFailedProcess="true" hideSuccessProcess="false" delayTime="0">
+    <runConfiguration name="Local websites" type="Bash" />
     <runConfiguration name="AuthenticationRunner" type="Application" />
     <runConfiguration name="IdentityRunner" type="Application" />
     <runConfiguration name="RecognitionRunner" type="Application" />

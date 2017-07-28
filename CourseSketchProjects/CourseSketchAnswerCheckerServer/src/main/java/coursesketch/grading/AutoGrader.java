@@ -1,6 +1,6 @@
 package coursesketch.grading;
 
-import coursesketch.database.AnswerCheckerDatabase;
+import coursesketch.database.RubricDataHandler;
 import coursesketch.database.util.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,14 +27,14 @@ public class AutoGrader {
     /**
      * Used to get rubrics.
      */
-    private final AnswerCheckerDatabase database;
+    private final RubricDataHandler database;
 
     /**
      * Creates a new instance of the autograder with the database.
      *
      * @param database The database that holds the rubric.
      */
-    public AutoGrader(final AnswerCheckerDatabase database) {
+    public AutoGrader(final RubricDataHandler database) {
         this.database = database;
     }
 
@@ -62,6 +62,7 @@ public class AutoGrader {
                     .setAssignmentId(experiment.getAssignmentId())
                     .setProblemId(experiment.getProblemId())
                     .setPartId(experiment.getPartId()));
+            submissionFeedback.setFeedbackData(builder);
         } catch (GradingException exception) {
             if (exception.hasFeedbackData()) {
                 submissionFeedback.setFeedbackData(exception.getFeedbackData());
@@ -100,7 +101,8 @@ public class AutoGrader {
                 grader = getCheckboxGrader(experimentQuestionData, solutionQuestionData);
                 break;
             default:
-                grader = buildMissingExperimentDataGrader();
+                grader = buildThrowExceptionGrader(
+                        new UnsupportedOperationException("Invalid Question Type: " + rubricId.getQuestionType().name()));
                 break;
         }
         return grader;
@@ -115,11 +117,11 @@ public class AutoGrader {
      */
     private AbstractGrader getCheckboxGrader(final QuestionDataOuterClass.QuestionData experimentQuestionData,
             final QuestionDataOuterClass.QuestionData solutionQuestionData) {
-        if (!experimentQuestionData.hasCheckBox()) {
+        if (!experimentQuestionData.hasMultipleChoice()) {
             return buildMissingExperimentDataGrader();
         }
         LOG.info("Grade info {}{} {}", experimentQuestionData, solutionQuestionData);
-        return buildThrowExceptionGrader(new UnsupportedOperationException("cant grade sketches"));
+        return buildThrowExceptionGrader(new UnsupportedOperationException("cant grade checkboxes"));
     }
 
     /**
@@ -135,7 +137,7 @@ public class AutoGrader {
             return buildMissingExperimentDataGrader();
         }
         LOG.info("Grade info {} {} {}", experimentQuestionData, solutionQuestionData);
-        return buildThrowExceptionGrader(new UnsupportedOperationException("cant grade sketches"));
+        return buildThrowExceptionGrader(new UnsupportedOperationException("cant grade free response problems"));
     }
 
     /**

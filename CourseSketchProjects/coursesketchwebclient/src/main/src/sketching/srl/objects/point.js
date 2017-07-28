@@ -345,4 +345,4 @@ function SRL_Point(x, y) {
     };
 };
 
-SRL_Point.Inherits(SRL_Shape);
+inheritsParent(SRL_Point, SRL_Shape);

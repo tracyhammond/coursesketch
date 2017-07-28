@@ -81,8 +81,8 @@ message LatePolicy {
 
 // Represents a grade. This can be a course grade, assignment grade, or problem grade dpeending on what Ids are given.
 message ProtoGrade {
-    required string courseId = 1;           // Id of the course the grade is for.
-    required string userId = 2;             // Id of the user the grade belongs to.
+    optional string courseId = 1;           // Id of the course the grade is for.
+    optional string userId = 2;             // Id of the user the grade belongs to.
     optional string assignmentId = 3;       // Id of the assignment the grade belongs to if it is an assignment grade.
     optional string problemId = 4;          // Id of the problem the grade belongs to if it is a problem grade.
     optional string partId = 5;             // Id of the problem part of it belongs to the part of a problem.

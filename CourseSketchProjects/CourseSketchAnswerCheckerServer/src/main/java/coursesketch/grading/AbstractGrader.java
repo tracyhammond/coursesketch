@@ -1,7 +1,7 @@
 package coursesketch.grading;
 
 import com.google.protobuf.GeneratedMessage;
-import coursesketch.database.AnswerCheckerDatabase;
+import coursesketch.database.RubricDataHandler;
 import protobuf.srl.grading.Grading;
 import protobuf.srl.grading.Rubric;
 import protobuf.srl.submission.Feedback;
@@ -23,7 +23,7 @@ public abstract class AbstractGrader<T extends GeneratedMessage> {
      * @param database Where the rubric is stored.
      * @return A builder representing a loaded rubric.
      */
-    protected Rubric.GradingRubric.Builder loadRubricBuilder(Util.DomainId rubricId, AnswerCheckerDatabase database) {
+    protected Rubric.GradingRubric.Builder loadRubricBuilder(Util.DomainId rubricId, RubricDataHandler database) {
         return database.loadRubric(rubricId);
     }
 
@@ -45,7 +45,7 @@ public abstract class AbstractGrader<T extends GeneratedMessage> {
      * @param database Where the rubric is stored.
      * @return A loaded rubric.
      */
-    final Rubric.GradingRubric buildRubric(Util.DomainId rubricId, AnswerCheckerDatabase database) {
+    final Rubric.GradingRubric buildRubric(Util.DomainId rubricId, RubricDataHandler database) {
         return database.loadRubric(rubricId).build();
     }
 
@@ -64,7 +64,7 @@ public abstract class AbstractGrader<T extends GeneratedMessage> {
      * @return {@link Feedback.FeedbackData}
      * @throws GradingException Thrown if there are problems while creating feedback
      */
-    final Feedback.FeedbackData.Builder createCorrectFeedback() throws GradingException {
+    static Feedback.FeedbackData.Builder createCorrectFeedback() throws GradingException {
         return Feedback.FeedbackData.newBuilder()
                 .setBasicFeedback(createBasicFeedback("Correct!"))
                 .setGrade(createGrade(1.0f))
@@ -78,14 +78,14 @@ public abstract class AbstractGrader<T extends GeneratedMessage> {
      * @return A grade.
      * @throws GradingException Thrown if there are problems while creating the grade
      */
-    static Grading.ProtoGrade createGrade(final float grade) throws GradingException {
+    static Grading.ProtoGrade.Builder createGrade(final float grade) throws GradingException {
         if (grade > 1) {
             throw new GradingException("Cant submit a grade larger than 1");
         }
         if (grade < 0) {
             throw new GradingException("Cant submit a grade less than 0");
         }
-        return Grading.ProtoGrade.newBuilder().setUnscaledGrade(grade).build();
+        return Grading.ProtoGrade.newBuilder().setUnscaledGrade(grade);
     }
 
     /**
@@ -94,5 +94,17 @@ public abstract class AbstractGrader<T extends GeneratedMessage> {
      */
     static Feedback.BasicFeedback createBasicFeedback(final String simpleFeedback) {
         return Feedback.BasicFeedback.newBuilder().setFeedbackMessage(simpleFeedback).build();
+    }
+
+    /**
+     * Checks if the experiment and solution is valid.
+     * @param experiment Experiment Data
+     * @param solution Solution Data
+     * @throws GradingException Thrown if data is not valid.
+     */
+    protected final void checkValidGradeData(T experiment, T solution) throws GradingException {
+        if (solution == null || experiment == null) {
+            throw new GradingException("Invalid solution = " + (solution == null) + " or experiment = " + (experiment == null));
+        }
     }
 }

@@ -130,7 +130,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
         }
         sendGrade(submissionFeedback);
         conn.send(createFeedbackMessage(submissionFeedback, req));
-        LOG.info("Feedback is: {}", submissionFeedback);
+        LOG.debug("Feedback is: {}", submissionFeedback);
     }
 
     /**
@@ -140,7 +140,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
      */
     private void sendGrade(final Feedback.SubmissionFeedback submissionFeedback) {
         final Grading.ProtoGrade grade = submissionFeedback.getFeedbackData().getGrade();
-        LOG.info("User grade: {}", grade);
+        LOG.debug("User grade: {}", grade);
     }
 
     /**
@@ -152,7 +152,11 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
     private Request createFeedbackMessage(final Feedback.SubmissionFeedback submissionFeedback, final Request initialRequest) {
         final Message.Request.Builder builder = ProtobufUtilities.createBaseResponse(initialRequest);
         builder.setRequestType(Request.MessageType.FEEDBACK);
-        builder.setOtherData(FeedbackFilterUtils.createFeedbackForUser(submissionFeedback).toByteString());
+        final Feedback.SubmissionFeedback feedbackForUser = FeedbackFilterUtils.createFeedbackForUser(submissionFeedback);
+        builder.setOtherData(feedbackForUser.toByteString());
+        if (feedbackForUser.hasFeedbackData() && feedbackForUser.getFeedbackData().hasBasicFeedback()) {
+            builder.setResponseText(feedbackForUser.getFeedbackData().getBasicFeedback().getFeedbackMessage());
+        }
 
         return builder.build();
     }

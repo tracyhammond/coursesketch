@@ -1,0 +1,29 @@
+package protobuf.srl.services.grading;
+
+import "util.proto";
+import "message.proto";
+import "grading.proto";
+
+option java_generic_services = true;
+
+message GradeRequest {
+    optional protobuf.srl.grading.ProtoGrade grade = 1;
+
+    // The id used to authenticate the grade
+    optional string authKey = 2;
+    // Used for if the grade is based around a bank problem
+    optional string bankProblemid = 3;
+}
+
+/**
+ * A service that handles messages to the grading server and from the grading server.
+ */
+service RecognitionService {
+
+    /**
+     * Adds a single grade.
+     *
+     * This grade value is not adjusted according to the grade policy.
+     */
+    rpc insertRawGrade(GradeRequest) returns (protobuf.srl.request.DefaultResponse);
+}

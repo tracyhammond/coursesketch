@@ -44,6 +44,7 @@ function ProblemRenderer(problemPanel) {
      * Resets the data in the renderer to its initial value.
      */
     this.reset = function() {
+        isRunning = undefined;
         isReadOnly = undefined;
         isStudent = undefined;
         startWaiting = undefined;
@@ -106,39 +107,11 @@ function ProblemRenderer(problemPanel) {
     }
 
     /**
-     * @param {Boolean} studentProblem True if what is being rendered should be treated as a student problem.
-     */
-    this.setIsStudentProblem = function(studentProblem) {
-        isStudent = studentProblem;
-    };
-
-    /**
-     * @param {Function} errorListenerFunction - Called if there is an error in the renderer.
-     */
-    this.setErrorListener = function(errorListenerFunction) {
-        errorListener = errorListenerFunction;
-    };
-
-    /**
-     * @param {Boolean} readOnly - True if the rendered data should be read only and not editable.
-     */
-    this.setReadOnly = function(readOnly) {
-        isReadOnly = readOnly;
-    };
-
-    /**
-     * @param {Boolean} fullScreen - True if the rendered data should be full screen.
-     */
-    this.setFullScreen = function(fullScreen) {
-        isFullScreen = fullScreen;
-    };
-
-    /**
      * Renders the bank problem.
      *
      * @param {SrlBankProblem} bankProblem - The bank problem that is being rendered.
      * @param {Function} callback - Called after the data is rendered.
-     * @param {Boolean} stopWaiting - If false the {@code finishWaiting} function will not be called.
+     * @param {Boolean} [stopWaiting] - If false the {@code finishWaiting} function will not be called.
      */
     this.renderBankProblem = function(bankProblem, callback, stopWaiting) {
         var internalCallback = setupWaiting(callback, stopWaiting);
@@ -150,7 +123,7 @@ function ProblemRenderer(problemPanel) {
         }
 
         copyQuestionData(bankProblem);
-        loadSpecificType(specialQuestionData, isStudent, internalCallback);
+        loadSpecificType(specialQuestionData, isStudent, false, internalCallback);
     };
 
     /**
@@ -175,62 +148,64 @@ function ProblemRenderer(problemPanel) {
         var internalCallback = setupWaiting(callback, stopWaiting);
 
         copyQuestionData(bankProblem);
-        loadSpecificType(submission.submissionData, isStudent, internalCallback);
+        var cleanedSubmissionData = CourseSketch.prutil.cleanProtobuf(submissionData, 'QuestionData');
+        if (bankProblem.questionType === CourseSketch.prutil.QuestionType.MULT_CHOICE) {
+            copyMultipleChoiceQuestionData(bankProblem.specialQuestionData, cleanedSubmissionData);
+        }
+        loadSpecificType(cleanedSubmissionData, isStudent, true, internalCallback);
     };
+
+    /**
+     * Copies multiple choice data from the bank problem to the submission.
+     *
+     * @param {QuestionData} questionData - The bank problem that is being rendered.
+     * @param {QuestionData} submissionData - The student submission data.
+     */
+    function copyMultipleChoiceQuestionData(questionData, submissionData) {
+        try {
+            if (isUndefined(submissionData.multipleChoice) ||
+                submissionData.multipleChoice === null) {
+                submissionData.multipleChoice = CourseSketch.prutil.MultipleChoice();
+            }
+            submissionData.multipleChoice.answerChoices =
+                questionData.multipleChoice.answerChoices;
+        } catch (exception) {
+            console.error(exception);
+        }
+    }
 
     /**
      * Loads the data for the {@link QuestionType}.
      *
      * @param {QuestionData} questionData - The questionData that is being rendered.
      * @param {Boolean} isSubmission - True if a submission is happening.
+     * @param {Boolean} reuse - True if it should try and reuse an existing element.
      * @param {Function} callback - Called after the data is rendered.
      */
-    function loadSpecificType(questionData, isSubmission, callback) {
-        problemPanel.emptyPanel();
-
+    function loadSpecificType(questionData, isSubmission, reuse, callback) {
         if (currentType === CourseSketch.prutil.QuestionType.SKETCH) {
-            loadSketch(questionData, callback);
+            loadSketch(questionData, reuse, callback);
         } else if (currentType === CourseSketch.prutil.QuestionType.FREE_RESP) {
-            loadTyping(questionData, callback);
-        } else if (currentType === CourseSketch.prutil.QuestionType.MULT_CHOICE) {
-            loadMultipleChoice(questionData, isSubmission, callback);
-        } else if (currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
-            loadCheckBox(questionData, callback);
+            loadTyping(questionData, reuse, callback);
+        } else if (currentType === CourseSketch.prutil.QuestionType.MULT_CHOICE ||
+            currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
+            loadMultipleChoice(questionData, isSubmission, reuse,
+                currentType === CourseSketch.prutil.QuestionType.CHECK_BOX, callback);
         } else {
             errorListener(new ProblemRenderException('invalid questionType when rendering submission: ' + currentType));
             callback();
         }
     }
 
-    this.startWaiting = function() {
-        startWaiting();
-    };
-
-    this.finishWaiting = function() {
-        finishWaiting();
-    };
-
-    this.setStartWaitingFunction = function(startWaitingFunction) {
-        startWaiting = function() {
-            isRunning = true;
-            startWaitingFunction();
-        };
-    };
-
-    this.setFinishWaitingFunction = function(finishWaitingFunction) {
-        finishWaiting = function() {
-            isRunning = false;
-            finishWaitingFunction();
-        };
-    };
-
     /**
      * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
      *
      * @param {QuestionData} questionData - questionData
+     * @param {Boolean} reuse - True if it should try and reuse an existing element.
      * @param {Function} callback - Called after data is loaded.
      */
-    function loadSketch(questionData, callback) {
+    function loadSketch(questionData, reuse, callback) {
+        problemPanel.emptyPanel();
         var sketchSurface = document.createElement('sketch-surface');
         if (!isUndefined(isReadOnly) && isReadOnly) {
             sketchSurface.setAttribute('read-only', '');
@@ -276,37 +251,25 @@ function ProblemRenderer(problemPanel) {
     }
 
     /**
-     * @param {QuestionData} questionData The data that is being checked if it exists.
-     * @returns {Boolean} True if the question data exists.
-     */
-    function hasValidQuestionData(questionData) {
-        return !isUndefined(questionData) && questionData !== null;
-    }
-
-    /**
-     * @param {Element} element - The element that is being set with full screen.
-     */
-    function setFullScreen(element) {
-        if (isFullScreen) {
-            element.className += ' full-screen';
-        }
-    }
-
-    /**
      * Loads the typing from the {@link SrlBankProblem}.
      *
      * @param {QuestionData} questionData - questionData
+     * @param {Boolean} reuse - True if it should try and reuse an existing element.
      * @param {Function} callback - Called after data is loaded.
      */
-    function loadTyping(questionData, callback) {
-        var typingSurface = document.createElement('textarea');
-        typingSurface.className = 'sub-panel card-panel';
-        typingSurface.contentEditable = true;
-        setFullScreen(typingSurface);
+    function loadTyping(questionData, reuse, callback) {
+        var typingSurface = problemPanel.querySelector('textarea.sub-panel.card-panel.submittable');
+        if (isUndefined(typingSurface) || typingSurface === null || isUndefined(reuse) || !reuse) {
+            problemPanel.emptyPanel();
+            typingSurface = document.createElement('textarea');
+            typingSurface.className = 'sub-panel card-panel submittable';
+            typingSurface.contentEditable = true;
+            setFullScreen(typingSurface);
+            problemPanel.appendChild(typingSurface);
+        }
         if (isReadOnly) {
             typingSurface.setAttribute('disabled', '');
         }
-        problemPanel.appendChild(typingSurface);
         var freeResponse = questionData.freeResponse;
         loadIntoTyping(freeResponse, typingSurface, callback);
     }
@@ -330,17 +293,22 @@ function ProblemRenderer(problemPanel) {
      *
      * @param {QuestionData} questionData - questionData
      * @param {Boolean} isSubmission - True if a submission is happening.
+     * @param {Boolean} reuse - True if it should try and reuse an existing element.
+     * @param {Boolean} isCheckbox - True if it should try and render the element as a checkbox.
      * @param {Function} callback - Called after data is loaded.
      */
-    function loadMultipleChoice(questionData, isSubmission, callback) {
-        var multiChoice = document.createElement('multi-choice');
-        multiChoice.className = 'sub-panel card-panel submittable col offset-s3 s9';
-        setFullScreen(multiChoice);
-        multiChoice.style.marginTop = '60px';
+    function loadMultipleChoice(questionData, isSubmission, reuse, isCheckbox, callback) {
+        var multiChoice = problemPanel.querySelector('multi-choice.sub-panel.card-panel.submittable');
+        if (isUndefined(multiChoice) || multiChoice === null || isUndefined(reuse) || !reuse) {
+            problemPanel.emptyPanel();
+            multiChoice = document.createElement('multi-choice');
+            multiChoice.className = 'sub-panel card-panel submittable col offset-s3 s9';
+            setFullScreen(multiChoice);
+            multiChoice.style.marginTop = '60px';
+            problemPanel.appendChild(multiChoice);
+        }
 
-        problemPanel.appendChild(multiChoice);
-
-        loadIntoMultipleChoice(questionData.multipleChoice, multiChoice, isSubmission, callback);
+        loadIntoMultipleChoice(questionData.multipleChoice, multiChoice, isSubmission, isCheckbox, callback);
     }
 
     /**
@@ -349,65 +317,33 @@ function ProblemRenderer(problemPanel) {
      * @param {MultipleChoice} multipleChoice - The proto holding the multiple choice data.
      * @param {MultiChoice} multiChoiceElement - The element that gets loaded with data.
      * @param {Boolean} isSubmission - True if a submission is happening.
+     * @param {Boolean} isCheckbox - True if it should try and render the element as a checkbox.
      * @param {Function} callback - Called after the data is loaded.
      */
-    function loadIntoMultipleChoice(multipleChoice, multiChoiceElement, isSubmission, callback) {
+    function loadIntoMultipleChoice(multipleChoice, multiChoiceElement, isSubmission, isCheckbox, callback) {
         if (isSubmission) {
             multiChoiceElement.turnOnStudentMode();
         }
-        if (isReadOnly) {
-            multiChoiceElement.turnOnReadOnlyMode();
-        }
-        if (isUndefined(multipleChoice) || multipleChoice === null) {
-            if (!isSubmission) {
-                multiChoiceElement.loadData(CourseSketch.prutil.MultipleChoice());
-            } else {
-                errorListener(new ProblemRenderException('Invalid multiple choice data occured for problem'));
-                multiChoiceElement.loadData(CourseSketch.prutil.MultipleChoice());
+        // eslint-disable-next-line require-jsdoc
+        function newCallback() {
+            if (isReadOnly) {
+                multiChoiceElement.turnOnReadOnlyMode();
+            }
+
+            if (isCheckbox) {
+                multiChoiceElement.turnOnCheckboxMode();
             }
             callback();
+        }
+        multiChoiceElement.setAttribute('data-mode', isSubmission ? 'student' : 'instructor');
+        if (isUndefined(multipleChoice) || multipleChoice === null) {
+            errorListener(new ProblemRenderException('Invalid multiple choice data occured for problem'));
+            multiChoiceElement.loadData(CourseSketch.prutil.MultipleChoice());
+            newCallback();
             return;
         }
         multiChoiceElement.loadData(multipleChoice);
-
-        if (isSubmission) {
-            var id = multipleChoice.correctId;
-            if (!isUndefined(id) && id !== null) {
-                multiChoiceElement.setSelected(id);
-            }
-        }
-        callback();
-    }
-
-    /**
-     * Loads the checkbox from the {@link SrlBankProblem}
-     *
-     * @param {QuestionData} questionData - questionData
-     * @param {Function} callback - Called after data is loaded.
-     */
-    function loadCheckBox(questionData, callback) {
-        callback();
-
-        /*
-        return;
-        var question = document.createElement('question-element');
-        var multiChoice = document.createElement('multi-choice');
-        problemPanel.appendChild(question);
-        question.addAnswerContent(multiChoice);
-
-        if (!hasValidQuestionData(questionData)) {
-            callback();
-            return;
-        }
-        var checkBox = questionData.checkBox;
-        if (!isUndefined(checkBox) && checkBox !== null) {
-            question.loadData(checkBox);
-        } else {
-            // load in empty data
-            question.loadData(CourseSketch.prutil.CheckBox());
-        }
-        callback();
-        */
+        newCallback();
     }
 
     /**
@@ -424,10 +360,9 @@ function ProblemRenderer(problemPanel) {
                 questionData.sketchArea = specialQuestionData.sketchArea;
             } else if (currentType === CourseSketch.prutil.QuestionType.FREE_RESP) {
                 questionData.freeResponse = specialQuestionData.freeResponse;
-            } else if (currentType === CourseSketch.prutil.QuestionType.MULT_CHOICE) {
+            } else if (currentType === CourseSketch.prutil.QuestionType.MULT_CHOICE ||
+                currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
                 questionData.multipleChoice = specialQuestionData.multipleChoice;
-            } else if (currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
-                questionData.checkBox = specialQuestionData.checkBox;
             }
             bankProblem.specialQuestionData = questionData;
             callback();
@@ -454,10 +389,9 @@ function ProblemRenderer(problemPanel) {
             saveSketch(callback);
         } else if (currentType === CourseSketch.prutil.QuestionType.FREE_RESP) {
             saveTyping(callback);
-        } else if (currentType === CourseSketch.prutil.QuestionType.MULT_CHOICE) {
+        } else if (currentType === CourseSketch.prutil.QuestionType.MULT_CHOICE ||
+            currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
             saveMultipleChoice(callback);
-        } else if (currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
-            saveCheckbox(callback);
         }
     }
 
@@ -493,24 +427,97 @@ function ProblemRenderer(problemPanel) {
      */
     function saveMultipleChoice(callback) {
         var multipleChoiceElement = problemPanel.querySelector('multi-choice');
-        multipleChoiceElement.setFinishedListener(function(command, evnt, update, multiChoice) {
-            specialQuestionData.multipleChoice = multiChoice;
-            callback();
-        });
-        multipleChoiceElement.saveData();
+        specialQuestionData.multipleChoice = multipleChoiceElement.saveData();
+        callback();
     }
 
     /**
-     * Saves checkbox data internally.
-     *
-     * @param {Function} callback - Called after data is saved.
+     * @param {QuestionData} questionData The data that is being checked if it exists.
+     * @returns {Boolean} True if the question data exists.
      */
-    function saveCheckbox(callback) {
-        var multipleChoiceElement = problemPanel.querySelector('multi-choice');
-        multipleChoiceElement.setFinishedListener(function(command, evnt, update, multiChoice) {
-            specialQuestionData.checkBox = multiChoice;
-            callback();
-        });
+    function hasValidQuestionData(questionData) {
+        return !isUndefined(questionData) && questionData !== null;
     }
+
+    /**
+     * @param {Element} element - The element that is being set with full screen.
+     */
+    function setFullScreen(element) {
+        if (isFullScreen) {
+            element.className += ' full-screen';
+        }
+    }
+
+
+    /**
+     * @param {Boolean} studentProblem True if what is being rendered should be treated as a student problem.
+     */
+    this.setIsStudentProblem = function(studentProblem) {
+        isStudent = studentProblem;
+    };
+
+    /**
+     * @param {Function} errorListenerFunction - Called if there is an error in the renderer.
+     */
+    this.setErrorListener = function(errorListenerFunction) {
+        errorListener = errorListenerFunction;
+    };
+
+    /**
+     * @param {Boolean} readOnly - True if the rendered data should be read only and not editable.
+     */
+    this.setReadOnly = function(readOnly) {
+        isReadOnly = readOnly;
+    };
+
+    /**
+     * @param {Boolean} fullScreen - True if the rendered data should be full screen.
+     */
+    this.setFullScreen = function(fullScreen) {
+        isFullScreen = fullScreen;
+    };
+
+    /**
+     * Called to start a waiting screen or other things to happen when it should start waiting.
+     */
+    this.startWaiting = function() {
+        startWaiting();
+    };
+
+    /**
+     * Called to end a waiting screen or other things to happen when it should stop waiting.
+     */
+    this.finishWaiting = function() {
+        finishWaiting();
+    };
+
+    /**
+     * @param {Function} startWaitingFunction - Sets a function to be called when it should start waiting.
+     */
+    this.setStartWaitingFunction = function(startWaitingFunction) {
+        startWaiting = function() {
+            isRunning = true;
+            startWaitingFunction();
+        };
+    };
+
+    /**
+     * @param {Function} finishWaitingFunction - Sets a function to be called when it should finish waiting.
+     */
+    this.setFinishWaitingFunction = function(finishWaitingFunction) {
+        finishWaiting = function() {
+            isRunning = false;
+            finishWaitingFunction();
+        };
+    };
+
+    /**
+     * Called when trying to kill the element.
+     */
+    this.finalize = function() {
+        this.reset();
+        problemPanel = undefined;
+    };
+
 }
 CourseSketch.ProblemRenderer = ProblemRenderer;

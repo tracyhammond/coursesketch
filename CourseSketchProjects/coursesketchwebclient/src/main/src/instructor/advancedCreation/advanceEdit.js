@@ -16,20 +16,20 @@ CourseSketch.AdvanceEditPanel = function() {
     /**
      * Loads the data from the school item into the edit panel.
      *
-     * @param {Protobuf} schoolItemData - A proto object containing the school item.
+     * @param {Protobuf} protobufObject - A proto object containing the school item.
      * @param {Element} parentElement - a panel that displays the editable material.
      * @returns {Map} A map that contains the field of the school proto boject and the loaded value of the proto object.
      */
-    function loadData(schoolItemData, parentElement) {
+    function loadData(protobufObject, parentElement) {
         var mappedInput = new Map();
-        for (var property in schoolItemData) {
-            if (schoolItemData.hasOwnProperty(property)) {
+        for (var property in protobufObject) {
+            if (protobufObject.hasOwnProperty(property)) {
                 var result;
                 var element = parentElement.querySelectorAll('.need-loading[data-prop="' + property + '"]')[0];
-                loadAction(schoolItemData, parentElement, property);
+                loadAction(protobufObject, parentElement, property);
                 if (!isUndefined(element)) {
                     var elementData = element.querySelectorAll(':scope > .data')[0];
-                    result = loadIntoElement(elementData, schoolItemData[property], property);
+                    result = loadIntoElement(elementData, protobufObject[property], property);
                     if (!element.hasAttribute('data-hidden')) {
                         element.style.display = 'inherit';
                     }
@@ -65,18 +65,18 @@ CourseSketch.AdvanceEditPanel = function() {
     /**
      * Loads an action into the element.
      *
-     * @param {ProtobufObject} schoolItemData - Data that is being attached to the action.
+     * @param {ProtobufObject} protobufObject - Data that is being attached to the action.
      * @param {Element} parentElement - The parent element.
      * @param {String} property - A property of schoolItemData.
      */
-    function loadAction(schoolItemData, parentElement, property) {
+    function loadAction(protobufObject, parentElement, property) {
         var actionElement = parentElement.querySelectorAll('.need-action[data-actionProp="' + property + '"]')[0];
         if (isUndefined(actionElement)) {
             return;
         }
         var superParent = getMatchingParent(parentElement, 'collapsible-body');
         actionElement.onclick = function() {
-            actionFunctions[actionElement.getAttribute('data-action')](schoolItemData, actionElement, [ property,
+            actionFunctions[actionElement.getAttribute('data-action')](protobufObject, actionElement, [ property,
                 parentElement, superParent ]);
         };
     }
@@ -143,7 +143,7 @@ CourseSketch.AdvanceEditPanel = function() {
             }
             elementData.style.display = 'inherit';
         } else if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-list')) {
-            loadListIntoElement(elementData, schoolItemData, property);
+            return loadListIntoElement(elementData, schoolItemData, property);
         } else if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-lower')) {
             // Says this should look lower into this element
             schoolItemData = loadIntoElement(elementData.querySelector('.data'), schoolItemData, property);
@@ -159,31 +159,46 @@ CourseSketch.AdvanceEditPanel = function() {
      * @param {Element} elementData - The parent element.
      * @param {ProtobufObject} schoolItemData - Data that is being attached to the action.
      * @param {String} property - A property of schoolItemData.
+     * @returns {Array} a list of how the data was loaded into the element.
      */
     function loadListIntoElement(elementData, schoolItemData, property) {
         var template = elementData.querySelector('.template');
         var templateNode = document.importNode(template.content, true);
         var templateDataNode = templateNode.querySelector('.templateData');
+        var returnedList = [];
         for (var i = 0; i < schoolItemData.length; i++) {
-            createListElement(i, schoolItemData[i], templateDataNode.cloneNode(true), elementData);
+            var result = createListElement(i, schoolItemData[i], templateDataNode.cloneNode(true), elementData);
+            returnedList.push(result);
         }
+        return returnedList;
     }
 
     /**
      * Creates a new list element and loads the data for it.
      *
      * @param {Number} index - The index of the element in the list.
-     * @param {ProtobufObject} schoolItemData - Data that is being attached to the action.
+     * @param {ProtobufObject} protobufData - Data that is being attached to the action.
      * @param {Element} newNode - The existing node
      * @param {Element} parent - The parent element.
+     * @returns {*} The equivalent of what would be grabbed by the field if not edited.
      */
-    function createListElement(index, schoolItemData, newNode, parent) {
+    function createListElement(index, protobufData, newNode, parent) {
         newNode.classList.remove('templateData');
         newNode.className += ' listItem' + index;
         newNode.setAttribute('data-list-item', index);
         parent.appendChild(newNode);
         newNode.querySelector('.listNumber').textContent = index + 1;
-        loadData(schoolItemData, newNode);
+        var elements = newNode.querySelectorAll('[data-list-item-id');
+        for (var i = 0; i < elements.length; i++) {
+            var element = elements[i];
+            var field = element.getAttribute('data-list-item-id');
+            var prefix = '';
+            if (element.hasAttribute('data-list-item-prefix')) {
+                prefix = element.getAttribute('data-list-item-prefix');
+            }
+            element[field] = prefix + (index);
+        }
+        return loadData(protobufData, newNode);
     }
 
     /**
@@ -290,8 +305,12 @@ CourseSketch.AdvanceEditPanel = function() {
                 var element = parentElement.querySelectorAll('.need-saving[data-prop="' + property + '"]')[0];
                 if (!isUndefined(element)) {
                     var elementData = element.querySelectorAll('.data')[0];
+                    var subMapData = new Map();
+                    if (!isUndefined(originalData)) {
+                        subMapData = originalData.get(property);
+                    }
 
-                    result = getDataFromElement(elementData, schoolItemData[property], property, originalData.get(property));
+                    result = getDataFromElement(elementData, schoolItemData[property], property, subMapData);
                 } else {
                     if (originalData.get(property) === IGNORE_FIELD) {
                         result = IGNORE_FIELD;
@@ -320,6 +339,7 @@ CourseSketch.AdvanceEditPanel = function() {
      * @returns {*} The data loaded from the element.
      */
     function getDataFromElement(elementData, schoolItemData, property, originalData) {
+        /*jshint maxcomplexity:13 */
         if (protoTypes.hasOwnProperty(property + 'ProtoType')) {
             return saveSubObject(elementData, schoolItemData, property, originalData);
         } else if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-date')) {
@@ -343,11 +363,43 @@ CourseSketch.AdvanceEditPanel = function() {
         } else if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-lower')) {
             // Says this should look lower into this element
             schoolItemData = getDataFromElement(elementData.querySelector('.data'), schoolItemData, property, originalData);
+        } else if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-list')) {
+            schoolItemData = getDataFromList(elementData, schoolItemData, property, originalData);
         }
         return schoolItemData;
     }
 
     this.getDataFromElement = getDataFromElement;
+
+    /**
+     * Gets data from the element if they are the same.
+     *
+     * It is expecting the data to be in a list though.
+     * @param {Element} elementData - The element the data is being loaded from.
+     * @param {*} schoolItemData - Data that is being loaded into.
+     * @param {String} property - A property of schoolItemData.
+     * @param {*} [originalData] - A map of the original data.
+     * @returns {*} The data loaded from the element.
+     */
+    function getDataFromList(elementData, schoolItemData, property, originalData) {
+        var elements = elementData.querySelectorAll(':scope > [data-list-item]');
+        var resultData = [];
+        for (var i = 0; i < elements.length; i++) {
+            var arraySchoolItemData;
+            if (schoolItemData.length <= i && i > 0) {
+                arraySchoolItemData = CourseSketch.prutil.createNewProtobufInstanceFromInstance(schoolItemData[i]);
+            } else {
+                arraySchoolItemData = schoolItemData[i];
+            }
+            resultData.push(getInput(arraySchoolItemData, elements[i], originalData[i]));
+        }
+
+        if (compareValues(originalData, resultData)) {
+            return resultData;
+        } else {
+            return schoolItemData;
+        }
+    }
 
     /**
      * @param {Element} elementData - The element the data is being loaded from.
@@ -363,7 +415,7 @@ CourseSketch.AdvanceEditPanel = function() {
             schoolItemData = protoTypes[property + 'ProtoType']();
         }
         var result = getInput(schoolItemData, elementData, originalData);
-        if (compareMaps(originalData, result)) {
+        if (compareValues(originalData, result)) {
             return result;
         } else {
             return schoolItemData;
@@ -414,7 +466,7 @@ CourseSketch.AdvanceEditPanel = function() {
      * @returns {Boolean} True if the values are the same otherwise this will return false;
      */
     function compareValues(originalValue, newValue) {
-        /*jshint maxcomplexity:16 */
+        /*jshint maxcomplexity:21 */
         if (originalValue === newValue) {
             return true;
         }
@@ -441,6 +493,26 @@ CourseSketch.AdvanceEditPanel = function() {
             (getTypeName(originalValue) === 'string' && getTypeName(newValue) === 'number')) {
             return ('' + originalValue) === ('' + newValue);
         }
+        if (getTypeName(originalValue) === 'string' && getTypeName(newValue) === 'string') {
+            return false;
+        }
+        if (isArray(originalValue) && isArray(newValue)) {
+            if (originalValue.length !== newValue.length) {
+                return false;
+            }
+            for (var i = 0; i < originalValue.length; i++) {
+                if (!compareValues(originalValue[i], newValue[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        if (getTypeName(originalValue) === getTypeName(newValue)) {
+            return false;
+        }
+
+        // Should always be the very last one!
         if (isNaN(originalValue) && isNaN(newValue)) {
             return true;
         }
@@ -479,18 +551,6 @@ CourseSketch.AdvanceEditPanel = function() {
         schoolItemData[property] = result;
     }
 
-    /**
-     * Removes the advance edit panel if the school item is removed.
-     */
-    if (!isUndefined(SchoolItem)) {
-        SchoolItem.prototype.finalize = function() {
-            if (!isUndefined(this.advanceEditPanel)) {
-                if (this.advanceEditPanel.parentNode !== null) {
-                    this.advanceEditPanel.parentNode.removeChild(this.advanceEditPanel);
-                }
-            }
-        };
-    }
     var getAdvanceEditPanel = this.getAdvanceEditPanel;
 
     /**

@@ -241,6 +241,36 @@ public class SubmissionDatabaseClientTest {
                 .equals(secondSubmission, result);
     }
 
+
+    @Test(expected = DatabaseAccessException.class)
+    public void testUpdateListThrowsExceptionIfTryingToOverride() throws Exception {
+        // round 1
+        Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
+        final Commands.SrlUpdateList original = createSimpleDatabaseListWithSaveMarker(200);
+        build.setSubmissionData(QuestionData.newBuilder().setSketchArea(
+                SketchArea.newBuilder().setRecordedSketch(original)));
+        Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
+        String id = databaseClient.saveExperiment(expected, 200);
+
+        // round 2
+        Submission.SrlSubmission.Builder secondList = Submission.SrlSubmission.newBuilder();
+        secondList.setSubmissionData(QuestionData.newBuilder().setSketchArea(
+                SketchArea.newBuilder().setRecordedSketch(SubmissionMergerTest.createSimpleDatabaseList(500))));
+        Submission.SrlExperiment secondSubmission = getFakeExperiment("User1", secondList.build());
+        String secondId = databaseClient.saveExperiment(secondSubmission, 200);
+
+        Assert.assertEquals(id, secondId);
+
+        // get experiment
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, new AuthenticationResponder(
+                Authentication.AuthResponse.newBuilder().setPermissionLevel(Authentication.AuthResponse.PermissionLevel.MODERATOR).build()));
+        new ProtobufComparisonBuilder()
+                .ignoreField(Submission.SrlSubmission.getDescriptor(), Submission.SrlSubmission.ID_FIELD_NUMBER)
+                .ignoreField(Submission.SrlExperiment.getDescriptor(), Submission.SrlExperiment.USERID_FIELD_NUMBER)
+                .build()
+                .equals(secondSubmission, result);
+    }
+
     @Test(expected = AuthenticationException.class)
     public void testSubmissionThrowsExceptionIfGivenWrongProblemId() throws Exception {
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
@@ -289,7 +319,7 @@ public class SubmissionDatabaseClientTest {
 
         // round 2
         Submission.SrlSubmission.Builder secondList = Submission.SrlSubmission.newBuilder();
-        secondList.setSubmissionData(QuestionData.newBuilder().setMultipleChoice(MultipleChoice.newBuilder().setCorrectId("" + 94)));
+        secondList.setSubmissionData(QuestionData.newBuilder().setMultipleChoice(MultipleChoice.newBuilder().addSelectedIds("" + 94)));
         Submission.SrlExperiment secondSubmission = getFakeExperiment("User1", secondList.build());
         String secondId = databaseClient.saveExperiment(secondSubmission, 200);
 
@@ -391,13 +421,13 @@ public class SubmissionDatabaseClientTest {
 
         // round 1
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
-        build.setSubmissionData(QuestionData.newBuilder().setMultipleChoice(MultipleChoice.newBuilder().setCorrectId(answerChoice)));
+        build.setSubmissionData(QuestionData.newBuilder().setMultipleChoice(MultipleChoice.newBuilder().addSelectedIds(answerChoice)));
         Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
         String id = databaseClient.saveExperiment(expected, 200);
 
         // get experiment
         Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, responder);
-        String resultAnswer = result.getSubmission().getSubmissionData().getMultipleChoice().getCorrectId();
+        String resultAnswer = result.getSubmission().getSubmissionData().getMultipleChoice().getSelectedIds(0);
 
         Assert.assertEquals(answerChoice, resultAnswer);
     }
@@ -409,21 +439,26 @@ public class SubmissionDatabaseClientTest {
 
         // round 1
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
-        build.setSubmissionData(QuestionData.newBuilder().setMultipleChoice(MultipleChoice.newBuilder().setCorrectId(textAnswer)));
+        build.setSubmissionData(QuestionData.newBuilder().setMultipleChoice(MultipleChoice.newBuilder().addSelectedIds(textAnswer)));
         Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
         String id = databaseClient.saveExperiment(expected, 200);
 
         // round 2
         Submission.SrlSubmission.Builder secondList = Submission.SrlSubmission.newBuilder();
-        secondList.setSubmissionData(QuestionData.newBuilder().setMultipleChoice(MultipleChoice.newBuilder().setCorrectId(textAnswer2)));
+        secondList.setSubmissionData(QuestionData.newBuilder().setMultipleChoice(MultipleChoice.newBuilder().addSelectedIds(textAnswer2)));
         Submission.SrlExperiment secondSubmission = getFakeExperiment("User1", secondList.build());
         databaseClient.saveExperiment(secondSubmission, 200);
 
         // get experiment
         Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, responder);
-        String resultAnswer = result.getSubmission().getSubmissionData().getMultipleChoice().getCorrectId();
+        String resultAnswer = result.getSubmission().getSubmissionData().getMultipleChoice().getSelectedIds(0);
 
         Assert.assertEquals(textAnswer2, resultAnswer);
+    }
+
+    @Test
+    public void testSettingUpIndexes() throws Exception {
+        databaseClient.setUpIndexes();
     }
 
     private Submission.SrlExperiment getFakeExperiment(String userId, Submission.SrlSubmission sub) {

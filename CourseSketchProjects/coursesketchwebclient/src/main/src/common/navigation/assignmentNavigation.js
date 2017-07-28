@@ -361,6 +361,13 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
+     * @returns {SrlProblem} The entire set of data that is in the current course problem
+     */
+    this.getCurrentCourseProblem = function() {
+        return currentSubgroup;
+    };
+
+    /**
      * @returns {UUID} the id of the subgroup (An {@link SrlProblem}).
      */
     this.getGroupId = function() {
@@ -488,6 +495,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
         stayInThisProblem = stayInCurrentProblem;
     };
 
+
     /**
      * Sets the information about a specific submission.
      *
@@ -496,11 +504,19 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @instance
      */
     this.setSubmissionInformation = function(submissionWrapper, isExperiment) {
+        var bankProblem = this.getCurrentInfo();
+        var problem = this.getCurrentCourseProblem();
         if (isExperiment) {
-            submissionWrapper.courseId = currentSubgroup.getCourseId();
-            submissionWrapper.assignmentId = currentSubgroup.getAssignmentId();
-            submissionWrapper.problemId = currentSubgroup.getId();
+            submissionWrapper.courseId = problem.getCourseId();
+            submissionWrapper.assignmentId = problem.getAssignmentId();
+            submissionWrapper.problemId = problem.getId();
             submissionWrapper.partId = '' + currentSubgroupPartIndex;
+        } else {
+            submissionWrapper.problemDomain = CourseSketch.prutil.DomainId();
+            submissionWrapper.problemDomain.questionType = bankProblem.questionType;
+            if (!isUndefined(bankProblem.problemDomain) && bankProblem.problemDomain !== null) {
+                submissionWrapper.problemDomain.domainId = bankProblem.problemDomain.domainId;
+            }
         }
         submissionWrapper.problemBankId = currentSubgroupPart.getId();
     };

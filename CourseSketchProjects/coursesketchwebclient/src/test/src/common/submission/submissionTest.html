@@ -12,6 +12,7 @@
     <link id="submissionTemplateImport" rel="import" href="/src/common/submission/submissionInclude.html">
     <link rel="import" href="/src/common/submission/toolbar/toolBarInclude.html">
     <link rel="import" href="/src/sketching/sketchInclude.html">
+    <link rel="import" href="/src/common/problem/renderer/problemRendererInclude.html">
 
     <!-- file being tested. -->
     <script src="/src/common/submission/submission.js" data-cover></script>
@@ -44,9 +45,18 @@
                     });
                 } catch (exception) {
                 }
-
             },
             setup: function() {
+                CourseSketch.Testing.dataListenerConfig = {
+                    callRealDataUpdate: false,
+                    callRealDataInsert: false,
+                    callRealRequest: false
+                };
+                CourseSketch.Testing.addFakeRequestFunction(
+                    CourseSketch.prutil.getRequestClass().MessageType.SUBMISSION, function (request) {
+                        request.messageTime = 60;
+                        return request;
+                    });
             },
             teardown : function() {
                 CourseSketch.connection.sendRequest = function(){};
@@ -219,6 +229,89 @@
             submission.sendDataToServer(undefined, true);
         });
 
+        QUnit.test("testing sending data multipleChoice submission works correctly", function(assert) {
+            expect(1);
+            var element = createSubmissionElement();
+            addElementToDom(element[0]);
+            var submissionElement = element[0];
+            var renderer = new CourseSketch.ProblemRenderer(submissionElement);
+            var bankProblem = CourseSketch.fakeBankProblems[2];
+            renderer.renderBankProblem(bankProblem, function () {
+                submissionElement.problemType = CourseSketch.prutil.QuestionType.MULT_CHOICE;
+
+                submissionElement.wrapperFunction = function (submission) {
+                    var element = submissionElement.querySelector('multi-choice');
+                    var multiChoice = element.saveData();
+                    assert.protoEqual(submission.submissionData.multipleChoice, multiChoice,
+                        CourseSketch.prutil.getMultipleChoiceClass(), 'Multi choice should be the same');
+                    return submission;
+                };
+                // actual test
+                submissionElement.sendDataToServer(undefined, true);
+            });
+        });
+
+        QUnit.test("testing sending data sketch area submission works correctly", function(assert) {
+            expect(1);
+            var done = assert.async();
+            var element = createSubmissionElement();
+            addElementToDom(element[0]);
+            var submissionElement = element[0];
+            var renderer = new CourseSketch.ProblemRenderer(submissionElement);
+            var bankProblem = CourseSketch.fakeBankProblems[4];
+            renderer.renderBankProblem(bankProblem, function () {
+                submissionElement.problemType = CourseSketch.prutil.QuestionType.SKETCH;
+
+                submissionElement.wrapperFunction = function (submission) {
+                    var element = submissionElement.querySelector('sketch-surface');
+                    var updateList = element.getUpdateList();
+                    assert.equal(updateList.length, submission.submissionData.sketchArea.recordedSketch.getList().length);
+                    done();
+                    return submission;
+                };
+                // actual test
+                submissionElement.sendDataToServer(undefined, true);
+            });
+        });
+
+        QUnit.test("testing sending data sketch area submission does not send twice", function(assert) {
+            expect(3);
+            var counter = 0;
+            var done = assert.async();
+            var element = createSubmissionElement();
+            addElementToDom(element[0]);
+            var submissionElement = element[0];
+            var renderer = new CourseSketch.ProblemRenderer(submissionElement);
+            var bankProblem = CourseSketch.fakeBankProblems[4];
+            renderer.renderBankProblem(bankProblem, function () {
+                submissionElement.problemType = CourseSketch.prutil.QuestionType.SKETCH;
+
+                submissionElement.wrapperFunction = function (submission) {
+                    var element = submissionElement.querySelector('sketch-surface');
+                    var updateList = element.getUpdateList();
+                    assert.equal(updateList.length, submission.submissionData.sketchArea.recordedSketch.getList().length);
+                    return submission;
+                };
+
+                submissionElement.setOnSavedListener(function () {
+                    if (counter === 0) {
+                        assert.ok(true, 'submission is called first time');
+                        counter++;
+                        assert.throws(function () {
+                            submissionElement.sendDataToServer(undefined, true);
+                        }, createExceptionComparator(SubmissionException, 'must make changes to save again.'),
+                            'submission exception is thrown when trying to submit twice');
+                        done();
+                    }
+                }, function (exception) {
+                    assert.ok(false, 'submission exception is called during second submission');
+                });
+
+                // actual test
+                submissionElement.sendDataToServer(undefined, true);
+            });
+        });
+
         QUnit.test("testing student sending submission data", function(assert) {
             expect(1);
             var element = createSubmissionElement();
@@ -232,20 +325,21 @@
 
             submission.wrapperFunction = function(submission) {
                 return submission;
-            }
+            };
 
             submission.isStudent = true;
 
-
-            CourseSketch.connection.sendRequest = function(request) {
-                assert.equal(request.responseText, "student");
-            };
+            CourseSketch.Testing.addFakeRequestFunction(
+                CourseSketch.prutil.getRequestClass().MessageType.SUBMISSION, function (request) {
+                    assert.equal(request.responseText, "student");
+                    return request;
+                });
             // actual test
             submission.sendDataToServer(undefined, true);
         });
 
         QUnit.test("testing grader sending submission data", function(assert) {
-            expect(1)
+            expect(1);
             var element = createSubmissionElement();
             addElementToDom(element[0]);
             var submission = element[0];
@@ -257,20 +351,23 @@
 
             submission.wrapperFunction = function(submission) {
                 return submission;
-            }
+            };
 
             submission.isStudent = false;
             submission.isGrader = true;
 
-            CourseSketch.connection.sendRequest = function(request) {
-                assert.equal(request.responseText, "grader");
-            }
+            CourseSketch.Testing.addFakeRequestFunction(
+                CourseSketch.prutil.getRequestClass().MessageType.SUBMISSION, function (request) {
+                    assert.equal(request.responseText, "grader");
+                    return request;
+                });
+
             // actual test
             submission.sendDataToServer(undefined, true);
         });
 
         QUnit.test("testing instructor sending submission data", function(assert) {
-            expect(1)
+            expect(1);
             var element = createSubmissionElement();
             addElementToDom(element[0]);
             var submission = element[0];
@@ -282,16 +379,43 @@
 
             submission.wrapperFunction = function(submission) {
                 return submission;
-            }
+            };
 
             submission.isStudent = false;
             submission.isGrader = false;
 
-            CourseSketch.connection.sendRequest = function(request) {
-                assert.equal(request.responseText, "instructor");
-            }
+            CourseSketch.Testing.addFakeRequestFunction(
+                CourseSketch.prutil.getRequestClass().MessageType.SUBMISSION, function (request) {
+                    assert.equal(request.responseText, "instructor");
+                    return request;
+                });
+
             // actual test
             submission.sendDataToServer(undefined, true);
+        });
+
+        QUnit.test("testing submission response calls callbacks on success", function(assert) {
+            expect(1);
+            var element = createSubmissionElement();
+            addElementToDom(element[0]);
+            var submission = element[0];
+            submission.setOnSavedListener(function (request) {
+                assert.ok(true, 'saved listener should be called on correct request');
+            });
+
+            submission.submissionResponse(CourseSketch.prutil.Request(), 0);
+        });
+
+        QUnit.test("testing submission response calls callbacks on failure", function(assert) {
+            expect(1);
+            var element = createSubmissionElement();
+            addElementToDom(element[0]);
+            var submission = element[0];
+            submission.setOnSavedListener(undefined, function (request) {
+                assert.ok(true, 'error listener should be called on incorrect request');
+            });
+
+            submission.submissionResponse(new CourseSketch.BaseException(), 0);
         });
 </script>
 </body>

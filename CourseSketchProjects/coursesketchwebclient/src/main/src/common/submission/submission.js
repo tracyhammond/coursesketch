@@ -14,6 +14,7 @@ function SubmissionException(message, cause) {
     this.setCause(cause);
     this.createStackTrace();
 }
+
 SubmissionException.prototype = new BaseException();
 
 /**
@@ -133,6 +134,11 @@ function SubmissionPanel() {
         try {
             this.sendDataToServer(isSubmitting);
         } catch (exception) {
+            if (!isUndefined(this.errorListener)) {
+                this.errorListener(exception);
+                // If someone set an error listener let it set the data
+                return;
+            }
             if (!suppressAlert) {
                 CourseSketch.clientException(exception);
             }
@@ -141,10 +147,40 @@ function SubmissionPanel() {
     };
 
     /**
+     * Gets submission data from the given panel based on if the problem is submitting.
+     *
+     * @param {Element} subPanel - The panel that holds submission data.
+     * @param {Boolean} isSubmitting - True if this is a submission instead of a save.
+     * @throws {SubmissionException} - If the question type can not be submitted.
+     * @returns {QuestionData} Data that has been grabbed from the {@code subPanel}.
+     */
+    this.getSubmissionData = function(subPanel, isSubmitting) {
+        var QuestionType = CourseSketch.prutil.QuestionType;
+        var submissionData = CourseSketch.prutil.QuestionData();
+        switch (this.problemType) {
+            case QuestionType.SKETCH:
+                submissionData.sketchArea = createSketchAreaData(subPanel, isSubmitting);
+                break;
+            case QuestionType.FREE_RESP:
+                submissionData.freeResponse = createFreeResponseData(subPanel, isSubmitting);
+                break;
+            case QuestionType.MULT_CHOICE:
+            case QuestionType.CHECK_BOX:
+                submissionData.multipleChoice = createMultipleChoiceData(subPanel, isSubmitting);
+                break;
+        }
+
+        if (isUndefined(submissionData)) {
+            throw new SubmissionException('submission type [' + this.problemType + '] not supported, aborting');
+        }
+        return submissionData;
+    };
+
+    /**
      * Sends the submission to the server.
      *
      * @param {Boolean} isSubmitting - true if the data is a submission as opposed to just a normal save.
-     * @throws {SubmissionException} - thrown if there is a problem
+     * @throws {SubmissionException} - thrown if there is a problem.
      * @instance
      * @memberof SubmissionPanel
      */
@@ -157,22 +193,8 @@ function SubmissionPanel() {
             throw new SubmissionException('Problem data is not set correctly aborting');
         }
         var submission = createBaseSubmission();
-        var QuestionType = CourseSketch.prutil.QuestionType;
-        var submissionData = CourseSketch.prutil.QuestionData();
-        switch (this.problemType) {
-            case QuestionType.SKETCH:
-                submissionData.sketchArea = createSketchSubmission(subPanel, isSubmitting);
-                break;
-            case QuestionType.FREE_RESP:
-                submissionData.freeResponse = createTextSubmission(subPanel, isSubmitting);
-                break;
-        }
 
-        if (isUndefined(submissionData)) {
-            throw new SubmissionException('submission type [' + this.problemType + '] not supported, aborting');
-        }
-
-        submission.setSubmissionData(submissionData);
+        submission.setSubmissionData(this.getSubmissionData(subPanel, isSubmitting));
 
         if (isUndefined(this.wrapperFunction)) {
             // You need to set the wrapper function to either create an experiment or solution.
@@ -183,36 +205,50 @@ function SubmissionPanel() {
         console.log(submittingValue);
         var submissionRequest = CourseSketch.prutil.createRequestFromData(submittingValue,
             CourseSketch.prutil.getRequestClass().MessageType.SUBMISSION);
-        var problemType = this.problemType;
         var problemIndex = this.problemIndex;
         CourseSketch.connection.setSubmissionListener();
         submissionRequest.setResponseText(this.isStudent ? 'student' : this.isGrader ? 'grader' : 'instructor');
         CourseSketch.dataListener.sendRequestWithTimeout(submissionRequest, function(event, request) {
-            console.log(request);
-            console.log(request.responseText);
-            if (problemIndex === this.problemIndex && this.problemType === CourseSketch.prutil.QuestionType.SKETCH) {
-                var sketchSurface = this.querySelector('.submittable');
-                // Potential conflict if it was save multiple times in quick succession.
-                sketchSurface.getUpdateManager().setLastSaveTime(request.getMessageTime());
-                console.log('submission has been updated with the latest time', request.getMessageTime().toString());
-            }
-            problemType = undefined;
-            problemIndex = undefined;
+            this.submissionResponse(request, problemIndex);
         }.bind(this), 1, CourseSketch.dataListener.getRequestType());
-        submission = undefined;
+    };
+
+    /**
+     * Called after the submission has been submitted successfully.
+     *
+     * @param {Request} request - The protobuf request of the response.
+     * @param {Number} problemIndex - The old problem when it was being submitted.
+     */
+    this.submissionResponse = function(request, problemIndex) {
+        console.log(request);
+        if (problemIndex === this.problemIndex && this.problemType === CourseSketch.prutil.QuestionType.SKETCH) {
+            var sketchSurface = this.querySelector('.submittable');
+            // Potential conflict if it was save multiple times in quick succession.
+            sketchSurface.getUpdateManager().setLastSaveTime(request.getMessageTime());
+            console.log('submission has been updated with the latest time', request.getMessageTime().toString());
+        }
+        if (request instanceof CourseSketch.BaseException) {
+            if (!isUndefined(this.errorListener)) {
+                this.errorListener(request);
+            }
+            return;
+        }
+        if (!isUndefined(this.saveListener)) {
+            this.saveListener(request);
+        }
     };
 
     /**
      * Gets the text that has been typed.
      *
-     * @returns {SrlSubmission} object that is ready to be sent to the server.
+     * @returns {FreeResponse} object that is ready to be sent to the server.
      *
      * @param {Element} textArea - The element that contains the text answer
      * @param {Boolean} isSubmitting - Value Currently ignored but in the future it may be used.
      * @instance
      * @memberof SubmissionPanel
      */
-    function createTextSubmission(textArea, isSubmitting) {
+    function createFreeResponseData(textArea) {
         var submission = CourseSketch.prutil.FreeResponse();
         submission.startingText = textArea.value;
         return submission;
@@ -225,11 +261,11 @@ function SubmissionPanel() {
      *
      * @param {SketchSurface} sketchSurface - The sketch surface that is being submitted.
      * @param {Boolean} isSubmitting - True if this is a submission instead of a save.
-     * @returns {SrlSubmission} object that is ready to be sent to the server.
+     * @returns {SketchArea} object that is ready to be sent to the server.
      * @instance
      * @memberof SubmissionPanel
      */
-    function createSketchSubmission(sketchSurface, isSubmitting) {
+    function createSketchAreaData(sketchSurface, isSubmitting) {
         var updateManager = sketchSurface.getUpdateManager();
 
         if (isSubmitting && !updateManager.isValidForSubmission()) {
@@ -248,6 +284,21 @@ function SubmissionPanel() {
         var submission = CourseSketch.prutil.SketchArea();
         submission.setRecordedSketch(protoObject);
         return submission;
+    }
+
+    /**
+     * Creates the submission object for the sketch surface.
+     *
+     * This also adds the submit or save marker to the update list.
+     *
+     * @param {MultiChoice} multiChoice - The sketch surface that is being submitted.
+     * @param {Boolean} isSubmitting - True if this is a submission instead of a save.
+     * @returns {MultipleChoice} object that is ready to be sent to the server.
+     * @instance
+     * @memberof SubmissionPanel
+     */
+    function createMultipleChoiceData(multiChoice, isSubmitting) {
+        return multiChoice.saveData();
     }
 
     /**
@@ -327,7 +378,9 @@ function SubmissionPanel() {
                 updateManager.addUpdate(update);
             });
         } else if (problemType === QuestionType.MULT_CHOICE) {
-            throw new SubmissionException('Callbacks for Multiple choice is not supported.');
+            console.log('No problem type needed');
+            // none currently needed
+            // throw new SubmissionException('Callbacks for Multiple choice is not supported.');
             // add mult choice tools
         } else if (problemType === QuestionType.FREE_RESP) {
             // add free resp tools

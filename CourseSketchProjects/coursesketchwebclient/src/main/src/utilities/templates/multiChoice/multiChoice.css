@@ -4,13 +4,72 @@
     margin-left: 0.3em;
 }
 
+:host {
+    background-color: #cfd8dc;
+}
+
 #add:hover {
     text-decoration: underline;
 }
 
+.answer-choice.listItem0 {
+}
+
 .answer-choice {
-    border: dotted 2px #DDD;
-    line-height: 2.25em;
+    border-bottom: 1px solid #2196f3;
+    /* line-height: 2.25em; */
+}
+
+.smoothHeight {
+    transition: height 1s ease;
+}
+
+::placeholder {
+    color: #757575 !important;
+}
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: #757575 !important;
+}
+::-moz-placeholder { /* Firefox 19+ */
+    color: #757575 !important;
+}
+:-ms-input-placeholder { /* IE 10+ */
+    color: #757575 !important;
+}
+:-moz-placeholder { /* Firefox 18- */
+    color: #757575 !important;
+}
+
+input[type="text"].answerText:not(:focus) {
+    transition: all 1s ease;
+    border-bottom: none;
+    margin: 10px 0 10px 0;
+    background-color: rbga(255, 255, 255, 0.1);
+}
+
+.answer-choice.row {
+    margin-bottom: initial;
+}
+
+div.radioHolder.col, .row div.col.closeHolder, .row div[data-prop="text"].student.col {
+    min-height: calc(3rem + 20px);
+}
+
+.radioHolder > input {
+    min-height: 3rem;
+}
+
+:host[data-mode] #remove {
+    display: none;
+}
+
+div[data-prop="text"].student {
+    padding-top: calc(1.5rem - 2px);
+}
+
+.row div.col.closeHolder {
+    padding-top: calc(1.5rem - 2px);
 }
 
 input.label {
@@ -20,7 +79,7 @@ input.label {
     outline: none;
 }
 
-#correct {
+#remove {
     font-size: 0.7em;
     float: right;
 }
@@ -28,7 +87,7 @@ input.label {
 .close, .correct {
     font-size: 2.25em;
     display: inline-block;
-    vertical-align: top;
+    vertical-align: middle;
     text-align: center;
     float: right;
     cursor: pointer;

@@ -505,4 +505,4 @@ function SRL_Stroke(startPoint) {
     };
 }
 
-SRL_Stroke.Inherits(SRL_Shape);
+inheritsParent(SRL_Stroke, SRL_Shape);

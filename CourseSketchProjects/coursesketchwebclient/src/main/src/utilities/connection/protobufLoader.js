@@ -1,4 +1,4 @@
-/* Depends on the protobuf library, base.js, objectAndInheritance.js */
+/* Depends on the protobuf library, base.js */
 
 /**
  * Any exception that occurs relating to protobufs.
@@ -491,6 +491,22 @@ function ProtobufSetup() {
     this.getSupportedEnums = function getSupportedEnums() {
         // The quickest way to clone.
         return JSON.parse(JSON.stringify(enumList));
+    };
+
+    /**
+     * @param {String} className Name of the protobuf.
+     * @returns {ProtobufObject} An instance of a protobuf of that name.
+     */
+    this.getProtobufInstanceByName = function(className) {
+        return CourseSketch.prutil[className]();
+    };
+
+    /**
+     * @param {ProtobufObject} protoObject Name of the protobuf.
+     * @returns {ProtobufObject} An instance of a protobuf of that name.
+     */
+    this.createNewProtobufInstanceFromInstance = function(protoObject) {
+        return CourseSketch.prutil[proto.$type.name]();
     };
 
     /**

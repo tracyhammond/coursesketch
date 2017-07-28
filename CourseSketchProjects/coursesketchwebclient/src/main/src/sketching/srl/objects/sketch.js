@@ -140,4 +140,4 @@ function SRL_Sketch() {
     this.clearSketch = this.resetSketch;
 }
 
-SRL_Sketch.Inherits(Overloads);
+inheritsParent(SRL_Sketch, Overloads);

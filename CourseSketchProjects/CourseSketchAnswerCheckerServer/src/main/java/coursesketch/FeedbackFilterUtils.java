@@ -68,7 +68,7 @@ public final class FeedbackFilterUtils {
             feedbackDataBuilder.clear().setFeedbackState(feedbackState);
         }
         if (limitations.getShowNothing()) {
-            feedbackDataBuilder.clear().setFeedbackState(Feedback.FeedbackState.UNKOWN);
+            feedbackDataBuilder.clear().setFeedbackState(Feedback.FeedbackState.UNKNOWN);
         }
         // More to be done as requirements become clear
     }
