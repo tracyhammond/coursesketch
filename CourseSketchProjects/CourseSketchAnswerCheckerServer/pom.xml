@@ -17,8 +17,8 @@
         <mainClass>connection.AnswerCheckerRunner</mainClass>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>100</projectBranchLevel>
-        <projectLineLevel>100</projectLineLevel>
+        <projectBranchLevel>25</projectBranchLevel>
+        <projectLineLevel>27</projectLineLevel>
     </properties>
     <build>
         <plugins>

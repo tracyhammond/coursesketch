@@ -96,6 +96,12 @@ public abstract class AbstractGrader<T extends GeneratedMessage> {
         return Feedback.BasicFeedback.newBuilder().setFeedbackMessage(simpleFeedback).build();
     }
 
+    /**
+     * Checks if the experiment and solution is valid.
+     * @param experiment Experiment Data
+     * @param solution Solution Data
+     * @throws GradingException Thrown if data is not valid.
+     */
     protected final void checkValidGradeData(T experiment, T solution) throws GradingException {
         if (solution == null || experiment == null) {
             throw new GradingException("Invalid solution = " + (solution == null) + " or experiment = " + (experiment == null));
