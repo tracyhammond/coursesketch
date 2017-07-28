@@ -26,7 +26,7 @@ import static coursesketch.database.util.DatabaseStringConstants.SELF_ID;
 /**
  * Holds information for the answer checker server.
  */
-public class AnswerCheckerDatabase extends AbstractCourseSketchDatabaseReader {
+public class AnswerCheckerDatabase extends AbstractCourseSketchDatabaseReader implements RubricDataHandler {
 
     /**
      * Declaration and Definition of Logger.

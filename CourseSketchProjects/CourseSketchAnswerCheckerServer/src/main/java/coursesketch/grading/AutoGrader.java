@@ -1,6 +1,6 @@
 package coursesketch.grading;
 
-import coursesketch.database.AnswerCheckerDatabase;
+import coursesketch.database.RubricDataHandler;
 import coursesketch.database.util.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,14 +27,14 @@ public class AutoGrader {
     /**
      * Used to get rubrics.
      */
-    private final AnswerCheckerDatabase database;
+    private final RubricDataHandler database;
 
     /**
      * Creates a new instance of the autograder with the database.
      *
      * @param database The database that holds the rubric.
      */
-    public AutoGrader(final AnswerCheckerDatabase database) {
+    public AutoGrader(final RubricDataHandler database) {
         this.database = database;
     }
 
@@ -101,7 +101,8 @@ public class AutoGrader {
                 grader = getCheckboxGrader(experimentQuestionData, solutionQuestionData);
                 break;
             default:
-                grader = buildMissingExperimentDataGrader();
+                grader = buildThrowExceptionGrader(
+                        new UnsupportedOperationException("Invalid Question Type: " + rubricId.getQuestionType().name()));
                 break;
         }
         return grader;

@@ -1,7 +1,7 @@
 package coursesketch.grading;
 
 import com.google.protobuf.GeneratedMessage;
-import coursesketch.database.AnswerCheckerDatabase;
+import coursesketch.database.RubricDataHandler;
 import protobuf.srl.grading.Grading;
 import protobuf.srl.grading.Rubric;
 import protobuf.srl.submission.Feedback;
@@ -23,7 +23,7 @@ public abstract class AbstractGrader<T extends GeneratedMessage> {
      * @param database Where the rubric is stored.
      * @return A builder representing a loaded rubric.
      */
-    protected Rubric.GradingRubric.Builder loadRubricBuilder(Util.DomainId rubricId, AnswerCheckerDatabase database) {
+    protected Rubric.GradingRubric.Builder loadRubricBuilder(Util.DomainId rubricId, RubricDataHandler database) {
         return database.loadRubric(rubricId);
     }
 
@@ -45,7 +45,7 @@ public abstract class AbstractGrader<T extends GeneratedMessage> {
      * @param database Where the rubric is stored.
      * @return A loaded rubric.
      */
-    final Rubric.GradingRubric buildRubric(Util.DomainId rubricId, AnswerCheckerDatabase database) {
+    final Rubric.GradingRubric buildRubric(Util.DomainId rubricId, RubricDataHandler database) {
         return database.loadRubric(rubricId).build();
     }
 
@@ -64,7 +64,7 @@ public abstract class AbstractGrader<T extends GeneratedMessage> {
      * @return {@link Feedback.FeedbackData}
      * @throws GradingException Thrown if there are problems while creating feedback
      */
-    final Feedback.FeedbackData.Builder createCorrectFeedback() throws GradingException {
+    static Feedback.FeedbackData.Builder createCorrectFeedback() throws GradingException {
         return Feedback.FeedbackData.newBuilder()
                 .setBasicFeedback(createBasicFeedback("Correct!"))
                 .setGrade(createGrade(1.0f))
@@ -94,5 +94,11 @@ public abstract class AbstractGrader<T extends GeneratedMessage> {
      */
     static Feedback.BasicFeedback createBasicFeedback(final String simpleFeedback) {
         return Feedback.BasicFeedback.newBuilder().setFeedbackMessage(simpleFeedback).build();
+    }
+
+    protected final void checkValidGradeData(T experiment, T solution) throws GradingException {
+        if (solution == null || experiment == null) {
+            throw new GradingException("Invalid solution = " + (solution == null) + " or experiment = " + (experiment == null));
+        }
     }
 }

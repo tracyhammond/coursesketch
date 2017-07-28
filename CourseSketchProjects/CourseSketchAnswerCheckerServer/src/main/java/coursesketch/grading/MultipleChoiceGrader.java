@@ -1,6 +1,6 @@
 package coursesketch.grading;
 
-import coursesketch.database.AnswerCheckerDatabase;
+import coursesketch.database.RubricDataHandler;
 import protobuf.srl.grading.Rubric;
 import protobuf.srl.question.QuestionDataOuterClass;
 import protobuf.srl.submission.Feedback;
@@ -20,7 +20,7 @@ public class MultipleChoiceGrader extends AbstractGrader<QuestionDataOuterClass.
     private QuestionDataOuterClass.MultipleChoice solution;
 
     @Override
-    public final Rubric.GradingRubric.Builder loadRubricBuilder(Util.DomainId rubricId, AnswerCheckerDatabase database) {
+    public final Rubric.GradingRubric.Builder loadRubricBuilder(Util.DomainId rubricId, RubricDataHandler database) {
         return super.loadRubricBuilder(rubricId, database);
     }
 
@@ -36,13 +36,14 @@ public class MultipleChoiceGrader extends AbstractGrader<QuestionDataOuterClass.
 
     @Override
     public final Feedback.FeedbackData.Builder gradeProblem(Rubric.GradingRubric gradingRubric) throws GradingException {
-        final String studentAnswer = this.experiment.getSelectedIds(0);
-        final String correctAnswer = this.solution.getSelectedIds(0);
+        checkValidGradeData(experiment, solution);
+        final String studentAnswer = experiment.getSelectedIds(0);
+        final String correctAnswer = solution.getSelectedIds(0);
 
         if (correctAnswer.equals(studentAnswer)) {
             return createCorrectFeedback();
         }
-        final Feedback.MultipleChoiceFeedback incorrectFeedback = createIncorrectFeedback(studentAnswer, gradingRubric);
+        final Feedback.MultipleChoiceFeedback incorrectFeedback = createIncorrectFeedback(correctAnswer, gradingRubric);
         return Feedback.FeedbackData.newBuilder()
                 .setBasicFeedback(createBasicFeedback(createFeedbackString(studentAnswer, correctAnswer)))
                 .setGrade(createGrade(0.0f))

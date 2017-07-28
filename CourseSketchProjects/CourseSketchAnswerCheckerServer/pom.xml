@@ -17,8 +17,8 @@
         <mainClass>connection.AnswerCheckerRunner</mainClass>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>0</projectBranchLevel>
-        <projectLineLevel>0</projectLineLevel>
+        <projectBranchLevel>100</projectBranchLevel>
+        <projectLineLevel>100</projectLineLevel>
     </properties>
     <build>
         <plugins>
@@ -100,6 +100,35 @@
             <artifactId>MongoDatabaseHelper</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>AuthenticationTestHelper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>DatabaseTestHelper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>ProtobufComparison</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>MatcherHelper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

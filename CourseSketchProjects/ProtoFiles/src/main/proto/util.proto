@@ -29,7 +29,7 @@ message SrlChecksum {
 
 message DomainId {
     optional string domainId = 1;
-    optional QuestionType questionType = 2;
+    optional QuestionType questionType = 2 [default = INVALID];
 }
 
 /**
@@ -37,6 +37,7 @@ message DomainId {
  * (This should only be what is currently supported)
  */
 enum QuestionType {
+    INVALID = -1;
     SKETCH = 0; // sketching
     MULT_CHOICE = 1;
     FREE_RESP = 2; // typing
