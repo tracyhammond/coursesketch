@@ -76,7 +76,8 @@ public class IdentityServiceTest {
 
     @Before
     public void before() throws Exception {
-        identityService = new IdentityService(dbAuthChecker, identityManager);
+        identityService = new IdentityService(dbAuthChecker);
+        identityService.setDatabaseReader(identityManager);
     }
 
     @Test

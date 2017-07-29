@@ -1,8 +1,12 @@
 package coursesketch.utilities;
 
+import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationOptionChecker;
+import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.server.authentication.HashManager;
 import protobuf.srl.services.authentication.Authentication;
+import protobuf.srl.utils.Util;
 
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
@@ -192,5 +196,51 @@ public final class AuthUtilities {
         } catch (NoSuchAlgorithmException e) {
             throw new AuthenticationException(e);
         }
+    }
+
+    /**
+     * Creates an empty authentication checker that only throws exceptions when the methods are called.
+     * @return Creates an instance of the {@link AuthenticationOptionChecker} that throws an exception when any of its methods are called.
+     */
+    public static AuthenticationOptionChecker createThrowingAuthenticationOptionChecker() {
+        return new AuthenticationOptionChecker() {
+            /**
+             * {@inheritDoc}
+             *
+             * This instance throws an exception.
+             */
+            @Override public boolean authenticateDate(final AuthenticationDataCreator dataCreator, final long checkTime)
+                    throws DatabaseAccessException {
+                throw new UnsupportedOperationException();
+            }
+
+            /**
+             * {@inheritDoc}
+             *
+             * This instance throws an exception.
+             */
+            @Override public boolean isItemRegistrationRequired(final AuthenticationDataCreator dataCreator) throws DatabaseAccessException {
+                throw new UnsupportedOperationException();
+            }
+
+            /**
+             * {@inheritDoc}
+             *
+             * This instance throws an exception.
+             */
+            @Override public boolean isItemPublished(final AuthenticationDataCreator dataCreator) throws DatabaseAccessException {
+                throw new UnsupportedOperationException();
+            }
+
+            /**
+             * {@inheritDoc}
+             *
+             * This instance throws an exception.
+             */
+            @Override public AuthenticationDataCreator createDataGrabber(final Util.ItemType collectionType, final String itemId)
+                    throws DatabaseAccessException {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 }

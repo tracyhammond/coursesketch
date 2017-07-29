@@ -1,7 +1,7 @@
 package connection;
 
-import coursesketch.server.base.ServerWebSocketHandler;
-import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.rpc.ServerWebSocketHandler;
+import coursesketch.server.rpc.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
 

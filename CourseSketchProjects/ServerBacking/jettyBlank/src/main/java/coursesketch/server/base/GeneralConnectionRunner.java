@@ -8,6 +8,7 @@ package coursesketch.server.base;
 
 import coursesketch.server.interfaces.AbstractGeneralConnectionRunner;
 import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.server.interfaces.InputParser;
 import coursesketch.server.interfaces.ServerInfo;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
@@ -26,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.LoggingConstants;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Properties;
@@ -190,8 +190,6 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
                     getSocketInitailizerInstance().onServerStart();
                     LOG.info("Server started at " + server.getURI());
                     server.join();
-                } catch (InterruptedException e) {
-                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 } catch (Exception e) {
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
@@ -222,22 +220,22 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
         return this.server == null || !this.server.isRunning();
     }
 
-    // FUTURE: add a command manager of some sort.
-    /**
-     * Parses extra commands that are taken in through the input line.
-     * @param command The command that is being processed.
-     * @param sysin Used for additional input.
-     * @return True if the message command is processed.
-     * @throws IOException Thrown if there is a problem reading input.
-     */
     @Override
-    @SuppressWarnings("checkstyle:designforextension")
-    public boolean parseUtilityCommand(final String command, final BufferedReader sysin) throws IOException {
-        if ("connectionNumber".equals(command)) {
-            LOG.info("Connect Number: {}", getSocketInitailizerInstance().getCurrentConnectionNumber());
-            return true;
-        }
-        return false;
+    protected void addArguments(InputParser inputParser) {
+
+    }
+
+    @Override
+    protected void addCommands(InputParser inputParser) {
+        inputParser.addParsingOption(inputParser.createOption("connectionNumber",
+                false,
+                "Prints out the number of connections"),
+                new InputParser.ArgumentListener() {
+                    @Override
+                    public void run(String argumentValue) throws IOException, InterruptedException {
+                        LOG.info("Connect Number: {}", getSocketInitailizerInstance().getCurrentConnectionNumber());
+                    }
+                });
     }
 
     /**

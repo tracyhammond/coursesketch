@@ -119,7 +119,7 @@
         <dependency>
             <groupId>com.github.pjklauser</groupId>
             <artifactId>protobuf-rpc-pro</artifactId>
-            <version>e1f6b9d3e520d657d4bff244ba0a8c405efeb998</version>
+            <version>-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>CourseSketch</groupId>

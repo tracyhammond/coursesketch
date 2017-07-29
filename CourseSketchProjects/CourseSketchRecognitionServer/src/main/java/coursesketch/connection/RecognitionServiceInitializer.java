@@ -36,7 +36,7 @@ public final class RecognitionServiceInitializer extends ServerWebSocketInitiali
      *
      * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public RecognitionServiceInitializer(final ServerInfo serverInfo) {
+    RecognitionServiceInitializer(final ServerInfo serverInfo) {
         super(serverInfo);
         databaseClient = new RecognitionDatabaseClient(serverInfo);
     }
@@ -54,7 +54,7 @@ public final class RecognitionServiceInitializer extends ServerWebSocketInitiali
      */
     @Override
     protected List<CourseSketchRpcService> getRpcServices() {
-        final List<CourseSketchRpcService> services = new ArrayList<CourseSketchRpcService>();
+        final List<CourseSketchRpcService> services = new ArrayList<>();
         try {
             databaseClient.startDatabase();
         } catch (DatabaseAccessException e) {

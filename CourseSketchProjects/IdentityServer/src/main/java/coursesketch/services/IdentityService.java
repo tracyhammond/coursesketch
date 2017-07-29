@@ -5,7 +5,8 @@ import com.google.protobuf.RpcController;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.identity.IdentityManager;
-import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
+import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.rpc.CourseSketchRpcService;
 import coursesketch.database.util.DatabaseAccessException;
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ public final class IdentityService extends Identity.IdentityService implements C
     /**
      * Manages authentication storage for this service.
      */
-    private final IdentityManager identityManager;
+    private IdentityManager identityManager;
 
     /**
      * Used for checking if users have permissions to access certain values.
@@ -39,20 +40,9 @@ public final class IdentityService extends Identity.IdentityService implements C
     /**
      * Creates an authentication service with an DbAuthManager and a DbAuthChecker.
      * @param authChecker {@link #authChecker}
-     * @param identityManager {@link #identityManager}
      */
-    public IdentityService(final Authenticator authChecker, final IdentityManager identityManager) {
+    public IdentityService(final Authenticator authChecker) {
         this.authChecker = authChecker;
-        this.identityManager = identityManager;
-    }
-
-    /**
-     * Sets the object that initializes this service.
-     *
-     * @param socketInitializer The object used to initialize the sockets.
-     */
-    @Override public void setSocketInitializer(final ISocketInitializer socketInitializer) {
-        // Does not set any values.
     }
 
     /**
@@ -152,7 +142,7 @@ public final class IdentityService extends Identity.IdentityService implements C
      */
     @Override public void getUserIdentity(final RpcController controller, final Identity.IdentityRequest request,
             final RpcCallback<Identity.UserNameResponse> done) {
-        String identity = null;
+        String identity;
         try {
             identity = identityManager.getUserIdentity(request.getUserId(), request.getAuthId());
         } catch (AuthenticationException e) {
@@ -224,5 +214,20 @@ public final class IdentityService extends Identity.IdentityService implements C
     @SuppressWarnings("PMD.UnusedPrivateMethod")
     private Identity.UserNameResponse createErredUserNameResponse(final Throwable tException) {
         return Identity.UserNameResponse.newBuilder().setDefaultResponse(ExceptionUtilities.createExceptionResponse(tException)).build();
+    }
+
+    @Override
+    public AbstractCourseSketchDatabaseReader createDatabaseReader(ServerInfo serverInfo) {
+        return new IdentityManager(serverInfo);
+    }
+
+    @Override
+    public void setDatabaseReader(AbstractCourseSketchDatabaseReader databaseReader) {
+        identityManager = (IdentityManager) databaseReader;
+    }
+
+    @Override
+    public void onInitialize() {
+
     }
 }

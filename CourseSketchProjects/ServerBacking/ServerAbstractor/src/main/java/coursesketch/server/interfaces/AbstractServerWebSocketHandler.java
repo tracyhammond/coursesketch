@@ -39,7 +39,7 @@ public abstract class AbstractServerWebSocketHandler {
      * The maximum number of connections.
      * This can be overwritten to give the number of connections a new value.
      */
-    public static final int MAX_CONNECTIONS = 80;
+    private static final int MAX_CONNECTIONS = 80;
     /**
      * The name of the socket This can be hidden in a subclass.
      */
@@ -47,35 +47,35 @@ public abstract class AbstractServerWebSocketHandler {
     /**
      * The state that represents the server being full.
      */
-    public static final int STATE_SERVER_FULL = 4001;
+    private static final int STATE_SERVER_FULL = 4001;
     /**
      * The state representing that the client has closed the connection.
      */
-    public static final int STATE_CLIENT_CLOSE = 4003;
+    private static final int STATE_CLIENT_CLOSE = 4003;
     /**
      * The message representing that the client closed the connection.
      */
-    public static final String CLIENT_CLOSE_MESSAGE = "The client closed the connection";
+    private static final String CLIENT_CLOSE_MESSAGE = "The client closed the connection";
 
     /**
      * The message for when the server is full.
      */
-    public static final String FULL_SERVER_MESSAGE = "Sorry, the " + NAME + "server is full";
+    private static final String FULL_SERVER_MESSAGE = "Sorry, the " + NAME + "server is full";
 
     /**
      * Maps a Session to its MultiConnectionState. FUTURE: {@link org.cliffc.high_scale_lib.NonBlockingHashMap}
      */
-    private final Map<SocketSession, MultiConnectionState> connectionToId = new HashMap<SocketSession, MultiConnectionState>();
+    private final Map<SocketSession, MultiConnectionState> connectionToId = new HashMap<>();
 
     /**
      * Maps a MultiConnectionState to a Session. FUTUE: {@link org.cliffc.high_scale_lib.NonBlockingHashMap}
      */
-    private final Map<MultiConnectionState, SocketSession> idToConnection = new HashMap<MultiConnectionState, SocketSession>();
+    private final Map<MultiConnectionState, SocketSession> idToConnection = new HashMap<>();
 
     /**
      * Maps a String representing the connections ID to its MultiConnectionState.
      */
-    private final Map<String, MultiConnectionState> idToState = new HashMap<String, MultiConnectionState>();
+    private final Map<String, MultiConnectionState> idToState = new HashMap<>();
 
     /**
      * The parent servlet for this server.
@@ -354,7 +354,7 @@ public abstract class AbstractServerWebSocketHandler {
      *
      * @throws DatabaseAccessException thrown if the database is unable to start.
      */
-    protected final void startDatabase() throws DatabaseAccessException {
+    private void startDatabase() throws DatabaseAccessException {
         final AbstractCourseSketchDatabaseReader reader = getDatabaseReader();
         if (reader != null) {
             reader.startDatabase();

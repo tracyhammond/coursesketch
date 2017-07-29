@@ -4,8 +4,9 @@ import com.google.protobuf.RpcCallback;
 import com.google.protobuf.RpcController;
 import com.googlecode.protobuf.pro.duplex.RpcClientChannel;
 import com.googlecode.protobuf.pro.duplex.listener.TcpConnectionEventListener;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
-import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.server.interfaces.ServerInfo;
 import io.netty.channel.ChannelHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,6 @@ import utilities.TimeManager;
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 /* package-private */ class ServerSocketWrapper extends Message.RequestService implements TcpConnectionEventListener, CourseSketchRpcService {
 
-
     /**
      * Declaration/Definition of Logger.
      */
@@ -36,7 +36,7 @@ import utilities.TimeManager;
     private final ServerWebSocketHandler socketHandler;
 
     /**
-     * Constructor for {@ServerSocketWrapper}.
+     * Constructor for {@link ServerSocketWrapper}.
      *
      * @param handler The handler for the server side of the socket.
      * @param secure True if the socket should use SSL.
@@ -59,7 +59,7 @@ import utilities.TimeManager;
         if (controller.failed() || controller.isCanceled()) {
             socketHandler.rpcOnError(controller, new ConnectionException(controller.errorText()));
         } else {
-            socketHandler.rpcOnMessage(controller, request);
+            socketHandler.rpcOnMessage(rpcCallback, controller, request);
         }
     }
 
@@ -88,7 +88,7 @@ import utilities.TimeManager;
      * @param rpcClientChannel The client channel that has closed.
      */
     @Override public void connectionClosed(final RpcClientChannel rpcClientChannel) {
-        socketHandler.rpcOnClose(new RpcSession(rpcClientChannel), -1, "for an unknown reason");
+        socketHandler.rpcOnClose(new ClientRpcSession(rpcClientChannel), -1, "for an unknown reason");
     }
 
     /**
@@ -99,15 +99,20 @@ import utilities.TimeManager;
      * @param rpcClientChannel The client channel that has opened.
      */
     @Override public void connectionOpened(final RpcClientChannel rpcClientChannel) {
-        socketHandler.rpcOnConnect(new RpcSession(rpcClientChannel), null);
+        socketHandler.rpcOnConnect(new ClientRpcSession(rpcClientChannel), null);
     }
 
-    /**
-     * Sets the object that initializes this service.
-     *
-     * @param socketInitializer The Initializer that created this service. (It is ignored in the wrapper).
-     */
-    @Override public void setSocketInitializer(final ISocketInitializer socketInitializer) {
-        // This is left blank because this class is a wrapper. The actual handler contains a socket initializer
+    @Override
+    public AbstractCourseSketchDatabaseReader createDatabaseReader(ServerInfo serverInfo) {
+        return null;
+    }
+
+    @Override
+    public void setDatabaseReader(AbstractCourseSketchDatabaseReader databaseReader) {
+    }
+
+    @Override
+    public void onInitialize() {
+        socketHandler.initialize();
     }
 }

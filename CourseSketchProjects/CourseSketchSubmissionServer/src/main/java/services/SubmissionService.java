@@ -2,12 +2,15 @@ package services;
 
 import com.google.protobuf.RpcCallback;
 import com.google.protobuf.RpcController;
+import coursesketch.database.SubmissionDatabaseClient;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.Authenticator;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.database.submission.SubmissionManagerInterface;
-import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.rpc.CourseSketchRpcService;
 import coursesketch.database.util.DatabaseAccessException;
+import handlers.SubmissionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.services.submission.SubmissionServer;
@@ -34,26 +37,14 @@ public final class SubmissionService extends SubmissionServer.SubmissionService 
     /**
      * Connects to the database to store and retrieve submissions.
      */
-    private final SubmissionManagerInterface submissionDatabaseInterface;
+    private SubmissionManagerInterface submissionDatabaseInterface;
 
     /**
      * A constructor for the submission service that takes in an authenticator and a submission manager interface.
      * @param authenticator Authenticates users.
-     * @param submissionDatabaseInterface Connects to the database to store submissions.
      */
-    public SubmissionService(final Authenticator authenticator, final SubmissionManagerInterface submissionDatabaseInterface) {
+    public SubmissionService(final Authenticator authenticator) {
         this.authenticator = authenticator;
-        this.submissionDatabaseInterface = submissionDatabaseInterface;
-    }
-
-    /**
-     * Sets the object that initializes this service.
-     *
-     * @param socketInitializer
-     *         The {@link ISocketInitializer} that contains useful data for any RpcService used by CourseSketch.
-     */
-    @Override public void setSocketInitializer(final ISocketInitializer socketInitializer) {
-        // Currently not needed.
     }
 
     /**
@@ -171,4 +162,18 @@ public final class SubmissionService extends SubmissionServer.SubmissionService 
         done.run(SubmissionServer.SubmissionResponse.newBuilder().setSubmissionId(submissionId).build());
     }
 
+    @Override
+    public AbstractCourseSketchDatabaseReader createDatabaseReader(ServerInfo serverInfo) {
+        return new SubmissionDatabaseClient(serverInfo);
+    }
+
+    @Override
+    public void setDatabaseReader(AbstractCourseSketchDatabaseReader databaseReader) {
+        this.submissionDatabaseInterface = new SubmissionManager((SubmissionDatabaseClient) databaseReader);
+    }
+
+    @Override
+    public void onInitialize() {
+
+    }
 }

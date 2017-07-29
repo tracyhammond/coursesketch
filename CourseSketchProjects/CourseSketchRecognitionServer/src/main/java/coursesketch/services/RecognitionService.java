@@ -2,10 +2,12 @@ package coursesketch.services;
 
 import com.google.protobuf.RpcCallback;
 import com.google.protobuf.RpcController;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.recognition.framework.RecognitionInterface;
 import coursesketch.recognition.framework.exceptions.RecognitionException;
 import coursesketch.recognition.framework.exceptions.TemplateException;
 import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.rpc.CourseSketchRpcService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,11 +38,6 @@ public final class RecognitionService extends RecognitionServer.RecognitionServi
      */
     public RecognitionService(final RecognitionInterface manager) {
         recognitionManager = manager;
-    }
-
-
-    @Override public void setSocketInitializer(final ISocketInitializer socketInitializer) {
-        throw new UnsupportedOperationException("This method is not supported");
     }
 
     @Override public void addUpdate(final RpcController controller, final RecognitionServer.AddUpdateRequest request,
@@ -138,5 +135,20 @@ public final class RecognitionService extends RecognitionServer.RecognitionServi
             LOG.error("Exception during recognize", e);
         }
         done.run(result.build());
+    }
+
+    @Override
+    public AbstractCourseSketchDatabaseReader createDatabaseReader(ServerInfo serverInfo) {
+        return null;
+    }
+
+    @Override
+    public void setDatabaseReader(AbstractCourseSketchDatabaseReader databaseReader) {
+
+    }
+
+    @Override
+    public void onInitialize() {
+
     }
 }

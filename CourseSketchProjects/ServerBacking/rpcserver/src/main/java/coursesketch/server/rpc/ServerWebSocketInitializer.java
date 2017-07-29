@@ -50,6 +50,7 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
      * When the authentication is created the websocket might not be ready so this is used to save the instance.
      */
     private final DelayedAuthenticationChecker authenticationChecker;
+    private List<CourseSketchRpcService> services;
 
     /**
      * Creates a GeneralConnectionServlet.
@@ -89,6 +90,9 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
         }
         if (connectionServer != null) {
             connectionServer.initialize();
+        }
+        for (CourseSketchRpcService service : services) {
+            service.initialize(serverInfo);
         }
 
         final AuthenticationWebSocketClient authSocket = ((ServerWebSocketHandler) getServer()).getAuthenticationWebsocket();
@@ -187,16 +191,15 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
      *
      * @param serverFactory The server that the services are being added to.
      */
-    public final void initChannel(final DuplexTcpServerPipelineFactory serverFactory) {
+    final void initChannel(final DuplexTcpServerPipelineFactory serverFactory) {
         LOG.debug("SslContext {}", sslContext);
-        final List<CourseSketchRpcService> services = getRpcServices();
+        services = getRpcServices();
         if (services == null) {
             throw new IllegalStateException("getRpcServices can not return null");
         }
         final ServerSocketWrapper wrapper = new ServerSocketWrapper(createServerSocket(), getServerInfo().isSecure());
         services.add(wrapper);
         for (CourseSketchRpcService service: services) {
-            service.setSocketInitializer(this);
             serverFactory.getRpcServiceRegistry().registerService(service);
         }
         serverFactory.registerConnectionEventListener(wrapper);
@@ -211,7 +214,7 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
      */
     @SuppressWarnings("checkstyle:designforextension")
     protected List<CourseSketchRpcService> getRpcServices() {
-        return new ArrayList<CourseSketchRpcService>();
+        return new ArrayList<>();
     }
 
     /**

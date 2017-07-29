@@ -69,6 +69,7 @@ public class AbstractGeneralConnectionRunnerTest {
         verify(run, times(1)).executeRemoteEnvironment();
     }
 
+    /*
     @Test(timeout=2000)
     public void testParseCommandReturnsTrueGivenNoCommand() throws IOException, InterruptedException {
         AbstractGeneralConnectionRunner run = PowerMockito.mock(AbstractGeneralConnectionRunner.class);
@@ -155,4 +156,5 @@ public class AbstractGeneralConnectionRunnerTest {
 
         verify(run, times(1)).parseUtilityCommand(command, reader);
     }
+    */
 }
