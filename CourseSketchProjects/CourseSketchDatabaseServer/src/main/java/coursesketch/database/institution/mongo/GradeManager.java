@@ -9,6 +9,7 @@ import com.mongodb.client.model.UpdateOptions;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
+import coursesketch.database.grading.GradingManagerInterface;
 import coursesketch.server.authentication.HashManager;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.RequestConverter;
