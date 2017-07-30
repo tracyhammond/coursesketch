@@ -251,7 +251,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
         timeoutChecker.setTimeoutExecutor(timeoutExecutor);
         timeoutChecker.startChecking(serverFactory.getRpcClientRegistry());
 
-        if (this.isLocal()) {
+        if (this.isLocal() && localRpcEventLogger != null) {
             serverFactory.registerConnectionEventListener(localRpcEventLogger);
         }
 

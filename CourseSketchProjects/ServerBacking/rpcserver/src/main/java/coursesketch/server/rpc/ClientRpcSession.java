@@ -4,7 +4,10 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.RpcCallback;
 import com.google.protobuf.RpcController;
 import com.googlecode.protobuf.pro.duplex.ClientRpcController;
+import com.googlecode.protobuf.pro.duplex.PeerInfo;
+import com.googlecode.protobuf.pro.duplex.RpcClient;
 import com.googlecode.protobuf.pro.duplex.RpcClientChannel;
+import com.googlecode.protobuf.pro.duplex.execute.ServerRpcController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
@@ -124,6 +127,17 @@ public final class ClientRpcSession extends RpcSession {
             return super.getController();
         } else {
             return session.newRpcController();
+        }
+    }
+
+    /**
+     * @return Information about the connected peer.  (What's on the other end)
+     */
+    protected PeerInfo getPeerInfo() {
+        if (session != null) {
+            return session.getPeerInfo();
+        } else {
+            return super.getPeerInfo();
         }
     }
 }

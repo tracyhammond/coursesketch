@@ -3,6 +3,8 @@ package coursesketch.server.rpc;
 import com.google.protobuf.RpcController;
 import com.googlecode.protobuf.pro.duplex.ClientRpcController;
 import com.googlecode.protobuf.pro.duplex.PeerInfo;
+import com.googlecode.protobuf.pro.duplex.RpcClient;
+import com.googlecode.protobuf.pro.duplex.execute.ServerRpcController;
 import coursesketch.server.interfaces.SocketSession;
 
 public abstract class RpcSession implements SocketSession {
@@ -28,9 +30,17 @@ public abstract class RpcSession implements SocketSession {
     /**
      * @return Information about the connected peer.  (What's on the other end)
      */
-    private PeerInfo getPeerInfo() {
-        if (controller != null && controller instanceof ClientRpcController) {
-            return ((ClientRpcController) controller).getRpcClient().getPeerInfo();
+    protected PeerInfo getPeerInfo() {
+        if (controller != null) {
+            RpcClient rpcClient = null;
+            if (controller instanceof ClientRpcController) {
+                rpcClient = ((ClientRpcController) controller).getRpcClient();
+            } else if (controller instanceof ServerRpcController) {
+                rpcClient = ((ServerRpcController) controller).getRpcClient();
+            }
+            if (rpcClient != null) {
+                return rpcClient.getPeerInfo();
+            }
         }
         return new PeerInfo();
     }
@@ -52,7 +62,8 @@ public abstract class RpcSession implements SocketSession {
      */
     @Override
     public int hashCode() {
-        return getPeerInfo().hashCode();
+        int hashCode = getPeerInfo().hashCode();
+        return hashCode;
     }
 
     protected RpcController getController() {

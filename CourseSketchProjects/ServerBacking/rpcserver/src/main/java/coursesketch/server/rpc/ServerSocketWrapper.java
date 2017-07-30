@@ -3,6 +3,7 @@ package coursesketch.server.rpc;
 import com.google.protobuf.RpcCallback;
 import com.google.protobuf.RpcController;
 import com.googlecode.protobuf.pro.duplex.RpcClientChannel;
+import com.googlecode.protobuf.pro.duplex.execute.ServerRpcController;
 import com.googlecode.protobuf.pro.duplex.listener.TcpConnectionEventListener;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
@@ -56,7 +57,7 @@ import utilities.TimeManager;
      * @param rpcCallback Where you set the result.
      */
     @Override public void sendMessage(final RpcController controller, final Message.Request request, final RpcCallback<Message.Request> rpcCallback) {
-        if (controller.failed() || controller.isCanceled()) {
+        if (!(controller instanceof ServerRpcController) && controller.failed() || controller.isCanceled()) {
             socketHandler.rpcOnError(controller, new ConnectionException(controller.errorText()));
         } else {
             socketHandler.rpcOnMessage(rpcCallback, controller, request);

@@ -179,6 +179,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
                 if (parameter == null) {
                     onError(clientRpcSession, new ConnectionException("Invalid response",
                             new NullPointerException("Request is null in callback")));
+                    return;
                 }
                 onMessage(ByteBuffer.wrap(parameter.toByteArray()));
             }
