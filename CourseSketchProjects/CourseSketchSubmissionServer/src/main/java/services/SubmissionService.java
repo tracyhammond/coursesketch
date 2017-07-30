@@ -168,6 +168,11 @@ public final class SubmissionService extends SubmissionServer.SubmissionService 
     }
 
     @Override
+    public void onInitializeDatabases() {
+
+    }
+
+    @Override
     public void setDatabaseReader(AbstractCourseSketchDatabaseReader databaseReader) {
         this.submissionDatabaseInterface = new SubmissionManager((SubmissionDatabaseClient) databaseReader);
     }

@@ -105,11 +105,17 @@ import utilities.TimeManager;
 
     @Override
     public AbstractCourseSketchDatabaseReader createDatabaseReader(ServerInfo serverInfo) {
-        return null;
+        return socketHandler.createDatabaseReader(serverInfo);
+    }
+
+    @Override
+    public void onInitializeDatabases() {
+        socketHandler.onInitializeDatabases();
     }
 
     @Override
     public void setDatabaseReader(AbstractCourseSketchDatabaseReader databaseReader) {
+        socketHandler.setDatabaseReader(databaseReader);
     }
 
     @Override

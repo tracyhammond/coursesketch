@@ -1,5 +1,7 @@
 package coursesketch.server.base;
 
+import com.google.common.collect.Lists;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
@@ -180,6 +182,7 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
         }
         if (connectionServer != null) {
             connectionServer.initialize();
+            loadSharedDatabase(this.serverInfo, Lists.newArrayList(connectionServer));
         }
         onReconnect();
     }
@@ -202,7 +205,7 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
     /**
      * @return the multiConnectionManager.  This is only used within this package.
      */
-    /* package-private */ final MultiConnectionManager getManager() {
+    protected final MultiConnectionManager getManager() {
         return manager;
     }
 
@@ -211,5 +214,15 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
      */
     protected final AbstractServerWebSocketHandler getServer() {
         return connectionServer;
+    }
+
+    @Override
+    public boolean isSharingDatabaseReaders() {
+        return false;
+    }
+
+    @Override
+    public AbstractCourseSketchDatabaseReader createSharedDatabaseReader(ServerInfo serverInfo) {
+        return null;
     }
 }

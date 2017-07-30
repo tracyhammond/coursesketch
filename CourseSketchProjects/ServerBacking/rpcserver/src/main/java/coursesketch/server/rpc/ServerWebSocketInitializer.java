@@ -1,8 +1,10 @@
 package coursesketch.server.rpc;
 
+import com.google.common.collect.Lists;
 import com.googlecode.protobuf.pro.duplex.server.DuplexTcpServerPipelineFactory;
 import coursesketch.auth.AuthenticationWebSocketClient;
 import coursesketch.database.auth.AuthenticationChecker;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
@@ -92,8 +94,9 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
             connectionServer.initialize();
         }
         for (CourseSketchRpcService service : services) {
-            service.initialize(serverInfo);
+            service.initialize();
         }
+        loadSharedDatabase(this.serverInfo, Lists.newArrayList(services));
 
         final AuthenticationWebSocketClient authSocket = ((ServerWebSocketHandler) getServer()).getAuthenticationWebsocket();
         if (authSocket != null) {
@@ -160,20 +163,13 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     }
 
     /**
-     * Called to initialize The {@link AbstractServerWebSocketHandler}.
-     */
-    @Override public void onServerStart() {
-        // Does nothing by default
-    }
-
-    /**
      * Returns the {@link MultiConnectionManager}.
      *
      * This is only used within this package.
      *
      * @return the {@link MultiConnectionManager}.
      */
-    /* package-private */ final MultiConnectionManager getManager() {
+    protected final MultiConnectionManager getManager() {
         return manager;
     }
 
@@ -197,6 +193,7 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
         if (services == null) {
             throw new IllegalStateException("getRpcServices can not return null");
         }
+        // Add default websocket listener
         final ServerSocketWrapper wrapper = new ServerSocketWrapper(createServerSocket(), getServerInfo().isSecure());
         services.add(wrapper);
         for (CourseSketchRpcService service: services) {
@@ -222,5 +219,22 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
      */
     protected final AuthenticationChecker getRpcAuthChecker() {
         return authenticationChecker;
+    }
+
+    /**
+     * Called to initialize The {@link AbstractServerWebSocketHandler}.
+     */
+    @Override public void onServerStart() {
+        // Does nothing by default
+    }
+
+    @Override
+    public boolean isSharingDatabaseReaders() {
+        return false;
+    }
+
+    @Override
+    public AbstractCourseSketchDatabaseReader createSharedDatabaseReader(ServerInfo serverInfo) {
+        return null;
     }
 }

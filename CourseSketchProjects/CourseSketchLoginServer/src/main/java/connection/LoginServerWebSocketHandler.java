@@ -239,8 +239,8 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      *
      * @return {@link DatabaseClient}.
      */
-    @Override protected AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
-        final IdentityManagerInterface identityWebSocketClient = (IdentityWebSocketClient) getConnectionManager()
+    @Override public AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
+        final IdentityManagerInterface identityWebSocketClient = getConnectionManager()
                 .getBestConnection(IdentityWebSocketClient.class);
         return new DatabaseClient(info, identityWebSocketClient);
     }

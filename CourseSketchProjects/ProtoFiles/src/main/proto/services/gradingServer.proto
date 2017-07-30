@@ -8,9 +8,14 @@ import "services/authentication.proto";
 option java_generic_services = true;
 
 message GradeRequest {
-    optional protobuf.srl.grading.ProtoGrade grade = 1;
+    // This is the request for the answer checker server saying it can submit this grade.
+    optional protobuf.srl.services.authentication.AuthRequest authRequest = 1;
 
-    optional protobuf.srl.services.authentication.AuthRequest authRequest = 2;
+    // This is the id of the student that is submitting the grade.
+    optional string userAuthId = 2;
+
+    // This is the unscaled grade that is being added.
+    optional protobuf.srl.grading.ProtoGrade grade = 3;
 }
 
 /**

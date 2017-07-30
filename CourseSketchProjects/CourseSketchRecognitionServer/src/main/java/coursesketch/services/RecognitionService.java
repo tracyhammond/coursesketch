@@ -143,6 +143,11 @@ public final class RecognitionService extends RecognitionServer.RecognitionServi
     }
 
     @Override
+    public void onInitializeDatabases() {
+
+    }
+
+    @Override
     public void setDatabaseReader(AbstractCourseSketchDatabaseReader databaseReader) {
 
     }

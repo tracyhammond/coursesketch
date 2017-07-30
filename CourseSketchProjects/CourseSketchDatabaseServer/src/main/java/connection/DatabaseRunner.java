@@ -49,6 +49,7 @@ public final class DatabaseRunner extends GeneralConnectionRunner {
      */
     @Override
     public void executeLocalEnvironment() {
+        super.executeLocalEnvironment();
         new UserClient(false, null); // makes the database point locally
     }
 

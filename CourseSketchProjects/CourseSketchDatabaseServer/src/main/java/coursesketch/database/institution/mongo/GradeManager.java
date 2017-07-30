@@ -13,9 +13,11 @@ import coursesketch.database.grading.GradingManagerInterface;
 import coursesketch.server.authentication.HashManager;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.RequestConverter;
+import handlers.subhandlers.GradingPolicyRequestHandler;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.grading.Grading;
 import protobuf.srl.grading.Grading.GradeHistory;
 import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.services.authentication.Authentication;
@@ -169,7 +171,17 @@ public final class GradeManager {
         updateObject.append("$setOnInsert", setOnInsertFields);
 
         gradeCollection.updateOne(query, updateObject, new UpdateOptions().upsert(true));
+    }
 
+    public static void addGrade(Authenticator auth, MongoDatabase database, String studentAuthId, Authentication.AuthRequest authRequest,
+            ProtoGrade grade, Grading.ProtoGradingPolicy gradingPolicy) throws DatabaseAccessException, AuthenticationException {
+        final AuthenticationResponder responder = auth
+                .checkAuthentication(authRequest.getItemType(), authRequest.getItemId(), authRequest.getAuthId(), 0,
+                        Authentication.AuthType.newBuilder().setCheckingAdmin(true).build());
+
+        if (!responder.hasTeacherPermission()) {
+            throw new AuthenticationException("Must have correct authorization to insert grade", AuthenticationException.INVALID_PERMISSION);
+        }
     }
 
     /**

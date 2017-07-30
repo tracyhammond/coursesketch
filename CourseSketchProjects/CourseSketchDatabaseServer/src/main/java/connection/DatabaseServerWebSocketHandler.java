@@ -83,22 +83,6 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
         LOG.debug("Finished looking at query {}", req);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return {@link MongoInstitution}.
-     */
-    @Override protected final AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
-        final AuthenticationWebSocketClient authChecker = (AuthenticationWebSocketClient) getConnectionManager()
-                .getBestConnection(AuthenticationWebSocketClient.class);
-        final Authenticator auth = new Authenticator(authChecker, new MongoOptionChecker(info));
-        final AuthenticationUpdater authUpdater = authChecker;
-
-        final IdentityManagerInterface identityManagerInterface = (IdentityWebSocketClient) getConnectionManager()
-                .getBestConnection(IdentityWebSocketClient.class);
-        return new MongoInstitution(info, auth, authUpdater, identityManagerInterface);
-    }
-
     private String getSessionId(final SocketSession conn) {
         final Map<SocketSession, MultiConnectionState> connectionToId = super.getConnectionToId();
         final MultiConnectionState multiConnectionState = connectionToId.get(conn);

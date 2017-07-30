@@ -222,6 +222,11 @@ public final class IdentityService extends Identity.IdentityService implements C
     }
 
     @Override
+    public void onInitializeDatabases() {
+
+    }
+
+    @Override
     public void setDatabaseReader(AbstractCourseSketchDatabaseReader databaseReader) {
         identityManager = (IdentityManager) databaseReader;
     }

@@ -138,6 +138,11 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
     }
 
     @Override
+    public void onInitializeDatabases() {
+
+    }
+
+    @Override
     public void setDatabaseReader(AbstractCourseSketchDatabaseReader databaseReader) {
 
     }

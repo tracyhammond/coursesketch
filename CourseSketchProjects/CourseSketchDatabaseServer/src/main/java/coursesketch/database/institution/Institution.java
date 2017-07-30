@@ -13,6 +13,7 @@ import protobuf.srl.school.Assignment.SrlAssignment;
 import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.school.Problem.SrlProblem;
 import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.services.identity.Identity;
 import protobuf.srl.submission.Submission;
 
@@ -595,6 +596,31 @@ public interface Institution {
      *         Thrown if grades are not found in the database.
      */
     void addGrade(final String authId, final ProtoGrade grade) throws AuthenticationException, DatabaseAccessException;
+
+    /**
+     * Adds the specified grade if it does not exist. If it does exist, updates the grade value in the database.
+     * The code block is an example of what happens when a new problem grade is added.
+     * <pre><code>
+     * coll.update(
+     *  { COURSE_ID: courseId, USER_ID, userId, ASSIGNMENT_ID: assignmentId, PROBLEM_ID: problemId },
+     *  {   $push: { gradeHistory: { $each: [gradeToInsertDocument], $sort: { GRADED_DATE: -1 }}}
+     *      $set: { CURRENT_GRADE: currentGrade }
+     *      $setOnInsert: { COURSE_ID: courseId, USER_ID, userId, ASSIGNMENT_ID: assignmentId, PROBLEM_ID: problemId }
+     *  },
+     *  { upsert: true }
+     * )
+     * </code></pre>
+     *
+     * @param authRequest
+     * @param grade
+     *         The ProtoObject representing the grade to be added.
+     * @throws AuthenticationException
+     *         Thrown if the user did not have the authentication to add the grade.
+     * @throws DatabaseAccessException
+     *         Thrown if grades are not found in the database.
+     */
+    void addGrade(Authentication.AuthRequest authRequest, String authId, final ProtoGrade grade) throws AuthenticationException,
+            DatabaseAccessException;
 
     /**
      * Finds a single grade for a student in a course. If fields are not required in the search, pass in null.

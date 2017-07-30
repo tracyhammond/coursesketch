@@ -2,7 +2,7 @@ package coursesketch.server.interfaces;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
-import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.interfaces.DatabaseReaderHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
@@ -23,7 +23,7 @@ import java.util.Map;
  * Created by gigemjt on 10/19/14.
  */
 @SuppressWarnings("PMD.TooManyMethods")
-public abstract class AbstractServerWebSocketHandler {
+public abstract class AbstractServerWebSocketHandler implements DatabaseReaderHolder {
 
     /**
      * Declaration/Definition of Logger.
@@ -298,7 +298,7 @@ public abstract class AbstractServerWebSocketHandler {
      * @param info Information about the server.
      * @return {@link AbstractCourseSketchDatabaseReader}.
      */
-    protected abstract AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info);
+    public abstract AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info);
 
     /**
      * @return A map representing the Id to state. The returned map is read only.
@@ -329,43 +329,27 @@ public abstract class AbstractServerWebSocketHandler {
     }
 
     /**
-     * Performs some initialization.  This is called before the server is started.
-     */
-    public final void initialize() {
-        databaseReader = createDatabaseReader(this.serverInfo);
-        try {
-            startDatabase();
-        } catch (DatabaseAccessException e) {
-            LOG.error("An error was created starting the database for the server", e);
-        }
-        onInitialize();
-    }
-
-    /**
      * Performs some initialization.
      *
      * This is called before the server is started.
      * This is called by {@link #initialize()}.
      */
-    protected abstract void onInitialize();
-
-    /**
-     * Starts the database if it exists.
-     *
-     * @throws DatabaseAccessException thrown if the database is unable to start.
-     */
-    private void startDatabase() throws DatabaseAccessException {
-        final AbstractCourseSketchDatabaseReader reader = getDatabaseReader();
-        if (reader != null) {
-            reader.startDatabase();
-        }
-    }
+    public abstract void onInitialize();
 
     /**
      * @return {@link AbstractCourseSketchDatabaseReader}.  This may return null if one is not set.
      */
     protected final AbstractCourseSketchDatabaseReader getDatabaseReader() {
         return databaseReader;
+    }
+
+    @Override
+    public final void setDatabaseReader(AbstractCourseSketchDatabaseReader databaseReader) {
+        this.databaseReader = databaseReader;
+    }
+
+    public final void initialize() {
+        onInitialize();
     }
 
     /**
