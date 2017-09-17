@@ -5,9 +5,9 @@ import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
-import coursesketch.database.user.UserUpdateHandler;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.DatabaseStringConstants;
+import coursesketch.database.util.MongoUtilities;
 import coursesketch.database.util.RequestConverter;
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -43,7 +43,6 @@ import static coursesketch.database.util.DatabaseStringConstants.REVIEW_OPEN_DAT
 import static coursesketch.database.util.DatabaseStringConstants.SELF_ID;
 import static coursesketch.database.util.DatabaseStringConstants.SET_COMMAND;
 import static coursesketch.database.util.DatabaseStringConstants.STATE_PUBLISHED;
-import static coursesketch.database.util.DatabaseStringConstants.USERS;
 import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
 import static coursesketch.database.util.MongoUtilities.convertStringToObjectId;
 
@@ -124,7 +123,7 @@ public final class AssignmentManager {
      * @throws AuthenticationException Thrown if the user did not have the authentication to perform the authentication.
      * @throws DatabaseAccessException Thrown if there are problems inserting the assignment.
      */
-    public static String mongoInsertAssignment(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
+    static String mongoInsertAssignment(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
             final SrlAssignment assignment)
             throws AuthenticationException, DatabaseAccessException {
         final MongoCollection<Document> assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
@@ -171,7 +170,7 @@ public final class AssignmentManager {
      * @param isInsertion true if the object is being inserted.  If false then defaults are not set and instead nothing is.
      * @return True if the query was modified, false otherwise.
      */
-    public static boolean setDateInformation(final SrlAssignment assignment, final Document query, final boolean isInsertion) {
+    private static boolean setDateInformation(final SrlAssignment assignment, final Document query, final boolean isInsertion) {
         if (assignment.hasAccessDate()) {
             query.append(ACCESS_DATE, assignment.getAccessDate().getMillisecond());
         } else if (isInsertion) {
@@ -212,7 +211,7 @@ public final class AssignmentManager {
      * @param isInsertion true if the object is being inserted.  If false then defaults are not set and instead nothing is.
      * @return True if the query was modified, false otherwise.
      */
-    public static boolean setAssignmentTypeInformation(final SrlAssignment assignment, final Document query, final boolean isInsertion) {
+    private static boolean setAssignmentTypeInformation(final SrlAssignment assignment, final Document query, final boolean isInsertion) {
         // Grade data
         if (assignment.hasAssignmentType()) {
             query.append(ASSIGNMENT_TYPE, assignment.getAssignmentType().getNumber());
@@ -241,7 +240,7 @@ public final class AssignmentManager {
      * @param isInsertion true if the object is being inserted.  If false then defaults are not set and instead nothing is.
      * @return True if the query was modified, false otherwise.
      */
-    public static boolean setGradeInformation(final SrlAssignment assignment, final Document query, final boolean isInsertion) {
+    private static boolean setGradeInformation(final SrlAssignment assignment, final Document query, final boolean isInsertion) {
         // Grade data
         if (assignment.hasLatePolicy()) {
             query.append(LATE_POLICY_FUNCTION_TYPE, assignment.getLatePolicy().getFunctionType().getNumber())
@@ -280,7 +279,7 @@ public final class AssignmentManager {
      * @throws DatabaseAccessException Thrown if there are problems retrieving the assignment.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
-    public static SrlAssignment mongoGetAssignment(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
+    static SrlAssignment mongoGetAssignment(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
             final String assignmentId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
         final MongoCollection<Document> assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
@@ -342,7 +341,8 @@ public final class AssignmentManager {
         if (responder.hasPeerTeacherPermission() || (responder.hasAccess()
                 && responder.isItemOpen())) {
             if (cursor.get(PROBLEM_LIST) != null) {
-                exactAssignment.addAllProblemGroups((List) cursor.get(PROBLEM_LIST));
+                List<String> problemList = MongoUtilities.getNonNullList(cursor, PROBLEM_LIST);
+                exactAssignment.addAllProblemGroups(problemList);
             }
             stateBuilder.setAccessible(true);
         } else if (responder.hasAccess() && !responder.isItemOpen()) {
@@ -459,12 +459,11 @@ public final class AssignmentManager {
      * @param authId The id of the user that asking to insert the assignment.
      * @param assignmentId The id of the assignment that is being updated.
      * @param assignment The assignment that is being inserted.
-     * @return true if the assignment was updated successfully.
      * @throws AuthenticationException The user does not have permission to update the assignment.
      * @throws DatabaseAccessException The assignment does not exist.
      */
     @SuppressWarnings("PMD.ExcessiveMethodLength")
-    public static boolean mongoUpdateAssignment(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
+    static void mongoUpdateAssignment(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
             final String assignmentId,
             final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
@@ -517,9 +516,7 @@ public final class AssignmentManager {
         }
         if (update) {
             assignmentCollection.updateOne(cursor, new Document(SET_COMMAND, updateQuery));
-            UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
         }
-        return true;
     }
 
     /**
@@ -542,19 +539,15 @@ public final class AssignmentManager {
      * @param dbs The database where the assignment is stored.
      * @param assignmentId The assignment that the problem is being added to.
      * @param problemId The id of the course problem that is being added to the assignment.
-     * @return True if it is successful.
      * @throws AuthenticationException The user does not have permission to update the assignment.
      * @throws DatabaseAccessException The assignment does not exist.
      */
-    static boolean mongoInsertProblemGroupIntoAssignment(final MongoDatabase dbs, final String assignmentId, final String problemId)
+    static void mongoInsertProblemGroupIntoAssignment(final MongoDatabase dbs, final String assignmentId, final String problemId)
             throws AuthenticationException, DatabaseAccessException {
         final MongoCollection<Document> assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
         final Document cursor = assignmentCollection.find(convertStringToObjectId(assignmentId)).first();
 
         final Document updateObj = new Document(PROBLEM_LIST, problemId);
         assignmentCollection.updateOne(cursor, new Document("$addToSet", updateObj));
-
-        UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
-        return true;
     }
 }

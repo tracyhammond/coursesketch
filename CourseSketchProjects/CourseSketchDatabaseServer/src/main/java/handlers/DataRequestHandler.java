@@ -8,14 +8,12 @@ import coursesketch.server.interfaces.SocketSession;
 import coursesketch.services.submission.SubmissionWebSocketClient;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.institution.Institution;
-import coursesketch.database.user.UserClient;
 import handlers.subhandlers.GradingPolicyRequestHandler;
 import handlers.subhandlers.GradingRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
-import protobuf.srl.query.Data;
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
@@ -183,16 +181,8 @@ public final class DataRequestHandler {
                         }
                         break;
                         case UPDATE: {
-                            long lastRequestTime = 0;
-                            if (itemRequest.getItemIdCount() > 0) {
-                                lastRequestTime = Long.parseLong(itemRequest.getItemId(0));
-                            }
-                            LOG.info("Last request time! {}", lastRequestTime);
-                            // for now get all updates!
-                            final List<Data.ItemResult> updates = UserClient.mongoGetReleventUpdates(authId, lastRequestTime);
-                            results.addAll(updates);
+                            throw new UnsupportedOperationException("Cant get updates from server");
                         }
-                        break;
                         case LECTURE: {
                             final List<SrlAssignment> lectureLoop = instance.getLecture(authId, itemRequest.getItemIdList());
                             results.add(ResultBuilder.buildResult(ItemQuery.LECTURE, lectureLoop));

@@ -3,6 +3,7 @@ package handlers;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.client.MongoDatabase;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationChecker;
@@ -18,8 +19,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data;
 import protobuf.srl.request.Message;
 import protobuf.srl.utils.Util;
@@ -47,18 +46,18 @@ public class DataRequestHandlerTest {
 
     @Rule
     public FongoRule fongo = new FongoRule();
-    @Mock AuthenticationChecker authChecker;
-    @Mock AuthenticationOptionChecker optionChecker;
+    @Mock
+    private AuthenticationChecker authChecker;
+    @Mock
+    private AuthenticationOptionChecker optionChecker;
 
-    public MongoDatabase db;
-    public Authenticator authenticator;
-    public BreakDatabase breakDatabase;
+    private BreakDatabase breakDatabase;
 
-    private static final Logger LOG = LoggerFactory.getLogger(DataRequestHandlerTest.class);
+    private MongoInstitution mongoInstitution;
 
     @Before
     public void before() {
-        db = fongo.getDatabase();
+        MongoDatabase db = fongo.getDatabase();
         breakDatabase = new BreakDatabase(db);
 
         try {
@@ -73,12 +72,11 @@ public class DataRequestHandlerTest {
 
             when(optionChecker.isItemRegistrationRequired(any(AuthenticationDataCreator.class)))
                     .thenReturn(true);
-        } catch (DatabaseAccessException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (DatabaseAccessException | AuthenticationException e) {
             e.printStackTrace();
         }
-        authenticator = new Authenticator(authChecker, optionChecker);
+        Authenticator authenticator = new Authenticator(authChecker, optionChecker);
+        mongoInstitution = new MongoInstitution(ServerInfo.createDefaultServerInfo(), authenticator, null, null);
     }
 
     @Test
@@ -104,7 +102,8 @@ public class DataRequestHandlerTest {
             }
         });
 
-        DataRequestHandler.handleRequest(request, session, MongoInstitution.getInstance(authenticator),
+
+        DataRequestHandler.handleRequest(request, session, mongoInstitution,
                 "sessionId", mock(MultiConnectionManager.class));
     }
 
@@ -126,7 +125,7 @@ public class DataRequestHandlerTest {
             }
         });
 
-        DataRequestHandler.handleRequest(request, session, MongoInstitution.getInstance(authenticator),
+        DataRequestHandler.handleRequest(request, session, mongoInstitution,
                 "sessionId", mock(MultiConnectionManager.class));
     }
 

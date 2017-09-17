@@ -66,12 +66,6 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     private static final Logger LOG = LoggerFactory.getLogger(MongoInstitution.class);
 
     /**
-     * A single instance of the mongo institution.
-     */
-    @SuppressWarnings("PMD.AssignmentToNonFinalStatic")
-    private static volatile MongoInstitution instance;
-
-    /**
      * Holds an Authenticator used to authenticate specific users.
      */
     private Authenticator auth;
@@ -105,29 +99,6 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         auth = authenticator;
         this.authUpdater = authUpdater;
         this.identityManager = identityManagerInterface;
-    }
-
-    /**
-     * This is only used for testing and references the test database not the real database.
-     *
-     * @param authenticator What is used to authenticate access to the different resources.
-     * @return An instance of the mongo client. Creates it if it does not exist.
-     * @see <a href="http://en.wikipedia.org/wiki/Double-checked_locking">Double Checked Locking</a>.
-     */
-    @Deprecated
-    @SuppressWarnings("checkstyle:innerassignment")
-    public static MongoInstitution getInstance(final Authenticator authenticator) {
-        MongoInstitution result = instance;
-        if (result == null) {
-            synchronized (MongoInstitution.class) {
-                if (result == null) {
-                    result = instance;
-                    instance = result = new MongoInstitution(ServerInfo.createDefaultServerInfo(), authenticator, null, null);
-                    result.auth = authenticator;
-                }
-            }
-        }
-        return result;
     }
 
     /**
@@ -170,8 +141,6 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
 
             }
         }
-        instance = this;
-        instance.auth = authenticator;
     }
 
     @Override
@@ -197,11 +166,11 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     public ArrayList<SrlProblem> getCourseProblem(final String authId, final List<String> problemID) throws AuthenticationException,
             DatabaseAccessException {
         final long currentTime = TimeManager.getSystemTime();
-        final ArrayList<SrlProblem> allCourses = new ArrayList<SrlProblem>();
-        for (int index = 0; index < problemID.size(); index++) {
+        final ArrayList<SrlProblem> allCourses = new ArrayList<>();
+        for (String aProblemID : problemID) {
             try {
                 allCourses.add(CourseProblemManager.mongoGetCourseProblem(
-                        auth, database, authId, problemID.get(index), currentTime));
+                        auth, database, authId, aProblemID, currentTime));
             } catch (DatabaseAccessException e) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
@@ -615,8 +584,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
 
     @Override
     public void addGrade(Authentication.AuthRequest authRequest, String authId, ProtoGrade grade) throws AuthenticationException, DatabaseAccessException {
-        final ProtoGradingPolicy gradingPolicy = getGradingPolicy(authId, grade.getCourseId());
-        GradeManager.addGrade(auth, database, authRequest, grade, gradingPolicy);
+        GradeManager.addGrade(auth, database, authRequest, grade);
     }
 
     @Override

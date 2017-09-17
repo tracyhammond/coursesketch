@@ -5,8 +5,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import protobuf.srl.request.Message;
 
-import java.awt.event.ActionListener;
-
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -19,8 +17,8 @@ public class SocketMocker {
     /**
      * An implementable listener
      */
-    public static interface SocketListener {
-        public void listen(Message.Request r) throws Exception;
+    public interface SocketListener {
+        void listen(Message.Request r) throws Exception;
     }
 
     /**

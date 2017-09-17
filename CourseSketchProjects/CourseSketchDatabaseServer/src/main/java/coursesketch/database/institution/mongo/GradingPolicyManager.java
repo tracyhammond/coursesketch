@@ -214,7 +214,7 @@ final class GradingPolicyManager {
         }
 
         // Builds and adds droppedAssignments to the protoGradingPolicy
-        final List<Document> droppedAssignments = MongoUtilities.getNonNullList (policyObject, DROPPED_ASSIGNMENTS);
+        final List<Document> droppedAssignments = MongoUtilities.getNonNullList(policyObject, DROPPED_ASSIGNMENTS);
         for (Document droppedAssignment : droppedAssignments) {
             final DroppedAssignment.Builder assignment = DroppedAssignment.newBuilder();
             assignment.setAssignmentId(droppedAssignment.get(ASSIGNMENT_ID).toString());

@@ -5,9 +5,9 @@ import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
-import coursesketch.database.user.UserUpdateHandler;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.DatabaseStringConstants;
+import coursesketch.database.util.MongoUtilities;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +27,10 @@ import static coursesketch.database.util.DatabaseStringConstants.COURSE_ID;
 import static coursesketch.database.util.DatabaseStringConstants.GRADE_WEIGHT;
 import static coursesketch.database.util.DatabaseStringConstants.IS_UNLOCKED;
 import static coursesketch.database.util.DatabaseStringConstants.NAME;
+import static coursesketch.database.util.DatabaseStringConstants.PROBLEM_LIST;
 import static coursesketch.database.util.DatabaseStringConstants.PROBLEM_NUMBER;
 import static coursesketch.database.util.DatabaseStringConstants.SELF_ID;
 import static coursesketch.database.util.DatabaseStringConstants.SET_COMMAND;
-import static coursesketch.database.util.DatabaseStringConstants.USERS;
 import static coursesketch.database.util.DbSchoolUtility.getCollectionFromType;
 import static coursesketch.database.util.MongoUtilities.convertStringToObjectId;
 
@@ -106,7 +106,7 @@ public final class CourseProblemManager {
      * @throws AuthenticationException Thrown if the user does not have permission to insert the course problem.
      * @throws DatabaseAccessException Thrown if there is data that is missing.
      */
-    public static String mongoInsertCourseProblem(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
+    static String mongoInsertCourseProblem(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
             final SrlProblem problem)
             throws AuthenticationException, DatabaseAccessException {
         final MongoCollection<Document> courseProblemCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
@@ -157,13 +157,13 @@ public final class CourseProblemManager {
      * @throws AuthenticationException Thrown if the user does not have permission to get the course problem.
      * @throws DatabaseAccessException Thrown if there is data that is missing.
      */
-    public static SrlProblem mongoGetCourseProblem(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
+    static SrlProblem mongoGetCourseProblem(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
             final String problemId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
 
         final MongoCollection<Document> courseProblemCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
-        final Document cursor = courseProblemCollection.find(convertStringToObjectId(problemId)).first();
-        if (cursor == null) {
+        final Document courseProblemData = courseProblemCollection.find(convertStringToObjectId(problemId)).first();
+        if (courseProblemData == null) {
             throw new DatabaseAccessException("Course problem was not found with the following ID " + problemId);
         }
 
@@ -184,7 +184,7 @@ public final class CourseProblemManager {
                 .setCheckIsPublished(true)
                 .build();
         final AuthenticationResponder assignmentResponder = authenticator
-                .checkAuthentication(Util.ItemType.ASSIGNMENT, (String) cursor.get(ASSIGNMENT_ID), authId, checkTime, assignmentAuthType);
+                .checkAuthentication(Util.ItemType.ASSIGNMENT, courseProblemData.getString(ASSIGNMENT_ID), authId, checkTime, assignmentAuthType);
 
         // Throws an exception if a user (only) is trying to get an problem when the assignment is closed.
         if (responder.hasAccess() && !responder.hasPeerTeacherPermission() && !assignmentResponder.isItemOpen()) {
@@ -204,19 +204,22 @@ public final class CourseProblemManager {
         // Past this point, the item is either published or the responder is at least a mod.
         stateBuilder.setPublished(responder.isItemPublished());
 
-        final SrlProblem.Builder exactProblem = extractProblemData(cursor);
+        final SrlProblem.Builder exactProblem = extractProblemData(courseProblemData);
         exactProblem.setId(problemId);
 
-        if (cursor.containsKey(DatabaseStringConstants.PROBLEM_LIST)) {
+        if (courseProblemData.containsKey(DatabaseStringConstants.PROBLEM_LIST)) {
             final List<Problem.ProblemSlideHolder> problemSlideHolderList = createProblemSlideHolderList(authenticator, dbs, authId,
                     exactProblem.getCourseId(), checkTime,
-                    (List<Document>) cursor.get(DatabaseStringConstants.PROBLEM_LIST));
+                    getSlideHolderList(courseProblemData));
             exactProblem.addAllSubgroups(problemSlideHolderList);
         }
 
         return exactProblem.build();
     }
 
+    private static List<Document> getSlideHolderList(Document courseProblem) {
+        return MongoUtilities.getNonNullList(courseProblem, PROBLEM_LIST);
+    }
 
     /**
      * @param authenticator The object that is performing authentication.
@@ -224,11 +227,10 @@ public final class CourseProblemManager {
      * @param authId The user requesting the problem.
      * @param problemId The problem being updated.
      * @param problem The data of the problem itself.
-     * @return True if the data was updated successfully.
      * @throws AuthenticationException Thrown if the user does not have permission to update the course problem.
      * @throws DatabaseAccessException Thrown if there is data that is missing.
      */
-    public static boolean mongoUpdateCourseProblem(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
+    static void mongoUpdateCourseProblem(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
             final String problemId,
             final SrlProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
@@ -272,9 +274,7 @@ public final class CourseProblemManager {
             }
 
             courseProblemCollection.updateOne(cursor, setData);
-            UserUpdateHandler.insertUpdates(dbs, ((List<String>) cursor.get(USERS)), problemId, UserUpdateHandler.COURSE_PROBLEM_CLASSIFICATION);
         }
-        return true;
     }
 
     /**
@@ -335,7 +335,7 @@ public final class CourseProblemManager {
      * @throws AuthenticationException Thrown if the user does not have permission to update the course problem.
      * @throws DatabaseAccessException Thrown if there is data that is missing.
      */
-    static List<Problem.ProblemSlideHolder> createProblemSlideHolderList(final Authenticator authenticator, final MongoDatabase database,
+    private static List<Problem.ProblemSlideHolder> createProblemSlideHolderList(final Authenticator authenticator, final MongoDatabase database,
             final String authId,
             final String courseId, final long checkTime, final List<Document> slideObjects) throws AuthenticationException, DatabaseAccessException {
         final List<Problem.ProblemSlideHolder> list = new ArrayList<>();
@@ -399,51 +399,14 @@ public final class CourseProblemManager {
      * @param authenticator The object that is performing authentication.
      * @param dbs The database where the assignment is being stored.
      * @param authId The user requesting the problem.
-     * @param problemId The id of the problem that the data is being inserted into.
-     * @param bankProblemId The id of the bank problem being inserted
-     * @throws AuthenticationException Thrown if the user does not have permission to update the course problem.
-     * @throws DatabaseAccessException Thrown if there is data that is missing.
-     */
-    public static void insertNewProblemPart(final Authenticator authenticator, final MongoDatabase dbs, final String authId, final String problemId,
-            final String bankProblemId) throws AuthenticationException, DatabaseAccessException {
-
-        final MongoCollection<Document> problemCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
-        final Document cursor = problemCollection.find(convertStringToObjectId(problemId)).first();
-
-        if (cursor == null) {
-            throw new DatabaseAccessException("Course problem was not found with the following ID: " + problemId);
-        }
-
-        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
-                .setCheckingAdmin(true)
-                .build();
-        final AuthenticationResponder responder = authenticator
-                .checkAuthentication(Util.ItemType.COURSE_PROBLEM, problemId, authId, 0, authType);
-
-        if (!responder.hasModeratorPermission()) {
-            throw new AuthenticationException("For  problem: " + problemId, AuthenticationException.INVALID_PERMISSION);
-        }
-
-        mongoInsertBankProblemIntoProblemGroup(dbs, cursor.get(DatabaseStringConstants.ASSIGNMENT_ID).toString(),
-                problemId,
-                bankProblemId,
-                true);
-
-    }
-
-    /**
-     * @param authenticator The object that is performing authentication.
-     * @param dbs The database where the assignment is being stored.
-     * @param authId The user requesting the problem.
      * @param assignmentId The assignment into which the slide is being inserted into.
      * @param problemGroupId The courseProblem the slide is being inserted into.
      * @param slideId The assignment that is being inserted into the course.
      * @param unlocked A boolean that is true if the object is unlocked.     @return true if the assignment was inserted correctly.
      * @throws AuthenticationException The user does not have permission to update the lecture.
      * @throws DatabaseAccessException The lecture does not exist.
-     * @return True if the slide is added successfully.
      */
-    public static boolean mongoInsertSlideIntoSlideGroup(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
+    static void mongoInsertSlideIntoSlideGroup(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
             final String assignmentId, final String problemGroupId, final String slideId, final boolean unlocked)
             throws AuthenticationException, DatabaseAccessException {
         final MongoCollection<Document> courseProblemCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
@@ -464,38 +427,6 @@ public final class CourseProblemManager {
         final Document updateObj = new Document(DatabaseStringConstants.PROBLEM_LIST,
                 createSlideProblemHolderQuery(slideId, Util.ItemType.SLIDE, unlocked));
         courseProblemCollection.updateOne(cursor, new Document(ADD_SET_COMMAND, updateObj));
-
-        UserUpdateHandler.insertUpdates(dbs, ((List<String>) cursor.get(USERS)), assignmentId, UserUpdateHandler.LECTURE_CLASSIFICATION);
-        return true;
-    }
-
-    /**
-     * NOTE: This is meant for internal use do not make this method public.
-     * <p/>
-     * With that being said this allows a course to be updated adding the
-     * bankProblemId to its list of items.
-     *
-     * @param dbs The database where the assignment is being stored.
-     * @param assignmentId The assignment into which the slide is being inserted into.
-     * @param problemGroupId The courseProblem the slide is being inserted into.
-     * @param bankProblemId The assignment that is being inserted into the course.
-     * @param unlocked A boolean that is true if the object is unlocked.
-     * @return true if the assignment was inserted correctly.
-     * @throws AuthenticationException The user does not have permission to update the lecture.
-     * @throws DatabaseAccessException The lecture does not exist.
-     */
-    private static boolean mongoInsertBankProblemIntoProblemGroup(final MongoDatabase dbs, final String assignmentId, final String problemGroupId,
-            final String bankProblemId, final boolean unlocked)
-            throws AuthenticationException, DatabaseAccessException {
-        final MongoCollection<Document> courseProblemCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
-        final Document cursor = courseProblemCollection.find(convertStringToObjectId(problemGroupId)).first();
-
-        final Document updateObj = new Document(DatabaseStringConstants.PROBLEM_LIST,
-                createSlideProblemHolderQuery(bankProblemId, Util.ItemType.BANK_PROBLEM, unlocked));
-        courseProblemCollection.updateOne(cursor, new Document(ADD_SET_COMMAND, updateObj));
-
-        UserUpdateHandler.insertUpdates(dbs, ((List<String>) cursor.get(USERS)), assignmentId, UserUpdateHandler.LECTURE_CLASSIFICATION);
-        return true;
     }
 
     /**

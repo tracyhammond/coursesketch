@@ -6,9 +6,9 @@ import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
-import coursesketch.database.user.UserUpdateHandler;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.DatabaseStringConstants;
+import coursesketch.database.util.MongoUtilities;
 import coursesketch.database.util.RequestConverter;
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -125,20 +125,20 @@ public final class CourseManager {
             throw new AuthenticationException("For course: " + courseId, AuthenticationException.INVALID_PERMISSION);
         }
 
-        final SrlCourse.Builder exactCourse = SrlCourse.newBuilder();
-        exactCourse.setDescription((String) cursor.get(DESCRIPTION));
-        exactCourse.setName((String) cursor.get(NAME));
+        final SrlCourse.Builder extractCourse = SrlCourse.newBuilder();
+        extractCourse.setDescription((String) cursor.get(DESCRIPTION));
+        extractCourse.setName((String) cursor.get(NAME));
         if (cursor.get(COURSE_SEMESTER) != null) {
-            exactCourse.setSemester((String) cursor.get(COURSE_SEMESTER));
+            extractCourse.setSemester((String) cursor.get(COURSE_SEMESTER));
         }
 
-        exactCourse.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(ACCESS_DATE)).longValue()));
-        exactCourse.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(CLOSE_DATE)).longValue()));
-        exactCourse.setId(courseId);
+        extractCourse.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(ACCESS_DATE)).longValue()));
+        extractCourse.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(CLOSE_DATE)).longValue()));
+        extractCourse.setId(courseId);
 
         // states
         final State.Builder stateBuilder = State.newBuilder();
-        if (exactCourse.getCloseDate().getMillisecond() > checkTime) {
+        if (extractCourse.getCloseDate().getMillisecond() > checkTime) {
             stateBuilder.setPastDue(true);
         }
 
@@ -150,38 +150,38 @@ public final class CourseManager {
         stateBuilder.setPublished(responder.isItemPublished());
 
         if (cursor.get(IMAGE) != null) {
-            exactCourse.setImageUrl((String) cursor.get(IMAGE));
+            extractCourse.setImageUrl((String) cursor.get(IMAGE));
         }
 
         // if you are a user, the course must be open to view the assignments
         if ((responder.hasAccess() && responder.isItemOpen())
                 || responder.hasPeerTeacherPermission()) {
-            final Object assignmentList = cursor.get(ASSIGNMENT_LIST);
-            final Object lectureList = cursor.get(LECTURE_LIST);
-            if (assignmentList != null) {
-                exactCourse.addAllAssignmentList((List) assignmentList);
+            if (cursor.containsKey(ASSIGNMENT_LIST)) {
+                final List<String> assignmentList = MongoUtilities.getNonNullList(cursor, ASSIGNMENT_LIST);
+                extractCourse.addAllAssignmentList(assignmentList);
             }
-            if (lectureList != null) {
-                exactCourse.addAllLectureList((List) lectureList);
+            if (cursor.containsKey(LECTURE_LIST)) {
+                final List<String> lectureList = MongoUtilities.getNonNullList(cursor, LECTURE_LIST);
+                extractCourse.addAllLectureList(lectureList);
             }
             stateBuilder.setAccessible(true);
         } else if (responder.hasAccess() && !responder.isItemOpen() && !responder.hasPeerTeacherPermission()) {
             LOG.info("USER CLASS TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
-            LOG.info("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", exactCourse.getAccessDate().getMillisecond(), checkTime,
-                    exactCourse.getCloseDate().getMillisecond());
+            LOG.info("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", extractCourse.getAccessDate().getMillisecond(), checkTime,
+                    extractCourse.getCloseDate().getMillisecond());
             stateBuilder.setAccessible(false);
         }
 
-        exactCourse.setState(stateBuilder);
+        extractCourse.setState(stateBuilder);
 
         if (responder.hasTeacherPermission()) {
             try {
-                exactCourse.setAccess(Util.Accessibility.valueOf((Integer) cursor.get(COURSE_ACCESS))); // admin
+                extractCourse.setAccess(Util.Accessibility.valueOf((Integer) cursor.get(COURSE_ACCESS))); // admin
             } catch (ClassCastException exception) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, exception);
             }
         }
-        return exactCourse.build();
+        return extractCourse.build();
 
     }
 
@@ -191,12 +191,11 @@ public final class CourseManager {
      * @param authId The id of the user that is updating the course.  Used to check permissions.
      * @param courseId The id of the course being updated.
      * @param course the course data that is being updated.
-     * @return true if the update is successful.
      * @throws AuthenticationException Thrown if the user did not have the authentication to update the course.
      * @throws DatabaseAccessException Thrown if there are problems updating the course.
      */
     @SuppressWarnings("PMD.NPathComplexity")
-    static boolean mongoUpdateCourse(final Authenticator authenticator, final MongoDatabase dbs, final String authId, final String courseId,
+    static void mongoUpdateCourse(final Authenticator authenticator, final MongoDatabase dbs, final String authId, final String courseId,
             final SrlCourse course) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
         final MongoCollection<Document> courseCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE));
@@ -270,9 +269,7 @@ public final class CourseManager {
         // get user list send updates
         if (update) {
             courseCollection.updateOne(cursor, new Document(SET_COMMAND, updateObj));
-            UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), courseId, UserUpdateHandler.COURSE_CLASSIFICATION);
         }
-        return true;
 
     }
 
@@ -285,21 +282,16 @@ public final class CourseManager {
      * @param dbs The database where the assignment is being stored.
      * @param courseId the course into which the assignment is being inserted into
      * @param assignmentId the assignment that is being inserted into the course.
-     * @return true if the assignment was inserted correctly.
      * @throws AuthenticationException The user does not have permission to update the assignment.
      * @throws DatabaseAccessException The assignment does not exist.
      */
-    static boolean mongoInsertAssignmentIntoCourse(final MongoDatabase dbs, final String courseId, final String assignmentId)
+    static void mongoInsertAssignmentIntoCourse(final MongoDatabase dbs, final String courseId, final String assignmentId)
             throws AuthenticationException, DatabaseAccessException {
         final MongoCollection<Document> courseCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE));
         final Document cursor = courseCollection.find(convertStringToObjectId(courseId)).first();
 
-        Document updateObj = null;
-        updateObj = new Document(ASSIGNMENT_LIST, assignmentId);
+        final Document updateObj = new Document(ASSIGNMENT_LIST, assignmentId);
         courseCollection.updateOne(cursor, new Document(ADD_SET_COMMAND, updateObj));
-
-        UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), courseId, UserUpdateHandler.COURSE_CLASSIFICATION);
-        return true;
     }
 
     /**
@@ -309,10 +301,10 @@ public final class CourseManager {
      * FUTURE: this should probably be paginated so it does not crush
      * the database.
      */
-    public static List<SrlCourse> mongoGetAllPublicCourses(final MongoDatabase dbs) {
+    static List<SrlCourse> mongoGetAllPublicCourses(final MongoDatabase dbs) {
         final MongoCollection<Document> courseTable = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE));
 
-        final List<SrlCourse> resultList = new ArrayList<SrlCourse>();
+        final List<SrlCourse> resultList = new ArrayList<>();
 
         // checks for all public courses.
         final Document publicCheck = new Document(COURSE_ACCESS, Util.Accessibility.PUBLIC.getNumber());
@@ -356,7 +348,7 @@ public final class CourseManager {
      * @throws AuthenticationException Thrown if there are problems checking the users authentication.
      * @throws DatabaseAccessException Thrown if the course does not exist.
      */
-    public static String mongoGetRegistrationKey(final Authenticator authenticator, final MongoDatabase database, final String authId,
+    static String mongoGetRegistrationKey(final Authenticator authenticator, final MongoDatabase database, final String authId,
             final String courseId,
             final boolean checkTeacher)
             throws AuthenticationException, DatabaseAccessException {

@@ -121,7 +121,7 @@ final class GradeManager {
     }
 
     static void addGrade(Authenticator auth, MongoDatabase database, Authentication.AuthRequest authRequest,
-            ProtoGrade grade, Grading.ProtoGradingPolicy gradingPolicy) throws DatabaseAccessException, AuthenticationException {
+            ProtoGrade grade) throws DatabaseAccessException, AuthenticationException {
         final AuthenticationResponder responder = auth
                 .checkAuthentication(authRequest.getItemType(), authRequest.getItemId(), authRequest.getAuthId(), 0,
                         Authentication.AuthType.newBuilder().setCheckingAdmin(true).build());
@@ -130,12 +130,7 @@ final class GradeManager {
             throw new AuthenticationException("Must have correct authorization to insert grade", AuthenticationException.INVALID_PERMISSION);
         }
 
-        ProtoGrade convertedGrade = convertRawGradeToRealGrade(grade, gradingPolicy);
-        addGrade(database, convertedGrade);
-    }
-
-    private static ProtoGrade convertRawGradeToRealGrade(ProtoGrade grade, Grading.ProtoGradingPolicy gradingPolicy) {
-        return grade;
+        addGrade(database, grade);
     }
 
     private static void addGrade(final MongoDatabase dbs, final ProtoGrade grade) throws DatabaseAccessException {
