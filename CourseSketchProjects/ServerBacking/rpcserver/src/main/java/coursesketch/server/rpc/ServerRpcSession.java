@@ -10,37 +10,48 @@ import protobuf.srl.request.Message;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Future;
 
+/**
+ * An Rpc Session that is only created server side.
+ */
 public class ServerRpcSession extends RpcSession {
     /**
      * Declaration/Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(ServerRpcSession.class);
 
+    /**
+     * Used as a callback.
+     */
     private final RpcCallback<Message.Request> callback;
 
-    ServerRpcSession(RpcCallback<Message.Request> session, RpcController controller) {
+    /**
+     * Creates a new session with the controller.
+     * @param session The Callback data.
+     * @param controller The controller.
+     */
+    ServerRpcSession(final RpcCallback<Message.Request> session, final RpcController controller) {
         super(controller);
         callback = session;
     }
 
     @Override
-    public String getRemoteAddress() {
+    public final String getRemoteAddress() {
         return null;
     }
 
     @Override
-    public void close() {
+    public final void close() {
         callback.run(null);
     }
 
     @Override
-    public Future<Void> send(Message.Request req) {
+    public final Future<Void> send(Message.Request req) {
         callback.run(req);
         return null;
     }
 
     @Override
-    public Future<Void> send(ByteBuffer buffer) {
+    public final Future<Void> send(ByteBuffer buffer) {
         try {
             return send(Message.Request.parseFrom(buffer.array()));
         } catch (InvalidProtocolBufferException e) {
@@ -50,7 +61,7 @@ public class ServerRpcSession extends RpcSession {
     }
 
     @Override
-    public void close(int statusCode, String reason) {
+    public final void close(int statusCode, String reason) {
         close();
     }
 }

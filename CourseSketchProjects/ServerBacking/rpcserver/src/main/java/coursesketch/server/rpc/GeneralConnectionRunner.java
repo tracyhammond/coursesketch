@@ -27,9 +27,7 @@ import org.slf4j.LoggerFactory;
 import utilities.LoggingConstants;
 
 import javax.net.ssl.SSLException;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.Executors;
 
 /**
@@ -323,12 +321,12 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     @Override
-    protected void addArguments(InputParser inputParser) {
+    protected void addArguments(InputParser argumentInputParser) {
 
     }
 
     @Override
-    protected void addCommands(InputParser inputParser) {
+    protected void addCommands(InputParser commandLineInputParser) {
 
     }
 }

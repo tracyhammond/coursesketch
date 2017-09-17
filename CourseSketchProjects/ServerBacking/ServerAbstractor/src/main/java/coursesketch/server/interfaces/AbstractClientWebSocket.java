@@ -253,7 +253,7 @@ public abstract class AbstractClientWebSocket {
      * Called if the connection is connected and working properly.
      * @param buffer The message that is trying to be sent.
      */
-    protected void connectedSend(final ByteBuffer buffer) {
+    private void connectedSend(final ByteBuffer buffer) {
         LOG.info("Sending message to: {}", this.getClass().getSimpleName());
         session.send(buffer);
         if (queing) {
@@ -283,9 +283,7 @@ public abstract class AbstractClientWebSocket {
                         Thread.sleep(MIN_SLEEP_TIME);
                         queing = false;
                         send(buffer);
-                    } catch (InterruptedException e) {
-                        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                    } catch (ConnectionException e) {
+                    } catch (InterruptedException | ConnectionException e) {
                         LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                     }
                 }

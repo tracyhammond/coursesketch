@@ -7,13 +7,21 @@ import com.googlecode.protobuf.pro.duplex.RpcClient;
 import com.googlecode.protobuf.pro.duplex.execute.ServerRpcController;
 import coursesketch.server.interfaces.SocketSession;
 
+/**
+ * Base class for a SocketSession meant for RPC.
+ */
 public abstract class RpcSession implements SocketSession {
     /**
      * The controller for the socket.
      */
-    protected RpcController controller;
+    private RpcController controller;
 
-    RpcSession(RpcController controller) {
+    /**
+     * Creates a new rpc session from the controller.
+     *
+     * @param controller The controller for this rpc session.
+     */
+    RpcSession(final RpcController controller) {
         this.controller = controller;
     }
 
@@ -62,10 +70,13 @@ public abstract class RpcSession implements SocketSession {
      */
     @Override
     public int hashCode() {
-        int hashCode = getPeerInfo().hashCode();
-        return hashCode;
+        return getPeerInfo().hashCode();
     }
 
+    /**
+     * @return The controller used by this session.
+     */
+    @SuppressWarnings("checkstyle:DesignForExtension")
     protected RpcController getController() {
         return controller;
     }

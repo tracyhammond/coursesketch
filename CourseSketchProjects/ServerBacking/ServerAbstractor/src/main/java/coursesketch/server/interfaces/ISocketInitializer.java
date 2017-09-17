@@ -39,7 +39,7 @@ public interface ISocketInitializer {
      * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      * @return An instance of the {@link MultiConnectionManager}
      */
-    MultiConnectionManager createConnectionManager(final ServerInfo serverInfo);
+    MultiConnectionManager createConnectionManager(ServerInfo serverInfo);
 
     /**
      * Override this method to create a subclass of GeneralConnectionServer.
@@ -58,9 +58,15 @@ public interface ISocketInitializer {
      */
     void onServerStart();
 
+    /**
+     * Loads the holders of shared databases.
+     *
+     * @param info The server information for creating a database.
+     * @param databaseHolders The list of objects that will hold databases.
+     */
     default void loadSharedDatabase(ServerInfo info, List<DatabaseReaderHolder> databaseHolders) {
         if (isSharingDatabaseReaders()) {
-            AbstractCourseSketchDatabaseReader shared = createSharedDatabaseReader(info);
+            final AbstractCourseSketchDatabaseReader shared = createSharedDatabaseReader(info);
             try {
                 shared.startDatabase();
             } catch (DatabaseAccessException e) {
@@ -78,8 +84,16 @@ public interface ISocketInitializer {
         }
     }
 
+    /**
+     * @return True if this class will be sharing {@link AbstractCourseSketchDatabaseReader}.
+     */
     boolean isSharingDatabaseReaders();
 
+    /**
+     * Creates a shared version of the {@link AbstractCourseSketchDatabaseReader}.
+     * @param serverInfo The information stored on the server.
+     * @return The {@link} AbstractCourseSketchDatabaseReader that was newly created.
+     */
     AbstractCourseSketchDatabaseReader createSharedDatabaseReader(ServerInfo serverInfo);
 
     // METHODS BELOW NEED TO BE IN ALL CLASSES OF THIS INTERFACE (but they can't be in interface because of scope.

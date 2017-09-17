@@ -11,7 +11,6 @@ import protobuf.srl.grading.Grading;
 import protobuf.srl.request.Message;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.services.grading.GradingServer;
-import protobuf.srl.services.submission.SubmissionServer;
 
 import java.net.URI;
 
@@ -72,7 +71,7 @@ public final class GradingWebSocketClient extends ClientWebSocket implements Gra
                 .setAuthRequest(authRequest)
                 .setGrade(grade).build();
 
-        Message.DefaultResponse response;
+        final Message.DefaultResponse response;
         try {
             LOG.debug("Sending add grade request");
             response = gradingService.insertRawGrade(getNewRpcController(), gradeRequest);

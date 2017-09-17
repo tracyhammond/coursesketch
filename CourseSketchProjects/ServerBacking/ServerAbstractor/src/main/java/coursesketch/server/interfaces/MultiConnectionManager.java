@@ -115,7 +115,7 @@ public class MultiConnectionManager {
             final AbstractServerWebSocketHandler serv) throws ConnectionException {
         AbstractClientWebSocket conWrapper = null;
         @SuppressWarnings("rawtypes")
-        Constructor construct;
+        final Constructor construct;
         try {
             construct = connectionType.getConstructor(URI.class, AbstractServerWebSocketHandler.class);
             conWrapper = (AbstractClientWebSocket) construct.newInstance(new URI(location), serv);
@@ -127,9 +127,7 @@ public class MultiConnectionManager {
             throw new ConnectionException("The URI for localtion: [" + location + "] is not valid syntax", e);
         }
 
-        if (conWrapper != null) {
-            conWrapper.connect();
-        }
+        conWrapper.connect();
 
         return conWrapper;
     }

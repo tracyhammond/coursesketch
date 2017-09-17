@@ -14,4 +14,10 @@ public class DbSchoolUtilityTest {
         assertEquals( Util.ItemType.COURSE, DbSchoolUtility.getParentItemType(Util.ItemType.COURSE));
         assertEquals( null, DbSchoolUtility.getParentItemType(Util.ItemType.SLIDE));
     }
+
+    @Test
+    public void CorrectName() {
+        assertEquals( Util.ItemType.BANK_PROBLEM.name(),
+                DbSchoolUtility.getCollectionFromType(Util.ItemType.BANK_PROBLEM));
+    }
 }

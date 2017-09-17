@@ -33,6 +33,12 @@
 	</Match>
 
 	<Match>
+		<Class name="~.*\.*ClientRpcSession" />
+		<Field name="service" />
+		<Bug pattern="IS2_INCONSISTENT_SYNC" />
+	</Match>
+
+	<Match>
 	    <Or>
 			<Field name="e" />
 			<Local name="e" />

@@ -7,7 +7,6 @@ import coursesketch.database.auth.DbAuthChecker;
 import coursesketch.database.auth.DbAuthManager;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.database.util.DatabaseAccessException;
-import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.rpc.CourseSketchRpcService;
 import coursesketch.utilities.ExceptionUtilities;
@@ -125,10 +124,10 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
             done.run(Message.DefaultResponse.getDefaultInstance());
         } catch (DatabaseAccessException e) {
             done.run(Message.DefaultResponse.newBuilder().setException(ExceptionUtilities.createProtoException(e)).build());
-            LOG.error("Failed to access data while registering user.", e);
+            LOG.error("Failed to access data while adding user.", e);
         } catch (AuthenticationException e) {
             done.run(Message.DefaultResponse.newBuilder().setException(ExceptionUtilities.createProtoException(e)).build());
-            LOG.error("User may not have permission to register for this class.", e);
+            LOG.error("User may not have permission to add user to this item.", e);
         }
     }
 

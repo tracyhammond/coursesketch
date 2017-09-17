@@ -24,7 +24,7 @@ public interface SubmissionManagerInterface {
      * @throws DatabaseAccessException Thrown if the submission can not be found.
      * @throws AuthenticationException Thrown if the user does not have permission to access the submission.
      */
-    List<Submission.SrlExperiment> getSubmission(final String authId, final Authenticator authenticator, final String problemId, String...
+    List<Submission.SrlExperiment> getSubmission(String authId, Authenticator authenticator, String problemId, String...
             submissionIds)
             throws DatabaseAccessException, AuthenticationException;
 
@@ -40,8 +40,8 @@ public interface SubmissionManagerInterface {
      * @throws AuthenticationException Thrown if the user does not have permission to insert the experiment.
      * @throws DatabaseAccessException Thrown if there are problems merging an existing experiment or creating a new experiment.
      */
-    String insertExperiment(final String authId, final Authenticator authenticator, final Submission.SrlExperiment submission,
-            final long submissionTime)
+    String insertExperiment(String authId, Authenticator authenticator, Submission.SrlExperiment submission,
+            long submissionTime)
             throws AuthenticationException, DatabaseAccessException;
 
     /**
@@ -54,7 +54,7 @@ public interface SubmissionManagerInterface {
      * @throws AuthenticationException Thrown if the user does not have permission to insert the solution.
      * @throws DatabaseAccessException Thrown if there are problems merging an existing solution or creating a new solution.
      */
-    String insertSolution(final String authId, final Authenticator authenticator, final Submission.SrlSolution submission)
+    String insertSolution(String authId, Authenticator authenticator, Submission.SrlSolution submission)
             throws AuthenticationException, DatabaseAccessException;
 
     /**
@@ -68,7 +68,7 @@ public interface SubmissionManagerInterface {
      * @throws AuthenticationException Thrown if the user does not have permission to get the solution.
      * @throws DatabaseAccessException Thrown if there are problems merging an existing solution or creating a new solution.
      */
-    Submission.SrlSolution getSolution(final String authId, final Authenticator authenticator, final String bankProblemId, final String
+    Submission.SrlSolution getSolution(String authId, Authenticator authenticator, String bankProblemId, String
             submissionId)
             throws DatabaseAccessException, AuthenticationException;
 }

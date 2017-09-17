@@ -52,6 +52,10 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
      * When the authentication is created the websocket might not be ready so this is used to save the instance.
      */
     private final DelayedAuthenticationChecker authenticationChecker;
+
+    /**
+     * List of rpc services used by this server.
+     */
     private List<CourseSketchRpcService> services;
 
     /**
@@ -229,12 +233,14 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     }
 
     @Override
+    @SuppressWarnings("checkstyle:designforextension")
     public boolean isSharingDatabaseReaders() {
         return false;
     }
 
     @Override
-    public AbstractCourseSketchDatabaseReader createSharedDatabaseReader(ServerInfo serverInfo) {
+    @SuppressWarnings("checkstyle:designforextension")
+    public AbstractCourseSketchDatabaseReader createSharedDatabaseReader(ServerInfo info) {
         return null;
     }
 }

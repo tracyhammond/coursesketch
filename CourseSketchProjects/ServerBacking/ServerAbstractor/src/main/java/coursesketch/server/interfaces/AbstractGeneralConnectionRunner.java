@@ -1,6 +1,5 @@
 package coursesketch.server.interfaces;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import com.mongodb.ServerAddress;
 import org.apache.commons.cli.ParseException;
@@ -58,16 +57,15 @@ public abstract class AbstractGeneralConnectionRunner {
      */
     private static final int DEFAULT_PORT = 8888;
 
-    /**
-     * A local instance is stored here.
-     */
-    private final AbstractGeneralConnectionRunner localInstance = this;
-
     // these should be changed based on the properties
     /**
      * Arguments that come in from the command line.
      */
     private final String[] args;
+
+    /**
+     * The object that parses command line input and argument input.
+     */
     private final InputParser inputParser;
 
     /**
@@ -146,6 +144,10 @@ public abstract class AbstractGeneralConnectionRunner {
      * The name of the database.
      */
     private String databaseName;
+
+    /**
+     * The object that holds command line input.
+     */
     private BufferedReader input;
 
     /**
@@ -328,12 +330,13 @@ public abstract class AbstractGeneralConnectionRunner {
 
     /**
      * Toggles off and on logging.
-     * @param sysin keyboard input
-     * @param equals
+     *
+     * @param sysin keyboard input.
+     * @param equals If the user is wanting to turn on logging.
      * @throws java.io.IOException Thrown if there are problems getting the keyboard input.
      */
     private void toggleLoggingCommand(final BufferedReader sysin, boolean equals) throws IOException {
-        if (logging) {
+        if (logging && !equals) {
             LOG.info("Are you sure you want to turn loggin off? [y/n]");
             if (!StringUtils.defaultString(sysin.readLine()).equalsIgnoreCase("y")) {
                 LOG.info("action canceled");
@@ -354,7 +357,7 @@ public abstract class AbstractGeneralConnectionRunner {
      * The input is started in a separate thread and this method will return immediately regardless of success.
      * If input is already running then this method does not start a new thread for input but instead returns.
      */
-    public final void startInput() {
+    private void startInput() {
         inputParser.clear();
         if (inputRunning || !isAcceptingCommandInput()) {
             return;
@@ -368,7 +371,7 @@ public abstract class AbstractGeneralConnectionRunner {
                 try {
                     final String command = sysin.readLine();
                     LOG.debug("Input command is {}", command);
-                    inputParser.parse(new String[]{ "-" + command });
+                    inputParser.parse(new String[] {"-" + command});
                 } catch (IOException | ParseException e) {
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                     break;
@@ -404,7 +407,7 @@ public abstract class AbstractGeneralConnectionRunner {
      *
      * @return a new instance of an {@link ISocketInitializer}.
      **/
-    protected abstract ISocketInitializer createSocketInitializer(final ServerInfo serverInfo);
+    protected abstract ISocketInitializer createSocketInitializer(ServerInfo serverInfo);
 
     /**
      * Sets the password for the SSL keystore.
@@ -463,7 +466,7 @@ public abstract class AbstractGeneralConnectionRunner {
     /**
      * @return The time it takes for a connection to timeout.
      */
-    public final long getTimeoutTime() {
+    private long getTimeoutTime() {
         return timeoutTime;
     }
 
@@ -478,21 +481,21 @@ public abstract class AbstractGeneralConnectionRunner {
     /**
      * @return true if the command-line is accepting input.
      */
-    public final boolean isAcceptingCommandInput() {
+    private boolean isAcceptingCommandInput() {
         return acceptInput;
     }
 
     /**
      * @param acceptInputToSet True if the command line will accept input.  False otherwise.
      */
-    public final void setAcceptingCommandInput(final boolean acceptInputToSet) {
+    private void setAcceptingCommandInput(final boolean acceptInputToSet) {
         this.acceptInput = acceptInputToSet;
     }
 
     /**
      * @return True if the server is running as a production environment.
      */
-    public final boolean isProduction() {
+    protected final boolean isProduction() {
         return production;
     }
 
@@ -548,7 +551,7 @@ public abstract class AbstractGeneralConnectionRunner {
      *
      * @param databaseUrl The list of addresses the database can connect to.
      */
-    protected final void setDatabaseUrl(final List<ServerAddress> databaseUrl) {
+    private void setDatabaseUrl(final List<ServerAddress> databaseUrl) {
         if (!setup) {
             throw new IllegalStateException("Can only set this variable during setup");
         }
@@ -575,20 +578,20 @@ public abstract class AbstractGeneralConnectionRunner {
         }
         this.databaseName = databaseName;
     }
-    private void addArgumentsLocal(InputParser inputParser) {
-        inputParser.addParsingOption(inputParser
-                        .createOption("isLocal", true,
-                                "Used for running the server as a local host or if it should connect to given IP addresses\n" +
-                                "True if it is local false otherwise"),
-                argumentValue -> {
-                    if (argumentValue.equalsIgnoreCase("true")) {
-                        local = true;
-                    } else {
-                        local = false;
-                    }
-                });
 
-        inputParser.addParsingOption(inputParser
+    /**
+     * Adds local arguments.
+     *
+     * @param argumentInputParser The parser that gets the local arguments
+     */
+    private void addArgumentsLocal(InputParser argumentInputParser) {
+        argumentInputParser.addParsingOption(argumentInputParser
+                        .createOption("isLocal", true,
+                                "Used for running the server as a local host or if it should connect to given IP addresses\n"
+                                + "True if it is local false otherwise"),
+                argumentValue -> local = argumentValue.equalsIgnoreCase("true"));
+
+        argumentInputParser.addParsingOption(argumentInputParser
                         .createOption("commandLine", true,
                                 "True if the server should accept command line input false if it should not"),
                 argumentValue -> {
@@ -599,7 +602,7 @@ public abstract class AbstractGeneralConnectionRunner {
                     }
                 });
 
-        inputParser.addParsingOption(inputParser
+        argumentInputParser.addParsingOption(argumentInputParser
                         .createOption("databaseUrls", true,
                                 "The address the database server is at as a list of comma separated Urls"),
                 argumentValue -> {
@@ -609,67 +612,53 @@ public abstract class AbstractGeneralConnectionRunner {
                     }
                     setDatabaseUrl(mongoLocation);
                 });
-        addArguments(inputParser);
+        addArguments(argumentInputParser);
     }
 
-    protected abstract void addArguments(InputParser inputParser);
+    /**
+     * Adds commands for parsing arguments.
+     *
+     * @param argumentInputParser The parser for arguments.
+     */
+    protected abstract void addArguments(InputParser argumentInputParser);
 
     /**
-     * Handles commands that can be used to perform certain functionality.
+     * Creates commands that can be used to perform certain functionality.
      *
-     * This method can and in some cases should be overwritten. We
-     * <b>strongly</b> suggest that you call super first then check to see if it
-     * is true and then call your overwritten method.
-     *
-     * @param command
-     *            The command that is parsed to provide functionality.
-     * @param sysin
-     *            Used if additional input is needed for the command.
-     * @return true if the command is an accepted command and is used by the
-     *         server
+     * @param commandLineInputParser The parser that the local commands are being added to.
      */
-    private void addCommandsLocal(InputParser inputParser) {
-        inputParser.addParsingOption(inputParser.createOption("exit", false, "kills the server"),
-                argumentValue -> {
-                    exitCommand(getInput());
-                });
+    private void addCommandsLocal(InputParser commandLineInputParser) {
+        commandLineInputParser.addParsingOption(commandLineInputParser.createOption("exit", false, "kills the server"),
+                argumentValue -> exitCommand(getInput()));
 
-        inputParser.addParsingOption(inputParser.createOption("restart", false, "restarts the server"),
-                argumentValue -> {
-                    restartCommand(getInput());
-                });
+        commandLineInputParser.addParsingOption(commandLineInputParser.createOption("restart", false, "restarts the server"),
+                argumentValue -> restartCommand(getInput()));
 
-        inputParser.addParsingOption(inputParser.createOption("reconnect", false, "restarts the server connections"),
-                argumentValue -> {
-                    reconnect();
-                });
+        commandLineInputParser.addParsingOption(commandLineInputParser.createOption("reconnect", false, "restarts the server connections"),
+                argumentValue -> reconnect());
 
-        inputParser.addParsingOption(inputParser.createOption("start", false, "starts the server connections"),
-                argumentValue -> {
-                    startCommand();
-                });
+        commandLineInputParser.addParsingOption(commandLineInputParser.createOption("start", false, "starts the server connections"),
+                argumentValue -> startCommand());
 
-        inputParser.addParsingOption(inputParser.createOption("stop", false, "stops the server connections"),
-                argumentValue -> {
-                    stopCommand(getInput());
-                });
+        commandLineInputParser.addParsingOption(commandLineInputParser.createOption("stop", false, "stops the server connections"),
+                argumentValue -> stopCommand(getInput()));
 
-        inputParser.addParsingOption(inputParser.createOption("setLogging", true,
+        commandLineInputParser.addParsingOption(commandLineInputParser.createOption("setLogging", true,
                 "turns on or off logging use \"on\" or \"off\""),
-                argumentValue -> {
-                    toggleLoggingCommand(getInput(), "on".equals(argumentValue));
-                });
-        addCommands(inputParser);
+                argumentValue -> toggleLoggingCommand(getInput(), "on".equals(argumentValue)));
+        addCommands(commandLineInputParser);
     }
 
     /**
      * Parses extra commands that are taken in through the input line.
-     * @param command The command that is being processed.
-     * @param sysin Used for additional input.
-     * @return True if the message command is processed.
+     *
+     * @param commandLineInputParser The parser that the commands are being added to.
      */
-    protected abstract void addCommands(InputParser inputParser);
+    protected abstract void addCommands(InputParser commandLineInputParser);
 
+    /**
+     * @return The reader used for command line input.
+     */
     public BufferedReader getInput() {
         return input;
     }

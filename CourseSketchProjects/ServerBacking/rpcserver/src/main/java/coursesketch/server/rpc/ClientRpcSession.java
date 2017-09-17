@@ -5,9 +5,7 @@ import com.google.protobuf.RpcCallback;
 import com.google.protobuf.RpcController;
 import com.googlecode.protobuf.pro.duplex.ClientRpcController;
 import com.googlecode.protobuf.pro.duplex.PeerInfo;
-import com.googlecode.protobuf.pro.duplex.RpcClient;
 import com.googlecode.protobuf.pro.duplex.RpcClientChannel;
-import com.googlecode.protobuf.pro.duplex.execute.ServerRpcController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
@@ -32,8 +30,14 @@ public final class ClientRpcSession extends RpcSession {
      */
     private final RpcClientChannel session;
 
+    /**
+     * A callback for any response from the server.
+     */
     private RpcCallback<Message.Request> callback;
 
+    /**
+     * The default service for talking to the server in only rpc fashion.
+     */
     private Message.RequestService service;
 
     /**
@@ -68,15 +72,20 @@ public final class ClientRpcSession extends RpcSession {
     @Override
     public Future<Void> send(final Message.Request req) {
         if (service == null) {
-            synchronized (this) {
-                if (service == null) {
-                    service = Message.RequestService.newStub(getSession());
-                }
-            }
+            setServiceIfNull();
         }
 
         service.sendMessage(getController(), req, callback);
         return null;
+    }
+
+    /**
+     * Sets the service if it is found to be null in a synchronized fashion.
+     */
+    private synchronized void setServiceIfNull() {
+        if (service == null) {
+            service = Message.RequestService.newStub(getSession());
+        }
     }
 
     /**
@@ -114,19 +123,29 @@ public final class ClientRpcSession extends RpcSession {
         close();
     }
 
-    public void addCallback(RpcCallback<Message.Request> callback) {
-        this.callback = callback;
+    /**
+     * Adds the callback to this session.
+     * @param requestRpcCallback Called When a message gets a response from the server.
+     */
+    public void addCallback(RpcCallback<Message.Request> requestRpcCallback) {
+        callback = requestRpcCallback;
     }
 
+    /**
+     * @return the channel for this session.
+     */
     public RpcClientChannel getSession() {
         return session;
     }
 
+    /**
+     * @return The controller for this session if it exists or it creates a new controller.
+     */
     public RpcController getController() {
         if (getSession() == null) {
             return super.getController();
         } else {
-            return session.newRpcController();
+            return getSession().newRpcController();
         }
     }
 

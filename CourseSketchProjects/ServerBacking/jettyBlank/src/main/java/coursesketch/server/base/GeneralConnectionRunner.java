@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.LoggingConstants;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Properties;
 
@@ -180,21 +179,17 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     public final void startServer() {
-        final Thread serverThread = new Thread() {
-            @Override
-            @SuppressWarnings({"PMD.CommentRequired", "PMD.AvoidCatchingGenericException" })
-            public void run() {
-                try {
-                    server.start();
-                    getSocketInitailizerInstance().reconnect();
-                    getSocketInitailizerInstance().onServerStart();
-                    LOG.info("Server started at " + server.getURI());
-                    server.join();
-                } catch (Exception e) {
-                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                }
+        final Thread serverThread = new Thread(() -> {
+            try {
+                server.start();
+                getSocketInitailizerInstance().reconnect();
+                getSocketInitailizerInstance().onServerStart();
+                LOG.info("Server started at " + server.getURI());
+                server.join();
+            } catch (Exception e) {
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
-        };
+        });
         serverThread.start();
     }
 
@@ -221,21 +216,18 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     @Override
-    protected void addArguments(InputParser inputParser) {
+    @SuppressWarnings("checkstyle:DesignForExtension")
+    protected void addArguments(InputParser argumentInputParser) {
 
     }
 
     @Override
-    protected void addCommands(InputParser inputParser) {
-        inputParser.addParsingOption(inputParser.createOption("connectionNumber",
+    @SuppressWarnings("checkstyle:DesignForExtension")
+    protected void addCommands(InputParser commandLineInputParser) {
+        commandLineInputParser.addParsingOption(commandLineInputParser.createOption("connectionNumber",
                 false,
                 "Prints out the number of connections"),
-                new InputParser.ArgumentListener() {
-                    @Override
-                    public void run(String argumentValue) throws IOException, InterruptedException {
-                        LOG.info("Connect Number: {}", getSocketInitailizerInstance().getCurrentConnectionNumber());
-                    }
-                });
+                argumentValue -> LOG.info("Connect Number: {}", getSocketInitailizerInstance().getCurrentConnectionNumber()));
     }
 
     /**

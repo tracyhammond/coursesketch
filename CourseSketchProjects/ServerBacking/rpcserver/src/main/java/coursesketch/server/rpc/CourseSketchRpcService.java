@@ -1,12 +1,7 @@
 package coursesketch.server.rpc;
 
 import com.google.protobuf.Service;
-import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.database.interfaces.DatabaseReaderHolder;
-import coursesketch.database.util.DatabaseAccessException;
-import coursesketch.server.interfaces.ServerInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * An Rpc Service that contains specific fields that all CourseSketch Rpc Services should have.
@@ -23,6 +18,9 @@ public interface CourseSketchRpcService extends Service, DatabaseReaderHolder {
      */
     void onInitialize();
 
+    /**
+     * Called to initialize the rpc service.
+     */
     default void initialize() {
         onInitialize();
     }

@@ -151,10 +151,11 @@ public abstract class AbstractServerWebSocketHandler implements DatabaseReaderHo
      *
      * @param conn the connection that is being opened.
      */
-    protected abstract void openSession(final SocketSession conn);
+    protected abstract void openSession(SocketSession conn);
 
     /**
      * Called when an error occurs with the connection.
+     *
      * @param session The session that has an error.
      * @param cause The actual error.
      */
@@ -194,7 +195,7 @@ public abstract class AbstractServerWebSocketHandler implements DatabaseReaderHo
      *            the message itself
      */
     @SuppressWarnings("checkstyle:designforextension")
-    protected abstract void onMessage(final SocketSession session, final Request req);
+    protected abstract void onMessage(SocketSession session, Request req);
 
     /**
      * A helper method for sending data given a session.
@@ -226,14 +227,6 @@ public abstract class AbstractServerWebSocketHandler implements DatabaseReaderHo
      */
     public final String getHostName() {
         return serverInfo.getHostName();
-    }
-
-    /**
-     * @return The port that the server is running on.
-     * @see ServerInfo#port
-     */
-    public final int getHostPort() {
-        return serverInfo.getPort();
     }
 
     /**
@@ -298,7 +291,7 @@ public abstract class AbstractServerWebSocketHandler implements DatabaseReaderHo
      * @param info Information about the server.
      * @return {@link AbstractCourseSketchDatabaseReader}.
      */
-    public abstract AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info);
+    public abstract AbstractCourseSketchDatabaseReader createDatabaseReader(ServerInfo info);
 
     /**
      * @return A map representing the Id to state. The returned map is read only.
@@ -348,6 +341,9 @@ public abstract class AbstractServerWebSocketHandler implements DatabaseReaderHo
         this.databaseReader = databaseReader;
     }
 
+    /**
+     * Called to initialize the server.
+     */
     public final void initialize() {
         onInitialize();
     }

@@ -194,12 +194,14 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     }
 
     @Override
+    @SuppressWarnings("checkstyle:DesignForExtension")
     public boolean isSharingDatabaseReaders() {
         return false;
     }
 
     @Override
-    public AbstractCourseSketchDatabaseReader createSharedDatabaseReader(ServerInfo serverInfo) {
+    @SuppressWarnings("checkstyle:DesignForExtension")
+    public AbstractCourseSketchDatabaseReader createSharedDatabaseReader(ServerInfo info) {
         return null;
     }
 }

@@ -12,11 +12,11 @@ public final class RequestConverter {
     /**
      * Max year we want to support.
      */
-    public static final long MAX_JODA_YEAR = 10000;
+    private static final long MAX_JODA_YEAR = 10000;
     /**
      * The number of milliseconds in a year.
      */
-    public static final long MILLIS_IN_YEAR = (long) (1000 * 60 * 60 * 24 * 365.25);
+    private static final long MILLIS_IN_YEAR = (long) (1000 * 60 * 60 * 24 * 365.25);
 
     /**
      * Private constructor.
@@ -64,15 +64,7 @@ public final class RequestConverter {
      * @param date The protobuf date time object
      * @return {@link org.joda.time.DateTime}.
      */
-    public static org.joda.time.DateTime getDateFromProto(final DateTime date) {
+    static org.joda.time.DateTime getDateFromProto(final DateTime date) {
         return new org.joda.time.DateTime(date.getMillisecond());
     }
-
-    /*
-    private static ArrayList<String> GroupToString(final SrlGroup group) {
-        final ArrayList<String> inputGroup = new ArrayList<String>();
-        inputGroup.add(group.getGroupId());
-        return inputGroup;
-    }
-    */
 }

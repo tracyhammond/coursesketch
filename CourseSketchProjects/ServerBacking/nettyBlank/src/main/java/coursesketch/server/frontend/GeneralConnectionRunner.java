@@ -182,14 +182,10 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
             final boolean assumedRunning = !workerGroup.isShutdown() && !workerGroup.isTerminated() && !workerGroup.isShuttingDown();
             LOG.info("Server is running hopefully = {}", assumedRunning);
 
-            final Thread reconnect = new Thread() {
-                @Override
-                @SuppressWarnings({ "PMD.CommentRequired", "PMD.AvoidCatchingGenericException" })
-                public void run() {
-                    getSocketInitailizerInstance().reconnect();
-                    getSocketInitailizerInstance().onServerStart();
-                }
-            };
+            final Thread reconnect = new Thread(() -> {
+                getSocketInitailizerInstance().reconnect();
+                getSocketInitailizerInstance().onServerStart();
+            });
             reconnect.start();
             Thread.sleep(ONE_SECOND);
         } catch (InterruptedException e) {
@@ -228,12 +224,12 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     @Override
-    protected void addArguments(InputParser inputParser) {
+    protected void addArguments(InputParser argumentInputParser) {
 
     }
 
     @Override
-    protected void addCommands(InputParser inputParser) {
+    protected void addCommands(InputParser commandLineInputParser) {
 
     }
 }

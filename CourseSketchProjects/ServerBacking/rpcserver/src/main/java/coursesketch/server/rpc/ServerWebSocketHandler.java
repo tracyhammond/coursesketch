@@ -2,7 +2,6 @@ package coursesketch.server.rpc;
 
 import com.google.protobuf.RpcCallback;
 import com.google.protobuf.RpcController;
-import com.googlecode.protobuf.pro.duplex.ClientRpcController;
 import coursesketch.auth.AuthenticationWebSocketClient;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
@@ -82,11 +81,11 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
 
     /**
      * Called when the server receives a message.
-     *  @param session The socket context.
-     * @param controller
+     * @param session The socket context.
+     * @param controller The controller of the rpc session.
      * @param req The protobuf request object that represents what was sent to the server.
      */
-    final void rpcOnMessage(final RpcCallback session, RpcController controller, final Message.Request req) {
+    final void rpcOnMessage(final RpcCallback<Message.Request> session, RpcController controller, final Message.Request req) {
         onMessage(new ServerRpcSession(session, controller), req);
     }
 
