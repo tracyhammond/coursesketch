@@ -8,6 +8,7 @@ import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.util.MongoUtilities;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -141,9 +142,9 @@ final class GradingPolicyManager {
         if (policy.getDroppedAssignmentsCount() != 0) {
             final List<Document> droppedAssignments = new ArrayList<>();
             final List<DroppedAssignment> droppedList = policy.getDroppedAssignmentsList();
-            for (int i = 0; i < droppedList.size(); i++) {
-                final Document assignment = new Document(ASSIGNMENT_ID, droppedList.get(i).getAssignmentId())
-                        .append(DROP_TYPE, droppedList.get(i).getDropType().getNumber());
+            for (DroppedAssignment aDroppedList : droppedList) {
+                final Document assignment = new Document(ASSIGNMENT_ID, aDroppedList.getAssignmentId())
+                        .append(DROP_TYPE, aDroppedList.getDropType().getNumber());
                 droppedAssignments.add(assignment);
             }
             policyObject.append(DROPPED_ASSIGNMENTS, droppedAssignments);
@@ -197,14 +198,15 @@ final class GradingPolicyManager {
 
         final ProtoGradingPolicy.Builder policy = ProtoGradingPolicy.newBuilder();
         policy.setCourseId(courseId);
-        final List<Document> categories = (List<Document>) policyObject.get(GRADE_CATEGORIES);
-        for (int i = 0; i < categories.size(); i++) {
-            policy.addGradeCategories(buildProtoCategory(categories.get(i)));
+
+        final List<Document> categories = MongoUtilities.getNonNullList(policyObject, GRADE_CATEGORIES);
+        for (Document category : categories) {
+            policy.addGradeCategories(buildProtoCategory(category));
         }
         policy.setPolicyType(ProtoGradingPolicy.PolicyType.valueOf((int) policyObject.get(GRADE_POLICY_TYPE)));
 
         // Builds and adds droppedProblems to the protoGradingPolicy
-        final Map<String, List<Document>> droppedProblems = (Map<String, List<Document>>) policyObject.get(DROPPED_PROBLEMS);
+        final Map<String, List<Document>> droppedProblems = MongoUtilities.getNonNullMap(policyObject, DROPPED_PROBLEMS);
         for (Map.Entry<String, List<Document>> droppedProblemEntry : droppedProblems.entrySet()) {
             final DroppedProblems.Builder protoDroppedProblems = buildProtoDroppedProblems(droppedProblemEntry.getValue());
             protoDroppedProblems.setAssignmentId(droppedProblemEntry.getKey());
@@ -212,11 +214,11 @@ final class GradingPolicyManager {
         }
 
         // Builds and adds droppedAssignments to the protoGradingPolicy
-        final List<Document> droppedAssignments = (List<Document>) policyObject.get(DROPPED_ASSIGNMENTS);
-        for (int i = 0; i < droppedAssignments.size(); i++) {
+        final List<Document> droppedAssignments = MongoUtilities.getNonNullList (policyObject, DROPPED_ASSIGNMENTS);
+        for (Document droppedAssignment : droppedAssignments) {
             final DroppedAssignment.Builder assignment = DroppedAssignment.newBuilder();
-            assignment.setAssignmentId(droppedAssignments.get(i).get(ASSIGNMENT_ID).toString());
-            assignment.setDropType(DropType.valueOf((int) droppedAssignments.get(i).get(DROP_TYPE)));
+            assignment.setAssignmentId(droppedAssignment.get(ASSIGNMENT_ID).toString());
+            assignment.setDropType(DropType.valueOf((int) droppedAssignment.get(DROP_TYPE)));
             policy.addDroppedAssignments(assignment);
         }
 
@@ -297,11 +299,10 @@ final class GradingPolicyManager {
      * @see #buildMongoCategory
      */
     static Document buildMongoLatePolicy(final LatePolicy latePolicy) {
-        final Document late = new Document(LATE_POLICY_FUNCTION_TYPE, latePolicy.getFunctionType().getNumber())
+        return new Document(LATE_POLICY_FUNCTION_TYPE, latePolicy.getFunctionType().getNumber())
                 .append(LATE_POLICY_TIME_FRAME_TYPE, latePolicy.getTimeFrameType().getNumber()).append(LATE_POLICY_RATE, latePolicy.getRate())
                 .append(LATE_POLICY_SUBTRACTION_TYPE, latePolicy.getSubtractionType().getNumber())
                 .append(APPLY_ONLY_TO_LATE_PROBLEMS, latePolicy.getApplyOnlyToLateProblems());
-        return late;
     }
 
     /**
@@ -343,9 +344,9 @@ final class GradingPolicyManager {
     static List<Document> buildMongoDroppedProblemObject(final DroppedProblems problems) {
         final List<DroppedProblems.SingleProblem> singleProblemList = problems.getProblemList();
         final List<Document> mongoProblemList = new ArrayList<>();
-        for (int i = 0; i < singleProblemList.size(); i++) {
-            final Document singleProblem = new Document(COURSE_PROBLEM_ID, singleProblemList.get(i).getProblemId())
-                    .append(DROP_TYPE, singleProblemList.get(i).getDropType().getNumber());
+        for (DroppedProblems.SingleProblem aSingleProblemList : singleProblemList) {
+            final Document singleProblem = new Document(COURSE_PROBLEM_ID, aSingleProblemList.getProblemId())
+                    .append(DROP_TYPE, aSingleProblemList.getDropType().getNumber());
             mongoProblemList.add(singleProblem);
         }
         return mongoProblemList;
@@ -360,10 +361,10 @@ final class GradingPolicyManager {
      */
     static DroppedProblems.Builder buildProtoDroppedProblems(final List<Document> singleProblemList) {
         final DroppedProblems.Builder problemList = DroppedProblems.newBuilder();
-        for (int i = 0; i < singleProblemList.size(); i++) {
+        for (Document aSingleProblemList : singleProblemList) {
             final DroppedProblems.SingleProblem.Builder singleProblem = DroppedProblems.SingleProblem.newBuilder();
-            singleProblem.setProblemId(singleProblemList.get(i).get(COURSE_PROBLEM_ID).toString());
-            singleProblem.setDropType(DropType.valueOf((int) singleProblemList.get(i).get(DROP_TYPE)));
+            singleProblem.setProblemId(aSingleProblemList.get(COURSE_PROBLEM_ID).toString());
+            singleProblem.setDropType(DropType.valueOf((int) aSingleProblemList.get(DROP_TYPE)));
             problemList.addProblem(singleProblem);
         }
         return problemList;

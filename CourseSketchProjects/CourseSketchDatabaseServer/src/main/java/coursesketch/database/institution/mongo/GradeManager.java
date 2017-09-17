@@ -9,11 +9,10 @@ import com.mongodb.client.model.UpdateOptions;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
-import coursesketch.database.grading.GradingManagerInterface;
+import coursesketch.database.util.MongoUtilities;
 import coursesketch.server.authentication.HashManager;
 import coursesketch.database.util.DatabaseAccessException;
 import coursesketch.database.util.RequestConverter;
-import handlers.subhandlers.GradingPolicyRequestHandler;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +70,7 @@ import static coursesketch.database.util.DatabaseStringConstants.WHO_CHANGED;
  *
  * Created by Matt on 3/29/2015.
  */
-public final class GradeManager {
+final class GradeManager {
 
     /**
      * Declaration and Definition of Logger.
@@ -117,7 +116,29 @@ public final class GradeManager {
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("User does not have permission to change this grade.", AuthenticationException.INVALID_PERMISSION);
         }
+        addGrade(dbs, grade);
 
+    }
+
+    static void addGrade(Authenticator auth, MongoDatabase database, Authentication.AuthRequest authRequest,
+            ProtoGrade grade, Grading.ProtoGradingPolicy gradingPolicy) throws DatabaseAccessException, AuthenticationException {
+        final AuthenticationResponder responder = auth
+                .checkAuthentication(authRequest.getItemType(), authRequest.getItemId(), authRequest.getAuthId(), 0,
+                        Authentication.AuthType.newBuilder().setCheckingAdmin(true).build());
+
+        if (!responder.hasTeacherPermission()) {
+            throw new AuthenticationException("Must have correct authorization to insert grade", AuthenticationException.INVALID_PERMISSION);
+        }
+
+        ProtoGrade convertedGrade = convertRawGradeToRealGrade(grade, gradingPolicy);
+        addGrade(database, convertedGrade);
+    }
+
+    private static ProtoGrade convertRawGradeToRealGrade(ProtoGrade grade, Grading.ProtoGradingPolicy gradingPolicy) {
+        return grade;
+    }
+
+    private static void addGrade(final MongoDatabase dbs, final ProtoGrade grade) throws DatabaseAccessException {
         final MongoCollection<Document> gradeCollection = dbs.getCollection(GRADE_COLLECTION);
 
         final Document query = new Document(COURSE_ID, grade.getCourseId())
@@ -171,17 +192,6 @@ public final class GradeManager {
         updateObject.append("$setOnInsert", setOnInsertFields);
 
         gradeCollection.updateOne(query, updateObject, new UpdateOptions().upsert(true));
-    }
-
-    public static void addGrade(Authenticator auth, MongoDatabase database, String studentAuthId, Authentication.AuthRequest authRequest,
-            ProtoGrade grade, Grading.ProtoGradingPolicy gradingPolicy) throws DatabaseAccessException, AuthenticationException {
-        final AuthenticationResponder responder = auth
-                .checkAuthentication(authRequest.getItemType(), authRequest.getItemId(), authRequest.getAuthId(), 0,
-                        Authentication.AuthType.newBuilder().setCheckingAdmin(true).build());
-
-        if (!responder.hasTeacherPermission()) {
-            throw new AuthenticationException("Must have correct authorization to insert grade", AuthenticationException.INVALID_PERMISSION);
-        }
     }
 
     /**
@@ -342,7 +352,7 @@ public final class GradeManager {
      * @throws AuthenticationException Thrown if the user did not have the authentication to get the grades.
      * @throws DatabaseAccessException Thrown if grades are not found in the database.
      */
-    public static List<ProtoGrade> getAllAssignmentGradesInstructor(final Authenticator authenticator, final MongoDatabase dbs, final String courseId,
+    static List<ProtoGrade> getAllAssignmentGradesInstructor(final Authenticator authenticator, final MongoDatabase dbs, final String courseId,
             final String authId) throws AuthenticationException, DatabaseAccessException {
         // Check authentication so only teachers of the course can retrieve all grades
         final Authentication.AuthType.Builder auth = Authentication.AuthType.newBuilder();
@@ -396,7 +406,7 @@ public final class GradeManager {
      * @throws AuthenticationException Thrown if the user did not have the authentication to get the grades.
      * @throws DatabaseAccessException Thrown if grades are not found in the database.
      */
-    public static List<ProtoGrade> getAllAssignmentGradesStudent(final Authenticator authenticator, final MongoDatabase dbs, final String courseId,
+    static List<ProtoGrade> getAllAssignmentGradesStudent(final Authenticator authenticator, final MongoDatabase dbs, final String courseId,
             final String authId, final String userId) throws AuthenticationException, DatabaseAccessException {
         // Check authentication to make sure the user is in the course
         final Authentication.AuthType.Builder auth = Authentication.AuthType.newBuilder();
@@ -469,9 +479,9 @@ public final class GradeManager {
         }
 
         if (grade.containsKey(GRADE_HISTORY)) {
-            final List<Document> history = (List<Document>) grade.get(GRADE_HISTORY);
-            for (int i = 0; i < history.size(); i++) {
-                protoGrade.addGradeHistory(buildProtoGradeHistory(history.get(i)));
+            final List<Document> history = MongoUtilities.getNonNullList(grade, GRADE_HISTORY);
+            for (Document aHistory : history) {
+                protoGrade.addGradeHistory(buildProtoGradeHistory(aHistory));
             }
         }
 

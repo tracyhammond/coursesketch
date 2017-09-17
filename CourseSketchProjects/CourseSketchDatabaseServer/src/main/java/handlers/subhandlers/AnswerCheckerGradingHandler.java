@@ -10,7 +10,6 @@ import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.rpc.CourseSketchRpcService;
 import coursesketch.utilities.ExceptionUtilities;
 import protobuf.srl.request.Message;
-import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.services.grading.GradingServer;
 
 public class AnswerCheckerGradingHandler extends GradingServer.GradingService implements CourseSketchRpcService {
@@ -21,7 +20,7 @@ public class AnswerCheckerGradingHandler extends GradingServer.GradingService im
             RpcCallback<protobuf.srl.request.Message.DefaultResponse> done) {
         Message.ProtoException protoException = null;
         try {
-            databaseReader.addGrade(request.getAuthRequest(), request.getGrade());
+            databaseReader.addGrade(request.getAuthRequest(), request.getUserAuthId(), request.getGrade());
         } catch (AuthenticationException | DatabaseAccessException e) {
             protoException = ExceptionUtilities.createProtoException(e);
         }
