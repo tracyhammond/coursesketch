@@ -205,7 +205,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
      * @return {@link AnswerCheckerDatabase}.
      */
     @Override
-    protected final AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
+    public final AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
         final AuthenticationWebSocketClient authChecker = getConnectionManager()
                 .getBestConnection(AuthenticationWebSocketClient.class);
 

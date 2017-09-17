@@ -1,8 +1,10 @@
 package coursesketch.server.rpc;
 
+import com.google.common.collect.Lists;
 import com.googlecode.protobuf.pro.duplex.server.DuplexTcpServerPipelineFactory;
 import coursesketch.auth.AuthenticationWebSocketClient;
 import coursesketch.database.auth.AuthenticationChecker;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
@@ -52,6 +54,11 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     private final DelayedAuthenticationChecker authenticationChecker;
 
     /**
+     * List of rpc services used by this server.
+     */
+    private List<CourseSketchRpcService> services;
+
+    /**
      * Creates a GeneralConnectionServlet.
      *
      * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
@@ -90,6 +97,10 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
         if (connectionServer != null) {
             connectionServer.initialize();
         }
+        for (CourseSketchRpcService service : services) {
+            service.initialize();
+        }
+        loadSharedDatabase(this.serverInfo, Lists.newArrayList(services));
 
         final AuthenticationWebSocketClient authSocket = ((ServerWebSocketHandler) getServer()).getAuthenticationWebsocket();
         if (authSocket != null) {
@@ -156,20 +167,13 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     }
 
     /**
-     * Called to initialize The {@link AbstractServerWebSocketHandler}.
-     */
-    @Override public void onServerStart() {
-        // Does nothing by default
-    }
-
-    /**
      * Returns the {@link MultiConnectionManager}.
      *
      * This is only used within this package.
      *
      * @return the {@link MultiConnectionManager}.
      */
-    /* package-private */ final MultiConnectionManager getManager() {
+    protected final MultiConnectionManager getManager() {
         return manager;
     }
 
@@ -187,16 +191,16 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
      *
      * @param serverFactory The server that the services are being added to.
      */
-    public final void initChannel(final DuplexTcpServerPipelineFactory serverFactory) {
+    final void initChannel(final DuplexTcpServerPipelineFactory serverFactory) {
         LOG.debug("SslContext {}", sslContext);
-        final List<CourseSketchRpcService> services = getRpcServices();
+        services = getRpcServices();
         if (services == null) {
             throw new IllegalStateException("getRpcServices can not return null");
         }
+        // Add default websocket listener
         final ServerSocketWrapper wrapper = new ServerSocketWrapper(createServerSocket(), getServerInfo().isSecure());
         services.add(wrapper);
         for (CourseSketchRpcService service: services) {
-            service.setSocketInitializer(this);
             serverFactory.getRpcServiceRegistry().registerService(service);
         }
         serverFactory.registerConnectionEventListener(wrapper);
@@ -211,7 +215,7 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
      */
     @SuppressWarnings("checkstyle:designforextension")
     protected List<CourseSketchRpcService> getRpcServices() {
-        return new ArrayList<CourseSketchRpcService>();
+        return new ArrayList<>();
     }
 
     /**
@@ -219,5 +223,24 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
      */
     protected final AuthenticationChecker getRpcAuthChecker() {
         return authenticationChecker;
+    }
+
+    /**
+     * Called to initialize The {@link AbstractServerWebSocketHandler}.
+     */
+    @Override public void onServerStart() {
+        // Does nothing by default
+    }
+
+    @Override
+    @SuppressWarnings("checkstyle:designforextension")
+    public boolean isSharingDatabaseReaders() {
+        return false;
+    }
+
+    @Override
+    @SuppressWarnings("checkstyle:designforextension")
+    public AbstractCourseSketchDatabaseReader createSharedDatabaseReader(ServerInfo info) {
+        return null;
     }
 }

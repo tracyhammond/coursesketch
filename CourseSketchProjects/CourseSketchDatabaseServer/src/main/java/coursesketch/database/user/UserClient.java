@@ -93,12 +93,10 @@ public final class UserClient {
      *
      * @param user {@link SrlUser} data for the new user to be inserted.
      * @param userId The userId associated with the user.
-     * @return True if it is successful otherwise it will throw an exception.
      * @throws DatabaseAccessException Thrown if there are problems inserting the user.
      */
-    public static boolean insertUser(final SrlUser user, final String userId) throws DatabaseAccessException {
+    public static void insertUser(final SrlUser user, final String userId) throws DatabaseAccessException {
         UserManager.createUser(getInstance().database, user, userId);
-        return true;
     }
 
     /**
@@ -120,20 +118,5 @@ public final class UserClient {
      */
     public static List<String> getUserCourses(final String userId) throws DatabaseAccessException {
         return UserManager.getUserCourses(getInstance().database, userId);
-    }
-
-    /**
-     * Gets an update for the user given a userId and the time of the last
-     * update.
-     *
-     * @param userId Gets all updates after a certain time.
-     * @param time The time the last update was given.
-     * @return An SrlSchool that contains data about all of the updates.
-     * @throws AuthenticationException Thrown if the user does not have access to any updates.
-     * @throws DatabaseAccessException Thrown if no dates exist.
-     */
-    public static List<Data.ItemResult> mongoGetReleventUpdates(final String userId, final long time)
-            throws AuthenticationException, DatabaseAccessException {
-        return UserUpdateHandler.mongoGetAllRelevantUpdates(getInstance().database, userId, time);
     }
 }

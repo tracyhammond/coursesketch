@@ -1,18 +1,27 @@
 package coursesketch.server.rpc;
 
 import com.google.protobuf.Service;
-import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.database.interfaces.DatabaseReaderHolder;
 
 /**
  * An Rpc Service that contains specific fields that all CourseSketch Rpc Services should have.
  *
  * Created by gigemjt on 9/3/15.
  */
-public interface CourseSketchRpcService extends Service {
+public interface CourseSketchRpcService extends Service, DatabaseReaderHolder {
+
     /**
-     * Sets the object that initializes this service.
+     * Performs some initialization.
      *
-     * @param socketInitializer The {@link ISocketInitializer} that contains useful data for any RpcService used by CourseSketch.
+     * This is called before the server is started.
+     * This is called by {@link #initialize()}.
      */
-    void setSocketInitializer(final ISocketInitializer socketInitializer);
+    void onInitialize();
+
+    /**
+     * Called to initialize the rpc service.
+     */
+    default void initialize() {
+        onInitialize();
+    }
 }

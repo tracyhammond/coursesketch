@@ -2,6 +2,7 @@ package coursesketch.server.frontend;
 
 import coursesketch.server.interfaces.AbstractGeneralConnectionRunner;
 import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.server.interfaces.InputParser;
 import coursesketch.server.interfaces.ServerInfo;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -17,9 +18,7 @@ import org.slf4j.LoggerFactory;
 import utilities.LoggingConstants;
 
 import javax.net.ssl.SSLException;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by gigemjt on 10/19/14.
@@ -182,28 +181,16 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
             Thread.sleep(ONE_SECOND);
             final boolean assumedRunning = !workerGroup.isShutdown() && !workerGroup.isTerminated() && !workerGroup.isShuttingDown();
             LOG.info("Server is running hopefully = {}", assumedRunning);
-            getSocketInitailizerInstance().reconnect();
-            getSocketInitailizerInstance().onServerStart();
+
+            final Thread reconnect = new Thread(() -> {
+                getSocketInitailizerInstance().reconnect();
+                getSocketInitailizerInstance().onServerStart();
+            });
+            reconnect.start();
+            Thread.sleep(ONE_SECOND);
         } catch (InterruptedException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
-    }
-
-    /**
-     * Parses extra commands that are taken in through the input line.
-     *
-     * @param command
-     *         The command that is being processed.
-     * @param sysin
-     *         Used for additional input.
-     * @return True if the message command is processed.
-     * @throws java.io.IOException
-     *         Thrown if there is a problem reading input.
-     */
-    @SuppressWarnings("checkstyle:designforextension")
-    @Override
-    protected boolean parseUtilityCommand(final String command, final BufferedReader sysin) throws IOException {
-        return false;
     }
 
     /**
@@ -234,5 +221,15 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     @Override
     protected final boolean serverStarted() {
         return true;
+    }
+
+    @Override
+    protected void addArguments(InputParser argumentInputParser) {
+
+    }
+
+    @Override
+    protected void addCommands(InputParser commandLineInputParser) {
+
     }
 }

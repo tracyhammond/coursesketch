@@ -86,7 +86,7 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
                 .setItemType(collectionType)
                 .setAuthParams(checkType)
                 .build();
-        Authentication.AuthResponse response;
+        final Authentication.AuthResponse response;
         try {
             response = authService.authorizeUser(getNewRpcController(), request);
         } catch (ServiceException e) {
@@ -129,7 +129,7 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
             creationRequestBuilder.setRegistrationKey(registrationKey);
         }
 
-        Message.DefaultResponse response;
+        final Message.DefaultResponse response;
         try {
             final Authentication.AuthCreationRequest creationRequest = creationRequestBuilder.build();
             response = authService.createNewItem(getNewRpcController(), creationRequest);
@@ -155,7 +155,7 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
         final Authentication.UserRegistration registrationRequest =
                 createRegistrationRequest(registrationKey, authId, itemId, collectionType, Authentication.AuthType.getDefaultInstance());
 
-        Message.DefaultResponse response;
+        final Message.DefaultResponse response;
         try {
             response = authService.registerUser(getNewRpcController(), registrationRequest);
             if (response.hasException()) {
@@ -180,7 +180,7 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
         final Authentication.UserRegistration registrationRequest = createRegistrationRequest(ownerId, authId, itemId, collectionType,
                 createAuthTypeCheckFromLevel(permissionLevel).setCheckingOwner(true).build());
 
-        Message.DefaultResponse response;
+        final Message.DefaultResponse response;
         try {
             response = authService.addUser(getNewRpcController(), registrationRequest);
             if (response.hasException()) {

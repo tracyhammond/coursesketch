@@ -4,9 +4,11 @@ import com.google.protobuf.RpcCallback;
 import com.google.protobuf.RpcController;
 import com.googlecode.protobuf.pro.duplex.RpcClientChannel;
 import com.googlecode.protobuf.pro.duplex.listener.TcpConnectionEventListener;
-import coursesketch.server.rpc.RpcSession;
+import coursesketch.server.rpc.ClientRpcSession;
 import protobuf.srl.request.Message;
 import utilities.TimeManager;
+
+import java.nio.ByteBuffer;
 
 /**
  * Wraps around the request service to allow the handler to extend the abstract handler.
@@ -38,7 +40,7 @@ class ClientWebSocketWrapper extends Message.RequestService implements TcpConnec
      * @param rpcCallback Call {@link RpcCallback#run(Object)} to send back the result.
      */
     @Override public void sendMessage(final RpcController controller, final Message.Request request, final RpcCallback<Message.Request> rpcCallback) {
-        socketHandler.onMessage(request.toByteString().asReadOnlyByteBuffer());
+        socketHandler.onMessage(ByteBuffer.wrap(request.toByteArray()));
     }
 
     /**
@@ -75,6 +77,6 @@ class ClientWebSocketWrapper extends Message.RequestService implements TcpConnec
      * @param rpcClientChannel The client channel that has opened.
      */
     @Override public void connectionOpened(final RpcClientChannel rpcClientChannel) {
-        socketHandler.onOpen(new RpcSession(rpcClientChannel));
+        socketHandler.onOpen(new ClientRpcSession(rpcClientChannel));
     }
 }

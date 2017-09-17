@@ -38,6 +38,7 @@
         <properties>
             <property name="publicMethodCommentRequirement" value="Ignored"/>
             <property name="protectedMethodCommentRequirement" value="Ignored"/>
+            <property name="CommentDefaultAccessModifier" value="Ignored"/>
         </properties>
     </rule>
 

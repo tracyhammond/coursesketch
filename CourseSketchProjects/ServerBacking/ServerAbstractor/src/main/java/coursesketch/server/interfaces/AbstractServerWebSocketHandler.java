@@ -2,7 +2,7 @@ package coursesketch.server.interfaces;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
-import coursesketch.database.util.DatabaseAccessException;
+import coursesketch.database.interfaces.DatabaseReaderHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
@@ -23,7 +23,7 @@ import java.util.Map;
  * Created by gigemjt on 10/19/14.
  */
 @SuppressWarnings("PMD.TooManyMethods")
-public abstract class AbstractServerWebSocketHandler {
+public abstract class AbstractServerWebSocketHandler implements DatabaseReaderHolder {
 
     /**
      * Declaration/Definition of Logger.
@@ -39,7 +39,7 @@ public abstract class AbstractServerWebSocketHandler {
      * The maximum number of connections.
      * This can be overwritten to give the number of connections a new value.
      */
-    public static final int MAX_CONNECTIONS = 80;
+    private static final int MAX_CONNECTIONS = 80;
     /**
      * The name of the socket This can be hidden in a subclass.
      */
@@ -47,35 +47,35 @@ public abstract class AbstractServerWebSocketHandler {
     /**
      * The state that represents the server being full.
      */
-    public static final int STATE_SERVER_FULL = 4001;
+    private static final int STATE_SERVER_FULL = 4001;
     /**
      * The state representing that the client has closed the connection.
      */
-    public static final int STATE_CLIENT_CLOSE = 4003;
+    private static final int STATE_CLIENT_CLOSE = 4003;
     /**
      * The message representing that the client closed the connection.
      */
-    public static final String CLIENT_CLOSE_MESSAGE = "The client closed the connection";
+    private static final String CLIENT_CLOSE_MESSAGE = "The client closed the connection";
 
     /**
      * The message for when the server is full.
      */
-    public static final String FULL_SERVER_MESSAGE = "Sorry, the " + NAME + "server is full";
+    private static final String FULL_SERVER_MESSAGE = "Sorry, the " + NAME + "server is full";
 
     /**
      * Maps a Session to its MultiConnectionState. FUTURE: {@link org.cliffc.high_scale_lib.NonBlockingHashMap}
      */
-    private final Map<SocketSession, MultiConnectionState> connectionToId = new HashMap<SocketSession, MultiConnectionState>();
+    private final Map<SocketSession, MultiConnectionState> connectionToId = new HashMap<>();
 
     /**
      * Maps a MultiConnectionState to a Session. FUTUE: {@link org.cliffc.high_scale_lib.NonBlockingHashMap}
      */
-    private final Map<MultiConnectionState, SocketSession> idToConnection = new HashMap<MultiConnectionState, SocketSession>();
+    private final Map<MultiConnectionState, SocketSession> idToConnection = new HashMap<>();
 
     /**
      * Maps a String representing the connections ID to its MultiConnectionState.
      */
-    private final Map<String, MultiConnectionState> idToState = new HashMap<String, MultiConnectionState>();
+    private final Map<String, MultiConnectionState> idToState = new HashMap<>();
 
     /**
      * The parent servlet for this server.
@@ -151,10 +151,11 @@ public abstract class AbstractServerWebSocketHandler {
      *
      * @param conn the connection that is being opened.
      */
-    protected abstract void openSession(final SocketSession conn);
+    protected abstract void openSession(SocketSession conn);
 
     /**
      * Called when an error occurs with the connection.
+     *
      * @param session The session that has an error.
      * @param cause The actual error.
      */
@@ -194,7 +195,7 @@ public abstract class AbstractServerWebSocketHandler {
      *            the message itself
      */
     @SuppressWarnings("checkstyle:designforextension")
-    protected abstract void onMessage(final SocketSession session, final Request req);
+    protected abstract void onMessage(SocketSession session, Request req);
 
     /**
      * A helper method for sending data given a session.
@@ -226,14 +227,6 @@ public abstract class AbstractServerWebSocketHandler {
      */
     public final String getHostName() {
         return serverInfo.getHostName();
-    }
-
-    /**
-     * @return The port that the server is running on.
-     * @see ServerInfo#port
-     */
-    public final int getHostPort() {
-        return serverInfo.getPort();
     }
 
     /**
@@ -298,7 +291,7 @@ public abstract class AbstractServerWebSocketHandler {
      * @param info Information about the server.
      * @return {@link AbstractCourseSketchDatabaseReader}.
      */
-    protected abstract AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info);
+    public abstract AbstractCourseSketchDatabaseReader createDatabaseReader(ServerInfo info);
 
     /**
      * @return A map representing the Id to state. The returned map is read only.
@@ -329,43 +322,30 @@ public abstract class AbstractServerWebSocketHandler {
     }
 
     /**
-     * Performs some initialization.  This is called before the server is started.
-     */
-    public final void initialize() {
-        databaseReader = createDatabaseReader(this.serverInfo);
-        try {
-            startDatabase();
-        } catch (DatabaseAccessException e) {
-            LOG.error("An error was created starting the database for the server", e);
-        }
-        onInitialize();
-    }
-
-    /**
      * Performs some initialization.
      *
      * This is called before the server is started.
      * This is called by {@link #initialize()}.
      */
-    protected abstract void onInitialize();
-
-    /**
-     * Starts the database if it exists.
-     *
-     * @throws DatabaseAccessException thrown if the database is unable to start.
-     */
-    protected final void startDatabase() throws DatabaseAccessException {
-        final AbstractCourseSketchDatabaseReader reader = getDatabaseReader();
-        if (reader != null) {
-            reader.startDatabase();
-        }
-    }
+    public abstract void onInitialize();
 
     /**
      * @return {@link AbstractCourseSketchDatabaseReader}.  This may return null if one is not set.
      */
     protected final AbstractCourseSketchDatabaseReader getDatabaseReader() {
         return databaseReader;
+    }
+
+    @Override
+    public final void setDatabaseReader(AbstractCourseSketchDatabaseReader databaseReader) {
+        this.databaseReader = databaseReader;
+    }
+
+    /**
+     * Called to initialize the server.
+     */
+    public final void initialize() {
+        onInitialize();
     }
 
     /**

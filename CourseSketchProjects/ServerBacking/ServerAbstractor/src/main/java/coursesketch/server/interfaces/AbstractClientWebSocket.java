@@ -283,9 +283,7 @@ public abstract class AbstractClientWebSocket {
                         Thread.sleep(MIN_SLEEP_TIME);
                         queing = false;
                         send(buffer);
-                    } catch (InterruptedException e) {
-                        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                    } catch (ConnectionException e) {
+                    } catch (InterruptedException | ConnectionException e) {
                         LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                     }
                 }

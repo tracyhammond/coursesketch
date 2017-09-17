@@ -2,6 +2,7 @@ package coursesketch.server.interfaces;
 
 import com.google.common.collect.Lists;
 import com.mongodb.ServerAddress;
+import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -55,16 +57,16 @@ public abstract class AbstractGeneralConnectionRunner {
      */
     private static final int DEFAULT_PORT = 8888;
 
-    /**
-     * A local instance is stored here.
-     */
-    private final AbstractGeneralConnectionRunner localInstance = this;
-
     // these should be changed based on the properties
     /**
      * Arguments that come in from the command line.
      */
     private final String[] args;
+
+    /**
+     * The object that parses command line input and argument input.
+     */
+    private final InputParser inputParser;
 
     /**
      * The port of the server.
@@ -144,6 +146,11 @@ public abstract class AbstractGeneralConnectionRunner {
     private String databaseName;
 
     /**
+     * The object that holds command line input.
+     */
+    private BufferedReader input;
+
+    /**
      * Parses the arguments from the server. This only expects a single argument
      * which is if it is local.
      *
@@ -151,12 +158,10 @@ public abstract class AbstractGeneralConnectionRunner {
      *            the arguments from the server are then parsed.
      */
     protected AbstractGeneralConnectionRunner(final String... arguments) {
+        inputParser = new InputParser();
+        addArgumentsLocal(inputParser);
         this.args = Arrays.copyOf(arguments, arguments.length);
-        if (arguments.length >= 1 && arguments[0].equals("local")) {
-            local = true;
-        } else {
-            local = false;
-        }
+
         production = false;
         secure = false;
     }
@@ -175,7 +180,7 @@ public abstract class AbstractGeneralConnectionRunner {
      *     <li>{@link #startInput()}</li>
      * </ol>
      */
-    protected final void start() {
+    public final void start() {
         setup = true;
         loadConfigurations();
         if (local) {
@@ -269,49 +274,6 @@ public abstract class AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Handles commands that can be used to perform certain functionality.
-     *
-     * This method can and in some cases should be overwritten. We
-     * <b>strongly</b> suggest that you call super first then check to see if it
-     * is true and then call your overwritten method.
-     *
-     * @param command
-     *            The command that is parsed to provide functionality.
-     * @param sysin
-     *            Used if additional input is needed for the command.
-     * @return true if the command is an accepted command and is used by the
-     *         server
-     * @throws java.io.IOException an I/O error
-     * @throws InterruptedException the thread is interrupted.
-     */
-    public final boolean parseCommand(final String command, final BufferedReader sysin) throws IOException, InterruptedException {
-        LOG.info("input command received: {}", command);
-        if (command == null) {
-            return true;
-        }
-        if ("exit".equals(command)) {
-            exitCommand(sysin);
-            return true;
-        } else if ("restart".equals(command)) {
-            restartCommand(sysin);
-            return true;
-        } else if ("reconnect".equals(command)) {
-            reconnect();
-            return true;
-        } else if ("stop".equals(command)) {
-            stopCommand(sysin);
-            return true;
-        } else if ("start".equals(command)) {
-            startCommand();
-            return true;
-        } else if ("toggle logging".equals(command)) {
-            toggleLoggingCommand(sysin);
-            return true;
-        }
-        return parseUtilityCommand(command, sysin);
-    }
-
-    /**
      * A command for exiting the server.
      * @param sysin Keyboard input.
      * @throws java.io.IOException Thrown if there are problems getting the keyboard input.
@@ -368,11 +330,13 @@ public abstract class AbstractGeneralConnectionRunner {
 
     /**
      * Toggles off and on logging.
-     * @param sysin keyboard input
+     *
+     * @param sysin keyboard input.
+     * @param equals If the user is wanting to turn on logging.
      * @throws java.io.IOException Thrown if there are problems getting the keyboard input.
      */
-    private void toggleLoggingCommand(final BufferedReader sysin) throws IOException {
-        if (logging) {
+    private void toggleLoggingCommand(final BufferedReader sysin, boolean equals) throws IOException {
+        if (logging && !equals) {
             LOG.info("Are you sure you want to turn loggin off? [y/n]");
             if (!StringUtils.defaultString(sysin.readLine()).equalsIgnoreCase("y")) {
                 LOG.info("action canceled");
@@ -393,40 +357,30 @@ public abstract class AbstractGeneralConnectionRunner {
      * The input is started in a separate thread and this method will return immediately regardless of success.
      * If input is already running then this method does not start a new thread for input but instead returns.
      */
-    public final void startInput() {
-        if (inputRunning) {
+    private void startInput() {
+        inputParser.clear();
+        if (inputRunning || !isAcceptingCommandInput()) {
             return;
         }
-        final Thread inputThread = new Thread() {
-            @Override
-            @SuppressWarnings("PMD.CommentRequired")
-            public void run() {
-                inputRunning = true;
-                final BufferedReader sysin = new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset()));
-                while (acceptInput) {
-                    try {
-                        final String command = sysin.readLine();
-                        localInstance.parseCommand(command, sysin);
-                    } catch (IOException | InterruptedException e) {
-                        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                        break;
-                    }
+        addCommandsLocal(inputParser);
+        final Thread inputThread = new Thread(() -> {
+            inputRunning = true;
+            final BufferedReader sysin = new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset()));
+            input = sysin;
+            while (acceptInput) {
+                try {
+                    final String command = sysin.readLine();
+                    LOG.debug("Input command is {}", command);
+                    inputParser.parse(new String[] {"-" + command});
+                } catch (IOException | ParseException e) {
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+                    break;
                 }
-                inputRunning = false;
             }
-        };
+            inputRunning = false;
+        });
         inputThread.start();
     }
-
-    // FUTURE: add a command manager of some sort.
-    /**
-     * Parses extra commands that are taken in through the input line.
-     * @param command The command that is being processed.
-     * @param sysin Used for additional input.
-     * @return True if the message command is processed.
-     * @throws java.io.IOException Thrown if there is a problem reading input.
-     */
-    protected abstract boolean parseUtilityCommand(String command, BufferedReader sysin) throws IOException;
 
     /**
      * Stops the server.
@@ -453,7 +407,7 @@ public abstract class AbstractGeneralConnectionRunner {
      *
      * @return a new instance of an {@link ISocketInitializer}.
      **/
-    protected abstract ISocketInitializer createSocketInitializer(final ServerInfo serverInfo);
+    protected abstract ISocketInitializer createSocketInitializer(ServerInfo serverInfo);
 
     /**
      * Sets the password for the SSL keystore.
@@ -512,7 +466,7 @@ public abstract class AbstractGeneralConnectionRunner {
     /**
      * @return The time it takes for a connection to timeout.
      */
-    public final long getTimeoutTime() {
+    private long getTimeoutTime() {
         return timeoutTime;
     }
 
@@ -527,21 +481,21 @@ public abstract class AbstractGeneralConnectionRunner {
     /**
      * @return true if the command-line is accepting input.
      */
-    public final boolean isAcceptingCommandInput() {
+    private boolean isAcceptingCommandInput() {
         return acceptInput;
     }
 
     /**
      * @param acceptInputToSet True if the command line will accept input.  False otherwise.
      */
-    public final void setAcceptingCommandInput(final boolean acceptInputToSet) {
+    private void setAcceptingCommandInput(final boolean acceptInputToSet) {
         this.acceptInput = acceptInputToSet;
     }
 
     /**
      * @return True if the server is running as a production environment.
      */
-    public final boolean isProduction() {
+    protected final boolean isProduction() {
         return production;
     }
 
@@ -597,7 +551,7 @@ public abstract class AbstractGeneralConnectionRunner {
      *
      * @param databaseUrl The list of addresses the database can connect to.
      */
-    protected final void setDatabaseUrl(final List<ServerAddress> databaseUrl) {
+    private void setDatabaseUrl(final List<ServerAddress> databaseUrl) {
         if (!setup) {
             throw new IllegalStateException("Can only set this variable during setup");
         }
@@ -623,5 +577,89 @@ public abstract class AbstractGeneralConnectionRunner {
             throw new IllegalStateException("Can only set this variable during setup");
         }
         this.databaseName = databaseName;
+    }
+
+    /**
+     * Adds local arguments.
+     *
+     * @param argumentInputParser The parser that gets the local arguments
+     */
+    private void addArgumentsLocal(InputParser argumentInputParser) {
+        argumentInputParser.addParsingOption(argumentInputParser
+                        .createOption("isLocal", true,
+                                "Used for running the server as a local host or if it should connect to given IP addresses\n"
+                                + "True if it is local false otherwise"),
+                argumentValue -> local = argumentValue.equalsIgnoreCase("true"));
+
+        argumentInputParser.addParsingOption(argumentInputParser
+                        .createOption("commandLine", true,
+                                "True if the server should accept command line input false if it should not"),
+                argumentValue -> {
+                    if (argumentValue.equals("true")) {
+                        setAcceptingCommandInput(true);
+                    } else {
+                        setAcceptingCommandInput(false);
+                    }
+                });
+
+        argumentInputParser.addParsingOption(argumentInputParser
+                        .createOption("databaseUrls", true,
+                                "The address the database server is at as a list of comma separated Urls"),
+                argumentValue -> {
+                    final List<ServerAddress> mongoLocation = new ArrayList<>();
+                    for (String serverAddress : argumentValue.split(",")) {
+                        mongoLocation.add(new ServerAddress(serverAddress));
+                    }
+                    setDatabaseUrl(mongoLocation);
+                });
+        addArguments(argumentInputParser);
+    }
+
+    /**
+     * Adds commands for parsing arguments.
+     *
+     * @param argumentInputParser The parser for arguments.
+     */
+    protected abstract void addArguments(InputParser argumentInputParser);
+
+    /**
+     * Creates commands that can be used to perform certain functionality.
+     *
+     * @param commandLineInputParser The parser that the local commands are being added to.
+     */
+    private void addCommandsLocal(InputParser commandLineInputParser) {
+        commandLineInputParser.addParsingOption(commandLineInputParser.createOption("exit", false, "kills the server"),
+                argumentValue -> exitCommand(getInput()));
+
+        commandLineInputParser.addParsingOption(commandLineInputParser.createOption("restart", false, "restarts the server"),
+                argumentValue -> restartCommand(getInput()));
+
+        commandLineInputParser.addParsingOption(commandLineInputParser.createOption("reconnect", false, "restarts the server connections"),
+                argumentValue -> reconnect());
+
+        commandLineInputParser.addParsingOption(commandLineInputParser.createOption("start", false, "starts the server connections"),
+                argumentValue -> startCommand());
+
+        commandLineInputParser.addParsingOption(commandLineInputParser.createOption("stop", false, "stops the server connections"),
+                argumentValue -> stopCommand(getInput()));
+
+        commandLineInputParser.addParsingOption(commandLineInputParser.createOption("setLogging", true,
+                "turns on or off logging use \"on\" or \"off\""),
+                argumentValue -> toggleLoggingCommand(getInput(), "on".equals(argumentValue)));
+        addCommands(commandLineInputParser);
+    }
+
+    /**
+     * Parses extra commands that are taken in through the input line.
+     *
+     * @param commandLineInputParser The parser that the commands are being added to.
+     */
+    protected abstract void addCommands(InputParser commandLineInputParser);
+
+    /**
+     * @return The reader used for command line input.
+     */
+    public BufferedReader getInput() {
+        return input;
     }
 }

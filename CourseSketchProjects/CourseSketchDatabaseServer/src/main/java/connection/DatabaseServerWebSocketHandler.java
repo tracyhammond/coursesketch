@@ -7,8 +7,9 @@ import coursesketch.database.auth.MongoOptionChecker;
 import coursesketch.database.identity.IdentityManagerInterface;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.identity.IdentityWebSocketClient;
-import coursesketch.server.base.ServerWebSocketHandler;
-import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.MultiConnectionState;
+import coursesketch.server.rpc.ServerWebSocketHandler;
+import coursesketch.server.rpc.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
@@ -24,6 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message.Request;
 import utilities.TimeManager;
+
+import java.util.Map;
 
 /**
  * A simple WebSocketServer implementation.
@@ -62,8 +65,9 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
     @Override
     public final void onMessage(final SocketSession conn, final Request req) {
         final Institution instance = (Institution) super.getDatabaseReader();
+
         if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
-            DataRequestHandler.handleRequest(req, conn, instance, super.getConnectionToId().get(conn).getSessionId(), getConnectionManager());
+            DataRequestHandler.handleRequest(req, conn, instance, getSessionId(conn), getConnectionManager());
         } else if (req.getRequestType() == Request.MessageType.DATA_INSERT) {
             DataInsertHandler.handleData(req, conn, instance);
         } else if (req.getRequestType() == Request.MessageType.DATA_UPDATE) {
@@ -79,19 +83,9 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
         LOG.debug("Finished looking at query {}", req);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return {@link MongoInstitution}.
-     */
-    @Override protected final AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
-        final AuthenticationWebSocketClient authChecker = (AuthenticationWebSocketClient) getConnectionManager()
-                .getBestConnection(AuthenticationWebSocketClient.class);
-        final Authenticator auth = new Authenticator(authChecker, new MongoOptionChecker(info));
-        final AuthenticationUpdater authUpdater = authChecker;
-
-        final IdentityManagerInterface identityManagerInterface = (IdentityWebSocketClient) getConnectionManager()
-                .getBestConnection(IdentityWebSocketClient.class);
-        return new MongoInstitution(info, auth, authUpdater, identityManagerInterface);
+    private String getSessionId(final SocketSession conn) {
+        final Map<SocketSession, MultiConnectionState> connectionToId = super.getConnectionToId();
+        final MultiConnectionState multiConnectionState = connectionToId.get(conn);
+        return multiConnectionState.getSessionId();
     }
 }

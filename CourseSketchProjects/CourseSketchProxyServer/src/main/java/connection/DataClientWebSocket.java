@@ -1,8 +1,9 @@
 package connection;
 
-import coursesketch.server.base.ClientWebSocket;
+import coursesketch.server.compat.ClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionState;
+import coursesketch.server.interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,8 +50,16 @@ public final class DataClientWebSocket extends ClientWebSocket {
      */
     @Override
     public void onMessage(final ByteBuffer buffer) {
+        if (buffer == null) {
+            LOG.warn("Received Null message");
+            return;
+        }
         final Request req = AbstractServerWebSocketHandler.Decoder.parseRequest(buffer);
 
+        if (req == null) {
+            LOG.warn("Received Null message after decoding");
+            return;
+        }
         if (req.getRequestType() == Request.MessageType.TIME) {
 
             final Request rsp = TimeManager.decodeRequest(req);
@@ -67,7 +76,8 @@ public final class DataClientWebSocket extends ClientWebSocket {
             final Request request = AbstractServerWebSocketHandler.Decoder.parseRequest(buffer);
             // Strips away identification.
             final Request result = ProxyConnectionManager.createClientRequest(request);
-            this.getParentServer().send(getConnectionFromState(state), result);
+            final SocketSession connectionFromState = getConnectionFromState(state);
+            this.getParentServer().send(connectionFromState, result);
         }
     }
 }

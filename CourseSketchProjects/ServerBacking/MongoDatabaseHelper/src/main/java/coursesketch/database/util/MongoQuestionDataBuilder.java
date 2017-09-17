@@ -176,7 +176,7 @@ public class MongoQuestionDataBuilder {
      */
     public Document createSubmission(final QuestionDataOuterClass.QuestionData questionData)
             throws DatabaseAccessException {
-        Document document;
+        final Document document;
 
         switch (questionData.getElementTypeCase()) {
             case SKETCHAREA:

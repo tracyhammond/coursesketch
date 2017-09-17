@@ -6,7 +6,9 @@ import org.bson.types.ObjectId;
 import protobuf.srl.question.QuestionDataOuterClass.QuestionData;
 import protobuf.srl.utils.Util;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static coursesketch.database.util.DatabaseStringConstants.DOMAIN_ID;
 import static coursesketch.database.util.DatabaseStringConstants.QUESTION_TYPE;
@@ -90,6 +92,38 @@ public final class MongoUtilities {
     }
 
     /**
+     * Gets a map from the database never returns null.
+     *
+     * @param document The document to get the map from.
+     * @param field The field where the map is.
+     * @param <K> The key type for the map.
+     * @param <V> The value type for the map.
+     * @return The map.
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> getNonNullMap(final Document document, String field) {
+        return getNonNullMap(document, field, (Class<Map<K, V>>) (Object) Map.class);
+    }
+
+    /**
+     * Gets a map from the database never returns null.
+     *
+     * @param document The document to get the map from.
+     * @param field The field where the map is.
+     * @param classObject The class representing the type.
+     * @param <K> The key type for the map.
+     * @param <V> The value type for the map.
+     * @return The map.
+     */
+    private static <K, V> Map<K, V> getNonNullMap(Document document, String field, Class<Map<K, V>> classObject) {
+        final Map<K, V> map = document.get(field, classObject);
+        if (map == null) {
+            return Collections.emptyMap();
+        }
+        return map;
+    }
+
+    /**
      * Gets a list from the database never returns null.
      *
      * @param document The document to get the list from.
@@ -98,10 +132,9 @@ public final class MongoUtilities {
      * @return The list.
      */
     @SuppressWarnings("unchecked")
-    static <T> List<T> getNonNullList(final Document document, String field) {
+    public static <T> List<T> getNonNullList(final Document document, String field) {
         return getNonNullList(document, field, (Class<List<T>>) (Object) List.class);
     }
-
 
     /**
      * Gets a list from the database never returns null.

@@ -37,8 +37,8 @@ public interface IdentityManagerInterface {
      * @throws DatabaseAccessException
      *         Thrown if the item, group, or users do not exist.
      */
-    Map<String, String> getItemRoster(final String authId, final String itemId, final Util.ItemType itemType,
-            final Collection<String> userIdsList, final Authenticator authChecker) throws AuthenticationException, DatabaseAccessException;
+    Map<String, String> getItemRoster(String authId, String itemId, Util.ItemType itemType,
+            Collection<String> userIdsList, Authenticator authChecker) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Creates a new user in the identity server.
@@ -51,7 +51,7 @@ public interface IdentityManagerInterface {
      * @throws DatabaseAccessException
      *         thrown if there is a problem with the database.
      */
-    Map<String, String> createNewUser(final String userName) throws AuthenticationException, DatabaseAccessException;
+    Map<String, String> createNewUser(String userName) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Gets the username given the actual unhashed userId.
@@ -72,8 +72,8 @@ public interface IdentityManagerInterface {
      * @throws DatabaseAccessException
      *         Thrown if the username does not exist.
      */
-    Map<String, String> getUserName(final String userId, final String authId, final String itemId, final Util.ItemType itemType,
-            final Authenticator authChecker)
+    Map<String, String> getUserName(String userId, String authId, String itemId, Util.ItemType itemType,
+            Authenticator authChecker)
             throws AuthenticationException, DatabaseAccessException;
 
     /**
@@ -89,7 +89,7 @@ public interface IdentityManagerInterface {
      * @throws DatabaseAccessException
      *         Thrown if the user is not found.
      */
-    String getUserIdentity(final String userName, final String authId) throws AuthenticationException, DatabaseAccessException;
+    String getUserIdentity(String userName, String authId) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Inserts a new item into the database.
@@ -113,8 +113,8 @@ public interface IdentityManagerInterface {
      * @throws AuthenticationException
      *         Thrown if there is data that can not be found in the database.
      */
-    void createNewItem(final String userId, final String authId, final String itemId, final Util.ItemType itemType,
-            final String parentId, final Authenticator authChecker) throws DatabaseAccessException, AuthenticationException;
+    void createNewItem(String userId, String authId, String itemId, Util.ItemType itemType,
+            String parentId, Authenticator authChecker) throws DatabaseAccessException, AuthenticationException;
 
     /**
      * Registers a student with a course.
@@ -137,6 +137,6 @@ public interface IdentityManagerInterface {
      * @throws DatabaseAccessException
      *         Thrown if the item can not be found.
      */
-    void registerUserInItem(final String userId, final String authId, final String itemId, final Util.ItemType itemType,
-            final Authenticator authChecker) throws AuthenticationException, DatabaseAccessException;
+    void registerUserInItem(String userId, String authId, String itemId, Util.ItemType itemType,
+            Authenticator authChecker) throws AuthenticationException, DatabaseAccessException;
 }

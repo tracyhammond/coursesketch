@@ -377,6 +377,13 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>${checkstyleVersion}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>${puppyVersion}</version>
+                        </dependency>
+                    </dependencies>
                     <executions>
                         <execution>
                             <id>checkstyle</id>
@@ -691,10 +698,10 @@
         <logbackVersion>1.1.1</logbackVersion>
 
         <!-- checkstyle -->
-        <checkstyleVersion>2.13</checkstyleVersion>
+        <checkstyleVersion>2.17</checkstyleVersion>
         <findbugVersion>3.0.0</findbugVersion>
-        <puppyVersion>[5.6,)</puppyVersion>
-        <pmdVersion>3.3</pmdVersion>
+        <puppyVersion>[8.2,)</puppyVersion>
+        <pmdVersion>3.8</pmdVersion>
 
         <!-- mongo-->
         <embeddedMongoVersion>0.3.4</embeddedMongoVersion>

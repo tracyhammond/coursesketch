@@ -146,15 +146,20 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * {@inheritDoc}
      */
     @SuppressWarnings("checkstyle:designforextension")
-    @Override protected AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
+    @Override public AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
         return null;
+    }
+
+    @Override
+    public void onInitializeDatabases() {
+
     }
 
     /**
      * {@inheritDoc}
      */
     @SuppressWarnings("checkstyle:designforextension")
-    @Override protected void onInitialize() {
+    @Override public void onInitialize() {
         // Does nothing by default
     }
 }

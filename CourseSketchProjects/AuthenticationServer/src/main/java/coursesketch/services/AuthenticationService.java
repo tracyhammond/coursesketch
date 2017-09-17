@@ -5,8 +5,9 @@ import com.google.protobuf.RpcController;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.DbAuthChecker;
 import coursesketch.database.auth.DbAuthManager;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.database.util.DatabaseAccessException;
-import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.rpc.CourseSketchRpcService;
 import coursesketch.utilities.ExceptionUtilities;
 import org.slf4j.Logger;
@@ -45,16 +46,6 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
     public AuthenticationService(final DbAuthChecker authChecker, final DbAuthManager authManager) {
         this.authChecker = authChecker;
         this.authManager = authManager;
-    }
-
-    /**
-     * Sets the object that initializes this service.
-     *
-     * @param socketInitializer The object used to initialize the sockets.
-     */
-    @Override
-    public void setSocketInitializer(final ISocketInitializer socketInitializer) {
-        // Defined by other implementations.
     }
 
     /**
@@ -133,10 +124,30 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
             done.run(Message.DefaultResponse.getDefaultInstance());
         } catch (DatabaseAccessException e) {
             done.run(Message.DefaultResponse.newBuilder().setException(ExceptionUtilities.createProtoException(e)).build());
-            LOG.error("Failed to access data while registering user.", e);
+            LOG.error("Failed to access data while adding user.", e);
         } catch (AuthenticationException e) {
             done.run(Message.DefaultResponse.newBuilder().setException(ExceptionUtilities.createProtoException(e)).build());
-            LOG.error("User may not have permission to register for this class.", e);
+            LOG.error("User may not have permission to add user to this item.", e);
         }
+    }
+
+    @Override
+    public AbstractCourseSketchDatabaseReader createDatabaseReader(ServerInfo serverInfo) {
+        return null;
+    }
+
+    @Override
+    public void onInitializeDatabases() {
+
+    }
+
+    @Override
+    public void setDatabaseReader(AbstractCourseSketchDatabaseReader databaseReader) {
+
+    }
+
+    @Override
+    public void onInitialize() {
+
     }
 }

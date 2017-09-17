@@ -1,7 +1,7 @@
 package connection;
 
-import coursesketch.server.base.GeneralConnectionRunner;
-import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.rpc.GeneralConnectionRunner;
+import coursesketch.server.rpc.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.database.util.DatabaseStringConstants;
 import coursesketch.database.user.UserClient;
@@ -49,6 +49,7 @@ public final class DatabaseRunner extends GeneralConnectionRunner {
      */
     @Override
     public void executeLocalEnvironment() {
+        super.executeLocalEnvironment();
         new UserClient(false, null); // makes the database point locally
     }
 

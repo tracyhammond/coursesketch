@@ -216,7 +216,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      *         Thrown if there are problems creating the hash data.
      */
     String createNewGroup(final String userId, final String courseId) throws AuthenticationException {
-        String hash;
+        final String hash;
         try {
             final String unsecuredSalt = HashManager.generateUnSecureSalt(courseId);
             hash = HashManager.toHex(HashManager.createHash(userId, unsecuredSalt).getBytes(StandardCharsets.UTF_8));
@@ -261,7 +261,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
         if (group == null) {
             throw new DatabaseAccessException("group could not be found");
         }
-        String hash;
+        final String hash;
         try {
             final String unsecuredSalt = HashManager.generateUnSecureSalt(group.get(DatabaseStringConstants.COURSE_ID).toString());
             hash = HashManager.toHex(HashManager.createHash(userId, unsecuredSalt)
@@ -314,7 +314,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
     public Map<String, String> createNewUser(final String userName) throws AuthenticationException, DatabaseAccessException {
         final ObjectId userId = new ObjectId();
         final String userPassword = Encoder.nextID().toString();
-        String hashPassword;
+        final String hashPassword;
         try {
             hashPassword = HashManager.createHash(userPassword);
         } catch (NoSuchAlgorithmException e) {

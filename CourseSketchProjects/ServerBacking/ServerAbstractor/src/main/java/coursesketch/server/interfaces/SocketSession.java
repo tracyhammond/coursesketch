@@ -67,7 +67,7 @@ public interface SocketSession extends Closeable {
      * @param other an instance of SocketSession
      * @return true if they are equal.
      */
-    boolean equals(final Object other);
+    boolean equals(Object other);
 
     /**
      * Default Doc this should be Overwritten.

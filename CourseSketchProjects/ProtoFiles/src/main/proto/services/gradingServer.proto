@@ -3,22 +3,25 @@ package protobuf.srl.services.grading;
 import "util.proto";
 import "message.proto";
 import "grading.proto";
+import "services/authentication.proto";
 
 option java_generic_services = true;
 
 message GradeRequest {
-    optional protobuf.srl.grading.ProtoGrade grade = 1;
+    // This is the request for the answer checker server saying it can submit this grade.
+    optional protobuf.srl.services.authentication.AuthRequest authRequest = 1;
 
-    // The id used to authenticate the grade
-    optional string authKey = 2;
-    // Used for if the grade is based around a bank problem
-    optional string bankProblemid = 3;
+    // This is the id of the student that is submitting the grade.
+    optional string userAuthId = 2;
+
+    // This is the unscaled grade that is being added.
+    optional protobuf.srl.grading.ProtoGrade grade = 3;
 }
 
 /**
  * A service that handles messages to the grading server and from the grading server.
  */
-service RecognitionService {
+service GradingService {
 
     /**
      * Adds a single grade.

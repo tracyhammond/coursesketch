@@ -13,6 +13,7 @@ import com.googlecode.protobuf.pro.duplex.timeout.TimeoutExecutor;
 import com.googlecode.protobuf.pro.duplex.util.RenamingThreadFactoryProxy;
 import coursesketch.server.interfaces.AbstractGeneralConnectionRunner;
 import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.server.interfaces.InputParser;
 import coursesketch.server.interfaces.ServerInfo;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
@@ -26,9 +27,7 @@ import org.slf4j.LoggerFactory;
 import utilities.LoggingConstants;
 
 import javax.net.ssl.SSLException;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.Executors;
 
 /**
@@ -250,7 +249,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
         timeoutChecker.setTimeoutExecutor(timeoutExecutor);
         timeoutChecker.startChecking(serverFactory.getRpcClientRegistry());
 
-        if (this.isLocal()) {
+        if (this.isLocal() && localRpcEventLogger != null) {
             serverFactory.registerConnectionEventListener(localRpcEventLogger);
         }
 
@@ -292,24 +291,6 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Parses extra commands that are taken in through the input line.
-     *
-     * @param command
-     *         The command that is being processed.
-     * @param systemIn
-     *         Used for additional input.
-     * @return True if the message command is processed.
-     * @throws IOException
-     *         Thrown if there is a problem reading input.
-     */
-    @SuppressWarnings("checkstyle:designforextension")
-    @Override
-    protected boolean parseUtilityCommand(final String command, final BufferedReader systemIn) throws IOException {
-        // processes no messages so false is returned.
-        return false;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -337,5 +318,15 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     protected final boolean serverStarted() {
         // returns false by default.
         return true;
+    }
+
+    @Override
+    protected void addArguments(InputParser argumentInputParser) {
+
+    }
+
+    @Override
+    protected void addCommands(InputParser commandLineInputParser) {
+
     }
 }

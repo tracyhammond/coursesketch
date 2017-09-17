@@ -28,7 +28,7 @@ public interface AuthenticationChecker {
      * @throws AuthenticationException
      *            Thrown if there are problems creating the auth response.
      */
-    Authentication.AuthResponse isAuthenticated(final Util.ItemType collectionType, final String itemId,
-            final String userId, final Authentication.AuthType checkType)
+    Authentication.AuthResponse isAuthenticated(Util.ItemType collectionType, String itemId,
+            String userId, Authentication.AuthType checkType)
             throws DatabaseAccessException, AuthenticationException;
 }

@@ -18,7 +18,7 @@ public interface AuthenticationOptionChecker {
      * @return True if the course is valid, false otherwise.
      * @throws DatabaseAccessException Thrown if there is a problem authenticating the date.
      */
-    boolean authenticateDate(final AuthenticationDataCreator dataCreator, long checkTime) throws DatabaseAccessException;
+    boolean authenticateDate(AuthenticationDataCreator dataCreator, long checkTime) throws DatabaseAccessException;
 
     /**
      * Returns true if the item requires registration to view it.
@@ -27,7 +27,7 @@ public interface AuthenticationOptionChecker {
      * @return true if the item requires registration to view it.
      * @throws DatabaseAccessException Thrown if there is a problem grabbing the data about registration.
      */
-    boolean isItemRegistrationRequired(final AuthenticationDataCreator dataCreator) throws DatabaseAccessException;
+    boolean isItemRegistrationRequired(AuthenticationDataCreator dataCreator) throws DatabaseAccessException;
 
     /**
      * True if the item is published.
@@ -38,7 +38,7 @@ public interface AuthenticationOptionChecker {
      * @return True if the item is published
      * @throws DatabaseAccessException Thrown if there is a problem grabbing the data about registration.
      */
-    boolean isItemPublished(final AuthenticationDataCreator dataCreator) throws DatabaseAccessException;
+    boolean isItemPublished(AuthenticationDataCreator dataCreator) throws DatabaseAccessException;
 
     /**
      * Creates a data grabber based on the {@link Util.ItemType} using the itemId to find the data.
@@ -48,5 +48,5 @@ public interface AuthenticationOptionChecker {
      * @return A {@link AuthenticationDataCreator} that grabs the data for any other uses by the option checker.
      * @throws DatabaseAccessException Thrown if there is a problem creating the data from the database.
      */
-    AuthenticationDataCreator createDataGrabber(final Util.ItemType collectionType, final String itemId) throws DatabaseAccessException;
+    AuthenticationDataCreator createDataGrabber(Util.ItemType collectionType, String itemId) throws DatabaseAccessException;
 }

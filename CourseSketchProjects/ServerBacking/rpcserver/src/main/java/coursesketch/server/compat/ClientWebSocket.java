@@ -1,5 +1,6 @@
 package coursesketch.server.compat;
 
+import com.google.protobuf.RpcCallback;
 import com.google.protobuf.RpcController;
 import com.googlecode.protobuf.pro.duplex.CleanShutdownHandler;
 import com.googlecode.protobuf.pro.duplex.PeerInfo;
@@ -14,6 +15,7 @@ import com.googlecode.protobuf.pro.duplex.timeout.TimeoutChecker;
 import com.googlecode.protobuf.pro.duplex.timeout.TimeoutExecutor;
 import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.rpc.ClientRpcSession;
 import coursesketch.server.rpc.LocalRpcEventLoggerFactory;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelOption;
@@ -21,6 +23,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.request.Message;
 import utilities.ConnectionException;
 
 import java.io.IOException;
@@ -168,6 +171,20 @@ public class ClientWebSocket extends AbstractClientWebSocket {
         final ClientWebSocketWrapper wrapper = new ClientWebSocketWrapper(this);
         clientFactory.getRpcServiceRegistry().registerService(wrapper);
         clientFactory.registerConnectionEventListener(wrapper);
+
+        final ClientRpcSession clientRpcSession = new ClientRpcSession(channel);
+        clientRpcSession.addCallback(new RpcCallback<Message.Request>() {
+            @Override
+            public void run(Message.Request parameter) {
+                if (parameter == null) {
+                    onError(clientRpcSession, new ConnectionException("Invalid response",
+                            new NullPointerException("Request is null in callback")));
+                    return;
+                }
+                onMessage(ByteBuffer.wrap(parameter.toByteArray()));
+            }
+        });
+        onOpen(clientRpcSession);
     }
 
     /**
@@ -194,7 +211,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
      *
      * @return A new instance of{@link RpcController}.
      */
-    public final RpcController getNewRpcController() {
+    protected final RpcController getNewRpcController() {
         return getRpcChannel().newRpcController();
     }
 }

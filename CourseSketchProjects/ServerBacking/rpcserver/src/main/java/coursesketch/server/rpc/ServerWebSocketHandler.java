@@ -1,7 +1,7 @@
 package coursesketch.server.rpc;
 
+import com.google.protobuf.RpcCallback;
 import com.google.protobuf.RpcController;
-import com.googlecode.protobuf.pro.duplex.ClientRpcController;
 import coursesketch.auth.AuthenticationWebSocketClient;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
@@ -40,7 +40,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * @param controller The context of the socket itself.
      * @param req The request that contains data about the upgrade request.
      */
-    final void rpcOnConnect(final RpcSession controller, final Message.Request req) {
+    final void rpcOnConnect(final ClientRpcSession controller, final Message.Request req) {
         onOpen(controller);
     }
 
@@ -62,7 +62,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * @param cause The cause of the error.
      */
     final void rpcOnError(final RpcController session, final Throwable cause) {
-        onError(new RpcSession((ClientRpcController) session), cause);
+        onError(new ClientRpcSession(session), cause);
     }
 
     /**
@@ -75,17 +75,18 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      */
     @Override
     protected void onError(final SocketSession session, final Throwable cause) {
+        LOG.error("Error from session", cause);
         // There is currently no way to listen for errors.
     }
 
     /**
      * Called when the server receives a message.
-     *
      * @param session The socket context.
+     * @param controller The controller of the rpc session.
      * @param req The protobuf request object that represents what was sent to the server.
      */
-    final void rpcOnMessage(final RpcController session, final Message.Request req) {
-        onMessage(new RpcSession((ClientRpcController) session), req);
+    final void rpcOnMessage(final RpcCallback<Message.Request> session, RpcController controller, final Message.Request req) {
+        onMessage(new ServerRpcSession(session, controller), req);
     }
 
     /**
@@ -109,7 +110,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * @param statusCode The code number that represents the reason for closing.
      * @param reason The human readable message that defines why the socket closed.
      */
-    final void rpcOnClose(final RpcSession session, final int statusCode, final String reason) {
+    final void rpcOnClose(final ClientRpcSession session, final int statusCode, final String reason) {
         super.onClose(session, statusCode, reason);
     }
 
@@ -132,15 +133,20 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * {@inheritDoc}
      */
     @SuppressWarnings("checkstyle:designforextension")
-    @Override protected AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
+    @Override public AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
         return null;
+    }
+
+    @Override
+    public void onInitializeDatabases() {
+
     }
 
     /**
      * {@inheritDoc}
      */
     @SuppressWarnings("checkstyle:designforextension")
-    @Override protected void onInitialize() {
+    @Override public void onInitialize() {
         // Does nothing by default
     }
 
@@ -149,7 +155,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      */
     /* package-private */ final AuthenticationWebSocketClient getAuthenticationWebsocket() {
         try {
-            return (AuthenticationWebSocketClient) getConnectionManager()
+            return getConnectionManager()
                     .getBestConnection(AuthenticationWebSocketClient.class);
         } catch (IllegalStateException e) {
             LOG.warn("Authentication websocket does not exist", e);

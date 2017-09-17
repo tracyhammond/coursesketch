@@ -1,5 +1,7 @@
 package coursesketch.server.frontend;
 
+import com.google.common.collect.Lists;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
@@ -27,7 +29,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     /**
      * Max size used in aggregating http request.  which is 2^16.
      */
-    public static final int MAX_FRAME_SIZE = Integer.MAX_VALUE;
+    static final int MAX_FRAME_SIZE = Integer.MAX_VALUE;
 
     /**
      * The server that the servlet is connected to.
@@ -91,6 +93,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
         }
         if (connectionServer != null) {
             connectionServer.initialize();
+            loadSharedDatabase(serverInfo, Lists.newArrayList(connectionServer));
         }
         onReconnect();
     }
@@ -179,7 +182,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     /**
      * @return the multiConnectionManager.  This is only used within this package.
      */
-    /* package-private */ final MultiConnectionManager getManager() {
+    protected final MultiConnectionManager getManager() {
         return manager;
     }
 
@@ -188,5 +191,17 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      */
     protected final AbstractServerWebSocketHandler getServer() {
         return connectionServer;
+    }
+
+    @Override
+    @SuppressWarnings("checkstyle:DesignForExtension")
+    public boolean isSharingDatabaseReaders() {
+        return false;
+    }
+
+    @Override
+    @SuppressWarnings("checkstyle:DesignForExtension")
+    public AbstractCourseSketchDatabaseReader createSharedDatabaseReader(ServerInfo info) {
+        return null;
     }
 }

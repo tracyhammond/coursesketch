@@ -80,7 +80,7 @@ public final class SubmissionWebSocketClient extends ClientWebSocket implements 
                 .addAllSubmissionIds(Arrays.asList(submissionIds))
                 .build();
 
-        SubmissionServer.ExperimentResponse response;
+        final SubmissionServer.ExperimentResponse response;
         try {
             LOG.debug("Sending submission request");
             response = submissionService.getSubmission(getNewRpcController(), request);
@@ -110,7 +110,7 @@ public final class SubmissionWebSocketClient extends ClientWebSocket implements 
                 .addAllSubmissionIds(Lists.newArrayList(submissionId))
                 .build();
 
-        SubmissionServer.SolutionResponse response;
+        final SubmissionServer.SolutionResponse response;
         try {
             LOG.debug("Sending solution request");
             response = submissionService.getSolution(getNewRpcController(), request);
@@ -148,7 +148,7 @@ public final class SubmissionWebSocketClient extends ClientWebSocket implements 
                 .setSubmissionTime(submissionTime)
                 .build();
 
-        SubmissionServer.SubmissionResponse response;
+        final SubmissionServer.SubmissionResponse response;
         try {
             LOG.debug("Sending submission request");
             response = submissionService.insertExperiment(getNewRpcController(), request);
@@ -185,7 +185,7 @@ public final class SubmissionWebSocketClient extends ClientWebSocket implements 
                 .setSubmission(submission)
                 .build();
 
-        SubmissionServer.SubmissionResponse response;
+        final SubmissionServer.SubmissionResponse response;
         try {
             LOG.debug("Sending submission request");
             response = submissionService.insertSolution(getNewRpcController(), request);
