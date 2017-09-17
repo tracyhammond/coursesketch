@@ -53,7 +53,7 @@ public final class IdentityService extends Identity.IdentityService implements C
     @Override public void getItemRoster(final RpcController controller, final Identity.RequestRoster request,
             final RpcCallback<Identity.UserNameResponse> done) {
         final Identity.IdentityRequest requestData = request.getRequestData();
-        Map<String, String> userIds;
+        final Map<String, String> userIds;
         try {
             userIds = identityManager.getItemRoster(requestData.getAuthId(), requestData.getItemId(), requestData.getItemType(),
                     request.getUserIdsList(), authChecker);
@@ -86,7 +86,7 @@ public final class IdentityService extends Identity.IdentityService implements C
      */
     @Override public void getUserName(final RpcController controller, final Identity.IdentityRequest request,
             final RpcCallback<Identity.UserNameResponse> done) {
-        Map<String, String> userIdToUserName;
+        final Map<String, String> userIdToUserName;
         try {
             userIdToUserName = identityManager
                     .getUserName(request.getUserId(), request.getAuthId(), request.getItemId(), request.getItemType(), authChecker);
@@ -142,7 +142,7 @@ public final class IdentityService extends Identity.IdentityService implements C
      */
     @Override public void getUserIdentity(final RpcController controller, final Identity.IdentityRequest request,
             final RpcCallback<Identity.UserNameResponse> done) {
-        String identity;
+        final String identity;
         try {
             identity = identityManager.getUserIdentity(request.getUserId(), request.getAuthId());
         } catch (AuthenticationException e) {
